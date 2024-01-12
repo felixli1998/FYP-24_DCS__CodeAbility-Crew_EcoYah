@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -14,14 +14,37 @@ import { countries } from '../Countries';
 type TextFieldsProps = {
     label: string
     type: string
+    validate: boolean
+    data: (type:string, arg: string) => void
 }
 
 export default function TextFields(props: TextFieldsProps) {
     const icon: any = {
         "email": <EmailOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
         "name": <AccountCircleOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
-        "password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />
+        "password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
+        "confirm password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />
     }
+
+    const helperText: any = {
+        "email": "Please enter your email",
+        "name": "Please enter your name",
+        "number": "Please enter your number",
+        "password": "Please enter your password",
+        "confirm password": "Please enter your password again",
+    }
+
+    console.log(props.validate);
+
+    const [value, setValue] = useState("");
+
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        console.log(event.target.value);
+        setValue(event.target.value);
+    };
+
+    console.log(value);
+    props.data(props.type, value);
 
     const [showPassword, setShowPassword] = useState(false);
     
@@ -72,8 +95,8 @@ export default function TextFields(props: TextFieldsProps) {
                 )}
               />
             }
-            <TextField sx={{ width : props.type === "number" ? 205 : 300 }} label={props.label} variant="standard" type={props.type === "password" && !showPassword ? "password" : "text"}
-                InputProps={props.type === "password" ? 
+            <TextField sx={{ width : props.type === "number" ? 205 : 300 }} label={props.label} variant="standard" type={(props.type === "password" || props.type === "confirm password") && !showPassword ? "password" : "text"}
+                InputProps={props.type === "password" || props.type === "confirm password" ? 
                         { endAdornment: (<InputAdornment position="end">
                         <IconButton
                             aria-label="toggle password visibility"
@@ -85,6 +108,10 @@ export default function TextFields(props: TextFieldsProps) {
                         </IconButton>
                         </InputAdornment>) }
                      : {} }
+                value={value}
+                onChange={handleInputChange}
+                error={props.validate && value === ""}
+                helperText={props.validate && value === "" ? helperText[props.type] : ""}
                 />
         </Box>
     );

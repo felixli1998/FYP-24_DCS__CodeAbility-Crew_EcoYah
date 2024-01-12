@@ -14,7 +14,6 @@ export default function CheckBox(props: CheckBoxProps) {
         { props.label.map(function(label, i){
             return <FormControlLabel control={<Checkbox />} label={label} key={i} />;
         })}
-
     </FormGroup>
   );
 }
