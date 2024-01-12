@@ -2,12 +2,27 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 
+// For Typeorm
+import "reflect-metadata"; 
+import { AppDataSource } from "./data-source";
+import { User } from "./entity/User";
+
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 const port = process.env.PORT;
+
+// Database
+
+AppDataSource.initialize()
+    .then(() => {
+        // here you can start to work with your database
+    })
+    .catch((error) => console.log(error))
+
+
 
 // testing
 const project = "EcoYah";
