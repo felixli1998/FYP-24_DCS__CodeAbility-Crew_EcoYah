@@ -1,24 +1,18 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity()
-export class User {
+export class Item{
     @PrimaryGeneratedColumn()
     id: number
 
     @Column({
-        length: 100,
+        length: 100
     })
     name: string
 
-    @Column("text")
-    description: string
+    @Column()
+    createdAt: Date
 
     @Column()
-    filename: string
-
-    @Column("double")
-    views: number
-
-    @Column()
-    isPublished: boolean
+    updatedAt: Date
 }
