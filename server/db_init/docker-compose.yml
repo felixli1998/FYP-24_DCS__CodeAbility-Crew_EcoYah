@@ -2,13 +2,12 @@ version: '3.7'
 services:
   postgres:
     image: postgres:13
-    container_name: postgres_db
+    container_name: ecoyah_db
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_DB: poll_db
-      POSTGRES_USER: poll_user
-      POSTGRES_PASSWORD: 0000
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
 volumes:
