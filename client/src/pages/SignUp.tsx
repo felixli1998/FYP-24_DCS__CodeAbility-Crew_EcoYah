@@ -15,20 +15,33 @@ export default function SignUp() {
     const content: string[] = [ "At least 12 characters", "1 uppercase letter", "1 lowercase letter", "1 number", "1 symbol" ]
 
     const [validateForm, setValidateForm] = useState(false);
+    const [passwordText, setPasswordText] = useState("");
+    const [isPasswordValid, setIsPasswordValid] = useState(false);
+    const [isPasswordSame, setIsPasswordSame] = useState(false);
 
     const handleClickStatus = (status: boolean) => {
         setValidateForm(status);
     }
 
-    const formData: { [k: string] : string} = {};
+    const formData: { [key: string] : string } = {};
 
     const handleData = (type: string, data: string) => {
         console.log(type);
         console.log(data);
         formData[type] = data;
+        if (formData['password']) {
+          setPasswordText(formData['password']);
+        }
+        if (formData['password'] && formData['confirm password'] && formData['password'] === formData['confirm password']) {
+          setIsPasswordSame(true);
+        }
     }
     console.log(formData);
-  
+
+    const handlePwdCriteria = (status: boolean) => {
+        setIsPasswordValid(status);
+    }
+    
     return (
       <ThemeProvider theme={theme}>
         <Box
@@ -48,12 +61,12 @@ export default function SignUp() {
               <TextFields label="Email" type="email" validate={validateForm} data={handleData}></TextFields>
               <TextFields label="Name" type="name" validate={validateForm} data={handleData}></TextFields>
               <TextFields label="Contact Number" type="number" validate={validateForm} data={handleData}></TextFields>
-              <TextFields label="Password" type="password" validate={validateForm} data={handleData}></TextFields>
+              <TextFields label="Password" type="password" validate={validateForm} data={handleData} error={isPasswordValid}></TextFields>
               <Box sx={{ backgroundColor: "rgba(7, 83, 142, 0.25)", padding: 2, borderRadius: 2, width: 330 }}>
                 <Typography variant="body2" gutterBottom><b>Your password must contain:</b></Typography>
-                <Checkboxes type="password" label={content}></Checkboxes>
+                <Checkboxes type="password" label={content} text={passwordText} isValid={handlePwdCriteria}></Checkboxes>
               </Box>
-              <TextFields label="Confirm Password" type="confirm password" validate={validateForm} data={handleData}></TextFields>
+              <TextFields label="Confirm Password" type="confirm password" validate={validateForm} data={handleData} error={isPasswordSame}></TextFields>
               <LongButtons label="Sign Up" clickStatus={handleClickStatus}></LongButtons>
             </Stack>
         </Box>

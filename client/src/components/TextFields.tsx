@@ -16,6 +16,7 @@ type TextFieldsProps = {
     type: string
     validate: boolean
     data: (type:string, arg: string) => void
+    error?: boolean 
 }
 
 export default function TextFields(props: TextFieldsProps) {
@@ -42,6 +43,10 @@ export default function TextFields(props: TextFieldsProps) {
         console.log(event.target.value);
         setValue(event.target.value);
     };
+
+    // const handleDropdownChange = (event: any) => {
+    //   console.log(event.target.value);
+    // };
 
     console.log(value);
     props.data(props.type, value);
@@ -70,6 +75,7 @@ export default function TextFields(props: TextFieldsProps) {
                     suggested: true,
                   }}
                 getOptionLabel={(option) => "+" + option.phone}
+                // onChange={handleDropdownChange}
                 renderOption={(props, option) => (
                   <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 }, width: 100 }} {...props}>
                     <img
@@ -110,8 +116,8 @@ export default function TextFields(props: TextFieldsProps) {
                      : {} }
                 value={value}
                 onChange={handleInputChange}
-                error={props.validate && value === ""}
-                helperText={props.validate && value === "" ? helperText[props.type] : ""}
+                error={(props.validate && value === "") || (props.validate && props.error === false)}
+                helperText={(props.validate && value === "" ? helperText[props.type] : "") || (props.validate && props.error === false && props.type === "password" && "Please enter a valid password") || (props.validate && props.error === false && props.type === "confirm password" && "Please enter the same password") }
                 />
         </Box>
     );
