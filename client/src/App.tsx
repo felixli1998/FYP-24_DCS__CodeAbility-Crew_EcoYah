@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import "./styles/App.css";
 import axios from "axios";
 import AppBar from "./components/AppBar"; // Import the AppBar component
+import SignUp from "./pages/SignUp";
 
 type ProjectStatus = {
   project: string;
@@ -23,7 +24,8 @@ const App: React.FC = () => {
 
   return (
     <>
-      <AppBar /> {/* Include the AppBar component */}
+      <AppBar />
+      <SignUp></SignUp>
       {res?.project} is {res?.status}
     </>
   );
