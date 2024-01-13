@@ -14,7 +14,7 @@ export default function CheckBox(props: CheckBoxProps) {
 
   const symbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
-  console.log(props.text);
+  // console.log(props.text);
 
   const [isTrue, setIsTrue] = useState(false);
 
@@ -41,13 +41,10 @@ export default function CheckBox(props: CheckBoxProps) {
               (i === 4 && symbol.test(props.text)))) || 
               (props.type !== "password" && isTrue) } />} label={label} key={i} 
               onChange={() => { 
-                if (!isTrue) {
-                  props.type !== "password" && props.isValid(true);
-                  setIsTrue(true);
-                } else {
-                  props.type !== "password" && props.isValid(false);
-                  setIsTrue(false);
-                }
+                setIsTrue((prevIsTrue) => !prevIsTrue);
+                if (props.type !== 'password') {
+                  props.isValid(!isTrue);
+                };
               }}/>;
         })}
     </FormGroup>

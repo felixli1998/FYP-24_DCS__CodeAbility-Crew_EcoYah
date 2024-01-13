@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/App.css";
 import { ThemeProvider } from '@mui/material';
 import { theme } from '../styles/Palette';
@@ -24,25 +24,6 @@ export default function SignUp() {
     const [isPasswordSame, setIsPasswordSame] = useState(false);
     const [signUpError, setSignUpError] = useState(true);
 
-    const handleClickStatus = (status: boolean) => {
-        setValidateForm(status);
-    }
-
-    const formData: { [key: string] : string } = {};
-
-    const handleData = (type: string, data: string) => {
-        // console.log(type);
-        // console.log(data);
-        formData[type] = data;
-        if (formData['password']) {
-          setPasswordText(formData['password']);
-        }
-        if (formData['password'] && formData['confirm password'] && formData['password'] === formData['confirm password']) {
-          setIsPasswordSame(true);
-        }
-    }
-    // console.log(formData);
-
     const handlePwdCriteria = (status: boolean) => {
         setIsPasswordValid(status);
     }
@@ -50,6 +31,32 @@ export default function SignUp() {
     const handleSignUpCriteria = (status: boolean) => {
         setSignUpError(status);
     }
+
+    const handleClickStatus = (status: boolean) => {
+        setValidateForm(status);
+    }
+
+    const [formData, setFormData] = useState<{ [key: string] : string }>({});
+
+    const handleData = (type: string, data: string) => {
+        // console.log(type);
+        // console.log(data);
+        setFormData((prevData) => ({...prevData, [type] : data}));
+
+        if (type === 'password') {
+          setPasswordText(data);
+          // console.log(passwordText);
+        }
+    }
+    // console.log(formData);
+
+    useEffect(() => {
+      if (formData['confirm password'] && passwordText === formData['confirm password']) {
+        setIsPasswordSame(true);
+      } else {
+        setIsPasswordSame(false);
+      }
+    }, [formData, passwordText]);
     
     return (
       <ThemeProvider theme={theme}>
@@ -90,8 +97,8 @@ export default function SignUp() {
               <LongButtons label="Sign Up" clickStatus={handleClickStatus}></LongButtons>
             </Stack>
         </Box>
-        <Typography sx={{ m: 2 }} variant="body2" gutterBottom><center>Already Have An Account?&nbsp;
-          <Link color="primary.light" href="#">Sign In</Link></center>
+        <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>Already Have An Account?&nbsp;
+          <Link color="primary.light" href="#">Sign In</Link>
           </Typography>
       </ThemeProvider>
     );
