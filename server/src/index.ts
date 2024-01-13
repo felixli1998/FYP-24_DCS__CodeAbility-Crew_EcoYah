@@ -6,6 +6,15 @@ import cors from "cors";
 import "reflect-metadata"; 
 import { AppDataSource } from "./config/data-source";
 
+// Routes
+import itemRoutes from './routes/itemRoutes';
+
+// For inserting sample data
+import { Item } from "./entities/Item";
+import { ItemRepository } from "./repositories/ItemRepository";
+import { ItemService } from "./services/ItemService";
+
+
 dotenv.config();
 
 const app = express();
@@ -13,14 +22,11 @@ app.use(express.json());
 app.use(cors());
 const port = process.env.PORT;
 
-import { Item } from "./entities/Item";
-import { ItemRepository } from "./repositories/ItemRepository";
-import { ItemService } from "./services/ItemService";
 
 // Database
 AppDataSource.initialize()
     .then(() => {
-        // Inserting test data
+        // TODO: Remove in future, only to add test data
         const sampleItem = new Item();
         sampleItem.name = "Test Item";
         sampleItem.createdAt = new Date();
@@ -28,7 +34,7 @@ AppDataSource.initialize()
 
         const itemRepository = new ItemRepository();
         const itemService = new ItemService(itemRepository);
-        itemService.createItem(sampleItem); // This line causes issue
+        itemService.createItem(sampleItem); 
     })
     .catch((error) => console.log(error))
 
@@ -36,7 +42,6 @@ AppDataSource.initialize()
 const project = "EcoYah";
 
 // Routes
-import itemRoutes from './routes/itemRoutes';
 app.use('/', itemRoutes);
 
 app.get('/', (req, res) => {
