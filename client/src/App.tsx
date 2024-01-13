@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./styles/App.css";
 import axios from "axios";
 import SignUp from "./pages/SignUp";
-
+import EditProfile from "./pages/EditProfile";
 type ProjectStatus = {
   project: string;
   status: string;
@@ -23,7 +23,8 @@ export default function App() {
   return (
     <>
       {/* res?.project} is {res?.status} */}
-      <SignUp />
+      {/* <SignUp /> */}
+      <EditProfile/>
     </>
   );
 }
