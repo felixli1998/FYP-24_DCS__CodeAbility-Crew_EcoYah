@@ -6,14 +6,9 @@ import profilePic from "../assets/ProfilePicture.png";
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-
-import TextFields from "../components/TextFields"
 import Typography from '@mui/material/Typography';
-import Checkboxes from "../components/CheckBox"
-import FormHelperText from '@mui/material/FormHelperText';
 import LongSaveButtons from "../components/LongSaveButton"
-import Link from '@mui/material/Link';
-
+import Button from '@mui/material/Button';
 
 export default function SignUp() {
 
@@ -24,45 +19,51 @@ export default function SignUp() {
     email: "johntimonthy@gmail.com"
   });
 
-  const passwordCriteria: string[] = ["At least 12 characters", "1 uppercase letter", "1 lowercase letter", "1 number", "1 symbol"];
-  const signUpCriteria: string[] = ["By signing up, you agree to the Terms of Service and Privacy Policy."];
+  // User data state variables
+  const [nameInput, setNameInput] = useState(userData.name);
+  const [contactInput, setContactInput] = useState(userData.contact);
 
-  const [validateForm, setValidateForm] = useState(false);
-  const [passwordText, setPasswordText] = useState("");
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [isPasswordSame, setIsPasswordSame] = useState(false);
-  const [signUpError, setSignUpError] = useState(true);
+  // Function to handle changes
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNameInput(event.target.value);
+  };
 
-  const handleClickStatus = (status: boolean) => {
-    setValidateForm(status);
-  }
+  const handleContactChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setContactInput(event.target.value);
+  };
 
-  const formData: { [key: string]: string } = {};
-
-  const handleData = (type: string, data: string) => {
-    // console.log(type);
-    // console.log(data);
-    formData[type] = data;
-    if (formData['password']) {
-      setPasswordText(formData['password']);
+  // Function to validate changes are valid
+  const validateChanges = () => {
+    console.log("Basic validation, might need to ensure OTP etc");
+    // Ensure not empty
+    if (nameInput === "" || contactInput === "" || userData.email === "") {
+      console.log("All fields cannot be empty");
+      return false;
     }
-    if (formData['password'] && formData['confirm password'] && formData['password'] === formData['confirm password']) {
-      setIsPasswordSame(true);
+    // Ensure contact is a number
+    if (isNaN(Number(contactInput))) {
+      console.log("Contact must be a number");
     }
-  }
-  // console.log(formData);
+    return true;
 
-  const handlePwdCriteria = (status: boolean) => {
-    setIsPasswordValid(status);
-  }
+  };
 
-  const handleSignUpCriteria = (status: boolean) => {
-    setSignUpError(status);
-  }
+  // Function to handle save changes
+  const handleSaveChanges = () => {
+    // Validate changes
+    if (validateChanges()) {
+      console.log("Backend request to server to change details!");
+      console.log("Name:", nameInput);
+      console.log("Contact:", contactInput);
+      console.log("Email:", userData.email);
+      return true;
+    }
+    console.log("Validation failed, will not send to server!")
+    return false;
+  };
 
   return (
     <ThemeProvider theme={theme}>
-
       <Box
         component="form"
         display="flex"
@@ -80,13 +81,12 @@ export default function SignUp() {
 
         <Stack spacing={3} justifyContent={"space-between"} >
           <Box
-            sx = {{
+            sx={{
               width: 350,
-        
             }}
           >
             <Box
-              sx = {{
+              sx={{
                 width: "100%",
                 display: "flex",
                 flexDirection: "column",
@@ -99,10 +99,10 @@ export default function SignUp() {
                 component="img"
                 sx={
                   {
-                    backgroundColor:"#E0E0E0",
+                    backgroundColor: "#E0E0E0",
                     position: 'relative', width: '7.5rem', height: '7.5rem',
                     borderRadius: '50%', boxShadow: "0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset",
-                    marginTop:"1rem", 
+                    marginTop: "1rem",
                   }
                 }
                 alt="profile picture"
@@ -114,50 +114,60 @@ export default function SignUp() {
             {/* Name */}
             <Box
               sx={{
-                marginY:"1rem",
+                marginY: "1rem",
               }}
             >
               <Typography variant="h6" align="left" > Name </Typography>
-              <TextField 
-                id="outlined-basic" 
-                InputLabelProps={{shrink: false}}
-                variant="outlined" 
-                fullWidth 
-                defaultValue={userData.name}/>
+              <TextField
+                id="outlined-basic"
+                InputLabelProps={{ shrink: false }}
+                variant="outlined"
+                fullWidth
+                defaultValue={userData.name}
+                onChange={handleNameChange}
+              />
             </Box>
 
             {/* Contact */}
             <Box
               sx={{
-                marginY:"1rem",
+                marginY: "1rem",
               }}
             >
               <Typography variant="h6" align="left" > Contact </Typography>
-              <TextField 
-                id="outlined-basic" 
-                InputLabelProps={{shrink: false}}
-                variant="outlined" 
-                fullWidth 
-                defaultValue={userData.contact}/>
+              <TextField
+                id="outlined-basic"
+                InputLabelProps={{ shrink: false }}
+                variant="outlined"
+                fullWidth
+                defaultValue={userData.contact}
+                onChange={handleContactChange}
+              />
             </Box>
 
             {/* Email */}
             <Box
               sx={{
-                marginY:"1rem",
+                marginY: "1rem",
               }}
             >
               <Typography variant="h6" align="left" > Email </Typography>
-              <TextField 
-                id="outlined-basic" 
-                InputLabelProps={{shrink: false}}
-                variant="outlined" 
-                fullWidth 
+              <TextField
+                id="outlined-basic"
+                InputLabelProps={{ shrink: false }}
+                variant="outlined"
+                fullWidth
                 disabled
-                defaultValue={userData.email}/>
+                defaultValue={userData.email} />
             </Box>
           </Box>
-          <LongSaveButtons label="Save changes" clickStatus={handleClickStatus}></LongSaveButtons>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleSaveChanges()}
+          >
+            Save changes
+          </Button>
         </Stack>
       </Box>
     </ThemeProvider>
