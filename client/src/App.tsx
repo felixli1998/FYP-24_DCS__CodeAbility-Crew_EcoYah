@@ -1,32 +1,36 @@
 // src/App.tsx
-import {useEffect, useState} from "react";
+// import {useEffect, useState} from "react";
 import "./styles/App.css";
-import axios from "axios";
-import AppBar from "./components/AppBar"; // Import the AppBar component
-import SignUp from "./pages/SignUp";
+// import axios from "axios";
+import AppBar from "./components/AppBar";
+import {ThemeProvider} from "@emotion/react";
+import {theme} from "./styles/Palette";
+import {Outlet} from "react-router-dom";
 
-type ProjectStatus = {
-  project: string;
-  status: string;
-};
+// type ProjectStatus = {
+//   project: string;
+//   status: string;
+// };
 
 const App: React.FC = () => {
-  const [res, setRes] = useState<ProjectStatus>();
+  // const [res, setRes] = useState<ProjectStatus>();
 
-  useEffect(() => {
-    axios
-      .post("http://localhost:8000/test", {msg: "start project"})
-      .then((resp) => {
-        setRes(resp.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .post("http://localhost:8000/test", {msg: "start project"})
+  //     .then((resp) => {
+  //       setRes(resp.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
 
   return (
     <>
-      <AppBar />
-      <SignUp></SignUp>
-      {res?.project} is {res?.status}
+      <ThemeProvider theme={theme}>
+        <AppBar />
+        <Outlet />
+      </ThemeProvider>
+      {/* {res?.project} is {res?.status} */}
     </>
   );
 };
