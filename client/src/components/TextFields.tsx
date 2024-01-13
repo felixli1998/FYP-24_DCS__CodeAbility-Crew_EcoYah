@@ -28,6 +28,8 @@ type Country = {
 }
 
 export default function TextFields(props: TextFieldsProps) {
+    // console.log(props.validate);
+
     const icon: any = {
         "email": <EmailOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
         "name": <AccountCircleOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
@@ -43,19 +45,17 @@ export default function TextFields(props: TextFieldsProps) {
         "confirm password": "Please enter your password again",
     }
 
-    // console.log(props.validate);
-
     const [value, setValue] = useState("");
     const [code, setCode] = useState("SG");
     const [phone, setPhone] = useState("65");
     const [phoneError, setPhoneError] = useState(false);
 
     useEffect(() => {
-    }, [phoneError]);
+    }, [phoneError, value]);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.value);
-        setValue(event.target.value)
+        setValue(event.target.value);
     };
     console.log(value);
 
@@ -82,9 +82,10 @@ export default function TextFields(props: TextFieldsProps) {
         }
       };
     } else {
+      console.log(value);
       props.data(props.type, value);
     }
-
+    
     const [showPassword, setShowPassword] = useState(false);
     
     const handleClickShowPassword = () => setShowPassword((show) => !show);

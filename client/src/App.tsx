@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./styles/App.css";
 import axios from "axios";
+import SignUp from "./pages/SignUp";
 
 type ProjectStatus = {
   project: string;
@@ -21,7 +22,8 @@ export default function App() {
 
   return (
     <>
-      {res?.project} is {res?.status}
+      {/* res?.project} is {res?.status} */}
+      <SignUp />
     </>
   );
 }
