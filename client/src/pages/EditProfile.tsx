@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import LongSaveButtons from "../components/LongSaveButton"
 import Button from '@mui/material/Button';
 
 export default function SignUp() {
@@ -40,13 +39,11 @@ export default function SignUp() {
 
     if (file) {
       setProfilePicInput(file);
-
-      // If you want to display the image preview, you can use FileReader
       const reader = new FileReader();
       reader.onloadend = () => {
         setUserData((prevUserData) => ({
           ...prevUserData,
-          profilePic: reader.result as string, // Assuming the result is a string
+          profilePic: reader.result as string, 
         }));
       };
       reader.readAsDataURL(file);
