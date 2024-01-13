@@ -5,6 +5,8 @@ import { theme } from '../styles/Palette';
 import profilePic from "../assets/ProfilePicture.png";
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+
 import TextFields from "../components/TextFields"
 import Typography from '@mui/material/Typography';
 import Checkboxes from "../components/CheckBox"
@@ -14,6 +16,13 @@ import Link from '@mui/material/Link';
 
 
 export default function SignUp() {
+
+  // Function to get current user data
+  const [userData, setUserData] = useState({
+    name: "John Timonthy",
+    contact: "12345678",
+    email: "johntimonthy@gmail.com"
+  });
 
   const passwordCriteria: string[] = ["At least 12 characters", "1 uppercase letter", "1 lowercase letter", "1 number", "1 symbol"];
   const signUpCriteria: string[] = ["By signing up, you agree to the Terms of Service and Privacy Policy."];
@@ -69,8 +78,13 @@ export default function SignUp() {
         autoComplete="off"
       >
 
-        <Stack spacing={3} justifyContent={"space-between"}>
-          <Box>
+        <Stack spacing={3} justifyContent={"space-between"} >
+          <Box
+            sx = {{
+              width: 350,
+        
+            }}
+          >
             <Box
               sx = {{
                 width: "100%",
@@ -100,36 +114,49 @@ export default function SignUp() {
             {/* Name */}
             <Box
               sx={{
-                marginY:"1rem"
+                marginY:"1rem",
               }}
             >
               <Typography variant="h6" align="left" > Name </Typography>
-              <TextFields label="Name" type="name" validate={validateForm} data={handleData}></TextFields>
+              <TextField 
+                id="outlined-basic" 
+                InputLabelProps={{shrink: false}}
+                variant="outlined" 
+                fullWidth 
+                defaultValue={userData.name}/>
             </Box>
 
-            {/* Contact  */}
+            {/* Contact */}
             <Box
               sx={{
-                marginY:"1rem"
+                marginY:"1rem",
               }}
             >
               <Typography variant="h6" align="left" > Contact </Typography>
-              <TextFields label="Contact Number" type="number" validate={validateForm} data={handleData}></TextFields>
+              <TextField 
+                id="outlined-basic" 
+                InputLabelProps={{shrink: false}}
+                variant="outlined" 
+                fullWidth 
+                defaultValue={userData.contact}/>
             </Box>
 
-            {/* Email  */}
+            {/* Email */}
             <Box
               sx={{
-                marginY:"1rem"
+                marginY:"1rem",
               }}
             >
               <Typography variant="h6" align="left" > Email </Typography>
-              <TextFields label="Email" type="email" validate={validateForm} data={handleData}></TextFields>
+              <TextField 
+                id="outlined-basic" 
+                InputLabelProps={{shrink: false}}
+                variant="outlined" 
+                fullWidth 
+                disabled
+                defaultValue={userData.email}/>
             </Box>
           </Box>
-
-
-
           <LongSaveButtons label="Save changes" clickStatus={handleClickStatus}></LongSaveButtons>
         </Stack>
       </Box>
