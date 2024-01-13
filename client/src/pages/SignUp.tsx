@@ -26,8 +26,8 @@ export default function SignUp() {
     const formData: { [key: string] : string } = {};
 
     const handleData = (type: string, data: string) => {
-        console.log(type);
-        console.log(data);
+        // console.log(type);
+        // console.log(data);
         formData[type] = data;
         if (formData['password']) {
           setPasswordText(formData['password']);
@@ -36,7 +36,7 @@ export default function SignUp() {
           setIsPasswordSame(true);
         }
     }
-    console.log(formData);
+    // console.log(formData);
 
     const handlePwdCriteria = (status: boolean) => {
         setIsPasswordValid(status);

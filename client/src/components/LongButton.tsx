@@ -10,7 +10,7 @@ export default function LongButton(props: LongButtonProps) {
   
   function handleSignUp(e: { preventDefault: () => void; }) {
     e.preventDefault();
-    console.log('You clicked sign up.');
+    // console.log('You clicked sign up.');
     props.clickStatus(true);
   }
 

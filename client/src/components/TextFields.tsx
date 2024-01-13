@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, useEffect, ChangeEvent } from 'react';
 import Box from '@mui/material/Box';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -10,6 +10,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { countries } from '../Countries';
+import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js'
 
 type TextFieldsProps = {
     label: string
@@ -17,6 +18,13 @@ type TextFieldsProps = {
     validate: boolean
     data: (type:string, arg: string) => void
     error?: boolean 
+}
+
+type Country = {
+  code: string;
+  label: string;
+  phone: string;
+  suggested?: boolean;
 }
 
 export default function TextFields(props: TextFieldsProps) {
@@ -30,26 +38,52 @@ export default function TextFields(props: TextFieldsProps) {
     const helperText: any = {
         "email": "Please enter your email",
         "name": "Please enter your name",
-        "number": "Please enter your number",
+        "number": "Please enter your contact number",
         "password": "Please enter your password",
         "confirm password": "Please enter your password again",
     }
 
-    console.log(props.validate);
+    // console.log(props.validate);
 
     const [value, setValue] = useState("");
+    const [code, setCode] = useState("SG");
+    const [phone, setPhone] = useState("65");
+    const [phoneError, setPhoneError] = useState(false);
+
+    useEffect(() => {
+    }, [phoneError]);
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.value);
-        setValue(event.target.value);
+        setValue(event.target.value)
     };
-
-    // const handleDropdownChange = (event: any) => {
-    //   console.log(event.target.value);
-    // };
-
     console.log(value);
-    props.data(props.type, value);
+
+    const handlePhoneChange = (event: React.ChangeEvent<{}>, country: Country | null) => {
+      /// console.log(country);
+      if (country) {
+        setCode(country.code);
+        setPhone(country.phone);
+      }
+    }
+    // console.log(code);
+
+    if (props.type === "number") {
+      const isValidPhone = isValidPhoneNumber(value, code as CountryCode);
+      // console.log(isValidPhone);
+      if (isValidPhone) {
+        props.data(props.type, "+" + phone + value);
+        if (phoneError) {
+          setPhoneError(false);
+        }
+      } else {
+        if (!phoneError) {
+          setPhoneError(true);
+        }
+      };
+    } else {
+      props.data(props.type, value);
+    }
 
     const [showPassword, setShowPassword] = useState(false);
     
@@ -62,46 +96,45 @@ export default function TextFields(props: TextFieldsProps) {
     return (
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
             {icon[props.type]} 
-            {props.type === "number" && 
+            { props.type === "number" &&
                 <Autocomplete
-                id="country-select-demo"
-                sx={{ width: 120, mr: 1 }}
-                options={countries}
-                autoHighlight
-                defaultValue={{
-                    code: 'SG', 
-                    label: 'Singapore', 
-                    phone: '65',
-                    suggested: true,
-                  }}
-                getOptionLabel={(option) => "+" + option.phone}
-                // onChange={handleDropdownChange}
-                renderOption={(props, option) => (
-                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 }, width: 100 }} {...props}>
-                    <img
-                      loading="lazy"
-                      width="20"
-                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                      alt=""
-                    />
-                    +{option.phone}
-                  </Box>
-                )}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Country Code"
-                    variant="standard"
-                    inputProps={{
-                      ...params.inputProps,
-                      autoComplete: 'new-password', // disable autocomplete and autofill
+                  id="country-select-demo"
+                  sx={{ width: 100, mr: 1 }}
+                  options={countries}
+                  autoHighlight
+                  defaultValue={{
+                      code: 'SG', 
+                      label: 'Singapore', 
+                      phone: '65',
+                      suggested: true,
                     }}
-                  />
-                )}
-              />
-            }
-            <TextField sx={{ width : props.type === "number" ? 205 : 300 }} label={props.label} variant="standard" type={(props.type === "password" || props.type === "confirm password") && !showPassword ? "password" : "text"}
+                  getOptionLabel={(option) => "+" + option.phone}
+                  onChange={handlePhoneChange}
+                  renderOption={(props, option, index) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 }, width: 100 }} {...props}>
+                      <img
+                        loading="lazy"
+                        width="20"
+                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                        alt=""
+                      />
+                      +{option.phone}
+                    </Box>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Country Code"
+                      variant="standard"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password', // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+                /> }
+            <TextField sx={{ width : props.type === "number" ? 225 : 300 }} label={props.label} variant="standard" type={(props.type === "password" || props.type === "confirm password") && !showPassword ? "password" : "text"}
                 InputProps={props.type === "password" || props.type === "confirm password" ? 
                         { endAdornment: (<InputAdornment position="end">
                         <IconButton
@@ -116,9 +149,9 @@ export default function TextFields(props: TextFieldsProps) {
                      : {} }
                 value={value}
                 onChange={handleInputChange}
-                error={(props.validate && value === "") || (props.validate && props.error === false)}
-                helperText={(props.validate && value === "" ? helperText[props.type] : "") || (props.validate && props.error === false && props.type === "password" && "Please enter a valid password") || (props.validate && props.error === false && props.type === "confirm password" && "Please enter the same password") }
-                />
-        </Box>
+                error={(props.validate && value === "") || (props.validate && props.error === false) || (props.validate && phoneError)}
+                helperText={(props.validate && value === "" ? helperText[props.type] : "") || (props.validate && props.error === false && props.type === "password" && "Please enter a valid password") || (props.validate && props.error === false && props.type === "confirm password" && "Please enter the same password") || (props.validate && phoneError && "Please enter a valid contact number") }
+                /> 
+        </Box> 
     );
 }

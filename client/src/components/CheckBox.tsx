@@ -14,7 +14,7 @@ export default function CheckBox(props: CheckBoxProps) {
 
   const symbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
-  console.log(props.text);
+  // console.log(props.text);
 
   useEffect(() => {
     const isPasswordValid = props.text.length >= 12 &&
@@ -22,9 +22,9 @@ export default function CheckBox(props: CheckBoxProps) {
       /[a-z]/.test(props.text) &&
       /\d/.test(props.text) &&
       symbol.test(props.text);
+  
+      props.isValid(isPasswordValid);
 
-    props.isValid(isPasswordValid);
-    
   }, [props.text]);
 
 
