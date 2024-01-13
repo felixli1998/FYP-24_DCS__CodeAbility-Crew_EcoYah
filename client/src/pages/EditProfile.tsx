@@ -88,8 +88,6 @@ export default function SignUp() {
         justifyContent="center"
         alignItems="top"
         sx={{
-          width: 420, height: "90vh", m: "auto",
-          '& > :not(style)': { m: 2, p: 2 }, boxShadow: 5, borderRadius: 2,
           marginTop: "2rem",
         }}
         noValidate
