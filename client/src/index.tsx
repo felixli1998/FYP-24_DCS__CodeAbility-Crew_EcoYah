@@ -1,8 +1,12 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import SignUp from "./pages/SignUp";
+import App from "./App";
+import { ThemeProvider } from "@emotion/react";
+import { theme } from "./styles/Palette";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+root.render(
+  <ThemeProvider theme={theme}>
+    <App />
+  </ThemeProvider>
 );
-root.render(<SignUp />);
