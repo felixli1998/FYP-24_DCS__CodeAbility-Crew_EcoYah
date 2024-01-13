@@ -16,12 +16,14 @@ export default function SignUp() {
   const [userData, setUserData] = useState({
     name: "John Timonthy",
     contact: "12345678",
-    email: "johntimonthy@gmail.com"
+    email: "johntimonthy@gmail.com",
+    profilePic: profilePic,
   });
 
   // User data state variables
   const [nameInput, setNameInput] = useState(userData.name);
   const [contactInput, setContactInput] = useState(userData.contact);
+  const [profilePicInput, setProfilePicInput] = useState<File | null>(null);
 
   // Function to handle changes
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +32,25 @@ export default function SignUp() {
 
   const handleContactChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setContactInput(event.target.value);
+  };
+
+  // Function to handle photo upload
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (file) {
+      setProfilePicInput(file);
+
+      // If you want to display the image preview, you can use FileReader
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUserData((prevUserData) => ({
+          ...prevUserData,
+          profilePic: reader.result as string, // Assuming the result is a string
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   // Function to validate changes are valid
@@ -73,51 +94,61 @@ export default function SignUp() {
           width: 420, height: "90vh", m: "auto",
           '& > :not(style)': { m: 2, p: 2 }, boxShadow: 5, borderRadius: 2,
           marginTop: "2rem",
-
         }}
         noValidate
         autoComplete="off"
       >
-
         <Stack spacing={3} justifyContent={"space-between"} >
           <Box
             sx={{
               width: 350,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "left",
+              alignItems: "center",
+              marginBottom: "3rem",
             }}
           >
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                marginBottom: "3rem",
-              }}
-            >
-              <Box
-                component="img"
-                sx={
-                  {
+            <Box sx={{ 
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "2rem",
+               }}>
+              <label htmlFor="profilePicInput">
+                <Box
+                  component="img"
+                  sx={{
                     backgroundColor: "#E0E0E0",
                     position: 'relative', width: '7.5rem', height: '7.5rem',
                     borderRadius: '50%', boxShadow: "0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset",
-                    marginTop: "1rem",
-                  }
-                }
-                alt="profile picture"
-                src={profilePic}>
-              </Box>
-              <Typography variant="h6" align="center" gutterBottom> Change Photo</Typography>
+                    marginTop: "1rem", 
+                    cursor: 'pointer',
+                  }}
+                  alt="profile picture"
+                  src={userData.profilePic || profilePic}
+                />
+                <input
+                  type="file"
+                  id="profilePicInput"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handlePhotoUpload}
+                />
+              </label>
+              <Typography variant="body1" align="center" sx={{fontWeight:"bold"}} > Change Photo</Typography>
+
             </Box>
 
             {/* Name */}
             <Box
               sx={{
-                marginY: "1rem",
+                marginY: ".5rem",
+                width: "100%",
               }}
             >
-              <Typography variant="h6" align="left" > Name </Typography>
+              <Typography variant="body1" align="left" sx={{fontWeight:"bold"}}> Name </Typography>
               <TextField
                 id="outlined-basic"
                 InputLabelProps={{ shrink: false }}
@@ -131,10 +162,11 @@ export default function SignUp() {
             {/* Contact */}
             <Box
               sx={{
-                marginY: "1rem",
+                marginY: ".5rem",
+                width: "100%",
               }}
             >
-              <Typography variant="h6" align="left" > Contact </Typography>
+              <Typography variant="body1" align="left" sx={{fontWeight:"bold"}}> Contact </Typography>
               <TextField
                 id="outlined-basic"
                 InputLabelProps={{ shrink: false }}
@@ -148,10 +180,11 @@ export default function SignUp() {
             {/* Email */}
             <Box
               sx={{
-                marginY: "1rem",
+                marginY: ".5rem",
+                width: "100%",
               }}
             >
-              <Typography variant="h6" align="left" > Email </Typography>
+              <Typography variant="body1" align="left" sx={{fontWeight:"bold"}}> Email </Typography>
               <TextField
                 id="outlined-basic"
                 InputLabelProps={{ shrink: false }}
@@ -161,6 +194,7 @@ export default function SignUp() {
                 defaultValue={userData.email} />
             </Box>
           </Box>
+
           <Button
             variant="contained"
             color="primary"
@@ -169,7 +203,7 @@ export default function SignUp() {
             Save changes
           </Button>
         </Stack>
-      </Box>
-    </ThemeProvider>
+      </Box >
+    </ThemeProvider >
   );
 }
