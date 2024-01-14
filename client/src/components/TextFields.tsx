@@ -9,7 +9,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { countries } from '../Countries';
+import { countries } from '../utils/Countries';
 import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js'
 
 type TextFieldsProps = {
@@ -28,13 +28,15 @@ type Country = {
 }
 
 export default function TextFields(props: TextFieldsProps) {
+
+    // console.log(props.validate);
+
     const icon: any = {
         "email": <EmailOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
         "name": <AccountCircleOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
         "password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
         "confirm password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />
     }
-
     const helperText: any = {
         "email": "Please enter your email",
         "name": "Please enter your name",
@@ -43,21 +45,23 @@ export default function TextFields(props: TextFieldsProps) {
         "confirm password": "Please enter your password again",
     }
 
-    // console.log(props.validate);
-
     const [value, setValue] = useState("");
     const [code, setCode] = useState("SG");
     const [phone, setPhone] = useState("65");
     const [phoneError, setPhoneError] = useState(false);
 
-    useEffect(() => {
-    }, [phoneError]);
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.value);
-        setValue(event.target.value)
+        // console.log(event.target.value);
+        setValue(event.target.value);
+        handleDataChange();
     };
-    console.log(value);
+    // console.log(value);
 
     const handlePhoneChange = (event: React.ChangeEvent<{}>, country: Country | null) => {
       /// console.log(country);
@@ -68,30 +72,28 @@ export default function TextFields(props: TextFieldsProps) {
     }
     // console.log(code);
 
-    if (props.type === "number") {
-      const isValidPhone = isValidPhoneNumber(value, code as CountryCode);
-      // console.log(isValidPhone);
-      if (isValidPhone) {
-        props.data(props.type, "+" + phone + value);
-        if (phoneError) {
-          setPhoneError(false);
-        }
+    const handleDataChange = () => {
+      if (props.type === "number") {
+        const isValidPhone = isValidPhoneNumber(value, code as CountryCode);
+        // console.log(isValidPhone);
+        if (isValidPhone) {
+          props.data(props.type, "+" + phone + value);
+          if (phoneError) {
+            setPhoneError(false);
+          }
+        } else {
+          if (!phoneError) {
+            setPhoneError(true);
+          }
+        };
       } else {
-        if (!phoneError) {
-          setPhoneError(true);
-        }
-      };
-    } else {
-      props.data(props.type, value);
+        props.data(props.type, value);
+      }
     }
 
-    const [showPassword, setShowPassword] = useState(false);
-    
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-    };
+    useEffect(() => {
+      handleDataChange();
+    }, [phoneError, value]);
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>

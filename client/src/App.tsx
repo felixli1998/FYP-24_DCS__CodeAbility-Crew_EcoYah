@@ -6,6 +6,8 @@ import AppBar from "./components/AppBar";
 import {ThemeProvider} from "@emotion/react";
 import {theme} from "./styles/Palette";
 import {Outlet} from "react-router-dom";
+import axios from "axios";
+import SignUp from "./pages/SignUp";
 
 // type ProjectStatus = {
 //   project: string;
@@ -31,6 +33,8 @@ const App: React.FC = () => {
         <Outlet />
       </ThemeProvider>
       {/* {res?.project} is {res?.status} */}
+      {/* res?.project} is {res?.status} */}
+      {/* <SignUp /> */}
     </>
   );
 };
