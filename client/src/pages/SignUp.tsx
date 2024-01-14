@@ -11,29 +11,34 @@ import Checkboxes from "../components/CheckBox"
 import FormHelperText from '@mui/material/FormHelperText';
 import LongButtons from "../components/LongButton"
 import Link from '@mui/material/Link';
-
+import SuccessCard from "../components/SuccessCard";
 
 export default function SignUp() {
 
     const passwordCriteria: string[] = [ "At least 12 characters", "1 uppercase letter", "1 lowercase letter", "1 number", "1 symbol" ];
     const signUpCriteria: string[] = [ "By signing up, you agree to the Terms of Service and Privacy Policy." ];
 
+    const [step, setStep] = useState(1);
     const [validateForm, setValidateForm] = useState(false);
     const [passwordText, setPasswordText] = useState("");
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [isPasswordSame, setIsPasswordSame] = useState(false);
-    const [signUpError, setSignUpError] = useState(true);
+    const [isChecked, setIsChecked] = useState(false);
 
     const handlePwdCriteria = (status: boolean) => {
         setIsPasswordValid(status);
     }
 
     const handleSignUpCriteria = (status: boolean) => {
-        setSignUpError(status);
+        setIsChecked(status);
     }
 
     const handleClickStatus = (status: boolean) => {
         setValidateForm(status);
+
+        if (isPasswordValid && isPasswordSame && isChecked) {
+          setStep(2);
+        }
     }
 
     const [formData, setFormData] = useState<{ [key: string] : string }>({});
@@ -80,6 +85,7 @@ export default function SignUp() {
             noValidate
             autoComplete="off"
           >
+            { step === 1 ?
             <Stack spacing={3}>
               <Typography variant="h5" align="center" gutterBottom>Let's Get Started!</Typography>
               <hr></hr>
@@ -93,13 +99,15 @@ export default function SignUp() {
               </Box>
               <TextFields label="Confirm Password" type="confirm password" validate={validateForm} data={handleData} error={isPasswordSame}></TextFields>
               <Checkboxes label={signUpCriteria} type="sign up" text="none" isValid={handleSignUpCriteria}></Checkboxes>
-              { validateForm && !signUpError && <FormHelperText error>Please indicate that you have read</FormHelperText> }
+              { validateForm && !isChecked && <FormHelperText error>Please indicate that you have read</FormHelperText> }
               <LongButtons label="Sign Up" clickStatus={handleClickStatus}></LongButtons>
-            </Stack>
+            </Stack> :
+            <SuccessCard type="sign up"/> }
         </Box>
+        { step === 1 ? 
         <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>Already Have An Account?&nbsp;
-          <Link color="primary.light" href="#">Sign In</Link>
-          </Typography>
+          <b><Link color="primary.light" href="#">Sign In</Link></b>
+        </Typography> : <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom><b><Link color="primary.light" href="#">Go to Home</Link></b></Typography> }
       </ThemeProvider>
     );
 }
