@@ -1,17 +1,19 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import {
+  Box,
+  Drawer,
+  List,
+  Divider,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  IconButton,
+  Button,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import {IconButton} from "@mui/material";
+import {Link} from "react-router-dom";
+import slugify from "slugify";
 
 type DrawerListProps = {
   topDrawerList: string[];
@@ -20,19 +22,12 @@ type DrawerListProps = {
 
 function TemporaryDrawer({topDrawerList, bottomDrawerList}: DrawerListProps) {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setIsDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setIsDrawerOpen(false);
-  };
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   const list = () => (
     <Box
       role="presentation"
-      onClick={handleDrawerOpen}
+      onClick={() => setIsDrawerOpen(true)}
       sx={{
         width: 150,
         display: "flex",
@@ -44,27 +39,46 @@ function TemporaryDrawer({topDrawerList, bottomDrawerList}: DrawerListProps) {
       <List>
         {topDrawerList.map((text, index) => (
           <ListItem
-            key={text}
+            key={index}
             disablePadding
           >
             <ListItemButton>
-              <ListItemText primary={text} />
+              <Link
+                to={text === "Home" ? `/` : `/${slugify(text, {lower: true})}`}
+              >
+                <ListItemText primary={text} />
+              </Link>
             </ListItemButton>
           </ListItem>
         ))}
       </List>
-      <Divider />
       <List>
-        {bottomDrawerList.map((text, index) => (
-          <ListItem
-            key={text}
-            disablePadding
+        <Divider />
+        <ListItem disablePadding>
+          <Button
+            sx={{marginX: 2, marginY: 2}}
+            variant="outlined"
+            fullWidth={true}
           >
-            <ListItemButton>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+            {!isLoggedIn ? (
+              <Link
+                to={`/${slugify(bottomDrawerList[0], {
+                  lower: true,
+                })}`}
+              >
+                {bottomDrawerList[0]}
+              </Link>
+            ) : (
+              <Link
+                to={`/${slugify(bottomDrawerList[1], {
+                  lower: true,
+                })}`}
+              >
+                {bottomDrawerList[1]}
+              </Link>
+            )}
+          </Button>
+        </ListItem>
       </List>
     </Box>
   );
@@ -78,11 +92,11 @@ function TemporaryDrawer({topDrawerList, bottomDrawerList}: DrawerListProps) {
         <Drawer
           anchor={"right"}
           open={isDrawerOpen}
-          onClose={handleDrawerClose}
+          onClose={() => setIsDrawerOpen(false)}
         >
           <IconButton
             disableRipple={true}
-            onClick={handleDrawerClose}
+            onClick={() => setIsDrawerOpen(false)}
             sx={{justifyContent: "flex-end"}}
           >
             <CloseIcon></CloseIcon>

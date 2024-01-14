@@ -7,15 +7,18 @@ const ErrorPage: React.FC = () => {
 
   if (isRouteErrorResponse(error)) {
     return (
-      <Container maxWidth="sm" sx={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh", // Ensure full height of the viewport
-      }}>
+      <Container
+        maxWidth="sm"
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+        }}
+      >
         <Paper
-        elevation={0}
-          sx={{textAlign:"center"}}
+          elevation={0}
+          sx={{textAlign: "center"}}
         >
           <Typography
             variant="h3"

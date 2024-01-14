@@ -2,15 +2,11 @@ import { useState, useEffect } from "react";
 import "../styles/App.css";
 import { ThemeProvider } from '@mui/material';
 import { theme } from '../styles/Palette';
+import { Box, Stack, Typography, FormHelperText, Link } from '@mui/material';
 import logo from "../assets/EcoYah.png";
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import TextFields from "../components/TextFields"
-import Typography from '@mui/material/Typography';
 import Checkboxes from "../components/CheckBox"
-import FormHelperText from '@mui/material/FormHelperText';
 import LongButtons from "../components/LongButton"
-import Link from '@mui/material/Link';
 import SuccessCard from "../components/SuccessCard";
 
 export default function SignUp() {

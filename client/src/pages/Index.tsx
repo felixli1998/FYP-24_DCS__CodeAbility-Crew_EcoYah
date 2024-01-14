@@ -1,7 +1,7 @@
 // Homepage
 import React, { useEffect } from 'react';
 
-const HomePage: React.FC = () => {
+const Home: React.FC = () => {
   useEffect(() => {
     // Add any initialization logic or side effects here
     console.log('Homepage mounted');
@@ -20,4 +20,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default Home;

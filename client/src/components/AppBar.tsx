@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import {useTheme} from "@mui/material/styles";
 import TemporaryDrawer from "./Drawer";
+import {Link} from "react-router-dom";
 
 const actionList = ["Sign in", "Sign out"];
 const navigationList = ["Home", "Reward", "Profile", "Contact us"];
@@ -21,23 +22,24 @@ function ResponsiveAppBar() {
           disableGutters
           sx={{justifyContent: "space-between"}}
         >
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: {display: "flex"},
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            LOGO
-          </Typography>
+          <Link to={"/"}>
+            <Typography
+              variant="h6"
+              noWrap
+              sx={{
+                mr: 2,
+                display: {display: "flex"},
+                fontFamily: "monospace",
+                fontWeight: 700,
+                letterSpacing: ".3rem",
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              LOGO
+            </Typography>
+          </Link>
+
           <TemporaryDrawer
             topDrawerList={navigationList}
             bottomDrawerList={actionList}
