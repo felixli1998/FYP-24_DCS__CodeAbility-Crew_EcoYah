@@ -14,8 +14,6 @@ export default function CheckBox(props: CheckBoxProps) {
 
   const symbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
 
-  // console.log(props.text);
-
   const [isTrue, setIsTrue] = useState(false);
 
   useEffect(() => {
