@@ -2,7 +2,7 @@
 import { DataSource } from "typeorm";
 
 // Entities
-import { Item } from "../entities/Item";
+// import { Item } from "../entities/Item";
 import { User } from "../entities/User";
 
 // External imports
@@ -19,7 +19,7 @@ export const AppDataSource = new DataSource({
     username: DATABASE_USERNAME,
     password: DATABASE_PASSWORD,
     database: "ecoyahdb",
-    entities: [ Item, User ],
+    entities: [ User ],
     synchronize: true,
     logging: true,
     subscribers: [],
