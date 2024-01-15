@@ -1,16 +1,15 @@
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import {useTheme} from "@mui/material/styles";
 import TemporaryDrawer from "./Drawer";
 import {Link} from "react-router-dom";
+import {Box} from "@mui/material";
+import logo from "../assets/Kunyah.png";
 
-const actionList = ["Sign in", "Sign out"];
+const actionList = ["Sign up", "Sign out"];
 const navigationList = ["Home", "Reward", "Profile", "Contact us"];
 
 function ResponsiveAppBar() {
-  const theme = useTheme();
 
   return (
     <AppBar
@@ -23,21 +22,18 @@ function ResponsiveAppBar() {
           sx={{justifyContent: "space-between"}}
         >
           <Link to={"/"}>
-            <Typography
-              variant="h6"
-              noWrap
+            <Box
+              component="img"
               sx={{
-                mr: 2,
-                display: {display: "flex"},
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
+                m: "auto",
+                marginTop: 2,
+                width: "4rem",
+                height: "4rem",
+                borderRadius: "100%",
               }}
-            >
-              LOGO
-            </Typography>
+              alt="EcoYah"
+              src={logo}
+            ></Box>
           </Link>
 
           <TemporaryDrawer
