@@ -7,7 +7,7 @@ type CheckBoxProps = {
     label: string[]
     type: string
     text: string 
-    isValid: (arg: boolean) => void
+    isValid?: (arg: boolean) => void
 }
 
 export default function CheckBox(props: CheckBoxProps) {
@@ -23,7 +23,7 @@ export default function CheckBox(props: CheckBoxProps) {
       /\d/.test(props.text) &&
       symbol.test(props.text);
   
-      props.isValid(isPasswordValid);
+      props.isValid?.(isPasswordValid);
 
   }, [props.text]);
 
@@ -41,7 +41,7 @@ export default function CheckBox(props: CheckBoxProps) {
               onChange={() => { 
                 setIsTrue((prevIsTrue) => !prevIsTrue);
                 if (props.type !== 'password') {
-                  props.isValid(!isTrue);
+                  props.isValid?.(!isTrue);
                 };
               }}/>;
         })}

@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import "../styles/App.css";
-import { ThemeProvider } from '@mui/material';
-import { theme } from '../styles/Palette';
 import { Box, Stack, Typography, FormHelperText, Link } from '@mui/material';
 import logo from "../assets/EcoYah.png";
-import TextFields from "../components/TextFields"
-import Checkboxes from "../components/CheckBox"
-import LongButtons from "../components/LongButton"
+import TextFields from "../components/TextFields";
+import Checkboxes from "../components/CheckBox";
+import LongButtons from "../components/LongButton";
 import SuccessCard from "../components/SuccessCard";
+import { Link as ReactRouterLink } from "react-router-dom";
 
 export default function SignUp() {
 
@@ -60,13 +59,13 @@ export default function SignUp() {
     }, [formData, passwordText]);
     
     return (
-      <ThemeProvider theme={theme}>
+      <>
         <Box 
           component="img" 
           display="flex"
           justifyContent="center"
           alignItems="center"
-          sx={{ position: 'relative', m: 'auto', width: '10rem', height: '10rem', borderRadius: '50%', boxShadow: "0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset" }}
+          sx={{ position: 'relative', m: 'auto', marginTop: 3, width: '10rem', height: '10rem', borderRadius: '50%', boxShadow: "0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset" }}
           alt="EcoYah"
           src={logo}>
         </Box>
@@ -102,8 +101,8 @@ export default function SignUp() {
         </Box>
         { step === 1 ? 
         <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>Already Have An Account?&nbsp;
-          <b><Link color="primary.light" href="#">Sign In</Link></b>
-        </Typography> : <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom><b><Link color="primary.light" href="#">Go to Home</Link></b></Typography> }
-      </ThemeProvider>
+          <b><Link color="primary.light" component={ReactRouterLink} to="/sign-in">Sign In</Link></b>
+        </Typography> : <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom><b><Link color="primary.light" component={ReactRouterLink} to="/">Go to Home</Link></b></Typography> }
+      </>
     );
 }

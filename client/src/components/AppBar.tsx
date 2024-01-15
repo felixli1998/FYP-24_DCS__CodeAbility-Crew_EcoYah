@@ -2,14 +2,14 @@ import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Container from "@mui/material/Container";
 import TemporaryDrawer from "./Drawer";
-import {Link} from "react-router-dom";
-import {Box} from "@mui/material";
+import { Link } from "react-router-dom";
+import { Box } from "@mui/material";
 import logo from "../assets/Kunyah.png";
 
-const actionList = ["Sign up", "Sign out"];
-const navigationList = ["Home", "Reward", "Profile", "Contact us"];
-
 function ResponsiveAppBar() {
+
+  const actionList = ["Sign up", "Sign in", "Sign out"];
+  const navigationList = ["Home", "Reward", "Profile", "Contact us"];
 
   return (
     <AppBar
@@ -31,7 +31,7 @@ function ResponsiveAppBar() {
                 height: "4rem",
                 borderRadius: "100%",
               }}
-              alt="EcoYah"
+              alt="Kunyah"
               src={logo}
             ></Box>
           </Link>

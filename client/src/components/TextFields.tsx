@@ -1,9 +1,5 @@
 import { useState, useEffect, ChangeEvent } from 'react';
-import Box from '@mui/material/Box';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
+import { Box, Autocomplete, TextField, InputAdornment, IconButton } from '@mui/material';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
