@@ -53,6 +53,7 @@ export class User{
       default: Status.ACTIVE,
       comment: "Consist of the user status: active, terminated"
     })
+    status: string
 
     @CreateDateColumn()
     createdAt: Date

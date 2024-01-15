@@ -1,19 +1,17 @@
+// External Imports
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 
-// For Typeorm
-import "reflect-metadata"; 
+// Internal Imports
+import generateSeedData from "../seeds/seed";
+
+// For TypeORM
+import "reflect-metadata";
 import { AppDataSource } from "./config/data-source";
 
 // Routes
 import itemRoutes from './routes/itemRoutes';
-
-// For inserting sample data
-import { Item } from "./entities/Item";
-import { ItemRepository } from "./repositories/ItemRepository";
-import { ItemService } from "./services/ItemService";
-
 
 dotenv.config();
 
@@ -22,20 +20,25 @@ app.use(express.json());
 app.use(cors());
 const port = process.env.PORT;
 
+const runSeedFile = ():boolean => {
+  // By default, it will not run the seed file unless you specify it in the .env file
+  const seedFileConfig = process.env.RUN_SEED_FILE || "false";
+
+  // Prematurely return false if it is on production //
+  if (process.env.NODE_ENV === "production") {
+    return false;
+  }
+
+  return seedFileConfig === "true";
+}
+
 
 // Database
 AppDataSource.initialize()
     .then(() => {
-        // TODO: Remove in future, only to add test data
-        const sampleItem = new Item();
-        sampleItem.name = "Test Item";
-        sampleItem.createdAt = new Date();
-        sampleItem.updatedAt = new Date();
-
-        const itemRepository = new ItemRepository();
-        const itemService = new ItemService(itemRepository);
-        itemService.createItem(sampleItem); 
-    })
+      if(runSeedFile()) generateSeedData()
+    }
+    )
     .catch((error) => console.log(error))
 
 // testing
@@ -61,4 +64,3 @@ app.post('/test', (req, res) => {
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
-
