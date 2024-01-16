@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "../styles/App.css";
 import { Box, Stack, Typography, Link } from '@mui/material';
 import logo from "../assets/EcoYah.png";
@@ -10,8 +10,6 @@ import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 export default function SignIn() {
 
     const [validateForm, setValidateForm] = useState(false);
-    const [passwordText, setPasswordText] = useState("");
-    const [isPasswordValid, setIsPasswordValid] = useState(false);
     const rmbSignIn: string[] = [ "Remember me" ];
     const [token, setToken] = useState(sessionStorage.getItem('token') || localStorage.getItem('token'));
       
@@ -29,6 +27,7 @@ export default function SignIn() {
     const handleClickStatus = (status: boolean) => {
         setValidateForm(status);
 
+        // Write Logic to retrieve donor for verifying credentials
         // navigate("/");
     }
 
@@ -38,11 +37,6 @@ export default function SignIn() {
         // console.log(type);
         // console.log(data);
         setFormData((prevData) => ({...prevData, [type] : data}));
-
-        if (type === 'password') {
-          setPasswordText(data);
-          // console.log(passwordText);
-        }
     }
     // console.log(formData);
 
@@ -72,7 +66,8 @@ export default function SignIn() {
                     <Typography variant="h5" align="center" gutterBottom>Welcome Back!</Typography>
                     <hr></hr>
                     <TextFields label="Email" type="email" validate={validateForm} data={handleData}></TextFields>
-                    <TextFields label="Password" type="password" validate={validateForm} data={handleData} error={isPasswordValid}></TextFields>
+                    <TextFields label="Password" type="password" validate={validateForm} data={handleData}></TextFields>
+                    <Typography sx={{textDecoration: 'underline'}} align="right" variant="caption" gutterBottom>Forgot Password?</Typography>
                     <Checkboxes label={rmbSignIn} type="sign up" text="none"></Checkboxes>
                     <LongButtons label="Sign Up" clickStatus={handleClickStatus}></LongButtons>
                 </Stack> 
