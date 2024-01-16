@@ -16,7 +16,7 @@ router.post('/login', async (req, res) => {
     const allowedParams = ['email', 'password'];
     const filteredParams = strongParams(params, allowedParams);
 
-    const { email, password } = filteredParams;
+    const { email = '', password = '' } = filteredParams; // In the event that these params are not properly supplied
 
     if(email.length === 0 || password.length === 0) {
       return generateResponse(res, 200, { action: false, message: 'Email and password fields must not be blank!' });
