@@ -12,6 +12,7 @@ import { AppDataSource } from "./config/data-source";
 
 // Routes
 import itemRoutes from './routes/itemRoutes';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -61,6 +62,7 @@ app.post('/test', (req, res) => {
 });
 
 app.use('/items', itemRoutes);
+app.use('/users', userRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
