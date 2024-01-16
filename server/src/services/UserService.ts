@@ -13,12 +13,6 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-  async getUserByEmail(email: User['email']) {
-    const user = await this.userRepository.getUserByEmail(email);
-
-    return user;
-  }
-
   async login(email: User['email'], password: User['password_digest']) {
     const user = await this.userRepository.getUserByEmail(email);
 
