@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "../styles/App.css";
 import { ThemeProvider } from '@mui/material';
 import { theme } from '../styles/Palette';
-import { Box, Stack, Typography, FormHelperText, Link } from '@mui/material';
+import { Box, Alert, Stack, Typography, FormHelperText, Link } from '@mui/material';
 import logo from "../assets/EcoYah.png";
 import TextFields from "../components/TextFields"
 import Checkboxes from "../components/CheckBox"
@@ -19,10 +19,13 @@ export default function SignUp() {
 
     const [step, setStep] = useState(1);
     const [validateForm, setValidateForm] = useState(false);
+    const [dupEmail, setDupEmail] = useState("");
+    const [emailExists, setEmailExists] = useState(false);
     const [passwordText, setPasswordText] = useState("");
     const [isPasswordValid, setIsPasswordValid] = useState(false);
     const [isPasswordSame, setIsPasswordSame] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
+    const [signUpError, setSignUpError] = useState(false);
 
     const handlePwdCriteria = (status: boolean) => {
         setIsPasswordValid(status);
@@ -51,9 +54,12 @@ export default function SignUp() {
               // Now TypeScript knows this is an Axios error
               const statusCode = error.response?.status;
               if (statusCode === 409) {
-                alert("Email already exists! Please log in with that account.");
+                setEmailExists(true);
+                setDupEmail(formData['email']);
+                // alert("Email already exists! Please log in with that account.");
               } else if (statusCode === 400) {
-                alert("Bad request! Please refresh.");
+                setSignUpError(true);
+                // alert("Bad request! Please refresh.");
               }
               console.log("Error status code:", statusCode);
           } else {
@@ -79,6 +85,12 @@ export default function SignUp() {
         setIsPasswordSame(true);
       } else {
         setIsPasswordSame(false);
+      }
+
+      if (validateForm && (dupEmail === formData['email'])) {
+        setEmailExists(true);
+      } else {
+        setEmailExists(false);
       }
     }, [formData, passwordText]);
     
@@ -106,9 +118,10 @@ export default function SignUp() {
           >
             { step === 1 ?
             <Stack spacing={3}>
+              { signUpError && <Alert severity="error">The request encountered an issue. Please refresh and try again!</Alert> }
               <Typography variant="h5" align="center" gutterBottom>Let's Get Started!</Typography>
               <hr></hr>
-              <TextFields label="Email" type="email" validate={validateForm} data={handleData}></TextFields>
+              <TextFields label="Email" type="email" validate={validateForm} data={handleData} error={emailExists}></TextFields>
               <TextFields label="Name" type="name" validate={validateForm} data={handleData}></TextFields>
               <TextFields label="Contact Number" type="number" validate={validateForm} data={handleData}></TextFields>
               <TextFields label="Password" type="password" validate={validateForm} data={handleData} error={isPasswordValid}></TextFields>

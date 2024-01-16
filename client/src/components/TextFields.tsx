@@ -151,8 +151,8 @@ export default function TextFields(props: TextFieldsProps) {
                      : {} }
                 value={value}
                 onChange={handleInputChange}
-                error={(props.validate && value === "") || (props.validate && props.error === false) || (props.validate && phoneError)}
-                helperText={(props.validate && value === "" ? helperText[props.type] : "") || (props.validate && props.error === false && props.type === "password" && "Please enter a valid password") || (props.validate && props.error === false && props.type === "confirm password" && "Please enter the same password") || (props.validate && phoneError && "Please enter a valid contact number") }
+                error={(props.validate && value === "") || (props.type === "email" && props.error) || (((props.type === "password" || props.type === "confirm password") && props.validate && props.error === false)) || (props.validate && phoneError)}
+                helperText={(props.validate && value === "" ? helperText[props.type] : "") || (props.type === "email" && props.error && "This email already exists. Please login instead.") || (props.validate && props.error === false && props.type === "password" && "Please enter a valid password") || (props.validate && props.error === false && props.type === "confirm password" && "Please enter the same password") || (props.validate && phoneError && "Please enter a valid contact number") }
                 /> 
         </Box> 
     );
