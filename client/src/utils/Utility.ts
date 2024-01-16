@@ -2,9 +2,9 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 
 
 export async function makeHttpRequest<T>(
+    method: string = 'GET',
     url: string,
     params: Record<string, any> = {},
-    method: string = 'GET',
 ): Promise<T> {
     try {
         // Configure axios

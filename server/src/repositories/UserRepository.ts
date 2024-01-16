@@ -10,4 +10,8 @@ export class UserRepository {
     async createUser(user: User) {
         return await AppDataSource.getRepository(User).save(user)
     }
+
+    async getUserByEmail(email: string) {
+        // Pass
+    }
 }

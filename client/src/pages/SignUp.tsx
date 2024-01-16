@@ -9,8 +9,10 @@ import Checkboxes from "../components/CheckBox"
 import LongButtons from "../components/LongButton"
 import SuccessCard from "../components/SuccessCard";
 import { makeHttpRequest } from "../utils/Utility";
+import axios from "axios";
 
 export default function SignUp() {
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
 
     const passwordCriteria: string[] = [ "At least 12 characters", "1 uppercase letter", "1 lowercase letter", "1 number", "1 symbol" ];
     const signUpCriteria: string[] = [ "By signing up, you agree to the Terms of Service and Privacy Policy." ];
@@ -30,32 +32,47 @@ export default function SignUp() {
         setIsChecked(status);
     }
 
-    const handleClickStatus = (status: boolean) => {
+    const handleClickStatus = async (status: boolean) => {
         setValidateForm(status);
 
         if (isPasswordValid && isPasswordSame && isChecked) {
-          // Sign up function here
-          // makeHttpRequest('POST', '/api/user/signup', formData)
-          setStep(2);
+          // Sign up function here 
 
+          try {
+            const res = await makeHttpRequest('POST', BACKEND_URL + '/users', {
+              email: formData['email'],
+              name: formData['name'],
+              contact_num: formData['number'],
+              password_digest: formData['password']
+            })
+            setStep(2);
+          } catch (error) {
+            if (axios.isAxiosError(error)) {
+              // Now TypeScript knows this is an Axios error
+              const statusCode = error.response?.status;
+              if (statusCode === 409) {
+                alert("Email already exists! Please log in with that account.");
+              } else if (statusCode === 400) {
+                alert("Bad request! Please refresh.");
+              }
+              console.log("Error status code:", statusCode);
+          } else {
+              // Handle non-Axios errors
+              console.log("Non-Axios error occurred:", error);
+          }   
+          }
         }
     }
-
-    const 
 
     const [formData, setFormData] = useState<{ [key: string] : string }>({});
 
     const handleData = (type: string, data: string) => {
-        // console.log(type);
-        // console.log(data);
         setFormData((prevData) => ({...prevData, [type] : data}));
 
         if (type === 'password') {
           setPasswordText(data);
-          // console.log(passwordText);
         }
     }
-    // console.log(formData);
 
     useEffect(() => {
       if (formData['confirm password'] && passwordText === formData['confirm password']) {
