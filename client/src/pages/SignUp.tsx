@@ -37,6 +37,8 @@ export default function SignUp() {
         }
     }
 
+    const 
+
     const [formData, setFormData] = useState<{ [key: string] : string }>({});
 
     const handleData = (type: string, data: string) => {
