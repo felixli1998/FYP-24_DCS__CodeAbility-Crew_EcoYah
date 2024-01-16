@@ -8,6 +8,7 @@ import TextFields from "../components/TextFields"
 import Checkboxes from "../components/CheckBox"
 import LongButtons from "../components/LongButton"
 import SuccessCard from "../components/SuccessCard";
+import { makeHttpRequest } from "../utils/Utility";
 
 export default function SignUp() {
 
@@ -33,7 +34,10 @@ export default function SignUp() {
         setValidateForm(status);
 
         if (isPasswordValid && isPasswordSame && isChecked) {
+          // Sign up function here
+          // makeHttpRequest('POST', '/api/user/signup', formData)
           setStep(2);
+
         }
     }
 

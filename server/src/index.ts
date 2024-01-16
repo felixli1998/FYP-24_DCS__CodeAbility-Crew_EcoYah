@@ -18,6 +18,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 const port = process.env.PORT;
 
 const runSeedFile = ():boolean => {
@@ -32,7 +33,6 @@ const runSeedFile = ():boolean => {
   return seedFileConfig === "true";
 }
 
-
 // Database
 AppDataSource.initialize()
     .then(() => {
@@ -45,7 +45,6 @@ AppDataSource.initialize()
 const project = "EcoYah";
 
 // Routes
-app.use('/', itemRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -60,6 +59,8 @@ app.post('/test', (req, res) => {
     res.status(404).send('Error!');
   }
 });
+
+app.use('/items', itemRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
