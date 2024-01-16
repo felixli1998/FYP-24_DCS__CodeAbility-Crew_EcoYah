@@ -12,6 +12,7 @@ import { AppDataSource } from "./config/data-source";
 
 // Routes
 import itemRoutes from './routes/itemRoutes';
+import userRoutes from './routes/userRoutes';
 
 dotenv.config();
 
@@ -46,6 +47,7 @@ const project = "EcoYah";
 
 // Routes
 app.use('/', itemRoutes);
+app.use('/', userRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
