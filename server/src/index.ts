@@ -13,6 +13,7 @@ import { AppDataSource } from "./config/data-source";
 // Routes
 import itemRoutes from './routes/itemRoutes';
 import userRoutes from './routes/userRoutes';
+import baseRoutes from './routes/baseRoutes';
 
 dotenv.config();
 
@@ -38,14 +39,15 @@ const runSeedFile = ():boolean => {
 AppDataSource.initialize()
     .then(() => {
       if(runSeedFile()) generateSeedData()
-    }
-    )
+    })
     .catch((error) => console.log(error))
 
 // testing
 const project = "EcoYah";
 
 // Routes
+// app.use('/', itemRoutes);
+app.use('/', baseRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
