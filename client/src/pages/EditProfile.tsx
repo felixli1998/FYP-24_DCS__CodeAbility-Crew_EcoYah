@@ -8,8 +8,9 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import ProfilePic from "../components/EditProfile/ProfilePic";
 
-export default function SignUp() {
+export default function EditProfile() {
 
   // Function to get current user data
   const [userData, setUserData] = useState({
@@ -104,38 +105,10 @@ export default function SignUp() {
               marginBottom: "3rem",
             }}
           >
-            <Box sx={{ 
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: "2rem",
-               }}>
-              <label htmlFor="profilePicInput">
-                <Box
-                  component="img"
-                  sx={{
-                    backgroundColor: "#E0E0E0",
-                    position: 'relative', width: '7.5rem', height: '7.5rem',
-                    borderRadius: '50%', boxShadow: "0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset",
-                    marginTop: "1rem", 
-                    cursor: 'pointer',
-                  }}
-                  alt="profile picture"
-                  src={userData.profilePic || profilePic}
-                />
-                <input
-                  type="file"
-                  id="profilePicInput"
-                  accept="image/*"
-                  style={{ display: "none" }}
-                  onChange={handlePhotoUpload}
-                />
-              </label>
-              <Typography variant="body1" align="center" sx={{fontWeight:"bold"}} > Change Photo</Typography>
-
-            </Box>
-
+            <ProfilePic 
+              profilePic={userData.profilePic} 
+              handlePhotoUpload={handlePhotoUpload} 
+            />
             {/* Name */}
             <Box
               sx={{

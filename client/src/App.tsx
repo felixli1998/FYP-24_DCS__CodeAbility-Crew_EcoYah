@@ -1,28 +1,20 @@
-import { useEffect, useState } from "react";
 import "./styles/App.css";
-import axios from "axios";
+import AppBar from "./components/AppBar";
+import {ThemeProvider} from "@emotion/react";
+import {theme} from "./styles/Palette";
+import {Outlet} from "react-router-dom";
 import EditProfile from "./pages/EditProfile";
-type ProjectStatus = {
-  project: string;
-  status: string;
-};
 
-export default function App() {
-  const [res, setRes] = useState<ProjectStatus>();
-
-  useEffect(() => {
-    axios
-      .post("http://localhost:8000/test", { msg: "start project" })
-      .then((resp) => {
-        setRes(resp.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
+const App: React.FC = () => {
   return (
     <>
-      {/* res?.project} is {res?.status} */}
-      <EditProfile/>
+      <ThemeProvider theme={theme}>
+        <AppBar />
+        <EditProfile />
+        <Outlet />
+      </ThemeProvider>
     </>
   );
-}
+};
+
+export default App;
