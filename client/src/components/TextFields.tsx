@@ -11,6 +11,7 @@ import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js'
 type TextFieldsProps = {
     label: string
     type: string
+    form?: string
     validate: boolean
     data: (type:string, arg: string) => void
     error?: boolean 
@@ -25,20 +26,18 @@ type Country = {
 
 export default function TextFields(props: TextFieldsProps) {
 
-    // console.log(props.validate);
-
     const icon: any = {
-        "email": <EmailOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
-        "name": <AccountCircleOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
-        "password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
-        "confirm password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />
+      "email": <EmailOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
+      "name": <AccountCircleOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
+      "password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />,
+      "confirm password": <LockOutlinedIcon sx={{ color: 'secondary.main', mr: 1, my: 0.5 }} />
     }
     const helperText: any = {
-        "email": "Please enter your email",
-        "name": "Please enter your name",
-        "number": "Please enter your contact number",
-        "password": "Please enter your password",
-        "confirm password": "Please enter your password again",
+      "email": "Please enter your email",
+      "name": "Please enter your name",
+      "number": "Please enter your contact number",
+      "password": "Please enter your password",
+      "confirm password": "Please enter your password again",
     }
 
     const [value, setValue] = useState("");
@@ -53,25 +52,20 @@ export default function TextFields(props: TextFieldsProps) {
     };
 
     const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-        // console.log(event.target.value);
         setValue(event.target.value);
         handleDataChange();
     };
-    // console.log(value);
 
     const handlePhoneChange = (event: React.ChangeEvent<{}>, country: Country | null) => {
-      /// console.log(country);
       if (country) {
         setCode(country.code);
         setPhone(country.phone);
       }
     }
-    // console.log(code);
 
     const handleDataChange = () => {
       if (props.type === "number") {
         const isValidPhone = isValidPhoneNumber(value, code as CountryCode);
-        // console.log(isValidPhone);
         if (isValidPhone) {
           props.data(props.type, "+" + phone + value);
           if (phoneError) {
@@ -89,8 +83,9 @@ export default function TextFields(props: TextFieldsProps) {
 
     const displayError = () => {
       if ((props.validate && value === "") || 
-        (props.type === "email" && props.error) || 
-        ((props.type === "password" || props.type === "confirm password") && props.validate && props.error === false) || 
+        (props.form === "sign up" && props.type === "email" && props.error) || 
+        (props.form === "sign in" && props.type === "email" && !props.error) ||
+        ((props.type.includes("password")) && props.validate && props.error === false) || 
         (props.validate && phoneError)) {
         return true;
       } else {
@@ -102,19 +97,21 @@ export default function TextFields(props: TextFieldsProps) {
       if (props.validate && value === "") {
         return helperText[props.type];
       } 
-      
-      if (props.type === "email" && props.error) {
-        return "This email already exists. Please login instead.";
+      if (props.form === "sign up" && props.type === "email" && props.error) {
+        return "This email already exists. Please use a different email or proceed to login if this account belongs to you";
       } 
-      
-      if (props.validate && props.error === false && props.type === "password") {
+      if (props.form === "sign in" && props.type === "email" && !props.error) {
+        return "This email does not match any registered accounts";
+      }
+      if (props.form === "sign up" && props.validate && props.type === "password" && !props.error) {
         return "Please enter a valid password";
-      } 
-      
-      if (props.validate && props.error === false && props.type === "confirm password") {
+      }
+      if (props.form === "sign in" && props.validate && props.type === "password" && !props.error) {
+        return "This password is incorrect";
+      }
+      if (props.validate && props.type === "confirm password" && !props.error) {
         return "Please enter the same password";
       } 
-      
       if (props.validate && phoneError) {
         return "Please enter a valid contact number";
       } 
@@ -165,8 +162,8 @@ export default function TextFields(props: TextFieldsProps) {
                     />
                   )}
                 /> }
-            <TextField sx={{ width : props.type === "number" ? 225 : 300 }} label={props.label} variant="standard" type={(props.type === "password" || props.type === "confirm password") && !showPassword ? "password" : "text"}
-                InputProps={props.type === "password" || props.type === "confirm password" ? 
+            <TextField sx={{ width : props.type === "number" ? 225 : 300 }} label={props.label} variant="standard" type={props.type.includes("password") && !showPassword ? "password" : "text"}
+                InputProps={props.type.includes("password") ? 
                         { endAdornment: (<InputAdornment position="end">
                         <IconButton
                             aria-label="toggle password visibility"

@@ -1,8 +1,6 @@
 import * as React from 'react';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
+import { Stack, Box, Typography } from '@mui/material';
 import AccountCreation from '../assets/AccountCreation.svg';
-import Typography from '@mui/material/Typography';
 
 type SuccessCardProps = {
     type: string

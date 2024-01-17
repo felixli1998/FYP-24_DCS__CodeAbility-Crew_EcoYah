@@ -24,9 +24,9 @@ router.post('/', async (req, res) => {
   } catch (error) {
     if (error instanceof QueryFailedError && error.driverError.code === '23505') {
       // Handle duplicate email error
-      res.status(409).json({ message: "A user with this email already exists. Did you forget your password?" });
+      res.status(409).json({ message: "A user with this email already exists." });
     } else {
-      res.status(500).json({ message: "Internal Server Error. Please refresh and try again" });
+      res.status(500).json({ message: "Internal Server Error. Please refresh and try again." });
     }
   }
 });

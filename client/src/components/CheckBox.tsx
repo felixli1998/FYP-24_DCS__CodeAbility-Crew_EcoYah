@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import { FormGroup, FormControlLabel } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 
 type CheckBoxProps = {
@@ -40,7 +39,7 @@ export default function CheckBox(props: CheckBoxProps) {
               (props.type !== "password" && isTrue) } />} label={label} key={i} 
               onChange={() => { 
                 setIsTrue((prevIsTrue) => !prevIsTrue);
-                if (props.type !== 'password') {
+                if (props.type !== "password") {
                   props.isValid?.(!isTrue);
                 };
               }}/>;
