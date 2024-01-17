@@ -125,7 +125,7 @@ export default function SignIn() {
                     <TextFields label="Password" type="password" form="sign in" validate={validateForm} data={handleData} error={isPasswordCorrect} current={currPassword}></TextFields>
                     <Typography sx={{textDecoration: 'underline'}} align="right" variant="caption" gutterBottom>Forgot Password?</Typography>
                     <Checkboxes label={rmbSignIn} type="remember me" text="none" isChecked={handleRmbMe}></Checkboxes>
-                    <LongButtons label="Sign Up" clickStatus={handleClickStatus}></LongButtons>
+                    <LongButtons label="Sign In" clickStatus={handleClickStatus}></LongButtons>
                 </Stack> 
             </Box>
             <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>Don't Have An Account?&nbsp;
