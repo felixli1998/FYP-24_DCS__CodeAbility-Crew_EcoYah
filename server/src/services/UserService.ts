@@ -1,3 +1,6 @@
+// External imports
+import { compare } from 'bcrypt';
+
 // services/ItemService.ts
 import { User } from '../entities/User';
 import { UserRepository } from '../repositories/UserRepository';
@@ -10,8 +13,23 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
+  async login(email: User['email'], password: User['password_digest']) {
+    const user = await this.userRepository.getUserByEmail(email);
+
+    // Defensive line; But unlikely since we check for email existence in the controller before calling this service
+    if(!user) return false;
+
+    const authenticated = await compare(password, user.password_digest);
+
+    return authenticated;
+  }
+
   async getAllUsers() {
     return this.userRepository.getAllUsers();
+  }
+
+  async getUserByEmail(email: string) {
+    return this.userRepository.getUserByEmail(email);
   }
 
   async createUser(user: User) {
