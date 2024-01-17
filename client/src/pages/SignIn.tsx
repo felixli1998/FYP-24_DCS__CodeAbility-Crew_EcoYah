@@ -7,7 +7,6 @@ import Checkboxes from "../components/CheckBox";
 import LongButtons from "../components/LongButton";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { makeHttpRequest } from "../utils/Utility";
-import axios from "axios";
 
 export default function SignIn() {
 
