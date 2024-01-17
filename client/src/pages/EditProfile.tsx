@@ -8,7 +8,10 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+
+// Components
 import ProfilePic from "../components/EditProfile/ProfilePic";
+import ProfileTextField from "../components/EditProfile/ProfileTextField";
 
 export default function EditProfile() {
 
@@ -110,57 +113,12 @@ export default function EditProfile() {
               handlePhotoUpload={handlePhotoUpload} 
             />
             {/* Name */}
-            <Box
-              sx={{
-                marginY: ".5rem",
-                width: "100%",
-              }}
-            >
-              <Typography variant="body1" align="left" sx={{fontWeight:"bold"}}> Name </Typography>
-              <TextField
-                id="outlined-basic"
-                InputLabelProps={{ shrink: false }}
-                variant="outlined"
-                fullWidth
-                defaultValue={userData.name}
-                onChange={handleNameChange}
-              />
-            </Box>
-
+            <ProfileTextField label="Name" value={userData.name} onChange={handleNameChange} />
             {/* Contact */}
-            <Box
-              sx={{
-                marginY: ".5rem",
-                width: "100%",
-              }}
-            >
-              <Typography variant="body1" align="left" sx={{fontWeight:"bold"}}> Contact </Typography>
-              <TextField
-                id="outlined-basic"
-                InputLabelProps={{ shrink: false }}
-                variant="outlined"
-                fullWidth
-                defaultValue={userData.contact}
-                onChange={handleContactChange}
-              />
-            </Box>
-
+            <ProfileTextField label="Contact" value={userData.contact} onChange={handleContactChange} />
             {/* Email */}
-            <Box
-              sx={{
-                marginY: ".5rem",
-                width: "100%",
-              }}
-            >
-              <Typography variant="body1" align="left" sx={{fontWeight:"bold"}}> Email </Typography>
-              <TextField
-                id="outlined-basic"
-                InputLabelProps={{ shrink: false }}
-                variant="outlined"
-                fullWidth
-                disabled
-                defaultValue={userData.email} />
-            </Box>
+            <ProfileTextField label="Email" value={userData.email} disabled={true} />
+      
           </Box>
 
           <Button
