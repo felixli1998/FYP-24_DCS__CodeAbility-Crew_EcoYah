@@ -16,13 +16,16 @@ import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { theme } from '../styles/Palette';
 import logo from "../assets/EcoYah.png";
+import { useNavigate } from "react-router-dom";
 
-import TextFields from "../components/TextFields";
-
-export default function EditProfile() {
+export default function Profile() {
 
     const [name, setName] = useState("");
     const [points, setPoints] = useState("");
+
+    const navigate = useNavigate();
+
+    const editProfileClick = () => { navigate("/test-edit-profile"); }
 
     return (
         <ThemeProvider theme={theme}>
@@ -72,7 +75,7 @@ export default function EditProfile() {
                                 <AccountCircleRoundedIcon sx={{ color: 'secondary.main'}} fontSize="large"/>
                             </Grid>
                             
-                            <Grid item xs={9}>
+                            <Grid item xs={9} onClick={editProfileClick}>
                                 <Stack>
                                     <Typography sx={{fontWeight: "bold"}}>Your Profile</Typography>
                                     <Typography>Edit and view profile information</Typography>

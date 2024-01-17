@@ -3,6 +3,7 @@ import App from "../App";
 import ErrorPage from "../pages/ErrorPage";
 import SignUp from "../pages/SignUp";
 import Profile from "../pages/Profile";
+import TestEditProfile from "../pages/TestEditProfile";
 // import ContactUs from "../pages/ContactUs";
 import Home from "../pages/Index";
 
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <Profile />,
+      },
+      {
+        path: "/test-edit-profile",
+        element: <TestEditProfile />,
       },
       // {
       //   path: "/contactUs",
