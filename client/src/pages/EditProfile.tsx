@@ -13,7 +13,6 @@ import ProfileTextField from "../components/EditProfile/ProfileTextField";
 import TerminateModal from "../components/EditProfile/TerminateModal";
 
 export default function EditProfile() {
-
   // Function to get current user data
   const [userData, setUserData] = useState({
     name: "John Timonthy",
@@ -39,7 +38,6 @@ export default function EditProfile() {
   // Function to handle photo upload
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-
     if (file) {
       setProfilePicInput(file);
       const reader = new FileReader();
@@ -66,7 +64,6 @@ export default function EditProfile() {
       console.log("Contact must be a number");
     }
     return true;
-
   };
 
   // Function to handle save changes
@@ -82,8 +79,6 @@ export default function EditProfile() {
     console.log("Validation failed, will not send to server!")
     return false;
   };
-
-  
 
   // Function to handle terminate account
   const handleTerminateAccount = () => {
