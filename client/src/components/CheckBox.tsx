@@ -6,7 +6,7 @@ type CheckBoxProps = {
     label: string[]
     type: string
     text: string 
-    isValid?: (arg: boolean) => void
+    isChecked?: (arg: boolean) => void
 }
 
 export default function CheckBox(props: CheckBoxProps) {
@@ -22,7 +22,7 @@ export default function CheckBox(props: CheckBoxProps) {
       /\d/.test(props.text) &&
       symbol.test(props.text);
   
-      props.isValid?.(isPasswordValid);
+      props.isChecked?.(isPasswordValid);
 
   }, [props.text]);
 
@@ -39,9 +39,7 @@ export default function CheckBox(props: CheckBoxProps) {
               (props.type !== "password" && isTrue) } />} label={label} key={i} 
               onChange={() => { 
                 setIsTrue((prevIsTrue) => !prevIsTrue);
-                if (props.type !== "password") {
-                  props.isValid?.(!isTrue);
-                };
+                if (props.type !== "password") props.isChecked?.(!isTrue);
               }}/>;
         })}
     </FormGroup>

@@ -15,6 +15,7 @@ type TextFieldsProps = {
     validate: boolean
     data: (type:string, arg: string) => void
     error?: boolean 
+    current?: string
 }
 
 type Country = {
@@ -40,7 +41,7 @@ export default function TextFields(props: TextFieldsProps) {
       "confirm password": "Please enter your password again",
     }
 
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(props.current || "");
     const [code, setCode] = useState("SG");
     const [phone, setPhone] = useState("65");
     const [phoneError, setPhoneError] = useState(false);

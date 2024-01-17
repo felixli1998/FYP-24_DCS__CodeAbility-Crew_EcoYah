@@ -124,10 +124,10 @@ export default function SignUp() {
               <TextFields label="Password" type="password" form="sign up" validate={validateForm} data={handleData} error={isPasswordValid}></TextFields>
               <Box sx={{ backgroundColor: "rgba(7, 83, 142, 0.25)", padding: 2, borderRadius: 2, width: 330 }}>
                 <Typography variant="body2" gutterBottom><b>Your password must contain:</b></Typography>
-                <Checkboxes type="password" label={passwordCriteria} text={passwordText} isValid={handlePwdCriteria}></Checkboxes>
+                <Checkboxes type="password" label={passwordCriteria} text={passwordText} isChecked={handlePwdCriteria}></Checkboxes>
               </Box>
               <TextFields label="Confirm Password" type="confirm password" validate={validateForm} data={handleData} error={isPasswordSame}></TextFields>
-              <Checkboxes label={signUpCriteria} type="sign up" text="none" isValid={handleSignUpCriteria}></Checkboxes>
+              <Checkboxes label={signUpCriteria} type="sign up" text="none" isChecked={handleSignUpCriteria}></Checkboxes>
               { validateForm && !isChecked && <FormHelperText error>Please indicate that you have read</FormHelperText> }
               <LongButtons label="Sign Up" clickStatus={handleClickStatus}></LongButtons>
             </Stack> :

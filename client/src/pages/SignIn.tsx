@@ -13,24 +13,31 @@ export default function SignIn() {
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+    const rmbSignIn: string[] = [ "Remember me" ];
     const [validateForm, setValidateForm] = useState(false);
-    const [currEmail, setCurrEmail] = useState("");
-    const [currPassword, setCurrPassword] = useState("");
+    const [currEmail, setCurrEmail] = useState(localStorage.getItem("ecoyah-email") || "");
+    const [currPassword, setCurrPassword] = useState(localStorage.getItem("ecoyah-password") || "");
     const [emailExists, setEmailExists] = useState(true);
     const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
-    const rmbSignIn: string[] = [ "Remember me" ];
-    const [token, setToken] = useState(sessionStorage.getItem('token') || localStorage.getItem('token'));
+    const [rmbMe, setRmbMe] = useState(false);
     const [signInError, setSignInError] = useState(false);
     const [formData, setFormData] = useState<{ [key: string] : string }>({});
       
-    const login = (token: string, rememberMe = false) => {
-        if (rememberMe) {
-          localStorage.setItem('token', token);
+    const handleRmbMe = (status: boolean) => {
+        setRmbMe(status);
+        handleLocalStorage();
+    }
+    // console.log(rmbMe);
+
+    const handleLocalStorage = () => {
+        if (rmbMe) {
+            localStorage.setItem("ecoyah-email", formData['email']); 
+            localStorage.setItem("ecoyah-password", formData['password']);
         } else {
-          sessionStorage.setItem('token', token);
+            localStorage.setItem("ecoyah-email", ""); 
+            localStorage.setItem("ecoyah-password", "");
         }
-        setToken(token);
-    };
+    }
 
     const navigate = useNavigate();
 
@@ -84,7 +91,9 @@ export default function SignIn() {
         } else {
             setIsPasswordCorrect(true);
         }
-      }, [formData]);
+
+        handleLocalStorage();
+      }, [formData, rmbMe]);
 
     return (
         <>
@@ -112,10 +121,10 @@ export default function SignIn() {
                     { signInError && <Alert severity="error">The request encountered an issue. Please refresh and try again!</Alert> }
                     <Typography variant="h5" align="center" gutterBottom>Welcome Back!</Typography>
                     <hr></hr>
-                    <TextFields label="Email" type="email" form="sign in" validate={validateForm} data={handleData} error={emailExists}></TextFields>
-                    <TextFields label="Password" type="password" form="sign in" validate={validateForm} data={handleData} error={isPasswordCorrect}></TextFields>
+                    <TextFields label="Email" type="email" form="sign in" validate={validateForm} data={handleData} error={emailExists} current={currEmail}></TextFields>
+                    <TextFields label="Password" type="password" form="sign in" validate={validateForm} data={handleData} error={isPasswordCorrect} current={currPassword}></TextFields>
                     <Typography sx={{textDecoration: 'underline'}} align="right" variant="caption" gutterBottom>Forgot Password?</Typography>
-                    <Checkboxes label={rmbSignIn} type="sign up" text="none"></Checkboxes>
+                    <Checkboxes label={rmbSignIn} type="remember me" text="none" isChecked={handleRmbMe}></Checkboxes>
                     <LongButtons label="Sign Up" clickStatus={handleClickStatus}></LongButtons>
                 </Stack> 
             </Box>
