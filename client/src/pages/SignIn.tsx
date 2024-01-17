@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../styles/App.css";
 import { Box, Alert, Stack, Typography, Link } from '@mui/material';
 import logo from "../assets/EcoYah.png";
@@ -14,6 +14,8 @@ export default function SignIn() {
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
     const [validateForm, setValidateForm] = useState(false);
+    const [currEmail, setCurrEmail] = useState("");
+    const [currPassword, setCurrPassword] = useState("");
     const [emailExists, setEmailExists] = useState(true);
     const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
     const rmbSignIn: string[] = [ "Remember me" ];
@@ -39,38 +41,50 @@ export default function SignIn() {
             
             // POST user to verify credentials  
             try {
-                const res = await makeHttpRequest('POST', BACKEND_URL + '/login', {
-                email: formData['email'],
-                password: formData['password']
+                const res: any = await makeHttpRequest('POST', BACKEND_URL + '/login', {
+                    email: formData['email'],
+                    password: formData['password']
                 })
+                // console.log(res);
+
+                if (res.data.action) {
+                    // Login successful
+                    navigate("/");
+                } else {
+                    // Login failed, handle specific cases
+                    if (res.data.message === "wrong_email") {
+                        setCurrEmail(formData['email']);
+                        setEmailExists(false);
+                    } else if (res.data.message === "wrong_credentials") {
+                        setCurrPassword(formData['password']);
+                        setIsPasswordCorrect(false);
+                    }
+                }
             } catch (error) {
-                // if (axios.isAxiosError(error)) {
-                // // Handle Axios errors
-                // const statusCode = error.response?.status;
-                // console.log(statusCode);
-                // const statusText = error.response?.statusText;
-                // if (statusCode === 200 && statusText === "Login successful") {
-                //     navigate("/");
-                // } else if (statusCode === 200 && statusText === "Email does not exist!") {
-                //     setEmailExists(false);
-                // } else if (statusCode === 200 && statusText === "Email or password is incorrect!") {
-                //     setIsPasswordCorrect(false);
-                // } else if (statusCode === 500) {
-                //     setSignInError(true);
-                // }
-                    console.log("Error status code:", error);
-                // } else {
-                //     // Handle non-Axios errors
-                //     console.log("Non-Axios error occurred:", error);
-                // }   
+                // Handle errors
+                setSignInError(true);
+                console.error("Error making request:", error);
             }
         }
-
     }
 
     const handleData = (type: string, data: string) => {
         setFormData((prevData) => ({...prevData, [type] : data}));
     }
+
+    useEffect(() => {
+        if (validateForm && (currEmail === formData['email'])) {
+          setEmailExists(false);
+        } else {
+          setEmailExists(true);
+        }
+
+        if (validateForm && (currPassword === formData['password'])) {
+            setIsPasswordCorrect(false);
+        } else {
+            setIsPasswordCorrect(true);
+        }
+      }, [formData]);
 
     return (
         <>
