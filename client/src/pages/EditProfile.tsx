@@ -5,13 +5,12 @@ import { theme } from '../styles/Palette';
 import profilePic from "../assets/ProfilePicture.png";
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
 // Components
 import ProfilePic from "../components/EditProfile/ProfilePic";
 import ProfileTextField from "../components/EditProfile/ProfileTextField";
+import TerminateModal from "../components/EditProfile/TerminateModal";
 
 export default function EditProfile() {
 
@@ -84,6 +83,15 @@ export default function EditProfile() {
     return false;
   };
 
+  
+
+  // Function to handle terminate account
+  const handleTerminateAccount = () => {
+    console.log("Backend request to server to terminate account!");
+    console.log("Email:", userData.email);
+    return true;
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -124,10 +132,16 @@ export default function EditProfile() {
           <Button
             variant="contained"
             color="primary"
+            sx={{
+              fontWeight: 'bold', // Make the font bold
+              height: '3rem', // Adjust the height to make it thicker
+            }}
             onClick={() => handleSaveChanges()}
           >
             Save changes
           </Button>
+
+          < TerminateModal handleConfirmTerminate={handleTerminateAccount}/>
         </Stack>
       </Box >
     </ThemeProvider >
