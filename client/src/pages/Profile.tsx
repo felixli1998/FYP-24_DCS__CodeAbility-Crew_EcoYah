@@ -22,16 +22,7 @@ import TextFields from "../components/TextFields";
 export default function EditProfile() {
 
     const [name, setName] = useState("");
-    const [contact, setContact] = useState("");
-    const [email, setEmail] = useState("");
-    const [formData, setFormData] = useState<{ [key: string] : string }>({});
-
-    const handleData = (type: string, data: string) => {
-        // console.log(type);
-        // console.log(data);
-        setFormData((prevData) => ({...prevData, [type] : data}));
-    }
-
+    const [points, setPoints] = useState("");
 
     return (
         <ThemeProvider theme={theme}>
