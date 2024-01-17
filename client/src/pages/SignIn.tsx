@@ -33,8 +33,8 @@ export default function SignIn() {
             localStorage.setItem("ecoyah-email", formData['email']); 
             localStorage.setItem("ecoyah-password", formData['password']);
         } else {
-            localStorage.setItem("ecoyah-email", ""); 
-            localStorage.setItem("ecoyah-password", "");
+            localStorage.removeItem("ecoyah-email"); 
+            localStorage.removeItem("ecoyah-password");
         }
     }
 

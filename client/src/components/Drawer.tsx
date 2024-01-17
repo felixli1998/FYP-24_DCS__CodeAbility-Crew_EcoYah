@@ -56,7 +56,7 @@ function TemporaryDrawer({topDrawerList, bottomDrawerList}: DrawerListProps) {
         <Divider />
         { bottomDrawerList.slice(0, 2).map(function(label, i) {
           return (
-          <ListItem disablePadding>
+          <ListItem disablePadding key={i}>
             <Button
               sx={{marginX: 2, marginY: 2}}
               variant="outlined"

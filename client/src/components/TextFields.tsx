@@ -6,7 +6,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { countries } from '../utils/Countries';
-import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js'
+import { CountryCode, isValidPhoneNumber } from 'libphonenumber-js';
 
 type TextFieldsProps = {
     label: string
