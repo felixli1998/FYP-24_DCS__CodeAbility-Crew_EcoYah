@@ -22,7 +22,7 @@ router.post('/login', async (req, res) => {
     if(!isValidEmail) return generateResponse(res, 200, { action: false, message: 'Email does not exist!' });
 
     const authenticated = await userService.login(email, password);
-    if(!authenticated) return generateResponse(res, 200, { action: true, message: 'Email or password is incorrect!' });
+    if(!authenticated) return generateResponse(res, 200, { action: false, message: 'Email or password is incorrect!' });
 
     return generateResponse(res, 200, { action: true, message: 'Login successful' });
   } catch (error) {
