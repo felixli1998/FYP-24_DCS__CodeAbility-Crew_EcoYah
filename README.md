@@ -2,6 +2,8 @@
 Final Year Project 2024
 
 ### Client - Frontend
+Ensure there is a `.env` file under the `client` folder and it contains `REACT_APP_BACKEND_URL=http://localhost:8000`.
+
 ```
 cd client
 # if first time
