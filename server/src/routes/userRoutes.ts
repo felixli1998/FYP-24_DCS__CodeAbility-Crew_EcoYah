@@ -31,4 +31,13 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.post('/get_user_by_email', (req, res) => {
+  const user = userService.getUserByEmail(req.body.email)
+  if (!user){
+    res.send({message: "Email does not exist!"})
+  } else {
+    res.send(user)
+  }
+})
+
 export default router;
