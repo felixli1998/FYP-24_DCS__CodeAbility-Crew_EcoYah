@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../styles/App.css";
-import { Box, Alert, Stack, Typography, Link } from '@mui/material';
+import { Box, Alert, Stack, Button, Typography, Link } from '@mui/material';
 import logo from "../assets/EcoYah.png";
 import TextFields from "../components/TextFields";
 import Checkboxes from "../components/CheckBox";
@@ -12,7 +12,7 @@ export default function SignIn() {
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-    const rmbSignIn: string[] = [ "Remember me" ];
+    const rmbSignIn: string[] = [ "Remember Me" ];
     const [validateForm, setValidateForm] = useState(false);
     const [currEmail, setCurrEmail] = useState(localStorage.getItem("ecoyah-email") || "");
     const [currPassword, setCurrPassword] = useState(localStorage.getItem("ecoyah-password") || "");
@@ -122,7 +122,9 @@ export default function SignIn() {
                     <hr></hr>
                     <TextFields label="Email" type="email" form="sign in" validate={validateForm} data={handleData} error={emailExists} current={currEmail}></TextFields>
                     <TextFields label="Password" type="password" form="sign in" validate={validateForm} data={handleData} error={isPasswordCorrect} current={currPassword}></TextFields>
-                    <Typography sx={{textDecoration: 'underline'}} align="right" variant="caption" gutterBottom>Forgot Password?</Typography>
+                    <Button disableRipple color="secondary" variant="text" sx={{ justifyContent: "flex-end", '&:hover': { background: "none" } }}>
+                        <Typography sx={{textDecoration: 'underline'}} variant="caption" gutterBottom>Forgot Password?</Typography>
+                    </Button>
                     <Checkboxes label={rmbSignIn} type="remember me" text="none" isChecked={handleRmbMe}></Checkboxes>
                     <LongButtons label="Sign In" clickStatus={handleClickStatus}></LongButtons>
                 </Stack> 
