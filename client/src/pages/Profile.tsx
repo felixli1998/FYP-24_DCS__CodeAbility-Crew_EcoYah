@@ -25,7 +25,7 @@ export default function Profile() {
 
     const navigate = useNavigate();
 
-    const editProfileClick = () => { navigate("/test-edit-profile"); }
+    const editProfileClick = () => { navigate("/edit-profile"); }
 
     return (
         <ThemeProvider theme={theme}>

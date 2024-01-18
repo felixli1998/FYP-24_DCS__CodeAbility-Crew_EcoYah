@@ -3,7 +3,7 @@ import App from "../App";
 import ErrorPage from "../pages/ErrorPage";
 import SignUp from "../pages/SignUp";
 import Profile from "../pages/Profile";
-import TestEditProfile from "../pages/TestEditProfile";
+import EditProfile from "../pages/EditProfile";
 // import ContactUs from "../pages/ContactUs";
 import Home from "../pages/Index";
 
@@ -26,8 +26,8 @@ const router = createBrowserRouter([
         element: <Profile />,
       },
       {
-        path: "/test-edit-profile",
-        element: <TestEditProfile />,
+        path: "/edit-profile",
+        element: <EditProfile />,
       },
       // {
       //   path: "/contactUs",
