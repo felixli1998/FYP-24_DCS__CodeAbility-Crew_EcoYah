@@ -50,7 +50,6 @@ export default function SignUp() {
               password_digest: formData['password']
             })
             localStorage.setItem("ecoyah-email", formData['email']); 
-            localStorage.setItem("ecoyah-password", formData['password']);
             setStep(2);
           } catch (error) {
               if (axios.isAxiosError(error)) {

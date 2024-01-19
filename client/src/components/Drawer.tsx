@@ -29,18 +29,16 @@ function TemporaryDrawer({topDrawerList, bottomDrawerList}: DrawerListProps) {
   const handleLogOut = () => {
     setIsLoggedIn(false); 
     localStorage.removeItem("ecoyah-email"); 
-    localStorage.removeItem("ecoyah-password");
     navigate("/"); 
   }
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("ecoyah-email") || "";
-    const storedPassword = localStorage.getItem("ecoyah-password") || "";
 
-    if (storedEmail !== "" && storedPassword !== "") {
+    if (storedEmail !== "") {
       setIsLoggedIn(true);
     } 
-  }, [localStorage.getItem("ecoyah-email"), localStorage.getItem("ecoyah-password")]);
+  }, [localStorage.getItem("ecoyah-email")]);
 
   console.log(isLoggedIn);
 
