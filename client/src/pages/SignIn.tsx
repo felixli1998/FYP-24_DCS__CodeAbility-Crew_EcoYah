@@ -55,6 +55,7 @@ export default function SignIn() {
 
                 if (res.data.action) {
                     // Login successful
+                    localStorage.setItem("ecoyah-email", formData['email']); 
                     navigate("/");
                 } else {
                     // Login failed, handle specific cases

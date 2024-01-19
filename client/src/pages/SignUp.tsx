@@ -49,6 +49,7 @@ export default function SignUp() {
               contact_num: formData['number'],
               password_digest: formData['password']
             })
+            localStorage.setItem("ecoyah-email", formData['email']); 
             setStep(2);
           } catch (error) {
               if (axios.isAxiosError(error)) {
