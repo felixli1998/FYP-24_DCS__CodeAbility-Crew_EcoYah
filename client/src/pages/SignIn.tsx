@@ -5,6 +5,7 @@ import logo from "../assets/EcoYah.png";
 import TextFields from "../components/TextFields";
 import Checkboxes from "../components/CheckBox";
 import LongButtons from "../components/LongButton";
+import EmailCard from "../components/EmailCard";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { makeHttpRequest } from "../utils/Utility";
 
@@ -18,9 +19,14 @@ export default function SignIn() {
     const [currPassword, setCurrPassword] = useState(localStorage.getItem("ecoyah-password") || "");
     const [emailExists, setEmailExists] = useState(true);
     const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);
+    const [forgotPassword, setForgotPassword] = useState(false);
     const [rmbMe, setRmbMe] = useState(false);
     const [signInError, setSignInError] = useState(false);
     const [formData, setFormData] = useState<{ [key: string] : string }>({});
+    
+    const handleForgotPassword = () => {
+        setForgotPassword(true);
+    }
       
     const handleRmbMe = (status: boolean) => {
         setRmbMe(status);
@@ -117,22 +123,24 @@ export default function SignIn() {
                 noValidate
                 autoComplete="off"
             >
+                { !forgotPassword ? 
                 <Stack spacing={3}>
                     { signInError && <Alert severity="error">The request encountered an issue. Please refresh and try again!</Alert> }
                     <Typography variant="h5" align="center" gutterBottom>Welcome Back!</Typography>
                     <hr></hr>
                     <TextFields label="Email" type="email" form="sign in" validate={validateForm} data={handleData} error={emailExists} current={currEmail}></TextFields>
                     <TextFields label="Password" type="password" form="sign in" validate={validateForm} data={handleData} error={isPasswordCorrect} current={currPassword}></TextFields>
-                    <Button disableRipple color="secondary" variant="text" sx={{ justifyContent: "flex-end", '&:hover': { background: "none" } }}>
+                    <Button disableRipple color="secondary" variant="text" sx={{ justifyContent: "flex-end", '&:hover': { background: "none" } }} onClick={handleForgotPassword}>
                         <Typography sx={{textDecoration: 'underline'}} variant="caption" gutterBottom>Forgot Password?</Typography>
                     </Button>
                     <Checkboxes label={rmbSignIn} type="remember me" text="none" isChecked={handleRmbMe}></Checkboxes>
                     <LongButtons label="Sign In" clickStatus={handleClickStatus}></LongButtons>
-                </Stack> 
+                </Stack> : <EmailCard/> }
             </Box>
+            { !forgotPassword &&
             <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>Don't Have An Account?&nbsp;
             <b><Link color="primary.light" component={ReactRouterLink} to="/sign-up">Sign Up</Link></b>
-            </Typography>
+            </Typography> }
         </>
     );
 }
