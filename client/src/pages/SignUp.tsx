@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import "../styles/App.css";
-import { ThemeProvider } from '@mui/material';
-import { theme } from '../styles/Palette';
 import { Box, Alert, Stack, Typography, FormHelperText, Link } from '@mui/material';
 import logo from "../assets/EcoYah.png";
-import TextFields from "../components/TextFields"
-import Checkboxes from "../components/CheckBox"
-import LongButtons from "../components/LongButton"
+import TextFields from "../components/TextFields";
+import Checkboxes from "../components/CheckBox";
+import LongButtons from "../components/LongButton";
 import SuccessCard from "../components/SuccessCard";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { makeHttpRequest } from "../utils/Utility";
 import axios from "axios";
 
 export default function SignUp() {
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
+
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
     const passwordCriteria: string[] = [ "At least 12 characters", "1 uppercase letter", "1 lowercase letter", "1 number", "1 symbol" ];
     const signUpCriteria: string[] = [ "By signing up, you agree to the Terms of Service and Privacy Policy." ];
@@ -26,6 +26,7 @@ export default function SignUp() {
     const [isPasswordSame, setIsPasswordSame] = useState(false);
     const [isChecked, setIsChecked] = useState(false);
     const [signUpError, setSignUpError] = useState(false);
+    const [formData, setFormData] = useState<{ [key: string] : string }>({});
 
     const handlePwdCriteria = (status: boolean) => {
         setIsPasswordValid(status);
@@ -39,8 +40,8 @@ export default function SignUp() {
         setValidateForm(status);
 
         if (isPasswordValid && isPasswordSame && isChecked) {
-          // Sign up function here 
-
+          
+          // POST user to database 
           try {
             const res = await makeHttpRequest('POST', BACKEND_URL + '/users', {
               email: formData['email'],
@@ -48,29 +49,26 @@ export default function SignUp() {
               contact_num: formData['number'],
               password_digest: formData['password']
             })
+            localStorage.setItem("ecoyah-email", formData['email']); 
             setStep(2);
           } catch (error) {
-            if (axios.isAxiosError(error)) {
-              // Now TypeScript knows this is an Axios error
-              const statusCode = error.response?.status;
-              if (statusCode === 409) {
-                setEmailExists(true);
-                setDupEmail(formData['email']);
-                // alert("Email already exists! Please log in with that account.");
-              } else if (statusCode === 400) {
-                setSignUpError(true);
-                // alert("Bad request! Please refresh.");
-              }
-              console.log("Error status code:", statusCode);
-          } else {
-              // Handle non-Axios errors
-              console.log("Non-Axios error occurred:", error);
-          }   
+              if (axios.isAxiosError(error)) {
+                // Handle Axios errors
+                const statusCode = error.response?.status;
+                if (statusCode === 409) {
+                  setEmailExists(true);
+                  setDupEmail(formData['email']);
+                } else if (statusCode === 400) {
+                  setSignUpError(true);
+                }
+                console.log("Error status code:", statusCode);
+            } else {
+                // Handle non-Axios errors
+                console.log("Non-Axios error occurred:", error);
+            }   
           }
         }
-    }
-
-    const [formData, setFormData] = useState<{ [key: string] : string }>({});
+      }
 
     const handleData = (type: string, data: string) => {
         setFormData((prevData) => ({...prevData, [type] : data}));
@@ -95,13 +93,13 @@ export default function SignUp() {
     }, [formData, passwordText]);
     
     return (
-      <ThemeProvider theme={theme}>
+      <>
         <Box 
           component="img" 
           display="flex"
           justifyContent="center"
           alignItems="center"
-          sx={{ position: 'relative', m: 'auto', width: '10rem', height: '10rem', borderRadius: '50%', boxShadow: "0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset" }}
+          sx={{ position: 'relative', m: 'auto', marginTop: 3, width: '10rem', height: '10rem', borderRadius: '50%', boxShadow: "0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset" }}
           alt="EcoYah"
           src={logo}>
         </Box>
@@ -121,16 +119,16 @@ export default function SignUp() {
               { signUpError && <Alert severity="error">The request encountered an issue. Please refresh and try again!</Alert> }
               <Typography variant="h5" align="center" gutterBottom>Let's Get Started!</Typography>
               <hr></hr>
-              <TextFields label="Email" type="email" validate={validateForm} data={handleData} error={emailExists}></TextFields>
+              <TextFields label="Email" type="email" form="sign up" validate={validateForm} data={handleData} error={emailExists}></TextFields>
               <TextFields label="Name" type="name" validate={validateForm} data={handleData}></TextFields>
               <TextFields label="Contact Number" type="number" validate={validateForm} data={handleData}></TextFields>
-              <TextFields label="Password" type="password" validate={validateForm} data={handleData} error={isPasswordValid}></TextFields>
+              <TextFields label="Password" type="password" form="sign up" validate={validateForm} data={handleData} error={isPasswordValid}></TextFields>
               <Box sx={{ backgroundColor: "rgba(7, 83, 142, 0.25)", padding: 2, borderRadius: 2, width: 330 }}>
                 <Typography variant="body2" gutterBottom><b>Your password must contain:</b></Typography>
-                <Checkboxes type="password" label={passwordCriteria} text={passwordText} isValid={handlePwdCriteria}></Checkboxes>
+                <Checkboxes type="password" label={passwordCriteria} text={passwordText} isChecked={handlePwdCriteria}></Checkboxes>
               </Box>
               <TextFields label="Confirm Password" type="confirm password" validate={validateForm} data={handleData} error={isPasswordSame}></TextFields>
-              <Checkboxes label={signUpCriteria} type="sign up" text="none" isValid={handleSignUpCriteria}></Checkboxes>
+              <Checkboxes label={signUpCriteria} type="sign up" text="none" isChecked={handleSignUpCriteria}></Checkboxes>
               { validateForm && !isChecked && <FormHelperText error>Please indicate that you have read</FormHelperText> }
               <LongButtons label="Sign Up" clickStatus={handleClickStatus}></LongButtons>
             </Stack> :
@@ -138,8 +136,8 @@ export default function SignUp() {
         </Box>
         { step === 1 ? 
         <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>Already Have An Account?&nbsp;
-          <b><Link color="primary.light" href="#">Sign In</Link></b>
-        </Typography> : <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom><b><Link color="primary.light" href="#">Go to Home</Link></b></Typography> }
-      </ThemeProvider>
+          <b><Link color="primary.light" component={ReactRouterLink} to="/sign-in">Sign In</Link></b>
+        </Typography> : <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom><b><Link color="primary.light" component={ReactRouterLink} to="/">Go to Home</Link></b></Typography> }
+      </>
     );
 }

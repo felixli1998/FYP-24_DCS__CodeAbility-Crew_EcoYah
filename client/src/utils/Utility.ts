@@ -12,6 +12,9 @@ export async function makeHttpRequest<T>(
             method: method.toUpperCase(),
             url: url,
         }
+        
+        // If it's a GET request, pass parameters as query parameters
+        // If it's a non-GET request, add payload as query parameters
         if (method.toUpperCase() === 'GET') {
             config.params = params;
         } else {

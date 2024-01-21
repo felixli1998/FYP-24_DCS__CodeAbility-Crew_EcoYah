@@ -19,12 +19,12 @@ router.post('/login', async (req, res) => {
     const { email = '', password = '' } = filteredParams; // In the event that these params are not properly supplied
 
     const isValidEmail = await userService.getUserByEmail(email);
-    if(!isValidEmail) return generateResponse(res, 200, { action: false, message: 'Email does not exist!' });
+    if(!isValidEmail) return generateResponse(res, 200, { action: false, message: 'wrong_email' });
 
     const authenticated = await userService.login(email, password);
-    if(!authenticated) return generateResponse(res, 200, { action: false, message: 'Email or password is incorrect!' });
+    if(!authenticated) return generateResponse(res, 200, { action: false, message: 'wrong_credentials' });
 
-    return generateResponse(res, 200, { action: true, message: 'Login successful' });
+    return generateResponse(res, 200, { action: true, message: 'login_success' });
   } catch (error) {
     return generateResponse(res, 500, "Something went wrong");
   }
