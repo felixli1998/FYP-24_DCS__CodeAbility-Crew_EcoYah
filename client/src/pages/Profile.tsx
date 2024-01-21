@@ -1,142 +1,271 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import "../styles/App.css";
-import { Box,
-         Button,
-         Container,
-         Grid,
-         Stack,
-         ThemeProvider, 
-         Typography,
-         OutlinedInput  
-        } from '@mui/material';
-import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
-import LocalActivityRoundedIcon from '@mui/icons-material/LocalActivityRounded';
-import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import { theme } from '../styles/Palette';
+import {
+  Box,
+  Container,
+  ThemeProvider,
+  Typography,
+  Avatar,
+  ListItemAvatar,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  IconButton,
+  Card,
+  CardContent,
+  CardMedia,
+} from "@mui/material";
+
+import {theme} from "../styles/Palette";
 import logo from "../assets/EcoYah.png";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import {green, pink, orange, blue} from "@mui/material/colors";
+import PersonIcon from "@mui/icons-material/Person";
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import pointsPicture from "../assets/Reward.png";
+import {useTheme} from "@mui/material/styles";
+import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import PaidOutlinedIcon from "@mui/icons-material/Paid";
+
+const navigationItems = [
+  {
+    category: "Rewards",
+    subCategories: [
+      {
+        title: "My vouchers",
+        subtitle: "View your active and past vouchers",
+        avatar: (
+          <Avatar sx={{bgcolor: orange[400]}}>
+            <LocalActivityIcon />
+          </Avatar>
+        ),
+        slug: "vouchers",
+      },
+    ],
+  },
+  {
+    category: "Account settings",
+    subCategories: [
+      {
+        title: "Your profile",
+        subtitle: "Edit and view profile information",
+        avatar: (
+          <Avatar sx={{bgcolor: blue[400]}}>
+            <PersonIcon />
+          </Avatar>
+        ),
+        slug: "edit-profile",
+      },
+    ],
+  },
+  {
+    category: "General",
+    subCategories: [
+      {
+        title: "Contact us",
+        subtitle: "Contact or send feedback to us",
+        avatar: (
+          <Avatar sx={{bgcolor: pink[400]}}>
+            <LocalPhoneIcon />
+          </Avatar>
+        ),
+        slug: "contact-us",
+      },
+      {
+        title: "Notification",
+        subtitle: "Manage subscriptions and email settings",
+        avatar: (
+          <Avatar sx={{bgcolor: green[400]}}>
+            <NotificationsIcon />
+          </Avatar>
+        ),
+        slug: "notification",
+      },
+    ],
+  },
+];
+
+// == Profile Picture Section ==
+interface ProfilePictureProps {
+  picture: string;
+  name: string;
+  role: string;
+}
+
+const ProfilePicture: React.FC<ProfilePictureProps> = ({
+  picture,
+  name,
+  role,
+}) => {
+  return (
+    <>
+      <Box
+        component="img"
+        display="flex"
+        justifyContent="center"
+        sx={{
+          marginX: "auto",
+          marginTop: 4,
+          marginBottom: 2,
+          width: "8rem",
+          height: "8rem",
+          borderRadius: "50%",
+          boxShadow:
+            "0px 2px 6px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset",
+        }}
+        alt="EcoYah"
+        src={logo}
+      ></Box>
+      <Typography
+        sx={{fontWeight: "bold"}}
+        align="center"
+      >
+        {name}
+      </Typography>
+      <Typography align="center">{role}</Typography>
+    </>
+  );
+};
+
+// == Reward Section ==
+interface RewardProps {
+  points: number;
+}
+
+const Reward: React.FC<RewardProps> = ({points}) => {
+  return (
+    <Card
+      sx={{
+        display: "flex",
+        bgcolor: "#e0f2f1",
+        borderRadius: 5,
+        marginY: 2,
+        height: "10rem",
+      }}
+    >
+      <Box sx={{display: "flex", flexDirection: "column"}}>
+        <CardContent sx={{flex: "1 0 auto", width: "14rem"}}>
+          <Typography
+            component="div"
+            variant="body1"
+            fontWeight={600}
+          >
+            My points
+          </Typography>
+          <Typography
+            variant="h6"
+            color={orange[500]}
+            component="div"
+            display="flex"
+            alignItems={"center"}
+          >
+            <PaidOutlinedIcon sx={{marginRight: 0.5}} /> {points}
+          </Typography>
+        </CardContent>
+        <Box sx={{display: "flex", alignItems: "center", pl: 2, pb: 2}}>
+          <Typography
+            variant="body1"
+            fontWeight={600}
+            component="div"
+          >
+            View history
+          </Typography>
+          <ArrowCircleRightIcon
+            sx={{marginLeft: 0.5}}
+            color="secondary"
+          />
+        </Box>
+      </Box>
+      <CardMedia
+        component="img"
+        sx={{width: "10rem", height: "10rem"}}
+        src={pointsPicture}
+        alt="Points"
+      />
+    </Card>
+  );
+};
+
+// == Everything below Reward ==
+const Others = () => {
+  const navigate = useNavigate();
+  return (
+    <nav aria-label="main mailbox folders">
+      {navigationItems.map((category, index) => (
+        <List
+          dense
+          sx={{paddingTop: 0}}
+          key={index}
+          disablePadding
+        >
+          <Typography
+            variant="h6"
+            sx={{
+              marginLeft: "1rem",
+              fontWeight: 600,
+              marginTop: 2,
+            }}
+          >
+            {category.category}
+          </Typography>
+          {category.subCategories.map((subCategory, subIndex) => (
+            <ListItem
+              key={subIndex}
+              disablePadding
+              secondaryAction={
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                >
+                  <KeyboardArrowRightIcon />
+                </IconButton>
+              }
+            >
+              <ListItemButton onClick={() => navigate(`/${subCategory.slug}`)}>
+                <ListItemAvatar>{subCategory.avatar}</ListItemAvatar>
+                <ListItemText
+                  primary={subCategory.title}
+                  primaryTypographyProps={{
+                    variant: "subtitle1",
+                    fontWeight: 500,
+                  }}
+                  secondary={subCategory.subtitle}
+                  secondaryTypographyProps={{
+                    variant: "subtitle2",
+                    fontWeight: 400,
+                  }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      ))}
+    </nav>
+  );
+};
 
 export default function Profile() {
+  const [userInfo, setUserInfo] = useState({
+    name: "John Timonthy",
+    role: "Donor",
+    points: 1200,
+  });
 
-    const [name, setName] = useState("");
-    const [points, setPoints] = useState("");
-
-    const navigate = useNavigate();
-
-    const editProfileClick = () => { navigate("/edit-profile"); }
-
-    return (
-        <ThemeProvider theme={theme}>
-
-            <Container sx={{paddingY: "20px", paddingX: "25px"}}>
-                <Box 
-                    component="img" 
-                    display="flex"
-                    justifyContent="center"
-                    alignItems="center"
-                    sx={{ position: 'relative', m: 'auto', width: '10rem', height: '10rem', borderRadius: '50%', boxShadow: "0px 5px 5px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset" }}
-                    alt="EcoYah"
-                    src={logo}>
-                </Box>
-
-                <Typography pb={1} pt={2} sx={{fontWeight: "bold"}} align="center">NAME</Typography>
-
-                <Stack>
-                    <Stack>
-
-                        <Typography variant="h6" sx={{fontWeight: "bold"}} pb={1} pt={2}>Rewards</Typography>
-                    
-                        <Grid container spacing={1}>
-                            <Grid item xs={2} display={"flex"} justifyContent="center" alignItems="center">
-                                <LocalActivityRoundedIcon sx={{ color: 'secondary.main'}} fontSize="large"/>
-                            </Grid>
-                            
-                            <Grid item xs={9}>
-                                <Stack>
-                                    <Typography sx={{fontWeight: "bold"}}>My Vouchers</Typography>
-                                    <Typography>View your active and past vouchers</Typography>
-                                </Stack>
-                            </Grid>
-
-                            <Grid item xs={1} display={"flex"} justifyContent="center" alignItems="center">
-                                <KeyboardArrowRightRoundedIcon sx={{ color: 'secondary.main'}}/>
-                            </Grid>
-
-                        </Grid>
-                    </Stack>
-
-                    <Stack>
-                        <Typography variant="h6" sx={{fontWeight: "bold"}} pb={1} pt={2}>Account Settings</Typography>
-
-                        <Grid container spacing={1}>
-                            <Grid item xs={2} display={"flex"} justifyContent="center" alignItems="center">
-                                <AccountCircleRoundedIcon sx={{ color: 'secondary.main'}} fontSize="large"/>
-                            </Grid>
-                            
-                            <Grid item xs={9} onClick={editProfileClick}>
-                                <Stack>
-                                    <Typography sx={{fontWeight: "bold"}}>Your Profile</Typography>
-                                    <Typography>Edit and view profile information</Typography>
-                                </Stack>
-                            </Grid>
-
-                            <Grid item xs={1} display={"flex"} justifyContent="center" alignItems="center">
-                                <KeyboardArrowRightRoundedIcon sx={{ color: 'secondary.main'}}/>
-                            </Grid>
-
-                        </Grid>
-                    </Stack>
-
-                    <Stack>
-
-                        <Typography variant="h6" sx={{fontWeight: "bold"}} pb={1} pt={2}>General</Typography>
-
-                        <Stack>
-                            <Grid container spacing={1}>
-                                <Grid item xs={2} display={"flex"} justifyContent="center" alignItems="center">
-                                    <PhoneRoundedIcon sx={{ color: 'secondary.main'}} fontSize="large"/>
-                                </Grid>
-                                
-                                <Grid item xs={9}>
-                                    <Stack>
-                                        <Typography sx={{fontWeight: "bold"}}>Contact Us</Typography>
-                                        <Typography>Contact or send feedback to us</Typography>
-                                    </Stack>
-                                </Grid>
-
-                                <Grid item xs={1} display={"flex"} justifyContent="center" alignItems="center">
-                                    <KeyboardArrowRightRoundedIcon sx={{ color: 'secondary.main'}}/>
-                                </Grid>
-
-                            </Grid>
-                       
-                            <Grid container spacing={1} sx={{marginTop:"5px"}}>
-                                <Grid item xs={2} display={"flex"} justifyContent="center" alignItems="center">
-                                    <NotificationsRoundedIcon sx={{ color: 'secondary.main'}} fontSize="large"/>
-                                </Grid>
-                                
-                                <Grid item xs={9}>
-                                    <Stack>
-                                        <Typography sx={{fontWeight: "bold"}}>Notification</Typography>
-                                        <Typography>Manage subscriptions and email settings</Typography>
-                                    </Stack>
-                                </Grid>
-
-                                <Grid item xs={1} display={"flex"} justifyContent="center" alignItems="center">
-                                    <KeyboardArrowRightRoundedIcon sx={{ color: 'secondary.main'}}/>
-                                </Grid>
-                            </Grid> 
-                        </Stack>
-                    </Stack>
-
-                        
-
-
-
-                </Stack>
-            </Container>
-        </ThemeProvider>
-    )
+  return (
+    <ThemeProvider theme={theme}>
+      <Container sx={{width: "100%"}}>
+        <ProfilePicture
+          picture={""}
+          name={userInfo.name}
+          role={userInfo.role}
+        />
+        <Reward points={userInfo.points} />
+        <Others />
+      </Container>
+    </ThemeProvider>
+  );
 }
