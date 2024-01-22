@@ -25,19 +25,19 @@ export class User{
     email: string
 
     @Column()
-    password_digest: string
+    passwordDigest: string
 
     @Column()
     name: string
 
     @Column()
-    contact_num: string
+    contactNum: string
 
     // TODO: This will subsequently be used to store the s3 image in the server
     @Column({
       default: null
     })
-    image_id: string
+    imageId: string
 
     // By default, the role will always be donor. Only the developers has the autonomy to create profiles of different role //
     @Column({
