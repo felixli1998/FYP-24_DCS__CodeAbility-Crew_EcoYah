@@ -4,6 +4,8 @@ import ErrorPage from "../pages/ErrorPage";
 import Home from "../pages/Index";
 import SignUp from "../pages/SignUp";
 import SignIn from "../pages/SignIn";
+import AdminSignIn from "../pages/admin/AdminSignIn";
+
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 // import ContactUs from "../pages/ContactUs";
@@ -34,10 +36,10 @@ const router = createBrowserRouter([
         path: "/edit-profile",
         element: <EditProfile />,
       },
-      // {
-      //   path: "/contactUs",
-      //   element: <ContactUs />,
-      // }
+      {
+        path: "/admin-sign-in",
+        element: <AdminSignIn />,
+      }
     ],
   },
 ]);
