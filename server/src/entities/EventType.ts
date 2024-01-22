@@ -1,8 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne, CreateDateColumn, UpdateDateColumn } from "typeorm"
-import { EventType } from "./EventType"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
 
 @Entity()
-export class Item{
+export class EventType{
     // Stick to using TypeORM style using PrimaryGeneratedColumn() to generate the primary key
     // This will help to facilitate in create OneToMany and ManyToOne relationships, join tables, etc.
     @PrimaryGeneratedColumn()
@@ -12,12 +11,6 @@ export class Item{
         length: 100,
     })
     name: string
-
-    @Column()
-    unit: string
-
-    @OneToOne(() => EventType) @JoinColumn()
-    eventType: EventType
 
     @CreateDateColumn()
     createdAt: Date
