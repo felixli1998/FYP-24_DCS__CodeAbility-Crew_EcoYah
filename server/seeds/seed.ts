@@ -64,6 +64,7 @@ const generateSeedData = async () => {
     newUser.passwordDigest = passwordDigest;
     newUser.contactNum = user.contactNum;
     newUser.imageId = user.imageURL;
+    newUser.role = user.role;
     const createdUser = await userService.createUser(newUser);
 
     USER_OBJECTS[user.name] = createdUser;

@@ -6,7 +6,7 @@ type UserSeedDataT = {
   passwordInput: string;
   contactNum: string;
   imageURL: string;
-  role?: UserRole;
+  role: UserRole;
 };
 
 export const USER_SEED_DATA: UserSeedDataT[] = [
@@ -16,6 +16,7 @@ export const USER_SEED_DATA: UserSeedDataT[] = [
     passwordInput: 'Testpassw0rd!',
     contactNum: '+6512345678',
     imageURL: 'https://picsum.photos/200/300',
+    role: UserRole.DONOR
   },
   {
     name: 'Alex',
