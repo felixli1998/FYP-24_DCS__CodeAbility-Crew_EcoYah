@@ -17,7 +17,9 @@ export class DonationEventItem{
     @ManyToOne(() => DonationEvent, (donationEvent) => donationEvent.donationEventItems)
     donationEvent: DonationEvent
 
-    @Column()
+    @Column({
+      nullable: false
+    })
     targetQty: number
 
     @Column({
@@ -25,10 +27,14 @@ export class DonationEventItem{
     })
     currentQty: number
 
-    @Column()
+    @Column({
+      nullable: false
+    })
     minQty: number
 
-    @Column()
+    @Column({
+      nullable: false
+    })
     pointsPerUnit: number
 
     @CreateDateColumn()
