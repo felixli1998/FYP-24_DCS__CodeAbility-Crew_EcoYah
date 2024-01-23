@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, ManyToOne } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, BeforeInsert, BeforeUpdate } from "typeorm"
 import { Item } from "./Item"
 import { DonationEvent } from "./DonationEvent"
 
@@ -42,4 +42,16 @@ export class DonationEventItem{
 
     @UpdateDateColumn()
     updatedAt: Date
+
+     // Validates before inserting the data into the database
+    // NOTE: Use try catch to handle the error graciously inside your service / repository
+    @BeforeInsert()
+    beforeInsert(){
+      if(!this.isValidTargetQty()) throw new Error("Target Qty has to be more than 0")
+
+    }
+
+    private isValidTargetQty(){
+      return this.targetQty > 0
+    }
 }
