@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, BeforeInsert, BeforeUpdate } from "typeorm"
 import { User } from "./User"
 import { EventType } from "./EventType"
 import { DonationEventItem } from "./DonationEventItem"
@@ -47,4 +47,26 @@ export class DonationEvent{
 
     @UpdateDateColumn()
     updatedAt: Date
+
+    // Validates before inserting the data into the database
+    @BeforeInsert()
+    beforeInsert(){
+      if(!this.isValidUser()) throw new Error("Donation Event must be created by a staff or admin")
+      if(!this.isValidDateRange()) throw new Error("Start date must be before or equal to end date")
+    }
+
+    // Validates before updating the data into the database
+    @BeforeUpdate()
+    beforeUpdate() {
+      if(!this.isValidUser()) throw new Error("Donation Event must be created by a staff or admin")
+      if(!this.isValidDateRange()) throw new Error("Start date must be before or equal to end date")
+    }
+
+    private isValidUser(): boolean{
+      return this.createdBy.role === "admin" || this.createdBy.role === "staff"
+    }
+
+    private isValidDateRange(): boolean{
+      return this.startDate <= this.endDate
+    }
 }
