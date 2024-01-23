@@ -11,6 +11,7 @@ export class EventType{
 
     @Column({
         length: 100,
+        nullable: false
     })
     name: string
 
