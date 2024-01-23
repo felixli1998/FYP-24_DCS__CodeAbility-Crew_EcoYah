@@ -11,10 +11,13 @@ export class Item{
 
     @Column({
         length: 100,
+        nullable: false
     })
     name: string
 
-    @Column()
+    @Column({
+      nullable: false
+    })
     unit: string
 
     // Item can have many DonationEventItems | DonationEventItem can only belong to one Item
