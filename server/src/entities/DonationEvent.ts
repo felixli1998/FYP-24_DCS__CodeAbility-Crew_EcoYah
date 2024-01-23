@@ -56,6 +56,7 @@ export class DonationEvent{
     updatedAt: Date
 
     // Validates before inserting the data into the database
+    // NOTE: Use try catch to handle the error graciously inside your service / repository
     @BeforeInsert()
     beforeInsert(){
       if(!this.isValidUser()) throw new Error("Donation Event must be created by a staff or admin")
@@ -63,6 +64,7 @@ export class DonationEvent{
     }
 
     // Validates before updating the data into the database
+    // NOTE: Use try catch to handle the error graciously inside your service / repository
     @BeforeUpdate()
     beforeUpdate() {
       if(!this.isValidUser()) throw new Error("Donation Event must be created by a staff or admin")
