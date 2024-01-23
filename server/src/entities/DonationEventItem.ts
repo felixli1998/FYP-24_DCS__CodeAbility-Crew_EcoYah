@@ -48,7 +48,6 @@ export class DonationEventItem{
     @BeforeInsert()
     beforeInsert(){
       if(!this.isValidTargetQty()) throw new Error("Target Qty has to be more than 0")
-
     }
 
     private isValidTargetQty(){
