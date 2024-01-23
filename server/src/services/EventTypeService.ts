@@ -12,4 +12,8 @@ export class EventTypeService {
   async createEventType(eventType: EventType) {
     return this.eventTypeRepository.createEventType(eventType);
   }
+
+  async retrieveEventTypeByName(name: string) {
+    return this.eventTypeRepository.retrieveEventTypeByName(name);
+  }
 }
