@@ -1,5 +1,7 @@
 // External imports
 import { hashSync } from 'bcrypt';
+// Internal imports
+import { USER_SEED_DATA, EVENT_TYPE_SEED_DATA, ITEM_SEED_DATA, DONATION_EVENT_SEED_DATA } from './data';
 // Users
 import { User } from '../src/entities/User';
 import { UserRepository } from '../src/repositories/UserRepository';
@@ -7,20 +9,18 @@ import { UserService } from '../src/services/UserService';
 // Event Types
 import { EventTypeRepository } from '../src/repositories/EventTypeRepository';
 import { EventTypeService } from '../src/services/EventTypeService';
+import { EventType } from '../src/entities/EventType';
 // Donation Events
 import { DonationEventRepository } from '../src/repositories/DonationEventRepository';
 import { DonationEventService } from '../src/services/DonationEventService';
+import { DonationEvent } from '../src/entities/DonationEvent';
 // Items
 import { ItemRepository } from '../src/repositories/ItemRepository';
 import { ItemService } from '../src/services/ItemService';
+import { Item } from '../src/entities/Item';
 // Donation Event Items
 import { DonationEventItemRepository } from '../src/repositories/DonationEventItemRepository';
 import { DonationEventItemService } from '../src/services/DonationEventItemService';
-import { EventType } from '../src/entities/EventType';
-import { Item } from '../src/entities/Item';
-
-import { USER_SEED_DATA, EVENT_TYPE_SEED_DATA, ITEM_SEED_DATA, DONATION_EVENT_SEED_DATA } from './data';
-import { DonationEvent } from '../src/entities/DonationEvent';
 import { DonationEventItem } from '../src/entities/DonationEventItem';
 
 // TODO: Want to refactor this to use a singleton pattern instead of constantly creating new instances of the services //
@@ -114,7 +114,6 @@ const generateSeedData = async () => {
       await donationEventItemService.createDonationEventItem(newDonationEventItem);
     }));
   }));
-
 
   console.log("=== Generating of seed data completed ===")
 }
