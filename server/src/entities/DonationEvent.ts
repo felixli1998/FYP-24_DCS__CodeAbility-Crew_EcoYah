@@ -24,16 +24,23 @@ export class DonationEvent{
 
     @Column({
         length: 100,
+        nullable: false
     })
     name: string
 
-    @Column()
+    @Column({
+      default: null
+    })
     imageId: string
 
-    @Column()
+    @Column({
+      nullable: false
+    })
     startDate: Date
 
-    @Column()
+    @Column({
+      nullable: false
+    })
     endDate: Date
 
     @Column({
