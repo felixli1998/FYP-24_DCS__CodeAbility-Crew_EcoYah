@@ -1,6 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, OneToMany, ManyToOne } from "typeorm"
 import { User } from "./User"
 import { EventType } from "./EventType"
+import { DonationEventItem } from "./DonationEventItem"
 
 @Entity()
 export class DonationEvent{
@@ -9,11 +10,17 @@ export class DonationEvent{
     @PrimaryGeneratedColumn()
     id: number
 
-    @OneToOne(() => User) @JoinColumn()
-    user: User
+    // DonationEvent can only belong to one User | User can have many DonationEvents
+    @ManyToOne(() => User, (user) => user.donationEvents)
+    createdBy: User
 
-    @OneToOne(() => EventType) @JoinColumn()
-    eventType: EventType
+    // DonationEvent can only belong to one EventType | EventType can have many DonationEvents
+    @ManyToOne(() => EventType, (eventType) => eventType.donationEvents)
+    eventType: EventType;
+
+    // DonationEvent can have many DonationEventItems | DonationEventItem can only belong to one DonationEvent
+    @OneToMany(() => DonationEventItem, (donationEventItem) => donationEventItem.donationEvent)
+    donationEventItems: DonationEventItem[]
 
     @Column({
         length: 100,
@@ -29,7 +36,10 @@ export class DonationEvent{
     @Column()
     endDate: Date
 
-    @Column()
+    @Column({
+      // By default, upon creation, this donation event is set to True unless stated otherwise
+      default: true
+    })
     isActive: boolean
 
     @CreateDateColumn()

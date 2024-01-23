@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, ManyToOne } from "typeorm"
 import { Item } from "./Item"
 import { DonationEvent } from "./DonationEvent"
 
@@ -9,16 +9,20 @@ export class DonationEventItem{
     @PrimaryGeneratedColumn()
     id: number
 
-    @OneToOne(() => Item) @JoinColumn()
+    // DonationEventItem can only belong to one Item | Item can have many DonationEventItems
+    @ManyToOne(() => Item, (item) => item.donationEventItems)
     item: Item
 
-    @OneToOne(() => DonationEvent) @JoinColumn()
-    DonationEvent: DonationEvent
+    // DonationEventItem can only belong to one DonationEvent | DonationEvent can have many DonationEventItems
+    @ManyToOne(() => DonationEvent, (donationEvent) => donationEvent.donationEventItems)
+    donationEvent: DonationEvent
 
     @Column()
     targetQty: number
 
-    @Column()
+    @Column({
+      default: 0
+    })
     currentQty: number
 
     @Column()

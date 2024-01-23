@@ -1,4 +1,5 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany } from "typeorm"
+import { DonationEvent } from "./DonationEvent"
 
 export enum UserRole {
   ADMIN = "admin",
@@ -56,6 +57,9 @@ export class User{
       comment: "Consist of the user status: active, terminated"
     })
     status: string
+
+    @OneToMany(() => DonationEvent, (donationEvent) => donationEvent.createdBy)
+    donationEvents: DonationEvent[]
 
     @CreateDateColumn()
     createdAt: Date
