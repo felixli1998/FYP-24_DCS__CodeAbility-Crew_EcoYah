@@ -1,4 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm"
+import { Item } from "./Item";
+import { DonationEvent } from "./DonationEvent";
 
 @Entity()
 export class EventType{
@@ -11,6 +13,14 @@ export class EventType{
         length: 100,
     })
     name: string
+
+    // EventType can have many Items | Item can only belong to one EventType
+    @OneToMany(() => Item, (item) => item.eventType)
+    items: Item[];
+
+    // EventType can have many DonationEvents | DonationEvent can only belong to one EventType
+    @OneToMany(() => DonationEvent, (donationEvent) => donationEvent.eventType)
+    donationEvents: DonationEvent[];
 
     @CreateDateColumn()
     createdAt: Date
