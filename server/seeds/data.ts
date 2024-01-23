@@ -1,9 +1,12 @@
+import { UserRole } from "../src/entities/User";
+
 type UserSeedDataT = {
   name: string;
   email: string;
   passwordInput: string;
   contactNum: string;
   imageURL: string;
+  role?: UserRole;
 };
 
 export const USER_SEED_DATA: UserSeedDataT[] = [
@@ -12,28 +15,31 @@ export const USER_SEED_DATA: UserSeedDataT[] = [
     email: 'michaeljackson1@gmail.com',
     passwordInput: 'Testpassw0rd!',
     contactNum: '+6512345678',
-    imageURL: 'https://picsum.photos/200/300'
+    imageURL: 'https://picsum.photos/200/300',
   },
   {
     name: 'Alex',
     email: 'alex@test.com',
-    passwordInput: 'Testpassw0rd!',
+    passwordInput: '1234',
     contactNum: '+6512345678',
-    imageURL: 'https://picsum.photos/200/300'
+    imageURL: 'https://picsum.photos/200/300',
+    role: UserRole.STAFF
   },
   {
     name: 'Siu Mei',
     email: 'siumei@test.com',
-    passwordInput: 'Testpassw0rd!',
+    passwordInput: '1234',
     contactNum: '+6512345678',
-    imageURL: 'https://picsum.photos/200/300'
+    imageURL: 'https://picsum.photos/200/300',
+    role: UserRole.STAFF
   },
   {
     name: 'Aaron',
     email: 'aaron@test.com',
-    passwordInput: 'Testpassw0rd!',
+    passwordInput: '1234',
     contactNum: '+6512345678',
-    imageURL: 'https://picsum.photos/200/300'
+    imageURL: 'https://picsum.photos/200/300',
+    role: UserRole.ADMIN
   }
 ]
 
