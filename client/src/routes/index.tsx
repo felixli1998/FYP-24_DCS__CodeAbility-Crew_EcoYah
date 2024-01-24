@@ -7,6 +7,7 @@ import SignIn from "../pages/SignIn";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 // import ContactUs from "../pages/ContactUs";
+import DonationEventForm from "../pages/DonationEventForm";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       //   path: "/contactUs",
       //   element: <ContactUs />,
       // }
+      {
+        path: "/admin/donation-event-form",
+        element: <DonationEventForm />,
+      }
     ],
   },
 ]);
