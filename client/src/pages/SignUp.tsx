@@ -40,16 +40,16 @@ export default function SignUp() {
         setValidateForm(status);
 
         if (isPasswordValid && isPasswordSame && isChecked) {
-          
-          // POST user to database 
+
+          // POST user to database
           try {
             const res = await makeHttpRequest('POST', BACKEND_URL + '/users', {
               email: formData['email'],
               name: formData['name'],
-              contact_num: formData['number'],
-              password_digest: formData['password']
+              contactNum: formData['number'],
+              passwordDigest: formData['password']
             })
-            localStorage.setItem("ecoyah-email", formData['email']); 
+            localStorage.setItem("ecoyah-email", formData['email']);
             setStep(2);
           } catch (error) {
               if (axios.isAxiosError(error)) {
@@ -65,7 +65,7 @@ export default function SignUp() {
             } else {
                 // Handle non-Axios errors
                 console.log("Non-Axios error occurred:", error);
-            }   
+            }
           }
         }
       }
@@ -91,11 +91,11 @@ export default function SignUp() {
         setEmailExists(false);
       }
     }, [formData, passwordText]);
-    
+
     return (
       <>
-        <Box 
-          component="img" 
+        <Box
+          component="img"
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -109,7 +109,7 @@ export default function SignUp() {
             justifyContent="center"
             alignItems="center"
             sx={{ width: 420, m: "auto",
-              '& > :not(style)': { m: 2, p: 2 }, boxShadow: 5, borderRadius: 2, 
+              '& > :not(style)': { m: 2, p: 2 }, boxShadow: 5, borderRadius: 2,
             }}
             noValidate
             autoComplete="off"
@@ -134,7 +134,7 @@ export default function SignUp() {
             </Stack> :
             <SuccessCard type="sign up"/> }
         </Box>
-        { step === 1 ? 
+        { step === 1 ?
         <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>Already Have An Account?&nbsp;
           <b><Link color="primary.light" component={ReactRouterLink} to="/sign-in">Sign In</Link></b>
         </Typography> : <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom><b><Link color="primary.light" component={ReactRouterLink} to="/">Go to Home</Link></b></Typography> }
