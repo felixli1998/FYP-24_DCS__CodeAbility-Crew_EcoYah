@@ -1,5 +1,6 @@
 import { useState }from 'react';
-import { Stack, Box, Stepper, Step, StepLabel, Grid, Button } from '@mui/material';
+import { Stack, Box, Stepper, Step, StepLabel, Typography, Grid, Button } from '@mui/material';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Step1Form from "../components/DonationEvent/Step1Form";
 import Step2Form from "../components/DonationEvent/Step2Form";
@@ -25,9 +26,12 @@ export default function DonationEventForm() {
         <>
         <Box sx={{ m: 5 }}>
             <Stepper activeStep={activeStep} alternativeLabel>
-                {steps.map((label) => (
+                {steps.map((label, i) => (
                 <Step key={label}>
-                    <StepLabel>{label}</StepLabel>
+                    <StepLabel  
+                        sx={{ ".MuiStepIcon-text": { fontSize: "1.5rem" } }}>
+                    <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", fontStyle: "bold" }}>{label}</Typography>
+                    </StepLabel>
                 </Step>
                 ))}
             </Stepper>
@@ -37,8 +41,8 @@ export default function DonationEventForm() {
                 <Stack spacing={5}> 
                     { form[activeStep] }
                     <Box display="flex" justifyContent="space-between">
-                        <Button variant="outlined" sx={{ width: "9.375rem", height: "3.75rem", borderColor: "primary.dark", color: "primary.dark" }} onClick={handleBack}>CANCEL</Button>
-                        <Button variant="contained" sx={{ width: "9.375rem", height: "3.75rem", backgroundColor: "primary.dark"}} endIcon={<ChevronRightIcon />} onClick={handleNext}>NEXT</Button>
+                        <Button variant="outlined" sx={{ fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem", borderColor: "primary.dark", color: "primary.dark" }} startIcon={ activeStep !== 0  && <ArrowBackIosIcon />} onClick={handleBack}>{ activeStep === 0 ? "CANCEL" : "BACK" }</Button>
+                        <Button variant="contained" sx={{ fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem", backgroundColor: "primary.dark"}} endIcon={<ChevronRightIcon />} onClick={handleNext}>NEXT</Button>
                     </Box>
                 </Stack>
             </Grid>

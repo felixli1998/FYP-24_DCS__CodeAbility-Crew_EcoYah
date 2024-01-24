@@ -25,7 +25,7 @@ export default function Step1Form() {
 
     return (
         <>
-        <Typography variant="h5" gutterBottom>Upload an Image of the Donation Event</Typography>
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Upload an Image of the Donation Event</Typography>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" 
             sx={{ width: "100%",  
                 [theme.breakpoints.up('sm')]: {
@@ -34,7 +34,7 @@ export default function Step1Form() {
             { !fileUpload ? (<><UploadFileIcon sx={{ width: "3.44rem", height: "3.44rem", color: "primary.dark" }}/>
             <Button sx={{ color: "primary.dark" }}>
                 <label htmlFor="ImageInput" style={{ cursor: "pointer" }}>
-                <Typography variant="h5" gutterBottom sx={{ textDecoration:"underline", marginTop: "1rem" }}>Click to Upload</Typography>
+                <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", textDecoration:"underline", marginTop: "1rem" }}>Click to Upload</Typography>
                 </label>
                 <input
                     type="file"
@@ -49,7 +49,7 @@ export default function Step1Form() {
                                 loading="lazy"
                                 style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /> }
         </Box>
-        <Typography variant="h5" gutterBottom>Enter the Name the Donation Event</Typography>
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Enter the Name the Donation Event</Typography>
         <TextField label="Name" type="text" 
             InputLabelProps={{ shrink: true }}
             sx={{ width: 300 }}
