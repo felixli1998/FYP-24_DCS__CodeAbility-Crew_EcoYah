@@ -1,4 +1,5 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from "typeorm"
+import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany } from "typeorm"
+import { DonationEvent } from "./DonationEvent"
 
 export enum UserRole {
   ADMIN = "admin",
@@ -25,19 +26,19 @@ export class User{
     email: string
 
     @Column()
-    password_digest: string
+    passwordDigest: string
 
     @Column()
     name: string
 
     @Column()
-    contact_num: string
+    contactNum: string
 
     // TODO: This will subsequently be used to store the s3 image in the server
     @Column({
       default: null
     })
-    image_id: string
+    imageId: string
 
     // By default, the role will always be donor. Only the developers has the autonomy to create profiles of different role //
     @Column({
@@ -56,6 +57,9 @@ export class User{
       comment: "Consist of the user status: active, terminated"
     })
     status: string
+
+    @OneToMany(() => DonationEvent, (donationEvent) => donationEvent.createdBy)
+    donationEvents: DonationEvent[]
 
     @CreateDateColumn()
     createdAt: Date
