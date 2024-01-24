@@ -1,7 +1,8 @@
-import Box from "@mui/material";
+import { Box } from "@mui/material";
 
 type RoundProfilePicProps = {
     pictureSrc: string;
+    altText: string
 }
 
 export default function RoundProfilePic(props: RoundProfilePicProps) {
@@ -21,7 +22,7 @@ export default function RoundProfilePic(props: RoundProfilePicProps) {
                 boxShadow:
                     "0px 2px 6px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset",
             }}
-            alt="EcoYah"
+            alt={props.altText}
             src={props.pictureSrc}
         ></Box>
         </>

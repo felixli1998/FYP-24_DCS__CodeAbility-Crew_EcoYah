@@ -16,6 +16,7 @@ import {
     CardActionArea,
     CardMedia,
   } from "@mui/material";
+  import RoundProfilePic from "../../components/RoundProfilePic";
   import {theme} from "../../styles/Palette";
 
   interface ProfileCardProps {
@@ -29,7 +30,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         return (
             <Card sx={{maxWidth: "300px", textAlign: "center"}}>
                 <CardActionArea>
-                    <Avatar></Avatar>
+                <RoundProfilePic altText={"test"} pictureSrc="../assets/EcoYah.png"/>
                 </CardActionArea>                
             </Card>
         )
