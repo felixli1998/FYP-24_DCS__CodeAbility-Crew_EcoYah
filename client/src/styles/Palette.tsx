@@ -12,4 +12,18 @@ export const theme = createTheme({
       light: "#666363"
     }
   },
+  components: {
+    // MuiDateCalendar: {
+    //   styleOverrides: {
+    //     root: {
+    //       color: '#bbdefb',
+    //       borderRadius: 2,
+    //       borderWidth: 1,
+    //       borderColor: '#2196f3',
+    //       border: '1px solid',
+    //       backgroundColor: '#0d47a1',
+    //     }
+    //   }
+    // }
+  }
 });

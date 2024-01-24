@@ -3,10 +3,12 @@ import { Stack, Box, Stepper, Step, StepLabel, Grid, Button } from '@mui/materia
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Step1Form from "../components/DonationEvent/Step1Form";
 import Step2Form from "../components/DonationEvent/Step2Form";
+import Step3Form from "../components/DonationEvent/Step3Form";
+
 
 export default function DonationEventForm() {
 
-    const form: any = { 0: <Step1Form/> , 1: <Step2Form/>, 2: <Step2Form/> }
+    const form: any = { 0: <Step1Form/> , 1: <Step2Form/>, 2: <Step3Form/> }
   
     const steps = ['Step 1', 'Step 2', 'Step 3'];
     const [activeStep, setActiveStep] = useState(0);
