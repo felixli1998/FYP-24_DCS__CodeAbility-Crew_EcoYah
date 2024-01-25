@@ -1,7 +1,7 @@
 import { useState }from 'react';
 import { Stack, Box, Stepper, Step, StepLabel, Typography, Grid, Button } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Step1Form from "../components/DonationEvent/Step1Form";
 import Step2Form from "../components/DonationEvent/Step2Form";
 import Step3Form from "../components/DonationEvent/Step3Form";
@@ -29,8 +29,8 @@ export default function DonationEventForm() {
                 {steps.map((label, i) => (
                 <Step key={label}>
                     <StepLabel  
-                        sx={{ ".MuiStepIcon-text": { fontSize: "1.5rem" } }}>
-                    <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", fontStyle: "bold" }}>{label}</Typography>
+                        sx={{ ".MuiSvgIcon-root": { width: "3.44rem", height: "3.44rem", borderRadius: "50rem" }, ".MuiStepIcon-text": { fontSize: "1rem" } }}>
+                    <Typography variant="h5" gutterBottom sx={{ color: (activeStep >= i) ? "primary.main" : null , letterSpacing: "0.18rem", fontStyle: "bold" }}>{label}</Typography>
                     </StepLabel>
                 </Step>
                 ))}
@@ -42,7 +42,7 @@ export default function DonationEventForm() {
                     { form[activeStep] }
                     <Box display="flex" justifyContent="space-between">
                         <Button variant="outlined" sx={{ fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem", borderColor: "primary.dark", color: "primary.dark" }} startIcon={ activeStep !== 0  && <ArrowBackIosIcon />} onClick={handleBack}>{ activeStep === 0 ? "CANCEL" : "BACK" }</Button>
-                        <Button variant="contained" sx={{ fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem", backgroundColor: "primary.dark"}} endIcon={<ChevronRightIcon />} onClick={handleNext}>NEXT</Button>
+                        <Button variant="contained" sx={{ fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem", backgroundColor: "primary.dark"}} endIcon={<ArrowForwardIosIcon />} onClick={handleNext}>NEXT</Button>
                     </Box>
                 </Stack>
             </Grid>

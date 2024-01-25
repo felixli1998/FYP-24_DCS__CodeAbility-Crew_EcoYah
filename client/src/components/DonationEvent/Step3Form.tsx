@@ -6,6 +6,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
 import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 
 export default function Step3Form() {
+
+    const [isActive, setIsActive] = useState(false);
    
     return (
         <>
@@ -20,7 +22,8 @@ export default function Step3Form() {
         </DemoContainer>
         </LocalizationProvider>
         <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Activate the Donation Event</Typography>
-        <FormControlLabel control={<Switch defaultChecked />} label="Active" />
+        <FormControlLabel control={<Switch checked={isActive} onClick={() => setIsActive(!isActive)} sx={{ width: "9rem", height: "5.25rem", ".MuiSwitch-thumb": { width: "4.5rem", height: "4.25rem",  marginLeft: ( isActive ? "2rem" : null ) } }}/>} 
+            label={ <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginLeft: "0.5rem" }}>Active</Typography> }/>
         </>
     );
 };

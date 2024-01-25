@@ -35,7 +35,7 @@ export default function Step2Form() {
                                 <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Item {i+1}: {items[i].item}</Typography>
                                 { itemFields.map(function(label, j) {
                                     return <TextField key={j} label={ (j !== 2) ? itemFields[j] : itemFields[j] + items[i].unit } type="number" 
-                                        InputProps={{ endAdornment: <InputAdornment position="end">{items[i].unit}</InputAdornment> }}
+                                        InputProps={{ endAdornment: <InputAdornment position="end">{ (j !== 2) && items[i].unit }</InputAdornment> }}
                                         InputLabelProps={{ shrink: true }}
                                         sx={{ width: 300 }} /> }) }
                             </Stack>
