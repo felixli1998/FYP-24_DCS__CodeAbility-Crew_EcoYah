@@ -13,13 +13,13 @@ export class UserService {
     this.userRepository = userRepository;
   }
 
-  async login(email: User['email'], password: User['password_digest']) {
+  async login(email: User['email'], password: User['passwordDigest']) {
     const user = await this.userRepository.getUserByEmail(email);
 
     // Defensive line; But unlikely since we check for email existence in the controller before calling this service
     if(!user) return false;
 
-    const authenticated = await compare(password, user.password_digest);
+    const authenticated = await compare(password, user.passwordDigest);
 
     return authenticated;
   }

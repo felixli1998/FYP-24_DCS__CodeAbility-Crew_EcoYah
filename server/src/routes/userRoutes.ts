@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
   // Create user
   try {
     // Hash password
-    req.body.password_digest = hashSync(req.body.password_digest, 10);
+    req.body.passwordDigest = hashSync(req.body.passwordDigest, 10);
     const user = await userService.createUser(req.body);
     res.status(201).json({ id: user.id, message: "User created successfully." });
   } catch (error) {
