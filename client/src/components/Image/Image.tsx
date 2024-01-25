@@ -35,6 +35,9 @@ export default function Image(props: ImageProps): JSX.Element {
       if (response.status === 200) {
         // Update the displayed image after successful upload
         console.log(`${response.data.filename} uploaded successfully`);
+        console.log(
+          "TODO: This is likely where you update the database with this particular image id, so that on the next refresh it will know which ID to request."
+        )
       } else {
         console.error('Failed to update image');
       }
