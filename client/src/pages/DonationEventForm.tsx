@@ -1,4 +1,4 @@
-import { useState }from 'react';
+import { useState } from 'react';
 import { Stack, Box, Stepper, Step, StepLabel, Typography, Grid, Button } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -8,19 +8,41 @@ import Step3Form from "../components/DonationEvent/Step3Form";
 
 
 export default function DonationEventForm() {
-
-    const form: any = { 0: <Step1Form/> , 1: <Step2Form/>, 2: <Step3Form/> }
   
     const steps = ['Step 1', 'Step 2', 'Step 3'];
     const [activeStep, setActiveStep] = useState(0);
+    const [validateStep1, setValidateStep1] = useState(false);
+    const [validateStep2, setValidateStep2] = useState(false);
+    const [validateStep3, setValidateStep3] = useState(false);
+    const [formData, setFormData] = useState<{ [key: string] : any }>({});
 
     const handleBack = () => {
         if (activeStep > 0) setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
     const handleNext = () => {
-        if (activeStep < 2) setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        switch(activeStep) {
+            case 0:
+                setValidateStep1(true);
+                if ((formData['name'] !== "") && (formData['imageId'] !== null)) setActiveStep(1);
+                break;
+            case 1:
+                setValidateStep2(true);
+                if ((Object.keys(formData['donationEventItems'][0]).length >= 1)) setActiveStep(2);
+                break;
+            case 2:
+                setValidateStep3(true);
+                break;
+        }
     }
+
+    const handleData = (key: string, value: any) => {
+        setFormData((prevData) => ({...prevData, [key] : value}));
+    }
+
+    console.log(formData);
+
+    const form: any = { 0: <Step1Form validate={validateStep1} data={handleData}/> , 1: <Step2Form validate={validateStep2} data={handleData}/>, 2: <Step3Form validate={validateStep3} data={handleData}/> }
 
     return (
         <>

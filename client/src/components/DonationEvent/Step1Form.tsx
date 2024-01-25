@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { useTheme } from '@mui/system';
-import { Box, Typography, TextField, Button } from '@mui/material';
+import { Box, Typography, TextField, Button, FormHelperText } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
+type Step1FormProps = {
+    validate: boolean
+    data: (key: string, value: string) => void
+}
 
-export default function Step1Form() {
+export default function Step1Form(props: Step1FormProps) {
 
     const theme = useTheme();
     const [fileUpload, setFileUpload] = useState(false);
     const [image, setImage] = useState<any>(null);
+    const [name, setName] = useState("");
 
-    const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
         setFileUpload(true);
         const file = event.target.files?.[0];
         if (file) {
@@ -23,9 +28,18 @@ export default function Step1Form() {
         };
     }
 
+    const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setName(event.target.value)
+    }
+
+    useEffect(() => {
+        props.data("imageId", image);
+        props.data("name", name);
+    }, [name, image]);
+
     return (
         <>
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Upload an Image of the Donation Event</Typography>
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Upload an Image of the Donation Event</Typography>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" 
             sx={{ width: "100%",  
                 [theme.breakpoints.up('sm')]: {
@@ -49,10 +63,15 @@ export default function Step1Form() {
                                 loading="lazy"
                                 style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /> }
         </Box>
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Enter the Name the Donation Event</Typography>
+        { (props.validate && image === null) && <FormHelperText error>Please upload an image</FormHelperText> }
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Enter the Name the Donation Event</Typography>
         <TextField label="Name" type="text" 
             InputLabelProps={{ shrink: true }}
             sx={{ width: 300 }}
+            value={name}
+            onChange={handleTextChange}
+            error={props.validate && name === ""}
+            helperText={ (props.validate && name === "") && "Please enter a name" }
             />
         </>
     );
