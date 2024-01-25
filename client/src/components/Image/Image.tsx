@@ -11,6 +11,15 @@ interface ImageProps {
   height?: string | number;
 }
 
+const defaultProps: ImageProps = {
+  imageId: "1.png",  // Default value for imageId
+  imageSource: "local",
+  type: "square",
+  editable: false,  // Default value for editable
+  width: "250px",
+  height: "250px",
+};
+
 export default function Image(props: ImageProps): JSX.Element {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [imagePath, setImagePath] = useState<string | undefined>();
@@ -88,11 +97,22 @@ export default function Image(props: ImageProps): JSX.Element {
       <img
         src={imagePath}
         alt="Image"
+        style={{
+          width: props.width,
+          height: props.height,
+          borderRadius: props.type === "circle" ? "50%" : "0%",
+        }}
       />
-      <div>
-        <input type="file" onChange={handleFileChange} />
-        <button onClick={updateImage}>Update Image</button>
-      </div>
+      {props.editable && (
+        <>
+          <div>
+            <input type="file" onChange={handleFileChange} />
+            <button onClick={updateImage}>Update Image</button>
+          </div>
+        </>
+      )}
     </div>
-  )
+  );
 }
+
+Image.defaultProps = defaultProps;
