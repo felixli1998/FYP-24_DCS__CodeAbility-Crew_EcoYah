@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+// MUI
+import { Box, Button } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { styled } from '@mui/material/styles';
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
+
 interface ImageProps {
   imageId: string;
   imageSource: "local" | "s3";
@@ -92,26 +109,54 @@ export default function Image(props: ImageProps): JSX.Element {
     fetchImage();
   }, []);
 
+  const getStyles = () => {
+    switch (props.type) {
+      case 'circle':
+        return { borderRadius: '50%' };
+      case 'rectangle':
+        return { borderRadius: '10px' };
+      // Add more cases for other types as needed,
+      // Some potential cases are "Donation Item, Poster"
+      default:
+        return {}; // Default styles for 'square'
+    }
+  };
+
   return (
-    <div>
+    <Box
+      sx={{
+        width: props.width,
+        marginBottom: "1rem",
+      }}  
+    >
       <img
         src={imagePath}
         alt="Image"
         style={{
-          width: props.width,
+          width: '100%',
           height: props.height,
-          borderRadius: props.type === "circle" ? "50%" : "0%",
+          ...getStyles(),
         }}
       />
       {props.editable && (
         <>
-          <div>
-            <input type="file" onChange={handleFileChange} />
-            <button onClick={updateImage}>Update Image</button>
-          </div>
+          <Box display="flex" flexDirection={"column"} sx= {{
+
+          }}>
+            <Button component="label" 
+              variant="outlined" 
+              sx={{
+                marginBottom: 1,
+              }}
+              startIcon={<CloudUploadIcon/>}>
+              Upload image
+              <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+            </Button>
+            <Button variant="contained" color="primary" onClick={updateImage}>Update Image</Button>
+          </Box>
         </>
       )}
-    </div>
+    </Box>
   );
 }
 
