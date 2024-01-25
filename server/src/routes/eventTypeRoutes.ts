@@ -8,6 +8,15 @@ const router = express.Router();
 const eventTypeRepository = new EventTypeRepository();
 const eventTypeService = new EventTypeService(eventTypeRepository);
 
+router.get("/event-types", async (req, res) => {
+    try {
+      const eventTypes = await eventTypeService.retrieveEventTypes();
+      return generateResponse(res, 200, {eventTypes});
+    } catch (error) {
+      return generateResponse(res, 500, {error: "Internal Server Error"});
+    }
+  });
+
 router.get("/event-type-by-name", async (req, res) => {
   try {
     const params = req.query;
