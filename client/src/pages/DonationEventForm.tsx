@@ -35,7 +35,7 @@ export default function DonationEventForm() {
                 break;
             case 2:
                 setValidateStep3(true);
-                if (moment(formData['startDate'], "DD-MM-YYYY").isValid() && moment(formData['endDate'], "DD-MM-YYYY").isValid()) navigate("/admin/donation-event-preview");
+                if (moment(formData['startDate'], "DD-MM-YYYY").isValid() && moment(formData['endDate'], "DD-MM-YYYY").isValid()) navigate("/admin/donation-event-preview", { state: JSON.stringify(formData) });
                 break;
         }
     }

@@ -26,8 +26,9 @@ export default function Step3Form(props: Step3FormProps) {
 
     const displayError = (index: number) => {
         if (index === 0 && props.validate && startDate === null) return true;
-        if (index === 1 && props.validate && endDate === null) return true;
-        if (index === 1 && props.validate && endDate! < startDate!) return true;
+        else if (index === 1 && props.validate && endDate === null) return true;
+        else if (index === 1 && props.validate && endDate! < startDate!) return true;
+        else return false;
     }
 
     const displayErrorMsg = (index: number) => {

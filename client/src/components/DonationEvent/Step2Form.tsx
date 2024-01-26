@@ -27,6 +27,7 @@ export default function Step2Form(props: Step2FormProps) {
             updatedItemsInfo[index] = {
                 ...updatedItemsInfo[index],
                 "name": items[index].item,
+                "unit": items[index].unit,
                 [itemKey]: parseFloat(event.target.value),
             };
             return updatedItemsInfo;
@@ -37,7 +38,7 @@ export default function Step2Form(props: Step2FormProps) {
 
     useEffect(() => {
         // accumulates the total count of keys across all objects
-        if (itemsInfo.reduce((count, obj) => count + Object.keys(obj).length, 0) === items.length * 4) {
+        if (itemsInfo.reduce((count, obj) => count + Object.keys(obj).length, 0) === items.length * 5) {
             props.data("donationEventItems", itemsInfo);
         } else {
             props.data("donationEventItems", []);
