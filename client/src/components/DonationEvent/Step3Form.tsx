@@ -32,19 +32,19 @@ export default function Step3Form(props: Step3FormProps) {
     const displayError = (index: number) => {
         if (index === 0 && props.validate && startDate === null) return true;
         else if (index === 1 && props.validate && endDate === null) return true;
-        else if (index === 0 && props.validate && startDate! < new Date()) return true;
+        else if (index === 0 && props.validate && startDate! < new Date(new Date().setHours(0,0,0,0))) return true;
         else if (index === 1 && props.validate && endDate! < startDate!) return true;
         else return false;
     }
 
     const displayErrorMsg = (index: number) => {
-        console.log(typeof startDate);
-        console.log(typeof new Date());
+        console.log(startDate);
+        console.log(new Date(new Date().setHours(0,0,0,0)));
         if (index === 0 && props.validate && startDate === null) {
             return "Please choose a Date (DD/MM/YYYY)";
         } else if (index === 1 && props.validate && endDate === null) {
             return "Please choose a Date (DD/MM/YYYY)";
-        } else if (index === 0 && props.validate && startDate! < new Date()) {
+        } else if (index === 0 && props.validate && startDate! < new Date(new Date().setHours(0,0,0,0))) {
             return "The start date should be today or later";
         } else if (index === 1 && props.validate && endDate! < startDate!) {
             return "The end date should either match or come after the start date";
@@ -57,7 +57,7 @@ export default function Step3Form(props: Step3FormProps) {
     // console.log(endDate);
 
     useEffect(() => {
-        if (endDate! >= startDate!) {
+        if (startDate! >= new Date(new Date().setHours(0,0,0,0)) && endDate! >= startDate!) {
             props.data("startDate", startDate);
             props.data("endDate", endDate);
         } else {
