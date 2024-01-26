@@ -1,34 +1,42 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Box, Stack, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AddIcon from '@mui/icons-material/Add';
-import { useLocation } from "react-router-dom";
-import moment from 'moment';
+import { useLocation, useNavigate } from "react-router-dom";
+import moment from 'moment-timezone';
 
 export default function DonationEventPreview() {
 
     const location = useLocation();
-    const formData = JSON.parse(location.state);
+    const navigate = useNavigate();
+    const formData = location.state ? JSON.parse(location.state) : null;
+
     const donationEventDetails: any = {'Name' : 'name', 'Type': 'eventType', 'Period': [ 'startDate', 'endDate'], 'Status': 'isActive'};
 
     const displayValue = (detail: any) => {
-        if (detail === "Status") {
+        if (formData && detail === "Status") {
             if (formData[donationEventDetails[detail]]) return "Active";
             else return "Inactive";
         } else if (detail === "Period") {
-            return moment(formData[donationEventDetails[detail][0]], "DD-MM-YYYY") + " - " + moment(formData[donationEventDetails[detail][1]], "DD-MM-YYYY");
+            return moment(formData[donationEventDetails[detail][0]]).tz('Asia/Singapore').format('DD/MM/YYYY') + " - " + moment(formData[donationEventDetails[detail][1]]).tz('Asia/Singapore').format('DD/MM/YYYY');
         } else {
             return formData[donationEventDetails[detail]];
-        }
+        } 
     }
 
-    console.log(formData);
+    // console.log(formData);
+
+    useEffect(() => {
+        if (formData === null) {
+            navigate("/admin/donation-event-form");
+        }
+    }, [formData]);
   
     return (
         <Box display="flex" justifyContent="center" sx={{ m: 5 }}>
             <Stack spacing={3}>
-                <Typography variant="h4" align="center" gutterBottom sx={{ letterSpacing: "0.255rem" }}>Preview the Donation Event</Typography>
+                <Typography variant="h4" align="center" gutterBottom sx={{ color: "primary.dark", letterSpacing: "0.255rem", fontWeight: "bold" }}>Preview the Donation Event</Typography>
                 <Box
                     component="img"
                     sx={{
@@ -38,8 +46,8 @@ export default function DonationEventPreview() {
                         maxHeight: { xs: "10rem", md: "45rem" },
                         objectFit: "contain"
                     }}
-                    alt={formData['name']}
-                    src={formData['imageId']}
+                    alt={formData && formData['name']}
+                    src={formData && formData['imageId']}
                     />
                 <Accordion>
                     <AccordionSummary
@@ -47,9 +55,9 @@ export default function DonationEventPreview() {
                     aria-controls="panel1-content"
                     id="panel1-header"
                     >
-                    <Typography variant="h4" gutterBottom sx={{ letterSpacing: "0.225rem"}}>Donation Event Details</Typography>
+                    <Typography variant="h4" gutterBottom sx={{ color: "primary.dark", letterSpacing: "0.225rem", fontWeight: "bold" }}>Donation Event Details</Typography>
                     </AccordionSummary>
-                    { Object.keys(donationEventDetails).map((detail: any, i: number)=>{
+                    { formData && Object.keys(donationEventDetails).map((detail: any, i: number)=>{
                         return (
                             <AccordionDetails key={i}>
                                 <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>
@@ -65,13 +73,13 @@ export default function DonationEventPreview() {
                     aria-controls="panel2-content"
                     id="panel2-header"
                     >
-                    <Typography variant="h4" gutterBottom sx={{ letterSpacing: "0.225rem"}}>Item Details</Typography> 
+                    <Typography variant="h4" gutterBottom sx={{ color: "primary.dark", letterSpacing: "0.225rem", fontWeight: "bold" }}>Item Details</Typography> 
                     </AccordionSummary>
-                    { formData['donationEventItems'].map(function(item: any, i: number) {
+                    { formData && formData['donationEventItems'].map(function(item: any, i: number) {
                         return (
                             <AccordionDetails key={i}>
                                 <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>
-                                    <b>{`${item['name']}:`}</b> <br/>
+                                    <b>{i+1}.{`${item['name']}:`}</b> <br/>
                                     <ul>
                                         <li><b>Minimum Quantity:</b> {item['minQty']} {item['unit']}</li>
                                         <li><b>Target Quantity:</b> {item['targetQty']} {item['unit']}</li>

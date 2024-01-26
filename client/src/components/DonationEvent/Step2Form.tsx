@@ -34,7 +34,7 @@ export default function Step2Form(props: Step2FormProps) {
         });
     }
 
-    console.log(itemsInfo);
+    // console.log(itemsInfo);
 
     useEffect(() => {
         // accumulates the total count of keys across all objects
@@ -47,7 +47,7 @@ export default function Step2Form(props: Step2FormProps) {
    
     return (
         <>
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Fill up the information for each donation item</Typography>
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem", fontWeight: "bold" }}>Fill up the information for each donation item</Typography>
         <Grid container justifyContent="space-between" sx={{ p: 2 }}>
             { items.map(function(item, i) {
                     return <Grid item xs={12} md={12} lg={6} sx={{ marginBottom: "1rem", }} key={i}>

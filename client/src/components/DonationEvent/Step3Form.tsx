@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Typography, Grid, FormControlLabel, Switch } from '@mui/material';
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import moment from 'moment';
 
 type Step3FormProps = {
     validate: boolean
@@ -10,6 +12,9 @@ type Step3FormProps = {
 }
 
 export default function Step3Form(props: Step3FormProps) {
+
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
 
     const datePickerFields = [ 'Start Date', 'End Date' ];
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -27,15 +32,20 @@ export default function Step3Form(props: Step3FormProps) {
     const displayError = (index: number) => {
         if (index === 0 && props.validate && startDate === null) return true;
         else if (index === 1 && props.validate && endDate === null) return true;
+        else if (index === 0 && props.validate && startDate! < new Date()) return true;
         else if (index === 1 && props.validate && endDate! < startDate!) return true;
         else return false;
     }
 
     const displayErrorMsg = (index: number) => {
+        console.log(typeof startDate);
+        console.log(typeof new Date());
         if (index === 0 && props.validate && startDate === null) {
             return "Please choose a Date (DD/MM/YYYY)";
         } else if (index === 1 && props.validate && endDate === null) {
             return "Please choose a Date (DD/MM/YYYY)";
+        } else if (index === 0 && props.validate && startDate! < new Date()) {
+            return "The start date should be today or later";
         } else if (index === 1 && props.validate && endDate! < startDate!) {
             return "The end date should either match or come after the start date";
         } else {
@@ -43,13 +53,13 @@ export default function Step3Form(props: Step3FormProps) {
         }
     }
 
-    console.log(startDate);
-    console.log(endDate);
+    // console.log(startDate);
+    // console.log(endDate);
 
     useEffect(() => {
         if (endDate! >= startDate!) {
-            props.data("startDate", moment(startDate, "DD-MM-YYYY"));
-            props.data("endDate", moment(endDate, "DD-MM-YYYY"));
+            props.data("startDate", startDate);
+            props.data("endDate", endDate);
         } else {
             props.data("startDate", null);
             props.data("endDate", null);
@@ -59,7 +69,7 @@ export default function Step3Form(props: Step3FormProps) {
    
     return (
         <>
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Choose the Donation Event Period</Typography>
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem", fontWeight: "bold" }}>Choose the Donation Event Period</Typography>
         <Grid container justifyContent="space-between">
         { datePickerFields.map(function(field, i) {
             return <Grid item xs={12} md={12} lg={6} key={i}>
@@ -74,14 +84,15 @@ export default function Step3Form(props: Step3FormProps) {
                         error: displayError(i)
                     },
                     }}
-                    format="DD-MM-YYYY"
+                    format="DD/MM/YYYY"
+                    timezone="Asia/Singapore"
                     value={ i === 0 ? startDate : endDate }
                     onChange={handleDateChange(field)}
                 />
                 </LocalizationProvider>
             </Grid> }) }
         </Grid>
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Activate the Donation Event</Typography>
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem", fontWeight: "bold" }}>Activate the Donation Event</Typography>
         <FormControlLabel control={<Switch checked={isActive} onClick={() => setIsActive(!isActive)} sx={{ width: "9rem", height: "5.25rem", ".MuiSwitch-thumb": { width: "4.4rem", height: "4.1rem",  marginLeft: ( isActive ? "2rem" : null ) } }}/>} 
             label={ <Typography variant="h5" gutterBottom sx={{ color: isActive ? "primary.dark" : "secondary.dark", letterSpacing: "0.18rem", marginLeft: "0.5rem" }}>{ isActive ? "Active" : "Inactive" }</Typography> }/>
         </>

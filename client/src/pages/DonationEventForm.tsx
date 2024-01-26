@@ -35,7 +35,7 @@ export default function DonationEventForm() {
                 break;
             case 2:
                 setValidateStep3(true);
-                if (moment(formData['startDate'], "DD-MM-YYYY").isValid() && moment(formData['endDate'], "DD-MM-YYYY").isValid()) navigate("/admin/donation-event-preview", { state: JSON.stringify(formData) });
+                if (moment(formData['startDate'], "DD/MM/YYYY").isValid() && moment(formData['endDate'], "DD/MM/YYYY").isValid()) navigate("/admin/donation-event-preview", { state: JSON.stringify(formData) });
                 break;
         }
     }
@@ -44,7 +44,7 @@ export default function DonationEventForm() {
         setFormData((prevData) => ({...prevData, [key] : value}));
     }
 
-    console.log(formData);
+    // console.log(formData);
 
     const form: any = { 0: <Step1Form validate={validateStep1} data={handleData}/> , 1: <Step2Form validate={validateStep2} data={handleData}/>, 2: <Step3Form validate={validateStep3} data={handleData}/> }
 

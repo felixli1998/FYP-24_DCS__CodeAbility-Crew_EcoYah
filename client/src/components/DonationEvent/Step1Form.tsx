@@ -39,7 +39,7 @@ export default function Step1Form(props: Step1FormProps) {
 
     return (
         <>
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Upload an Image of the Donation Event</Typography>
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem", fontWeight: "bold" }}>Upload an Image of the Donation Event</Typography>
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" 
             sx={{ width: "100%",  
                 [theme.breakpoints.up('sm')]: {
@@ -64,7 +64,7 @@ export default function Step1Form(props: Step1FormProps) {
                                 style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /> }
         </Box>
         { (props.validate && image === null) && <FormHelperText sx={{ fontSize: "1.5rem", letterSpacing: "0.18rem" }} error>Please upload an image</FormHelperText> }
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Enter the Name the Donation Event</Typography>
+        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem", fontWeight: "bold" }}>Enter the Name the Donation Event</Typography>
         <TextField label="Name" type="text" 
             InputLabelProps={{ shrink: true }}
             sx={{ width: 350 }}
