@@ -44,7 +44,7 @@ export default function Step1Form(props: Step1FormProps) {
             sx={{ width: "100%",  
                 [theme.breakpoints.up('sm')]: {
                     width: '40.25rem', 
-                }, height: "12.5rem", border: "1px dashed #5A5858", borderRadius: "4px" }}>
+                }, height: "12.5rem", border: `1px dashed ${ props.validate && !fileUpload ? "#d32f2f" : "#5A5858" }`, borderRadius: "4px" }}>
             { !fileUpload ? (<><UploadFileIcon sx={{ width: "3.44rem", height: "3.44rem", color: "primary.dark" }}/>
             <Button sx={{ color: "primary.dark" }}>
                 <label htmlFor="ImageInput" style={{ cursor: "pointer" }}>
@@ -63,15 +63,15 @@ export default function Step1Form(props: Step1FormProps) {
                                 loading="lazy"
                                 style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /> }
         </Box>
-        { (props.validate && image === null) && <FormHelperText error>Please upload an image</FormHelperText> }
+        { (props.validate && image === null) && <FormHelperText sx={{ fontSize: "1.5rem", letterSpacing: "0.18rem" }} error>Please upload an image</FormHelperText> }
         <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Enter the Name the Donation Event</Typography>
         <TextField label="Name" type="text" 
             InputLabelProps={{ shrink: true }}
-            sx={{ width: 300 }}
+            sx={{ width: 350 }}
             value={name}
             onChange={handleTextChange}
             error={props.validate && name === ""}
-            helperText={ (props.validate && name === "") && "Please enter a name" }
+            helperText={ (props.validate && name === "") && <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Please enter a name</Typography> }
             />
         </>
     );

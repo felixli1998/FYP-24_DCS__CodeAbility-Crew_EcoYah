@@ -14,18 +14,19 @@ export default function Step2Form(props: Step2FormProps) {
     const allItems = [ 
         { item: "Broccoli", unit: "Kilogram" }, 
         { item: "Lettuce", unit: "Kilogram" }, 
-        { item: "Chocolate Milk", unit: "Litre" }, 
-        { item: "Apple Juice", unit: "Litre" }
+        // { item: "Chocolate Milk", unit: "Litre" }, 
+        // { item: "Apple Juice", unit: "Litre" }
     ];
 
     const [items, setItems] = useState(allItems);
-    const [itemsInfo, setItemsInfo] = useState<{ [key: string]: number }[]>([{}]);
+    const [itemsInfo, setItemsInfo] = useState<{ [key: string]: string | number }[]>([]);
 
     const handleTextChange = (itemKey: string, index: number) => (event: ChangeEvent<HTMLInputElement>) => {
         setItemsInfo((prevData) => {
             const updatedItemsInfo = [...prevData];
             updatedItemsInfo[index] = {
                 ...updatedItemsInfo[index],
+                "name": items[index].item,
                 [itemKey]: parseFloat(event.target.value),
             };
             return updatedItemsInfo;
@@ -35,7 +36,12 @@ export default function Step2Form(props: Step2FormProps) {
     console.log(itemsInfo);
 
     useEffect(() => {
-        props.data("donationEventItems", itemsInfo);
+        // accumulates the total count of keys across all objects
+        if (itemsInfo.reduce((count, obj) => count + Object.keys(obj).length, 0) === items.length * 4) {
+            props.data("donationEventItems", itemsInfo);
+        } else {
+            props.data("donationEventItems", []);
+        };
     }, [itemsInfo]);
    
     return (
@@ -61,9 +67,11 @@ export default function Step2Form(props: Step2FormProps) {
                                         type="number" 
                                         InputProps={{ endAdornment: <InputAdornment position="end">{ (j !== 2) && items[i].unit }</InputAdornment> }}
                                         InputLabelProps={{ shrink: true }}
-                                        sx={{ width: 300 }}
+                                        sx={{ width: 350 }}
                                         value={itemsInfo[i] && itemsInfo[i][itemKeys[j]] ? itemsInfo[i][itemKeys[j]] : ''}
-                                        onChange={handleTextChange(itemKeys[j], i)} /> }) }
+                                        onChange={handleTextChange(itemKeys[j], i)} 
+                                        error={ (props.validate && !itemsInfo[i]) || (props.validate && itemsInfo[i] && !itemsInfo[i][itemKeys[j]]) }
+                                        helperText={ ((props.validate && !itemsInfo[i]) || (props.validate && itemsInfo[i] && !itemsInfo[i][itemKeys[j]])) && <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Please enter a number</Typography> } /> }) }
                             </Stack>
                         </Box> 
                 </Grid>  }) }

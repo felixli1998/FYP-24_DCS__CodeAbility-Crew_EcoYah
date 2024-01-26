@@ -24,9 +24,35 @@ export default function Step3Form(props: Step3FormProps) {
         }
     }
 
+    const displayError = (index: number) => {
+        if (index === 0 && props.validate && startDate === null) return true;
+        if (index === 1 && props.validate && endDate === null) return true;
+        if (index === 1 && props.validate && endDate! < startDate!) return true;
+    }
+
+    const displayErrorMsg = (index: number) => {
+        if (index === 0 && props.validate && startDate === null) {
+            return "Please choose a Date (DD/MM/YYYY)";
+        } else if (index === 1 && props.validate && endDate === null) {
+            return "Please choose a Date (DD/MM/YYYY)";
+        } else if (index === 1 && props.validate && endDate! < startDate!) {
+            return "The end date should either match or come after the start date";
+        } else {
+            return "DD/MM/YYYY";
+        }
+    }
+
+    console.log(startDate);
+    console.log(endDate);
+
     useEffect(() => {
-        props.data("startDate", moment(startDate).format("DD-MM-YYYY"));
-        props.data("endDate", moment(endDate).format("DD-MM-YYYY"));
+        if (endDate! >= startDate!) {
+            props.data("startDate", moment(startDate, "DD-MM-YYYY"));
+            props.data("endDate", moment(endDate, "DD-MM-YYYY"));
+        } else {
+            props.data("startDate", null);
+            props.data("endDate", null);
+        }
         props.data("isActive", isActive);
     }, [startDate, endDate, isActive]);
    
@@ -35,19 +61,20 @@ export default function Step3Form(props: Step3FormProps) {
         <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Choose the Donation Event Period</Typography>
         <Grid container justifyContent="space-between">
         { datePickerFields.map(function(field, i) {
-            return <Grid item xs={12} md={6} lg={6} key={i}>
+            return <Grid item xs={12} md={12} lg={6} key={i}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                     label={field}
-                    sx={{ width: 300, marginBottom: "1.5rem" }}
+                    sx={{ width: 350, marginBottom: "1.5rem" }}
                     slotProps={{
                     textField: {
-                        helperText: 'DD/MM/YYYY',
-                        InputLabelProps: { shrink: true }
+                        helperText: <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>{displayErrorMsg(i)}</Typography>,
+                        InputLabelProps: { shrink: true },
+                        error: displayError(i)
                     },
                     }}
                     format="DD-MM-YYYY"
-                    value={ field === "Start Date" ? startDate : endDate }
+                    value={ i === 0 ? startDate : endDate }
                     onChange={handleDateChange(field)}
                 />
                 </LocalizationProvider>

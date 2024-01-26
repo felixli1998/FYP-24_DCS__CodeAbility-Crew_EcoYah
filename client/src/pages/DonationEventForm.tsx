@@ -5,7 +5,8 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Step1Form from "../components/DonationEvent/Step1Form";
 import Step2Form from "../components/DonationEvent/Step2Form";
 import Step3Form from "../components/DonationEvent/Step3Form";
-
+import moment from 'moment';
+import { useNavigate } from "react-router-dom";
 
 export default function DonationEventForm() {
   
@@ -15,6 +16,8 @@ export default function DonationEventForm() {
     const [validateStep2, setValidateStep2] = useState(false);
     const [validateStep3, setValidateStep3] = useState(false);
     const [formData, setFormData] = useState<{ [key: string] : any }>({});
+
+    const navigate = useNavigate();
 
     const handleBack = () => {
         if (activeStep > 0) setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -28,10 +31,11 @@ export default function DonationEventForm() {
                 break;
             case 1:
                 setValidateStep2(true);
-                if ((Object.keys(formData['donationEventItems'][0]).length >= 1)) setActiveStep(2);
+                if (formData['donationEventItems'].length !== 0) setActiveStep(2);
                 break;
             case 2:
                 setValidateStep3(true);
+                if (moment(formData['startDate'], "DD-MM-YYYY").isValid() && moment(formData['endDate'], "DD-MM-YYYY").isValid()) navigate("/admin/donation-event-preview");
                 break;
         }
     }
