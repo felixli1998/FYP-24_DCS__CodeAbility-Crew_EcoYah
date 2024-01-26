@@ -25,6 +25,10 @@ export default function DonationEventPreview() {
         } 
     }
 
+    const handleBack = () => {
+        navigate("/admin/donation-event-form", { state: 2 });
+    }
+
     // console.log(formData);
 
     useEffect(() => {
@@ -79,7 +83,7 @@ export default function DonationEventPreview() {
                         return (
                             <AccordionDetails key={i}>
                                 <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>
-                                    <b>{i+1}.{`${item['name']}:`}</b> <br/>
+                                    <b>{i+1}. {`${item['name']}:`}</b> <br/>
                                     <ul>
                                         <li><b>Minimum Quantity:</b> {item['minQty']} {item['unit']}</li>
                                         <li><b>Target Quantity:</b> {item['targetQty']} {item['unit']}</li>
@@ -90,7 +94,7 @@ export default function DonationEventPreview() {
                     }) }
                 </Accordion>
                 <Box display="flex" justifyContent="space-between">
-                    <Button variant="outlined" sx={{ fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem", borderColor: "primary.dark", color: "primary.dark" }} startIcon={<ArrowBackIosIcon />}>BACK</Button>
+                    <Button variant="outlined" sx={{ fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem", borderColor: "primary.dark", color: "primary.dark" }} startIcon={<ArrowBackIosIcon />} onClick={handleBack}>BACK</Button>
                     <Button variant="contained" sx={{ fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem", backgroundColor: "primary.dark"}} startIcon={<AddIcon />}>CREATE</Button>
                 </Box>
             </Stack>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Stack, Box, Stepper, Step, StepLabel, Typography, Grid, Button } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -6,21 +6,37 @@ import Step1Form from "../components/DonationEvent/Step1Form";
 import Step2Form from "../components/DonationEvent/Step2Form";
 import Step3Form from "../components/DonationEvent/Step3Form";
 import moment from 'moment';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function DonationEventForm() {
-  
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const steps = ['Step 1', 'Step 2', 'Step 3'];
     const [activeStep, setActiveStep] = useState(0);
     const [validateStep1, setValidateStep1] = useState(false);
+    const [backStep1, setBackStep1] = useState(false);
     const [validateStep2, setValidateStep2] = useState(false);
+    const [backStep2, setBackStep2] = useState(false);
     const [validateStep3, setValidateStep3] = useState(false);
+    const [backStep3, setBackStep3] = useState(false);
     const [formData, setFormData] = useState<{ [key: string] : any }>({});
 
-    const navigate = useNavigate();
-
     const handleBack = () => {
-        if (activeStep > 0) setActiveStep((prevActiveStep) => prevActiveStep - 1);
+        switch(activeStep) {
+            case 0:
+                navigate("/admin/donation-event-overview");
+                break;
+            case 1:
+                setBackStep1(true);
+                setActiveStep(0);
+                break;
+            case 2:
+                setBackStep2(true);
+                setActiveStep(1);
+                break;
+        }
     };
 
     const handleNext = () => {
@@ -44,9 +60,20 @@ export default function DonationEventForm() {
         setFormData((prevData) => ({...prevData, [key] : value}));
     }
 
-    // console.log(formData);
+    console.log(formData);
 
-    const form: any = { 0: <Step1Form validate={validateStep1} data={handleData}/> , 1: <Step2Form validate={validateStep2} data={handleData}/>, 2: <Step3Form validate={validateStep3} data={handleData}/> }
+    const form: any = { 
+            0: <Step1Form validate={validateStep1} data={handleData} back={backStep1} prevData={formData}/> , 
+            1: <Step2Form validate={validateStep2} data={handleData} back={backStep2} prevData={formData}/>, 
+            2: <Step3Form validate={validateStep3} data={handleData} back={backStep3} prevData={formData}/> 
+    }
+
+    // useEffect(() => {
+    //     if (location.state) {
+    //         setActiveStep(2);
+    //         setBackStep3(true);
+    //     }
+    // }, [location.state]);
 
     return (
         <>

@@ -4,6 +4,8 @@ import { Typography, Grid, Box, Stack, TextField, InputAdornment } from '@mui/ma
 type Step2FormProps = {
     validate: boolean
     data: (key: string, value: any) => void
+    back: boolean
+    prevData: any
 }
 
 export default function Step2Form(props: Step2FormProps) {
@@ -19,10 +21,16 @@ export default function Step2Form(props: Step2FormProps) {
     ];
 
     const [items, setItems] = useState(allItems);
-    const [itemsInfo, setItemsInfo] = useState<{ [key: string]: string | number }[]>([]);
+    const [itemsInfo, setItemsInfo] = useState(() => {
+        if (props.back && props.prevData['donationEventItems']) {
+            return props.prevData['donationEventItems'];
+        } else {
+            return allItems.map(item => ({ ...{ minQty: '', targetQty: '', pointsPerUnit: '' } }));
+        }
+    });
 
     const handleTextChange = (itemKey: string, index: number) => (event: ChangeEvent<HTMLInputElement>) => {
-        setItemsInfo((prevData) => {
+        setItemsInfo((prevData: any) => {
             const updatedItemsInfo = [...prevData];
             updatedItemsInfo[index] = {
                 ...updatedItemsInfo[index],
@@ -34,15 +42,16 @@ export default function Step2Form(props: Step2FormProps) {
         });
     }
 
-    // console.log(itemsInfo);
+    console.log(itemsInfo);
+
 
     useEffect(() => {
-        // accumulates the total count of keys across all objects
-        if (itemsInfo.reduce((count, obj) => count + Object.keys(obj).length, 0) === items.length * 5) {
-            props.data("donationEventItems", itemsInfo);
+        // check that each value is neither empty nor NaN, then update the state
+        if (itemsInfo.every((item: { [s: string]: any; })=> Object.values(item).every(value => value !== "" && !Number.isNaN(value)))) {
+            props.data('donationEventItems', itemsInfo);
         } else {
-            props.data("donationEventItems", []);
-        };
+            props.data('donationEventItems', []);
+        }
     }, [itemsInfo]);
    
     return (

@@ -6,6 +6,8 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 type Step1FormProps = {
     validate: boolean
     data: (key: string, value: string) => void
+    back: boolean
+    prevData: any
 }
 
 export default function Step1Form(props: Step1FormProps) {
@@ -33,6 +35,16 @@ export default function Step1Form(props: Step1FormProps) {
     }
 
     useEffect(() => {
+        // retrieve previously entered data
+        if (props.back && (props.prevData['name']) && (props.prevData['imageId'])) {
+            setName(props.prevData['name']);
+            setFileUpload(true);
+            setImage(props.prevData['imageId']);
+        }
+    }, [props.back, props.prevData]);
+
+    useEffect(() => {
+        // update new entered data
         props.data("imageId", image);
         props.data("name", name);
     }, [name, image]);

@@ -9,6 +9,8 @@ import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 type Step3FormProps = {
     validate: boolean
     data: (key: string, value: any) => void
+    back: boolean
+    prevData: any
 }
 
 export default function Step3Form(props: Step3FormProps) {
@@ -38,8 +40,8 @@ export default function Step3Form(props: Step3FormProps) {
     }
 
     const displayErrorMsg = (index: number) => {
-        console.log(startDate);
-        console.log(new Date(new Date().setHours(0,0,0,0)));
+        // console.log(startDate);
+        // console.log(new Date(new Date().setHours(0,0,0,0)));
         if (index === 0 && props.validate && startDate === null) {
             return "Please choose a Date (DD/MM/YYYY)";
         } else if (index === 1 && props.validate && endDate === null) {
