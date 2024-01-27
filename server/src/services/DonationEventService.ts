@@ -9,7 +9,19 @@ export class DonationEventService {
     this.donationEventRepository = donationEventRepository;
   }
 
-  async createDonationEvent(donationEvent: DonationEvent) {
+  async createDonationEvent(donationEvent: DonationEvent): Promise<DonationEvent> {
     return this.donationEventRepository.createDonationEvent(donationEvent);
+  }
+  
+  async getAllDonationEvents(): Promise<DonationEvent[]> {
+    return this.donationEventRepository.getAllDonationEvents();
+  }
+
+  async getDonationEventById(id: number): Promise<DonationEvent | null> {
+    return this.donationEventRepository.getDonationEventById(id);
+  }
+
+  async updateDonationEvent(donationEvent: DonationEvent): Promise<DonationEvent> {
+    return this.donationEventRepository.updateDonationEvent(donationEvent);
   }
 }
