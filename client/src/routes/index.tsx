@@ -6,6 +6,7 @@ import SignUp from "../pages/SignUp";
 import SignIn from "../pages/SignIn";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
+import ImageComponentExample from "../pages/ImageComponentExample";
 // import ContactUs from "../pages/ContactUs";
 
 const router = createBrowserRouter([
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/edit-profile",
         element: <EditProfile />,
+      },
+      {
+        path: "/image-component-example",
+        element: <ImageComponentExample />,
       },
       // {
       //   path: "/contactUs",
