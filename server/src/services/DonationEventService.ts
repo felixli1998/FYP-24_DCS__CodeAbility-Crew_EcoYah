@@ -24,4 +24,10 @@ export class DonationEventService {
   async updateDonationEvent(donationEvent: DonationEvent): Promise<DonationEvent> {
     return this.donationEventRepository.updateDonationEvent(donationEvent);
   }
+
+  // Filtering
+
+  async getFilteredDonationEvents(filters: any): Promise<DonationEvent[]> {
+    return this.donationEventRepository.filterDonationEvents(filters);
+  }
 }

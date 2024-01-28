@@ -26,4 +26,27 @@ export class DonationEventRepository {
     async updateDonationEvent(donationEvent: DonationEvent) {
         return await AppDataSource.getRepository(DonationEvent).save(donationEvent);
     }
+
+    async filterDonationEvents(filters: any): Promise<DonationEvent[]> {
+        const queryBuilder = AppDataSource.getRepository(DonationEvent)
+            .createQueryBuilder("donationEvent");
+
+        if (filters.startDate && filters.endDate) {
+            queryBuilder.where("donationEvent.startDate >= :startDate AND donationEvent.endDate <= :endDate", {
+                startDate: filters.startDate,
+                endDate: filters.endDate
+            });
+        }
+
+        if (filters.createdBy) {
+            queryBuilder.andWhere("donationEvent.createdBy = :userId", { userId: filters.createdBy });
+        }
+
+        if (filters.eventType) {
+            queryBuilder.andWhere("donationEvent.eventType = :eventTypeId", { eventTypeId: filters.eventType });
+        }
+
+        return await queryBuilder.getMany();
+    }
+
 }
