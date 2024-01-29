@@ -42,7 +42,7 @@ export default function Step2Form(props: Step2FormProps) {
         });
     }
 
-    console.log(itemsInfo);
+    // console.log(itemsInfo);
 
 
     useEffect(() => {

@@ -4,7 +4,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AddIcon from '@mui/icons-material/Add';
 import { useLocation, useNavigate } from "react-router-dom";
-import moment from 'moment-timezone';
+import dayjs from "dayjs";
 
 export default function DonationEventPreview() {
 
@@ -19,14 +19,14 @@ export default function DonationEventPreview() {
             if (formData[donationEventDetails[detail]]) return "Active";
             else return "Inactive";
         } else if (detail === "Period") {
-            return moment(formData[donationEventDetails[detail][0]]).tz('Asia/Singapore').format('DD/MM/YYYY') + " - " + moment(formData[donationEventDetails[detail][1]]).tz('Asia/Singapore').format('DD/MM/YYYY');
+            return dayjs(formData[donationEventDetails[detail][0]]).format('DD/MM/YYYY') + " - " + dayjs(formData[donationEventDetails[detail][1]]).format('DD/MM/YYYY');
         } else {
             return formData[donationEventDetails[detail]];
         } 
     }
 
     const handleBack = () => {
-        navigate("/admin/donation-event-form", { state: 2 });
+        navigate("/admin/donation-event-form", { state: JSON.stringify(formData) });
     }
 
     // console.log(formData);

@@ -18,8 +18,6 @@
     "axios": "^1.6.5",
     "dayjs": "^1.11.10",
     "libphonenumber-js": "^1.10.53",
-    "moment": "^2.30.1",
-    "moment-timezone": "^0.5.44",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.2",

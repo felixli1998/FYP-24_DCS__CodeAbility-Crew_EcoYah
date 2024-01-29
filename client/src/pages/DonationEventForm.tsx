@@ -5,7 +5,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Step1Form from "../components/DonationEvent/Step1Form";
 import Step2Form from "../components/DonationEvent/Step2Form";
 import Step3Form from "../components/DonationEvent/Step3Form";
-import moment from 'moment';
+import dayjs from "dayjs";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function DonationEventForm() {
@@ -51,7 +51,7 @@ export default function DonationEventForm() {
                 break;
             case 2:
                 setValidateStep3(true);
-                if (moment(formData['startDate'], "DD/MM/YYYY").isValid() && moment(formData['endDate'], "DD/MM/YYYY").isValid()) navigate("/admin/donation-event-preview", { state: JSON.stringify(formData) });
+                if (dayjs(formData['startDate']).isValid() && dayjs(formData['endDate']).isValid()) navigate("/admin/donation-event-preview", { state: JSON.stringify(formData) });
                 break;
         }
     }
@@ -68,12 +68,13 @@ export default function DonationEventForm() {
             2: <Step3Form validate={validateStep3} data={handleData} back={backStep3} prevData={formData}/> 
     }
 
-    // useEffect(() => {
-    //     if (location.state) {
-    //         setActiveStep(2);
-    //         setBackStep3(true);
-    //     }
-    // }, [location.state]);
+    useEffect(() => {
+        if (location.state) {
+            setFormData(JSON.parse(location.state));
+            setActiveStep(2);
+            setBackStep3(true);
+        }
+    }, [location.state]);
 
     return (
         <>
