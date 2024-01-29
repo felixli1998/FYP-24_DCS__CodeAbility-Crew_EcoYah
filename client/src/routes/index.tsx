@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         element: <EditProfile />,
       },
       {
-        path: "/admin-sign-in",
+        path: "/admin/sign-in",
         element: <AdminSignIn />,
       }
     ],

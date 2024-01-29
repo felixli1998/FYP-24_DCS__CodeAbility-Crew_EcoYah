@@ -7,7 +7,7 @@ type RoundProfilePicProps = {
 
 export default function RoundProfilePic(props: RoundProfilePicProps) {
     return (
-        <>
+        
         <Box
             component="img"
             display="flex"
@@ -25,6 +25,5 @@ export default function RoundProfilePic(props: RoundProfilePicProps) {
             alt={props.altText}
             src={props.pictureSrc}
         ></Box>
-        </>
     )
 };
