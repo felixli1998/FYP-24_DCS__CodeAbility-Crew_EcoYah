@@ -6,6 +6,8 @@ import SignUp from "../pages/SignUp";
 import SignIn from "../pages/SignIn";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
+import VerifyEmail from "../pages/VerifyEmail";
+import ResetPassword from "../pages/ResetPassword";
 // import ContactUs from "../pages/ContactUs";
 
 const router = createBrowserRouter([
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
       {
         path: "/edit-profile",
         element: <EditProfile />,
+      },
+      {
+        path: "/verify-email",
+        element: <VerifyEmail />,
+      },
+      {
+        path: "/reset-password",
+        element: <ResetPassword />,
       },
       // {
       //   path: "/contactUs",
