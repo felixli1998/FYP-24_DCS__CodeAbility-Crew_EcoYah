@@ -46,8 +46,8 @@ export default function SignUp() {
             const res = await makeHttpRequest('POST', BACKEND_URL + '/users', {
               email: formData['email'],
               name: formData['name'],
-              contact_num: formData['number'],
-              password_digest: formData['password']
+              contactNum: formData['number'],
+              passwordDigest: formData['password']
             })
             localStorage.setItem("ecoyah-email", formData['email']); 
             setStep(2);
