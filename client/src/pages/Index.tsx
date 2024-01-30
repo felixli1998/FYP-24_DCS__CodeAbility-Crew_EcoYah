@@ -37,32 +37,37 @@ const Home: React.FC = () => {
   };
 
   const handleFormSubmit = async (formData: any): Promise<boolean> => {
-    setErrorMessage("");
-    const {eventType} = formData;
+    try {
+      setErrorMessage("");
+      const {eventType} = formData;
 
-    // Sanitise input to safeguard duplicate creation of event type
-    const sanitisedEventType = _.replace(
-      _.startCase(_.trim(eventType)),
-      /\s+/g,
-      " "
-    );
-    const existingEventTypes = eventTypesData.data.eventTypes;
-    const isEventTypeExist = _.some(existingEventTypes, (eventTypeObj) => {
-      return eventTypeObj.name === sanitisedEventType;
-    });
+      // Sanitise input to safeguard duplicate creation of event type
+      const sanitisedEventType = _.replace(
+        _.startCase(_.trim(eventType)),
+        /\s+/g,
+        " "
+      );
+      const existingEventTypes = eventTypesData.data.eventTypes;
+      const isEventTypeExist = _.some(existingEventTypes, (eventTypeObj) => {
+        return eventTypeObj.name === sanitisedEventType;
+      });
 
-    // If doesn't exist, proceed with creation
-    if (!isEventTypeExist) {
-      const newEventType = await createEventType(sanitisedEventType);
-      console.log(newEventType);
-      if (newEventType && newEventType.data.eventTypes) {
-        eventTypesRefetch();
-        return true;
+      // If doesn't exist, proceed with creation
+      if (!isEventTypeExist) {
+        const newEventType = await createEventType(sanitisedEventType);
+        if (newEventType && newEventType.data.eventTypes) {
+          eventTypesRefetch();
+          return true;
+        }
       }
-    }
 
-    setErrorMessage("Input event type already exists!");
-    return false;
+      setErrorMessage("Input event type already exists!");
+      return false;
+    } catch (error) {
+      console.error("Error creating event type:", error);
+      setErrorMessage("An error occurred while creating the event type.");
+      return false;
+    }
   };
 
   return (

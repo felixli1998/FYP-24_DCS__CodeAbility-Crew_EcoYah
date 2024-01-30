@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import {IconProps} from "@mui/material";
 import Alert from "@mui/material/Alert";
+import CircularProgress from "@mui/material/CircularProgress";
 
 interface FormDialogProps {
   buttonName: string;
@@ -77,8 +78,7 @@ const FormDialog: React.FC<FormDialogProps> = ({
         <DialogTitle sx={{paddingX: "4rem"}}>{dialogTitle}</DialogTitle>
         <DialogContent>
           {formComponent}
-          {
-            errorMessage &&
+          {errorMessage && (
             <Alert
               variant="filled"
               severity="error"
@@ -86,7 +86,7 @@ const FormDialog: React.FC<FormDialogProps> = ({
             >
               {errorMessage}
             </Alert>
-          }
+          )}
         </DialogContent>
 
         <DialogActions>
@@ -102,7 +102,7 @@ const FormDialog: React.FC<FormDialogProps> = ({
             type="submit"
             disabled={loading}
           >
-            {rightActionButtonName}
+            {loading ? <CircularProgress /> : rightActionButtonName}
           </Button>
         </DialogActions>
       </Dialog>
