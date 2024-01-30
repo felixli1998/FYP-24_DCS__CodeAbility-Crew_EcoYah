@@ -32,7 +32,6 @@ import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import PaidOutlinedIcon from "@mui/icons-material/Paid";
 import { makeHttpRequest } from "../utils/Utility";
 import { USER_ROUTES } from "../services/routes";
-import { capitalize } from "lodash";
 
 const navigationItems = [
   {
@@ -267,7 +266,7 @@ export default function Profile() {
       if(action) {
         // Currently, we do not have points so it will be null
         const { name, role, points = 1000 } = data;
-        setUserInfo({ name, role: capitalize(role), points });
+        setUserInfo({ name, role, points });
       } else {
         // TODO: Currently, we do not really have any robust error message
         console.log("Error retrieving user info");
