@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import BoxButton from "../components/Button/BoxButton";
 import FormDialog from "../components/Dialog/FormDialog";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {
   EventType,
   createEventType,
@@ -9,7 +9,10 @@ import {
 } from "../services/eventTypesApi";
 import AddIcon from "@mui/icons-material/Add";
 import OutlinedTextField from "../components/TextFields/OutlinedTextField";
-import _ from "lodash";
+import {
+  formatAndCapitalizeString,
+  isValueExistsInObjectArray,
+} from "../utils/Common";
 
 const Home: React.FC = () => {
   const [eventTypes, setEventTypes] = useState<EventType[]>([]);
@@ -22,7 +25,7 @@ const Home: React.FC = () => {
     isLoading: eventTypesIsLoading,
     refetch: eventTypesRefetch,
   } = useQuery({
-    queryKey: ["/event-types"],
+    queryKey: ["eventTypes"],
     queryFn: fetchEventTypes,
   });
 
@@ -32,42 +35,46 @@ const Home: React.FC = () => {
     }
   }, [eventTypesData, eventTypesIsLoading]);
 
+  const {mutateAsync: createEventTypeMutateAsync} = useMutation({
+    mutationKey: ["createEventType"],
+    // mutationFn: Performing the actual API call
+    mutationFn: (eventTypeName: string) => {
+      return createEventType(eventTypeName);
+    },
+    // Execution after successful API call
+    onSuccess: (response) => {
+      if (response && response.data.eventTypes) {
+        eventTypesRefetch();
+        return true;
+      }
+      return false;
+    },
+    onError: (error: any) => {
+      console.error("Error creating event type:", error);
+      setErrorMessage("An error occurred while creating the event type.");
+    },
+  });
+
   const handleBoxButtonClick = (eventType: EventType) => {
     setSelectedEventType(eventType);
   };
 
   const handleFormSubmit = async (formData: any): Promise<boolean> => {
-    try {
-      setErrorMessage("");
-      const {eventType} = formData;
+    setErrorMessage("");
+    const {eventType} = formData;
+    const sanitisedEventType = formatAndCapitalizeString(eventType); // Sanitize input to safeguard duplicate creation of event type
+    const existingEventTypes = eventTypesData.data.eventTypes;
+    const isEventTypeExist = isValueExistsInObjectArray(
+      existingEventTypes,
+      "name",
+      sanitisedEventType
+    );
 
-      // Sanitise input to safeguard duplicate creation of event type
-      const sanitisedEventType = _.replace(
-        _.startCase(_.trim(eventType)),
-        /\s+/g,
-        " "
-      );
-      const existingEventTypes = eventTypesData.data.eventTypes;
-      const isEventTypeExist = _.some(existingEventTypes, (eventTypeObj) => {
-        return eventTypeObj.name === sanitisedEventType;
-      });
-
-      // If doesn't exist, proceed with creation
-      if (!isEventTypeExist) {
-        const newEventType = await createEventType(sanitisedEventType);
-        if (newEventType && newEventType.data.eventTypes) {
-          eventTypesRefetch();
-          return true;
-        }
-      }
-
+    if (isEventTypeExist) {
       setErrorMessage("Input event type already exists!");
       return false;
-    } catch (error) {
-      console.error("Error creating event type:", error);
-      setErrorMessage("An error occurred while creating the event type.");
-      return false;
     }
+    return createEventTypeMutateAsync(sanitisedEventType);
   };
 
   return (
