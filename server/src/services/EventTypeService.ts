@@ -13,6 +13,10 @@ export class EventTypeService {
     return this.eventTypeRepository.createEventType(eventType);
   }
 
+  async retrieveEventTypeById(id: number) {
+    return this.eventTypeRepository.retrieveEventTypeById(id);
+  }
+
   async retrieveEventTypeByName(name: string) {
     return this.eventTypeRepository.retrieveEventTypeByName(name);
   }

@@ -14,9 +14,11 @@ export class ItemService {
     return this.itemRepository.getAllItems(); // Assuming getAllItems is a method in your repository
   }
 
+  async getItemById(id: number) {
+    return this.itemRepository.getItemById(id); 
+  }
+
   async createItem(item: Item) {
     return this.itemRepository.createItem(item); // Assuming createItem is a method in your repository
   }
-
-  // Other business logic methods
 }

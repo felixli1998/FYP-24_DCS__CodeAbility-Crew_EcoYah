@@ -10,10 +10,7 @@ export class DonationEventItemService {
     this.donationItemRepository = donationItemRepository;
   }
 
-  async createDonationEventItem(donationItemRepository: DonationEventItem) {
-    return this.donationItemRepository.createDonationEventItem(donationItemRepository); // Assuming createItem is a method in your repository
+  async createDonationEventItem(donationEventItem: DonationEventItem) {
+    return this.donationItemRepository.createDonationEventItem(donationEventItem); 
   }
-
-  // Other business logic methods
-  // ...
 }
