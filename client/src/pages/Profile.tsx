@@ -27,7 +27,6 @@ import {green, pink, orange, blue} from "@mui/material/colors";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import pointsPicture from "../assets/Reward.png";
-import {useTheme} from "@mui/material/styles";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import PaidOutlinedIcon from "@mui/icons-material/Paid";
 import { makeHttpRequest } from "../utils/Utility";
