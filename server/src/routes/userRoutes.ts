@@ -39,7 +39,7 @@ router.get("/:email", async (req, res) => {
     const user = await userService.getUserByEmail(email);
 
     if (user === null) {
-      generateResponse(res, 200, { message: "User not found", data: null });
+      generateResponse(res, 200, { action: false, message: "User not found", data: null });
     } else {
       const payload = {
         name: user.name,
@@ -48,10 +48,10 @@ router.get("/:email", async (req, res) => {
         imageId: user.imageId,
         role: user.role,
       };
-      generateResponse(res, 200, { message: "User found", data: payload });
+      generateResponse(res, 200, { action: true, message: "User found", data: payload });
     }
   } catch (error) {
-    generateResponse(res, 500, { message: "Internal Server Error. Please refresh and try again.", data: null });
+    generateResponse(res, 500, { action: false, message: "Internal Server Error. Please refresh and try again.", data: null });
   }
 });
 

@@ -30,6 +30,8 @@ import pointsPicture from "../assets/Reward.png";
 import {useTheme} from "@mui/material/styles";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import PaidOutlinedIcon from "@mui/icons-material/Paid";
+import { makeHttpRequest } from "../utils/Utility";
+import { USER_ROUTES } from "../services/routes";
 
 const navigationItems = [
   {
@@ -249,11 +251,33 @@ const Others = () => {
 };
 
 export default function Profile() {
+  const email = localStorage.getItem("ecoyah-email") || "";
+
   const [userInfo, setUserInfo] = useState({
-    name: "John Timonthy",
-    role: "Donor",
-    points: 1200,
+    name: "",
+    role: "",
+    points: 0,
   });
+
+  const retrieveProfileInfo = async () => {
+    try {
+      const res: any = await makeHttpRequest('GET', USER_ROUTES.retrieveUserByEmail.replace(':email', email));
+      const { action, data } = res.data;
+      if(action) {
+        // Currently, we do not have points so it will be null
+        const { name, role, points = 1000 } = data;
+        setUserInfo({ name, role, points });
+      } else {
+        console.log("Error retrieving user info");
+      }
+    } catch (error) {
+      console.log("Error retrieving user info");
+    }
+  };
+
+  useEffect(() => {
+    retrieveProfileInfo();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
