@@ -14,4 +14,5 @@ export const GENERAL_ROUTES = {
 // Image Related Routes //
 export const IMAGE_ROUTES = {
   UPDATE: `${BASE_URL}/images/:id`,
+  RETRIEVE_BY_FILE_PATH: `${BASE_URL}/images/:filePath`,
 }

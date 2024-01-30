@@ -88,7 +88,7 @@ export default function Image(props: ImageProps): JSX.Element {
     const fetchImage = async () => {
       try {
         const filepath = `${props.folderPrefix ? props.folderPrefix + "/" : ""}${props.imageId}`;
-        const response = await axios.get(`${BACKEND_URL}/images/${filepath}`, {
+        const response = await axios.get(IMAGE_ROUTES.RETRIEVE_BY_FILE_PATH.replace(":filePath", filepath), {
           responseType: 'arraybuffer',
         });
 
