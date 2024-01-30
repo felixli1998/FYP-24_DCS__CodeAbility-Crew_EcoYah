@@ -28,7 +28,7 @@ const BoxButton: React.FC<BoxButtonProps> = ({
         width: "1rem",
         padding: "3.5rem",
         fontWeight: "bold",
-        marginRight: 1,
+        margin: 0.5,
         ...customStyles, // Merge custom styles with existing styles
       }}
     >
