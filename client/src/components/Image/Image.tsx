@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Box, Button } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
+import { IMAGE_ROUTES } from '../../services/routes';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -38,7 +39,6 @@ const defaultProps: ImageProps = {
 };
 
 export default function Image(props: ImageProps): JSX.Element {
-  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [imagePath, setImagePath] = useState<string | undefined>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -52,7 +52,7 @@ export default function Image(props: ImageProps): JSX.Element {
     formData.append('file', selectedFile);
 
     try {
-      const response = await axios.put(`${BACKEND_URL}/images/${props.imageId}`, formData, {
+      const response = await axios.put(IMAGE_ROUTES.UPDATE.replace(':id', props.imageId), formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -126,7 +126,7 @@ export default function Image(props: ImageProps): JSX.Element {
       sx={{
         width: props.width,
         marginBottom: "1rem",
-      }}  
+      }}
     >
       <img
         src={imagePath}
@@ -142,8 +142,8 @@ export default function Image(props: ImageProps): JSX.Element {
           <Box display="flex" flexDirection={"column"} sx= {{
 
           }}>
-            <Button component="label" 
-              variant="outlined" 
+            <Button component="label"
+              variant="outlined"
               sx={{
                 marginBottom: 1,
               }}

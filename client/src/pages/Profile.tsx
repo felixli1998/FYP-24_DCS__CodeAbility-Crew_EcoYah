@@ -261,13 +261,14 @@ export default function Profile() {
 
   const retrieveProfileInfo = async () => {
     try {
-      const res: any = await makeHttpRequest('GET', USER_ROUTES.retrieveUserByEmail.replace(':email', email));
+      const res: any = await makeHttpRequest('GET', USER_ROUTES.RETRIEVE_BY_EMAIL.replace(':email', email));
       const { action, data } = res.data;
       if(action) {
         // Currently, we do not have points so it will be null
         const { name, role, points = 1000 } = data;
         setUserInfo({ name, role, points });
       } else {
+        // TODO: Currently, we do not really have any robust error message
         console.log("Error retrieving user info");
       }
     } catch (error) {
