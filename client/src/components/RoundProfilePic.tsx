@@ -24,6 +24,6 @@ export default function RoundProfilePic(props: RoundProfilePicProps) {
             }}
             alt={props.altText}
             src={props.pictureSrc}
-        ></Box>
+        />
     )
 };
