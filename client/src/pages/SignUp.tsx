@@ -9,11 +9,9 @@ import SuccessCard from "../components/SuccessCard";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { makeHttpRequest } from "../utils/Utility";
 import axios from "axios";
+import { USER_ROUTES } from "../services/routes";
 
 export default function SignUp() {
-
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
     const passwordCriteria: string[] = [ "At least 12 characters", "1 uppercase letter", "1 lowercase letter", "1 number", "1 symbol" ];
     const signUpCriteria: string[] = [ "By signing up, you agree to the Terms of Service and Privacy Policy." ];
 
@@ -43,7 +41,7 @@ export default function SignUp() {
 
           // POST user to database
           try {
-            const res = await makeHttpRequest('POST', BACKEND_URL + '/users', {
+            const res = await makeHttpRequest('POST', USER_ROUTES.CREATE_USER, {
               email: formData['email'],
               name: formData['name'],
               contactNum: formData['number'],

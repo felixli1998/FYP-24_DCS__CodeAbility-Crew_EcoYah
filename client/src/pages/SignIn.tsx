@@ -8,11 +8,9 @@ import LongButtons from "../components/LongButton";
 import EmailCard from "../components/EmailCard";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { makeHttpRequest } from "../utils/Utility";
+import { GENERAL_ROUTES } from "../services/routes";
 
 export default function SignIn() {
-
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
     const rmbSignIn: string[] = [ "Remember Me" ];
     const [validateForm, setValidateForm] = useState(false);
     const [currEmail, setCurrEmail] = useState(localStorage.getItem("ecoyah-email") || "");
@@ -23,11 +21,11 @@ export default function SignIn() {
     const [rmbMe, setRmbMe] = useState(false);
     const [signInError, setSignInError] = useState(false);
     const [formData, setFormData] = useState<{ [key: string] : string }>({});
-    
+
     const handleForgotPassword = () => {
         setForgotPassword(true);
     }
-      
+
     const handleRmbMe = (status: boolean) => {
         setRmbMe(status);
         handleLocalStorage();
@@ -36,10 +34,10 @@ export default function SignIn() {
 
     const handleLocalStorage = () => {
         if (rmbMe) {
-            localStorage.setItem("ecoyah-email", formData['email']); 
+            localStorage.setItem("ecoyah-email", formData['email']);
             localStorage.setItem("ecoyah-password", formData['password']);
         } else {
-            localStorage.removeItem("ecoyah-email"); 
+            localStorage.removeItem("ecoyah-email");
             localStorage.removeItem("ecoyah-password");
         }
     }
@@ -50,10 +48,10 @@ export default function SignIn() {
         setValidateForm(status);
 
         if (formData['email'] !== "" && formData['password'] !== "") {
-            
-            // POST user to verify credentials  
+
+            // POST user to verify credentials
             try {
-                const res: any = await makeHttpRequest('POST', BACKEND_URL + '/login', {
+                const res: any = await makeHttpRequest('POST', GENERAL_ROUTES.LOGIN, {
                     email: formData['email'],
                     password: formData['password']
                 })
@@ -61,7 +59,7 @@ export default function SignIn() {
 
                 if (res.data.action) {
                     // Login successful
-                    localStorage.setItem("ecoyah-email", formData['email']); 
+                    localStorage.setItem("ecoyah-email", formData['email']);
                     navigate("/");
                 } else {
                     // Login failed, handle specific cases
@@ -103,8 +101,8 @@ export default function SignIn() {
 
     return (
         <>
-            <Box 
-                component="img" 
+            <Box
+                component="img"
                 display="flex"
                 justifyContent="center"
                 alignItems="center"
@@ -118,12 +116,12 @@ export default function SignIn() {
                 justifyContent="center"
                 alignItems="center"
                 sx={{ width: 420, m: "auto",
-                '& > :not(style)': { m: 2, p: 2 }, boxShadow: 5, borderRadius: 2, 
+                '& > :not(style)': { m: 2, p: 2 }, boxShadow: 5, borderRadius: 2,
                 }}
                 noValidate
                 autoComplete="off"
             >
-                { !forgotPassword ? 
+                { !forgotPassword ?
                 <Stack spacing={3}>
                     { signInError && <Alert severity="error">The request encountered an issue. Please refresh and try again!</Alert> }
                     <Typography variant="h5" align="center" gutterBottom>Welcome Back!</Typography>
