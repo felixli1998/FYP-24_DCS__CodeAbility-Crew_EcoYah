@@ -7,9 +7,11 @@ interface ProfileTextFieldProps {
   value: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  error?: boolean;
+  helperText?: string;
 }
 
-const ProfileTextField: React.FC<ProfileTextFieldProps> = ({ label, value, onChange, disabled }) => (
+const ProfileTextField: React.FC<ProfileTextFieldProps> = ({ label, value, onChange, disabled, error = false, helperText = '' }) => (
   <Box
     sx={{
       marginY: ".5rem",
@@ -22,9 +24,11 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({ label, value, onCha
       InputLabelProps={{ shrink: false }}
       variant="outlined"
       fullWidth
-      defaultValue={value}
+      value={value}
       disabled={disabled}
       onChange={onChange}
+      error={error}
+      helperText={helperText}
     />
   </Box>
 );

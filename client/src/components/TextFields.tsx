@@ -14,7 +14,7 @@ type TextFieldsProps = {
     form?: string
     validate: boolean
     data: (type:string, arg: string) => void
-    error?: boolean 
+    error?: boolean
     current?: string
 }
 
@@ -83,10 +83,10 @@ export default function TextFields(props: TextFieldsProps) {
     }
 
     const displayError = () => {
-      if ((props.validate && value === "") || 
-        (props.form === "sign up" && props.type === "email" && props.error) || 
+      if ((props.validate && value === "") ||
+        (props.form === "sign up" && props.type === "email" && props.error) ||
         (props.form === "sign in" && props.type === "email" && !props.error) ||
-        ((props.type.includes("password")) && props.validate && props.error === false) || 
+        ((props.type.includes("password")) && props.validate && props.error === false) ||
         (props.validate && phoneError)) {
         return true;
       } else {
@@ -97,10 +97,10 @@ export default function TextFields(props: TextFieldsProps) {
     const displayErrorMsg = () => {
       if (props.validate && value === "") {
         return helperText[props.type];
-      } 
+      }
       if (props.form === "sign up" && props.type === "email" && props.error) {
         return "This email already exists. Please use a different email or proceed to login if this account belongs to you";
-      } 
+      }
       if (props.form === "sign in" && props.type === "email" && !props.error) {
         return "This email does not match any registered accounts";
       }
@@ -112,10 +112,10 @@ export default function TextFields(props: TextFieldsProps) {
       }
       if (props.validate && props.type === "confirm password" && !props.error) {
         return "Please enter the same password";
-      } 
+      }
       if (props.validate && phoneError) {
         return "Please enter a valid contact number";
-      } 
+      }
     }
 
     useEffect(() => {
@@ -124,7 +124,7 @@ export default function TextFields(props: TextFieldsProps) {
 
     return (
         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-            {icon[props.type]} 
+            {icon[props.type]}
             { props.type === "number" &&
                 <Autocomplete
                   id="country-select-demo"
@@ -132,8 +132,8 @@ export default function TextFields(props: TextFieldsProps) {
                   options={countries}
                   autoHighlight
                   defaultValue={{
-                      code: 'SG', 
-                      label: 'Singapore', 
+                      code: 'SG',
+                      label: 'Singapore',
                       phone: '65',
                       suggested: true,
                     }}
@@ -164,7 +164,7 @@ export default function TextFields(props: TextFieldsProps) {
                   )}
                 /> }
             <TextField sx={{ width : props.type === "number" ? 225 : 300 }} label={props.label} variant="standard" type={props.type.includes("password") && !showPassword ? "password" : "text"}
-                InputProps={props.type.includes("password") ? 
+                InputProps={props.type.includes("password") ?
                         { endAdornment: (<InputAdornment position="end">
                         <IconButton
                             aria-label="toggle password visibility"
@@ -180,7 +180,7 @@ export default function TextFields(props: TextFieldsProps) {
                 onChange={handleInputChange}
                 error={displayError()}
                 helperText={displayErrorMsg()}
-                /> 
-        </Box> 
+                />
+        </Box>
     );
 }
