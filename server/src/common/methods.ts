@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import IPagination from './IPagination';
 // Common methods
 // -----------------------------------------------------------------------
 type PayloadT = {
@@ -17,9 +18,10 @@ export const strongParams = (payload: PayloadT, allowedParams: string[]): Partia
   return filteredParams;
 }
 // https://stackoverflow.com/questions/12806386/is-there-any-standard-for-json-api-response-format
-export const generateResponse = (res: Response, status: number, data: any) => {
+export const generateResponse = (res: Response, status: number, data: any, pagination?:IPagination) => {
   return res.status(status).json({
     "status": status,
     "data": data,
+    "pagination": pagination
   });
 }
