@@ -110,10 +110,10 @@ export default function EditProfile() {
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      userDataDispatch({ type: 'updateProfilePic', payload: file });
+      userDataDispatch({ type: 'profilePic', payload: file });
       const reader = new FileReader();
       reader.onloadend = () => {
-        userDataDispatch({ type: 'updateProfilePic', payload: reader.result as string });
+        userDataDispatch({ type: 'profilePic', payload: reader.result as string });
       };
       reader.readAsDataURL(file);
     }
