@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Stack, Box, Stepper, Step, StepLabel, Typography, Grid, Button } from '@mui/material';
+import StaffTypography from "../components/Typography/StaffTypography";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import Step1Form from "../components/DonationEvent/Step1Form";
@@ -84,7 +85,7 @@ export default function DonationEventForm() {
                 <Step key={label}>
                     <StepLabel  
                         sx={{ ".MuiSvgIcon-root": { width: "3.44rem", height: "3.44rem", borderRadius: "50rem" }, ".MuiStepIcon-text": { fontSize: "1rem" } }}>
-                    <Typography variant="h5" gutterBottom sx={{ color: (activeStep >= i) ? "primary.main" : null , letterSpacing: "0.18rem", fontStyle: "bold" }}>{label}</Typography>
+                    <StaffTypography type="title" size={1.5} text={label} customStyles={{ color: (activeStep >= i) ? "primary.main" : "" }} />
                     </StepLabel>
                 </Step>
                 ))}

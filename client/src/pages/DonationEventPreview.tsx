@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { Box, Stack, Typography, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+import { Box, Stack, Accordion, AccordionSummary, AccordionDetails, Button } from '@mui/material';
+import StaffTypography from "../components/Typography/StaffTypography";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AddIcon from '@mui/icons-material/Add';
@@ -14,7 +15,7 @@ export default function DonationEventPreview() {
 
     const donationEventDetails: any = {'Name' : 'name', 'Type': 'eventType', 'Period': [ 'startDate', 'endDate'], 'Status': 'isActive'};
 
-    const displayValue = (detail: any) => {
+    const displayValue = (detail: string) => {
         if (formData && detail === "Status") {
             if (formData[donationEventDetails[detail]]) return "Active";
             else return "Inactive";
@@ -40,7 +41,7 @@ export default function DonationEventPreview() {
     return (
         <Box display="flex" justifyContent="center" sx={{ m: 5 }}>
             <Stack spacing={3}>
-                <Typography variant="h4" align="center" gutterBottom sx={{ color: "primary.dark", letterSpacing: "0.255rem", fontWeight: "bold" }}>Preview the Donation Event</Typography>
+                <StaffTypography type="title" size={2.125} text="Preview the Donation Event" customStyles={{ textAlign: "center" }}/>
                 <Box
                     component="img"
                     sx={{
@@ -59,14 +60,12 @@ export default function DonationEventPreview() {
                     aria-controls="panel1-content"
                     id="panel1-header"
                     >
-                    <Typography variant="h4" gutterBottom sx={{ color: "primary.dark", letterSpacing: "0.225rem", fontWeight: "bold" }}>Donation Event Details</Typography>
+                    <StaffTypography type="title" size={2.125} text="Donation Event Details" customStyles={{ textAlign: "center" }}/>
                     </AccordionSummary>
                     { formData && Object.keys(donationEventDetails).map((detail: any, i: number)=>{
                         return (
                             <AccordionDetails key={i}>
-                                <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>
-                                    <span><b>{`${detail}:`}</b> {displayValue(detail)}</span>
-                                </Typography>
+                                <StaffTypography type="title" size={1.5} text={`<b>${detail}</b>: ${displayValue(detail)}`} customStyles={{ color: "secondary.main", fontWeight: "none" }}/>
                             </AccordionDetails> )
                         })
                     }
@@ -77,19 +76,18 @@ export default function DonationEventPreview() {
                     aria-controls="panel2-content"
                     id="panel2-header"
                     >
-                    <Typography variant="h4" gutterBottom sx={{ color: "primary.dark", letterSpacing: "0.225rem", fontWeight: "bold" }}>Item Details</Typography> 
+                    <StaffTypography type="title" size={2.125} text="Item Details" customStyles={{ textAlign: "center" }}/>
                     </AccordionSummary>
                     { formData && formData['donationEventItems'].map(function(item: any, i: number) {
                         return (
                             <AccordionDetails key={i}>
-                                <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>
-                                    <b>{i+1}. {`${item['name']}:`}</b> <br/>
+                                <StaffTypography type="title" size={1.5}
+                                    text={`<div><b>${i+1}. ${item['name']}:</b><br/>
                                     <ul>
-                                        <li><b>Minimum Quantity:</b> {item['minQty']} {item['unit']}</li>
-                                        <li><b>Target Quantity:</b> {item['targetQty']} {item['unit']}</li>
-                                        <li><b>Points Per {item['unit']}:</b> {item['pointsPerUnit']}</li>
-                                    </ul>
-                                </Typography>
+                                        <li><b>Minimum Quantity:</b> ${item['minQty']} ${item['unit']}</li>
+                                        <li><b>Target Quantity:</b> ${item['targetQty']} ${item['unit']}</li>
+                                        <li><b>Points Per ${item['unit']}:</b> ${item['pointsPerUnit']}</li>
+                                    </ul></div>`} customStyles={{ color: "secondary.main", fontWeight: "none" }}/>
                             </AccordionDetails> )
                     }) }
                 </Accordion>
