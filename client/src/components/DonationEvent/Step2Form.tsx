@@ -1,5 +1,6 @@
 import { useState, useEffect, ChangeEvent } from "react";
-import { Typography, Grid, Box, Stack, TextField, InputAdornment } from '@mui/material';
+import { Grid, Box, Stack, TextField, InputAdornment } from '@mui/material';
+import StaffTypography from "../Typography/StaffTypography";
 
 type Step2FormProps = {
     validate: boolean
@@ -56,7 +57,7 @@ export default function Step2Form(props: Step2FormProps) {
    
     return (
         <>
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem", fontWeight: "bold" }}>Fill up the information for each donation item</Typography>
+        <StaffTypography type="title" size={1.5} text="Fill up the information for each donation item" />
         <Grid container justifyContent="space-between" sx={{ p: 2 }}>
             { items.map(function(item, i) {
                     return <Grid item xs={12} md={12} lg={6} sx={{ marginBottom: "1rem", }} key={i}>
@@ -71,7 +72,7 @@ export default function Step2Form(props: Step2FormProps) {
                             noValidate
                             autoComplete="off">
                             <Stack spacing={5}>
-                                <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem" }}>Item {i+1}: {items[i].item}</Typography>
+                                <StaffTypography type="title" size={1.5} text={"Item " + (i+1) + ": " + items[i].item } />
                                 { itemFields.map(function(field, j) {
                                     return <TextField key={j} label={ (j !== 2) ? itemFields[j] : itemFields[j] + items[i].unit } 
                                         type="number" 
@@ -81,7 +82,7 @@ export default function Step2Form(props: Step2FormProps) {
                                         value={itemsInfo[i] && itemsInfo[i][itemKeys[j]] ? itemsInfo[i][itemKeys[j]] : ''}
                                         onChange={handleTextChange(itemKeys[j], i)} 
                                         error={ (props.validate && !itemsInfo[i]) || (props.validate && itemsInfo[i] && !itemsInfo[i][itemKeys[j]]) }
-                                        helperText={ ((props.validate && !itemsInfo[i]) || (props.validate && itemsInfo[i] && !itemsInfo[i][itemKeys[j]])) && <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Please enter a number</Typography> } /> }) }
+                                        helperText={ ((props.validate && !itemsInfo[i]) || (props.validate && itemsInfo[i] && !itemsInfo[i][itemKeys[j]])) && <StaffTypography type="helperText" size={1.5} text="Please enter a number" /> } /> }) }
                             </Stack>
                         </Box> 
                 </Grid>  }) }

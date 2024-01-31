@@ -1,7 +1,8 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { useTheme } from '@mui/system';
-import { Box, Typography, TextField, Button, FormHelperText } from '@mui/material';
+import { Box, TextField, Button } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
+import StaffTypography from "../Typography/StaffTypography";
 
 type Step1FormProps = {
     validate: boolean
@@ -51,7 +52,7 @@ export default function Step1Form(props: Step1FormProps) {
 
     return (
         <>
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem", fontWeight: "bold" }}>Upload an Image of the Donation Event</Typography>
+        <StaffTypography type="title" size={1.5} text="Upload an Image of the Donation Event" />
         <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" 
             sx={{ width: "100%",  
                 [theme.breakpoints.up('sm')]: {
@@ -60,7 +61,7 @@ export default function Step1Form(props: Step1FormProps) {
             { !fileUpload ? (<><UploadFileIcon sx={{ width: "3.44rem", height: "3.44rem", color: "primary.dark" }}/>
             <Button sx={{ color: "primary.dark" }}>
                 <label htmlFor="ImageInput" style={{ cursor: "pointer" }}>
-                <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", textDecoration:"underline", marginTop: "1rem" }}>Click to Upload</Typography>
+                <StaffTypography type="title" size={1.5} text="Click to Upload" customStyles={{ textDecoration:"underline", marginTop: "1rem"}}/>
                 </label>
                 <input
                     type="file"
@@ -75,15 +76,15 @@ export default function Step1Form(props: Step1FormProps) {
                                 loading="lazy"
                                 style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} /> }
         </Box>
-        { (props.validate && image === null) && <FormHelperText sx={{ fontSize: "1.5rem", letterSpacing: "0.18rem" }} error>Please upload an image</FormHelperText> }
-        <Typography variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem", marginBottom: "1.5rem", fontWeight: "bold" }}>Enter the Name the Donation Event</Typography>
+        { (props.validate && image === null) && <StaffTypography type="helperText" size={1.5} text="Please upload an image" /> }
+        <StaffTypography type="title" size={1.5} text="Enter the Name the Donation Event" />
         <TextField label="Name" type="text" 
             InputLabelProps={{ shrink: true }}
             sx={{ width: 350 }}
             value={name}
             onChange={handleTextChange}
             error={props.validate && name === ""}
-            helperText={ (props.validate && name === "") && <Typography component={'span'} variant="h5" gutterBottom sx={{ letterSpacing: "0.18rem" }}>Please enter a name</Typography> }
+            helperText={ (props.validate && name === "") && <StaffTypography type="helperText" size={1.5} text="Please enter a name" /> }
             />
         </>
     );
