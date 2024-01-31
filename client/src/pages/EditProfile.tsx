@@ -14,17 +14,41 @@ import TerminateModal from "../components/EditProfile/TerminateModal";
 import { makeHttpRequest } from "../utils/Utility";
 import { USER_ROUTES } from "../services/routes";
 
+type ErrorActionT = {
+  type: 'Required Field' | 'Invalid Contact' | 'Reset' | 'Reset All',
+  payload: 'name' | 'contactNum' | 'email' | 'profilePic'
+}
+
+type ErrorStateT = {
+  [key in 'name' | 'contactNum' | 'email' | 'profilePic']: {
+    error: boolean;
+    helperText: string;
+  };
+};
+
+type UserActionT =
+| { type: keyof UserStateT ; payload: string }
+| { type: 'all'; payload: UserStateT };
+
+
+type UserStateT = {
+  name: string;
+  contactNum: string;
+  email: string;
+  profilePic: string | File;
+}
+
 export default function EditProfile() {
   const email = localStorage.getItem("ecoyah-email") || "";
 
-  const defaultState = {
+  const defaultUserState: UserStateT = {
     name: "",
     contactNum: "",
     email: "",
     profilePic: ""
   }
 
-  const defaultErrorState = {
+  const defaultErrorState: ErrorStateT = {
     name: { error: false, helperText: "" },
     contactNum: { error: false, helperText: "" },
     email: { error: false, helperText: "" },
@@ -32,7 +56,7 @@ export default function EditProfile() {
   }
 
   // TODO: Note to self, can I just use a regular useState and achieve the same outcome?
-  const userDataReducer = (state: any, action:any) => {
+  const userDataReducer = (state: UserStateT, action: UserActionT) => {
     switch (action.type) {
       case 'name':
         return { ...state, name: action.payload };
@@ -47,12 +71,19 @@ export default function EditProfile() {
     }
   }
 
-  const errorReducer = (state: any, action:any) => {
+  const errorReducer = (state: ErrorStateT, action:ErrorActionT) => {
+    const FIELDS_MAPPER = {
+      'name': 'name',
+      'contactNum': 'contact number',
+      'email': 'email',
+      'profilePic': 'profile picture'
+    }
+
     switch(action.type) {
       case 'Required Field':
-        return { ...state, [action.payload]: {error: true, helperText: "This is a required field"} };
+        return { ...state, [action.payload]: {error: true, helperText: `Please enter your ${FIELDS_MAPPER[action.payload]}.`} };
       case 'Invalid Contact':
-        return { ...state, [action.payload]: {error: true, helperText: "Please input a valid value."} };
+        return { ...state, [action.payload]: {error: true, helperText: "Please enter a valid contact number."} };
       case 'Reset':
         return { ...state, [action.payload]: {error: false, helperText: ""} };
       case 'Reset All':
@@ -60,15 +91,15 @@ export default function EditProfile() {
     }
   }
 
-  const [userData, userDataDispatch] = useReducer(userDataReducer, defaultState);
+  const [userData, userDataDispatch] = useReducer(userDataReducer, defaultUserState);
   const [errorData, errorDataDispatch] = useReducer(errorReducer, defaultErrorState);
 
   const retrieveProfileInfo = async () => {
     try {
       const res: any = await makeHttpRequest('GET', USER_ROUTES.RETRIEVE_BY_EMAIL.replace(':email', email));
       const { action, data } = res.data;
+
       if(action) {
-        // Currently, we do not have points so it will be null
         const { name, email, contactNum, imageUrl = profilePic } = data;
         userDataDispatch({ type: 'all', payload: { name, email, contactNum, profilePic: imageUrl }})
       } else {
@@ -86,10 +117,10 @@ export default function EditProfile() {
 
   // // Function to validate changes are valid
   const validateChanges = () => {
-    const REQUIRED_FIELDS = ['name', 'contactNum', 'email'];
+    const REQUIRED_FIELDS: (keyof UserStateT)[] = ['name', 'contactNum', 'email'];
 
     REQUIRED_FIELDS.forEach((field) => {
-      if(userData[field].trim() === "") {
+      if(userData[field] === "") {
         errorDataDispatch({ type: 'Required Field', payload: field });
       }
     })
@@ -110,7 +141,6 @@ export default function EditProfile() {
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      userDataDispatch({ type: 'profilePic', payload: file });
       const reader = new FileReader();
       reader.onloadend = () => {
         userDataDispatch({ type: 'profilePic', payload: reader.result as string });
@@ -133,7 +163,7 @@ export default function EditProfile() {
     return true;
   };
 
-  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
+  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>, field: keyof UserStateT) => {
     userDataDispatch({ type: field, payload: event.target.value });
     errorDataDispatch({ type: 'Reset', payload: field }); // Remove existing error message
   }
