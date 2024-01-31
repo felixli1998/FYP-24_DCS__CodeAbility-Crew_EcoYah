@@ -45,12 +45,12 @@ export default function EditProfile() {
     useFeedbackNotification();
   const navigate = useNavigate();
 
-  const defaultUserState: UserStateT = {
-      name: "",
-      contactNum: "",
-      email: "",
-      profilePic: "",
-  };
+      const defaultUserState: UserStateT = {
+          name: "",
+          contactNum: "",
+          email: "",
+          profilePic: "",
+      };
 
   const defaultErrorState: ErrorStateT = {
     name: { error: false, helperText: "" },
