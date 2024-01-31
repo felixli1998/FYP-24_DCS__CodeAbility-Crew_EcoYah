@@ -10,7 +10,13 @@ export class DonationEventService {
     this.donationEventRepository = donationEventRepository;
   }
 
-  async createDonationEvent(donationEvent: DonationEvent) {
-    return this.donationEventRepository.createDonationEvent(donationEvent);
+  async createDonationEvent(donationEvent: DonationEvent): Promise<DonationEvent> {
+    try {
+      // This will trigger the @BeforeInsert() validations in the entity
+      return await this.donationEventRepository.createDonationEvent(donationEvent);
+    } catch (error) {
+        console.log(error);
+        throw new Error("An error occurred while saving the donation event.");
+    }
   }
 }
