@@ -10,9 +10,11 @@ import Button from '@mui/material/Button';
 // Components
 import ProfilePic from "../components/EditProfile/ProfilePic";
 import ProfileTextField from "../components/EditProfile/ProfileTextField";
-import TerminateModal from "../components/EditProfile/TerminateModal";
+// import TerminateModal from "../components/EditProfile/TerminateModal";
 import { makeHttpRequest } from "../utils/Utility";
 import { USER_ROUTES } from "../services/routes";
+import { useNavigate } from "react-router-dom";
+
 
 type ErrorActionT = {
   type: 'requiredField' | 'invalidContact' | 'reset' | 'resetAll',
@@ -40,6 +42,7 @@ type UserStateT = {
 
 export default function EditProfile() {
   const email = localStorage.getItem("ecoyah-email") || "";
+  const navigate = useNavigate();
 
   const defaultUserState: UserStateT = {
     name: "",
@@ -170,11 +173,11 @@ export default function EditProfile() {
     errorDataDispatch({ type: 'reset', payload: field }); // Remove existing error message
   }
 
-  // Function to handle terminate account
-  const handleTerminateAccount = () => {
-    // console.log("Email:", userData.email);
-    return true;
-  };
+  // // Function to handle terminate account
+  // const handleTerminateAccount = () => {
+  //   // console.log("Email:", userData.email);
+  //   return true;
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -220,7 +223,19 @@ export default function EditProfile() {
           >
             Save changes
           </Button>
-          <TerminateModal handleConfirmTerminate={handleTerminateAccount}/>
+          <Button
+            variant="outlined"
+            color="error"
+            sx={{
+              fontWeight: 'bold', // Make the font bold
+              height: '3rem', // Adjust the height to make it thicker
+            }}
+            onClick={() => navigate('/profile')}
+          >
+            Cancel
+          </Button>
+          {/* TODO */}
+          {/* <TerminateModal handleConfirmTerminate={handleTerminateAccount}/> */}
         </Stack>
       </Box >
     </ThemeProvider >
