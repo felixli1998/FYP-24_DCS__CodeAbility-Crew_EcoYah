@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import {Box} from "@mui/material";
 
 type RoundProfilePicProps = {
     pictureSrc: string;
@@ -24,6 +24,6 @@ export default function RoundProfilePic(props: RoundProfilePicProps) {
             }}
             alt={props.altText}
             src={props.pictureSrc}
-        ></Box>
+        />
     )
 };
