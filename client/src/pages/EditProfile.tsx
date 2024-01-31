@@ -24,24 +24,44 @@ export default function EditProfile() {
     profilePic: ""
   }
 
+  const defaultErrorState = {
+    name: { error: false, helperText: "" },
+    contactNum: { error: false, helperText: "" },
+    email: { error: false, helperText: "" },
+    profilePic: { error: false, helperText: "" }
+  }
+
   // TODO: Note to self, can I just use a regular useState and achieve the same outcome?
-  const reducer = (state: any, action:any) => {
+  const userDataReducer = (state: any, action:any) => {
     switch (action.type) {
-      case 'updateName':
-        // console.log('state', )
+      case 'name':
         return { ...state, name: action.payload };
-      case 'updateContactNum':
+      case 'contactNum':
         return { ...state, contactNum: action.payload };
-      case 'updateProfilePic':
+      case 'profilePic':
         return { ...state, profilePic: action.payload };
-      case 'updateAll':
+      case 'all':
         return { ...state, ...action.payload };
       default:
         throw new Error();
     }
   }
 
-  const [userData, userDataDispatch] = useReducer(reducer, defaultState);
+  const errorReducer = (state: any, action:any) => {
+    switch(action.type) {
+      case 'Required Field':
+        return { ...state, [action.payload]: {error: true, helperText: "This is a required field"} };
+      case 'Invalid Contact':
+        return { ...state, [action.payload]: {error: true, helperText: "Please input a valid value."} };
+      case 'Reset':
+        return { ...state, [action.payload]: {error: false, helperText: ""} };
+      case 'Reset All':
+        return { ...defaultErrorState };
+    }
+  }
+
+  const [userData, userDataDispatch] = useReducer(userDataReducer, defaultState);
+  const [errorData, errorDataDispatch] = useReducer(errorReducer, defaultErrorState);
 
   const retrieveProfileInfo = async () => {
     try {
@@ -50,7 +70,7 @@ export default function EditProfile() {
       if(action) {
         // Currently, we do not have points so it will be null
         const { name, email, contactNum, imageUrl = profilePic } = data;
-        userDataDispatch({ type: 'updateAll', payload: { name, email, contactNum, profilePic: imageUrl }})
+        userDataDispatch({ type: 'all', payload: { name, email, contactNum, profilePic: imageUrl }})
       } else {
         // TODO: Currently, we do not really have any robust error message
         console.log("Error retrieving user info");
@@ -66,17 +86,24 @@ export default function EditProfile() {
 
   // // Function to validate changes are valid
   const validateChanges = () => {
-    const { name, contactNum, email } = userData;
-    // Ensure not empty
-    if (name === "" || contactNum === "" || email === "") {
-      console.log("All fields cannot be empty");
+    const REQUIRED_FIELDS = ['name', 'contactNum', 'email'];
+
+    REQUIRED_FIELDS.forEach((field) => {
+      if(userData[field].trim() === "") {
+        errorDataDispatch({ type: 'Required Field', payload: field });
+      }
+    })
+
+    // Ensure contact is a number
+    if (isNaN(Number(userData['contactNum']))) {
+      errorDataDispatch({ type: 'Invalid Contact', payload: 'contactNum' });
+    }
+
+    if(Object.values(errorData).some((error: any) => error.error)) {
       return false;
     }
-    // Ensure contact is a number
-    if (isNaN(Number(contactNum))) {
-      console.log("Contact must be a number");
-    }
-    return true;
+
+    return true
   };
 
   // Function to handle photo upload
@@ -94,17 +121,9 @@ export default function EditProfile() {
 
   // Function to handle save changes
   const handleSaveChanges = () => {
-    // Validate changes
-    if (validateChanges()) {
-      // console.log("Backend request to server to change details!");
-      // console.log("Name:", nameInput);
-      // console.log("Contact:", contactInput);
-      // console.log("Email:", userData.email);
-      return true;
-    }
-    // console.log("Validation failed, will not send to server!")
-    console.log(userData)
-    return true;
+    if (!validateChanges()) return
+
+    // TODO: INVOKE FUNCTION TO SAVE CHANGES
   };
 
   // Function to handle terminate account
@@ -113,6 +132,11 @@ export default function EditProfile() {
     console.log("Email:", userData.email);
     return true;
   };
+
+  const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    userDataDispatch({ type: field, payload: event.target.value });
+    errorDataDispatch({ type: 'Reset', payload: field }); // Remove existing error message
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -142,11 +166,8 @@ export default function EditProfile() {
               profilePic={userData.profilePic}
               handlePhotoUpload={handlePhotoUpload}
             />
-            {/* Name */}
-            <ProfileTextField label="Name" value={userData.name} onChange={(e) => userDataDispatch({ type: 'updateName', payload: e.target.value})} error={true} helperText="This is a required field"/>
-            {/* Contact */}
-            <ProfileTextField label="Contact" value={userData.contactNum} onChange={(e) => userDataDispatch({ type: 'updateContactNum', payload: e.target.value})} />
-            {/* Email */}
+            <ProfileTextField label="Name" value={userData.name} onChange={(e) => handleFieldChange(e, 'name')} error={errorData.name.error} helperText={errorData.name.helperText}/>
+            <ProfileTextField label="Contact" value={userData.contactNum} onChange={(e) => handleFieldChange(e, 'contactNum')} error={errorData.contactNum.error} helperText={errorData.contactNum.helperText}/>
             <ProfileTextField label="Email" value={userData.email} disabled={true} />
           </Box>
 
