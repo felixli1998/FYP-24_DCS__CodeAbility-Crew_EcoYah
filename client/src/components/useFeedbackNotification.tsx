@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Alert, Snackbar } from '@mui/material'
+import { set } from 'lodash';
 
 // ***********************************************************************************************************************************************//
 // -- How do I use this? -- //
@@ -26,10 +27,6 @@ export const useFeedbackNotification = () => {
   });
 
   const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
     setOpen(false);
   };
 
