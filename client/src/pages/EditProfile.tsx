@@ -16,11 +16,11 @@ import { USER_ROUTES } from "../services/routes";
 
 type ErrorActionT = {
   type: 'requiredField' | 'invalidContact' | 'reset' | 'resetAll',
-  payload: 'name' | 'contactNum' | 'email' | 'profilePic'
+  payload: keyof UserStateT
 }
 
 type ErrorStateT = {
-  [key in 'name' | 'contactNum' | 'email' | 'profilePic']: {
+  [key in keyof UserStateT]: {
     error: boolean;
     helperText: string;
   };
