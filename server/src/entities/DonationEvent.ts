@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, BeforeInsert, BeforeUpdate } from "typeorm"
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, BeforeInsert, BeforeUpdate, AfterLoad } from "typeorm"
 import { User } from "./User"
 import { EventType } from "./EventType"
 import { DonationEventItem } from "./DonationEventItem"
@@ -57,9 +57,12 @@ export class DonationEvent{
 
     // Validates before inserting the data into the database
     // NOTE: Use try catch to handle the error graciously inside your service / repository
+    // TODO: This seems to require a the USER object, not sure if its feasible
     @BeforeInsert()
     beforeInsert(){
-      if(!this.isValidUser()) throw new Error("Donation Event must be created by a staff or admin")
+      // Line below throws error, requires us to query pass the entire User object
+      // when querying the database.
+      // if(!this.isValidUser()) throw new Error("Donation Event must be created by a staff or admin")
       if(!this.isValidDateRange()) throw new Error("Start date must be before or equal to end date")
     }
 
@@ -67,7 +70,7 @@ export class DonationEvent{
     // NOTE: Use try catch to handle the error graciously inside your service / repository
     @BeforeUpdate()
     beforeUpdate() {
-      if(!this.isValidUser()) throw new Error("Donation Event must be created by a staff or admin")
+      // if(!this.isValidUser()) throw new Error("Donation Event must be created by a staff or admin")
       if(!this.isValidDateRange()) throw new Error("Start date must be before or equal to end date")
     }
 

@@ -1,6 +1,6 @@
 import { DonationEvent } from '../entities/DonationEvent';
 import { DonationEventRepository } from '../repositories/DonationEventRepository';
-
+import IPagination from '../common/IPagination';
 
 export class DonationEventService {
   private donationEventRepository: DonationEventRepository;
@@ -27,7 +27,7 @@ export class DonationEventService {
 
   // Filtering
 
-  async getFilteredDonationEvents(filters: any): Promise<DonationEvent[]> {
+  async getFilteredDonationEvents(filters: any): Promise<{ data: DonationEvent[], pagination:IPagination }> {
     return this.donationEventRepository.filterDonationEvents(filters);
   }
 }
