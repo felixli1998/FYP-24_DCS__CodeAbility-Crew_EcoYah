@@ -196,51 +196,58 @@ export default function EditProfile() {
         noValidate
         autoComplete="off"
       >
-        <Stack spacing={3} justifyContent={"space-between"} >
-          <Box
-            sx={{
-              width: 350,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "left",
-              alignItems: "center",
-              marginBottom: "3rem",
-            }}
-          >
-            <ProfilePic
-              profilePic={userData.profilePic}
-              handlePhotoUpload={handlePhotoUpload}
-            />
-            <ProfileTextField label="Name" value={userData.name} onChange={(e) => handleFieldChange(e, 'name')} error={errorData.name.error} helperText={errorData.name.helperText}/>
-            <ProfileTextField label="Contact" value={userData.contactNum} onChange={(e) => handleFieldChange(e, 'contactNum')} error={errorData.contactNum.error} helperText={errorData.contactNum.helperText}/>
-            <ProfileTextField label="Email" value={userData.email} disabled={true} />
-          </Box>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              fontWeight: 'bold', // Make the font bold
-              height: '3rem', // Adjust the height to make it thicker
-            }}
-            onClick={() => handleSaveChanges()}
-          >
-            Save changes
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            sx={{
-              fontWeight: 'bold', // Make the font bold
-              height: '3rem', // Adjust the height to make it thicker
-            }}
-            onClick={() => navigate('/profile')}
-          >
-            Cancel
-          </Button>
-          {/* TODO */}
-          {/* <TerminateModal handleConfirmTerminate={handleTerminateAccount}/> */}
+        <Stack spacing={6}>
+            <Box
+              sx={{
+                width: 350,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "left",
+                alignItems: "center",
+              }}
+            >
+              <ProfilePic
+                profilePic={userData.profilePic}
+                handlePhotoUpload={handlePhotoUpload}
+              />
+              <ProfileTextField label="Name" value={userData.name} onChange={(e) => handleFieldChange(e, 'name')} error={errorData.name.error} helperText={errorData.name.helperText}/>
+              <ProfileTextField label="Contact" value={userData.contactNum} onChange={(e) => handleFieldChange(e, 'contactNum')} error={errorData.contactNum.error} helperText={errorData.contactNum.helperText}/>
+              <ProfileTextField label="Email" value={userData.email} disabled={true} />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "left",
+                gap: "1rem"
+              }}>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  fontWeight: 'bold', // Make the font bold
+                  height: '3rem', // Adjust the height to make it thicker
+                }}
+                onClick={() => handleSaveChanges()}
+              >
+                Save changes
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                sx={{
+                  fontWeight: 'bold', // Make the font bold
+                  height: '3rem', // Adjust the height to make it thicker
+                }}
+                onClick={() => navigate('/profile')}
+              >
+                Cancel
+              </Button>
+            </Box>
+            {/* TODO */}
+            {/* <TerminateModal handleConfirmTerminate={handleTerminateAccount}/> */}
         </Stack>
-      </Box >
+      </Box>
       <FeedbackNotification />
     </ThemeProvider >
   );
