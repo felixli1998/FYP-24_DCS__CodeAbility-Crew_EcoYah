@@ -86,9 +86,9 @@ export default function EditProfile() {
 
     switch(action.type) {
       case 'requiredField':
-        return { ...state, [action.payload]: {error: true, helperText: `Please enter your ${FIELDS_MAPPER[action.payload]}.`} };
+        return { ...state, [action.payload]: {error: true, helperText: `Please enter your ${FIELDS_MAPPER[action.payload]}`} };
       case 'invalidContact':
-        return { ...state, [action.payload]: {error: true, helperText: "Please enter a valid contact number."} };
+        return { ...state, [action.payload]: {error: true, helperText: "Please enter a valid contact number"} };
       case 'reset':
         return { ...state, [action.payload]: {error: false, helperText: ""} };
       case 'resetAll':
@@ -109,11 +109,11 @@ export default function EditProfile() {
         userDataDispatch({ type: 'all', payload: { name, email, contactNum, profilePic: imageUrl }})
       } else {
         // TODO: Currently, we do not really have any robust error message
-        displayNotification('error', 'We encountered some error while retrieving your profile information. Please try again later.')
+        displayNotification('error', 'We encountered some error while retrieving your profile information. Please try again later')
       }
     } catch (error) {
       console.log(error);
-      displayNotification('error', 'Whoooops. We might be facing some technical error! Please try again later.')
+      displayNotification('error', 'Whoooops. We might be facing some technical error! Please try again later')
     }
   };
 
@@ -164,11 +164,11 @@ export default function EditProfile() {
         displayNotification('success', 'Your profile has been updated successfully!')
         retrieveProfileInfo();
       } else {
-        displayNotification('error', 'Encountered an error while saving changes. Please try again.')
+        displayNotification('error', 'Encountered an error while saving changes. Please try again')
       }
     } catch (error) {
       console.log(error);
-      displayNotification('error', 'Whoooops. We might be facing some technical error! Please try again later.')
+      displayNotification('error', 'Whoooops. We might be facing some technical error! Please try again later')
     }
   };
 
@@ -215,7 +215,6 @@ export default function EditProfile() {
             <ProfileTextField label="Contact" value={userData.contactNum} onChange={(e) => handleFieldChange(e, 'contactNum')} error={errorData.contactNum.error} helperText={errorData.contactNum.helperText}/>
             <ProfileTextField label="Email" value={userData.email} disabled={true} />
           </Box>
-
           <Button
             variant="contained"
             color="primary"
