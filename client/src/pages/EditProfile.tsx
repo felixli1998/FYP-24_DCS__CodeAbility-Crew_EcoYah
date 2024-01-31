@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer } from "react";
 import "../styles/App.css";
 import { ThemeProvider } from '@mui/material';
 import { theme } from '../styles/Palette';
@@ -118,23 +118,22 @@ export default function EditProfile() {
   // Function to validate changes are valid
   const validateChanges = () => {
     const requiredFieldS: (keyof UserStateT)[] = ['name', 'contactNum', 'email'];
+    let isValid = true;
 
     requiredFieldS.forEach((field) => {
       if(userData[field] === "") {
+        isValid = false;
         errorDataDispatch({ type: 'requiredField', payload: field });
       }
     })
 
     // Ensure contact is a number
     if (isNaN(Number(userData['contactNum']))) {
+      isValid = false;
       errorDataDispatch({ type: 'invalidContact', payload: 'contactNum' });
     }
 
-    if(Object.values(errorData).some((error) => error.error)) {
-      return false;
-    }
-
-    return true
+    return isValid;
   };
 
   // Function to handle photo upload
@@ -150,23 +149,32 @@ export default function EditProfile() {
   };
 
   // Function to handle save changes
-  const handleSaveChanges = () => {
-    if (!validateChanges()) return
+  const handleSaveChanges = async () => {
+    if(!validateChanges()) return;
 
-    // TODO: INVOKE FUNCTION TO SAVE CHANGES
-  };
-
-  // Function to handle terminate account
-  const handleTerminateAccount = () => {
-    console.log("Backend request to server to terminate account!");
-    console.log("Email:", userData.email);
-    return true;
+    try {
+      const res: any = await makeHttpRequest('PUT', USER_ROUTES.UPDATE_USER, userData);
+      if(res.data.action) {
+        alert('Changes saved successfully!');
+        retrieveProfileInfo();
+      } else {
+        alert('Error saving changes!');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>, field: keyof UserStateT) => {
     userDataDispatch({ type: field, payload: event.target.value });
     errorDataDispatch({ type: 'reset', payload: field }); // Remove existing error message
   }
+
+  // Function to handle terminate account
+  const handleTerminateAccount = () => {
+    // console.log("Email:", userData.email);
+    return true;
+  };
 
   return (
     <ThemeProvider theme={theme}>
