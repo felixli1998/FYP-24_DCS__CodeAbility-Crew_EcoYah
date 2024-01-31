@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 // Components
 import ProfilePic from "../components/EditProfile/ProfilePic";
 import ProfileTextField from "../components/EditProfile/ProfileTextField";
+import { useFeedbackNotification } from "../components/useFeedbackNotification";
 // import TerminateModal from "../components/EditProfile/TerminateModal";
 import { makeHttpRequest } from "../utils/Utility";
 import { USER_ROUTES } from "../services/routes";
@@ -42,6 +43,7 @@ type UserStateT = {
 
 export default function EditProfile() {
   const email = localStorage.getItem("ecoyah-email") || "";
+  const { displayNotification, FeedbackNotification } = useFeedbackNotification();
   const navigate = useNavigate();
 
   const defaultUserState: UserStateT = {
@@ -158,10 +160,10 @@ export default function EditProfile() {
     try {
       const res: any = await makeHttpRequest('PUT', USER_ROUTES.UPDATE_USER, userData);
       if(res.data.action) {
-        alert('Changes saved successfully!');
+        displayNotification('success', 'Your profile has been updated successfully!')
         retrieveProfileInfo();
       } else {
-        alert('Error saving changes!');
+        displayNotification('error', 'Encountered an error while saving changes. Please try again.')
       }
     } catch (error) {
       console.log(error);
@@ -238,6 +240,7 @@ export default function EditProfile() {
           {/* <TerminateModal handleConfirmTerminate={handleTerminateAccount}/> */}
         </Stack>
       </Box >
+      <FeedbackNotification />
     </ThemeProvider >
   );
 }
