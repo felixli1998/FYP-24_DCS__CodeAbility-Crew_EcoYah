@@ -42,7 +42,7 @@ const donationEventItemService = new DonationEventItemService(donationEventItemR
 
 // Donation Events
 const donationEventRepository = new DonationEventRepository();
-const donationEventService = new DonationEventService(donationEventRepository, donationEventItemRepository, userRepository, eventTypeRepository);
+const donationEventService = new DonationEventService(donationEventRepository);
 
 let USER_OBJECTS: any = {};
 let EVENT_TYPE_OBJECTS: any = {};

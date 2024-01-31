@@ -20,7 +20,7 @@ const donationEventItemRepository= new DonationEventItemRepository();
 const userRepository = new UserRepository();
 const eventTypeRepository = new EventTypeRepository();
 const itemRepository = new ItemRepository();
-const donationEventService = new DonationEventService(donationEventRepository, donationEventItemRepository, userRepository, eventTypeRepository);
+const donationEventService = new DonationEventService(donationEventRepository);
 const donationEventItemService = new DonationEventItemService(donationEventItemRepository);
 
 router.post('/create', async (req, res) => {
