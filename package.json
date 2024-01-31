@@ -1,0 +1,12 @@
+{
+    "name": "ecoyah",
+    "version": "1.0.0",
+    "description": "",
+    "scripts": {
+        "format": "npx prettier --write ."
+    },
+    "devDependencies": {
+        "husky": "^9.0.7",
+        "pretty-quick": "^4.0.0"
+    }
+}
