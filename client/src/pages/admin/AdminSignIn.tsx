@@ -1,46 +1,13 @@
 import {
-    Card,
-    CardActionArea,
     Container,
     Grid,
     ThemeProvider,
     Typography
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import RoundProfilePic from "../../components/RoundProfilePic";
+import ProfileCard from "../../components/ProfileCard";
 import { theme } from "../../styles/Palette";
 import { makeHttpRequest } from "../../utils/Utility";
-import ProfileCard from "../../components/ProfileCard";
-
-// const StyledCard = styled(Card)(({ theme }) => ({
-//     transition: "transform 0.15s ease-in-out",
-//     "&:hover": { transform: "scale3d(1.3, 1.3, 1)" },
-//   }))
-
-// function ProfileCard(props: { displayName: string, id: number, imgSrc: string }) {
-
-//     const [raised, setRaised] = useState(false);
-
-//     function hoverCard(){
-//         console.log("hovered");
-//         setRaised(true);
-//     }
-
-//     function outHoverCard(){
-//         console.log("hovered out");
-//         setRaised(false);
-//     }
-
-//     return (
-//         <StyledCard raised={raised} sx={{width: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
-//             <CardActionArea onMouseOver={()=> hoverCard()} onMouseOut={() => outHoverCard()}>
-//                 <RoundProfilePic altText={"test"} pictureSrc={props.imgSrc}/>
-//                 <Typography variant="h4" color={"white"} sx={{paddingBottom: 3}}>{props.displayName}</Typography>
-//             </CardActionArea>                
-//         </StyledCard>
-//     )
-// }
 
 interface ProfilesType {
     id: number;

@@ -1,13 +1,10 @@
-import { useState } from "react";
 import {
     Card,
     CardActionArea,
-    Container,
-    Grid,
-    ThemeProvider,
     Typography
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useState } from "react";
 import RoundProfilePic from "./RoundProfilePic";
 
 const StyledCard = styled(Card)(({ theme }) => ({
