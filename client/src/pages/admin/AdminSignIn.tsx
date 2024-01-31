@@ -9,6 +9,7 @@ import ProfileCard from "../../components/ProfileCard";
 import { theme } from "../../styles/Palette";
 import { makeHttpRequest } from "../../utils/Utility";
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import { USER_ROUTES } from "../../services/routes";
 
 interface ProfilesType {
     id: number;
@@ -34,7 +35,7 @@ export default function AdminSignIn() {
 
     const getAllAdminProfiles = async (): Promise<ApiResponse> => {
         try {
-            const response = await makeHttpRequest('GET', BACKEND_URL + '/users/allAdmins');
+            const response = await makeHttpRequest('GET', USER_ROUTES.ADMIN_LOGIN);
             console.log(response);
             return response as ApiResponse;
         } catch (error) {
