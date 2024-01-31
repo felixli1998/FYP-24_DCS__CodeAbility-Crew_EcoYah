@@ -1,4 +1,4 @@
-// services/ItemService.ts
+// Internal Imports
 import { Item } from '../entities/Item';
 import { ItemRepository } from '../repositories/ItemRepository';
 
@@ -11,12 +11,14 @@ export class ItemService {
   }
 
   async getAllItems() {
-    return this.itemRepository.getAllItems(); // Assuming getAllItems is a method in your repository
+    return this.itemRepository.getAllItems(); 
+  }
+
+  async getItemById(id: number) {
+    return this.itemRepository.getItemById(id); 
   }
 
   async createItem(item: Item) {
-    return this.itemRepository.createItem(item); // Assuming createItem is a method in your repository
+    return this.itemRepository.createItem(item); 
   }
-
-  // Other business logic methods
 }
