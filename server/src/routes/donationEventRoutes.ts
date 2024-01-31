@@ -76,7 +76,12 @@ router.post('/create', async (req, res) => {
 
         return generateResponse(res, 200, { action: true, message: 'create_success' });
       } catch (error) {
-        return generateResponse(res, 500, "Something went wrong");
+
+        if (error instanceof Error) {
+            return generateResponse(res, 400, error.message);
+        }
+
+        return generateResponse(res, 500, "Internal Server Error");
       }
 });
 
