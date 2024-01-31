@@ -109,10 +109,11 @@ export default function EditProfile() {
         userDataDispatch({ type: 'all', payload: { name, email, contactNum, profilePic: imageUrl }})
       } else {
         // TODO: Currently, we do not really have any robust error message
-        console.log("Error retrieving user info");
+        displayNotification('error', 'We encountered some error while retrieving your profile information. Please try again later.')
       }
     } catch (error) {
-      console.log("Error retrieving user info");
+      console.log(error);
+      displayNotification('error', 'Whoooops. We might be facing some technical error! Please try again later.')
     }
   };
 
@@ -167,6 +168,7 @@ export default function EditProfile() {
       }
     } catch (error) {
       console.log(error);
+      displayNotification('error', 'Whoooops. We might be facing some technical error! Please try again later.')
     }
   };
 
