@@ -1,13 +1,13 @@
 {
-  "tabWidth": 2, // Set the tab width to 2 spaces
-  "semi": true, // Add semicolons at the end of statements
-  "singleQuote": true, // Use single quotes for string literals
-  "trailingComma": "es5", // Add trailing commas wherever possible (except in function arguments)
-  "printWidth": 80, // Set the maximum line width to 80 characters
-  "jsxSingleQuote": true, // Use single quotes for JSX attributes
-  "jsxBracketSameLine": false, // Put the > of a multi-line JSX element at the end of the last line
-  "arrowParens": "always", // Always include parentheses around arrow function parameters
-  "endOfLine": "auto", // Use the appropriate line ending for your platform
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "jsxSingleQuote": true,
+  "jsxBracketSameLine": false,
+  "arrowParens": "always",
+  "endOfLine": "auto",
   "overrides": [
     {
       "files": "*.json",
