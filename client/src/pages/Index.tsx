@@ -14,7 +14,11 @@ import {
   isValueExistsInObjectArray,
 } from "../utils/Common";
 
+import {Item, createItem, getItemsByEventTypeName} from "../services/itemApi";
+import {Divider} from "@mui/material";
+
 const Home: React.FC = () => {
+  // === For Event Type View and Create ===
   const [eventTypes, setEventTypes] = useState<EventType[]>([]);
   const [selectedEventType, setSelectedEventType] = useState<EventType | null>(
     null
@@ -76,11 +80,46 @@ const Home: React.FC = () => {
     }
     return createEventTypeMutateAsync(sanitisedEventType);
   };
+  // === For Event Type View and Create ===
+
+  // === For Item View and Create ===
+  const [items, setItems] = useState<Item[]>([]);
+  const [selectedItems, setSelectedItems] = useState<Item[] | null>(null);
+  const eventTypeName = "Food Waste"; // Hardcode by right is passed from the previous page
+  const {
+    data: itemsData,
+    isLoading: itemsIsLoading,
+    refetch: itemsRefetch,
+  } = useQuery({
+    queryKey: ["items", {eventTypeName: eventTypeName}],
+    queryFn: () => getItemsByEventTypeName(eventTypeName),
+  });
+
+  useEffect(() => {
+    if (!itemsIsLoading && itemsData) {
+      setItems(itemsData.data.items);
+    }
+  }, [itemsData, itemsIsLoading]);
+
+  const handleItemBoxButtonClick = (item: Item) => {
+    if (selectedItems?.includes(item)) {
+      // If the item is already in the array, remove it
+      setSelectedItems(
+        selectedItems.filter((selectedItem) => selectedItem !== item)
+      );
+    } else {
+      // If the item is not in the array, add it
+      setSelectedItems(selectedItems ? [...selectedItems, item] : [item]);
+    }
+  };
+
+  // === For Item View and Create ===
 
   return (
     <div>
       <h1>Welcome to the Homepage</h1>
       <p>This is a simple React homepage template.</p>
+      {/* === For Event Type View and Create ===  */}
       {eventTypesIsLoading ? (
         <div>Loading</div>
       ) : (
@@ -114,6 +153,46 @@ const Home: React.FC = () => {
         }
         handleFormSubmit={handleFormSubmit}
       ></FormDialog>
+      {/* === For Event Type View and Create ===  */}
+
+      {/* === For Item View and Create ===  */}
+      <Divider />
+      <div>For Item Ticket</div>
+      {itemsIsLoading ? (
+        <div>Loading</div>
+      ) : (
+        items &&
+        items.map((item: any) => (
+          <BoxButton
+            key={item.id}
+            handleClick={() => handleItemBoxButtonClick(item)}
+            color="primary"
+            size="small"
+            name={item.name}
+            isSelected={selectedItems?.includes(item) ? true : false}
+          ></BoxButton>
+        ))
+      )}
+      <FormDialog
+        buttonName="Add"
+        buttonIcon={<AddIcon />}
+        dialogTitle="Create a New Item"
+        leftActionButtonName="Cancel"
+        rightActionButtonName="Add"
+        errorMessage={errorMessage}
+        formComponent={
+          <OutlinedTextField
+            id={"create-item"}
+            name="item"
+            label="Required"
+            helperText="Please enter non-numerical values"
+            regExpression={/^[a-zA-Z\s]+$/}
+          />
+        }
+        handleFormSubmit={handleFormSubmit}
+      ></FormDialog>
+
+      {/* === For Item View and Create ===  */}
     </div>
   );
 };
