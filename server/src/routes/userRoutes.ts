@@ -32,6 +32,26 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.put('/update', async (req, res) => {
+  try {
+    const payload = req.body;
+    const allowedParams = ['name', 'contactNum', 'email']
+    const sanitisedPayload = strongParams(payload, allowedParams);
+    const { email = "" } = sanitisedPayload;
+
+    // Defensive Line - Check if email exists
+    const user = await userService.getUserByEmail(email);
+    if(!user) {
+      generateResponse(res, 200, { action: false, message: "User not found" });
+      return;
+    }
+    await userService.updateUser(email, sanitisedPayload);
+    generateResponse(res, 200, { action: true, message: "User is updated successfully!" });
+  } catch (error) {
+    generateResponse(res, 500, { action: false, message: "An error occured while updating user" });
+  }
+});
+
 router.get("/:email", async (req, res) => {
   try {
     const { email } = req.params;
