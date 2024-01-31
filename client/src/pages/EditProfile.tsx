@@ -15,7 +15,7 @@ import { makeHttpRequest } from "../utils/Utility";
 import { USER_ROUTES } from "../services/routes";
 
 type ErrorActionT = {
-  type: 'Required Field' | 'Invalid Contact' | 'Reset' | 'Reset All',
+  type: 'requiredField' | 'invalidContact' | 'reset' | 'resetAll',
   payload: 'name' | 'contactNum' | 'email' | 'profilePic'
 }
 
@@ -80,13 +80,13 @@ export default function EditProfile() {
     }
 
     switch(action.type) {
-      case 'Required Field':
+      case 'requiredField':
         return { ...state, [action.payload]: {error: true, helperText: `Please enter your ${FIELDS_MAPPER[action.payload]}.`} };
-      case 'Invalid Contact':
+      case 'invalidContact':
         return { ...state, [action.payload]: {error: true, helperText: "Please enter a valid contact number."} };
-      case 'Reset':
+      case 'reset':
         return { ...state, [action.payload]: {error: false, helperText: ""} };
-      case 'Reset All':
+      case 'resetAll':
         return { ...defaultErrorState };
     }
   }
@@ -115,22 +115,22 @@ export default function EditProfile() {
     retrieveProfileInfo();
   }, [email]);
 
-  // // Function to validate changes are valid
+  // Function to validate changes are valid
   const validateChanges = () => {
-    const REQUIRED_FIELDS: (keyof UserStateT)[] = ['name', 'contactNum', 'email'];
+    const requiredFieldS: (keyof UserStateT)[] = ['name', 'contactNum', 'email'];
 
-    REQUIRED_FIELDS.forEach((field) => {
+    requiredFieldS.forEach((field) => {
       if(userData[field] === "") {
-        errorDataDispatch({ type: 'Required Field', payload: field });
+        errorDataDispatch({ type: 'requiredField', payload: field });
       }
     })
 
     // Ensure contact is a number
     if (isNaN(Number(userData['contactNum']))) {
-      errorDataDispatch({ type: 'Invalid Contact', payload: 'contactNum' });
+      errorDataDispatch({ type: 'invalidContact', payload: 'contactNum' });
     }
 
-    if(Object.values(errorData).some((error: any) => error.error)) {
+    if(Object.values(errorData).some((error) => error.error)) {
       return false;
     }
 
@@ -165,7 +165,7 @@ export default function EditProfile() {
 
   const handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>, field: keyof UserStateT) => {
     userDataDispatch({ type: field, payload: event.target.value });
-    errorDataDispatch({ type: 'Reset', payload: field }); // Remove existing error message
+    errorDataDispatch({ type: 'reset', payload: field }); // Remove existing error message
   }
 
   return (
@@ -212,7 +212,6 @@ export default function EditProfile() {
           >
             Save changes
           </Button>
-
           <TerminateModal handleConfirmTerminate={handleTerminateAccount}/>
         </Stack>
       </Box >
