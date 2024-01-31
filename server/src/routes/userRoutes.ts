@@ -19,8 +19,8 @@ router.get("/", async (req, res) => {
 router.get("/allAdmins", async (req, res) => {
   console.log("BACKEND /allAdmins userRoutes")
   const adminUsers = await userService.getAllAdminUsers();
-  // console.log(adminUsers);
-  res.status(200).json({adminUsers});
+  return generateResponse(res, 200, { action: true, message: adminUsers });
+  // res.status(200).json({adminUsers});
 
 });
 

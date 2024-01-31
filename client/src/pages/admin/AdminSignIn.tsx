@@ -11,62 +11,36 @@ import { useEffect, useState } from "react";
 import RoundProfilePic from "../../components/RoundProfilePic";
 import { theme } from "../../styles/Palette";
 import { makeHttpRequest } from "../../utils/Utility";
+import ProfileCard from "../../components/ProfileCard";
 
+// const StyledCard = styled(Card)(({ theme }) => ({
+//     transition: "transform 0.15s ease-in-out",
+//     "&:hover": { transform: "scale3d(1.3, 1.3, 1)" },
+//   }))
 
-// interface ProfileCardProps {
-// displayName: string;
-// username: string;
+// function ProfileCard(props: { displayName: string, id: number, imgSrc: string }) {
+
+//     const [raised, setRaised] = useState(false);
+
+//     function hoverCard(){
+//         console.log("hovered");
+//         setRaised(true);
+//     }
+
+//     function outHoverCard(){
+//         console.log("hovered out");
+//         setRaised(false);
+//     }
+
+//     return (
+//         <StyledCard raised={raised} sx={{width: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
+//             <CardActionArea onMouseOver={()=> hoverCard()} onMouseOut={() => outHoverCard()}>
+//                 <RoundProfilePic altText={"test"} pictureSrc={props.imgSrc}/>
+//                 <Typography variant="h4" color={"white"} sx={{paddingBottom: 3}}>{props.displayName}</Typography>
+//             </CardActionArea>                
+//         </StyledCard>
+//     )
 // }
-
-// const ProfileCard: React.FC<ProfileCardProps> = ({
-//     displayName,
-//     username }) => {
-//         return (
-//             <Card sx={{maxWidth: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
-//                 <CardActionArea onMouseOver={()=> console.log("hovered")}>
-//                     <RoundProfilePic altText={"test"} pictureSrc={profilePic}/>
-//                     <Typography variant="h5" color={"white"} sx={{paddingBottom: 3}}>{displayName}</Typography>
-//                 </CardActionArea>                
-//             </Card>
-//         )
-//     }
-// const useStyles = makeStyles({
-//     root: {
-//       maxWidth: 310,
-//       transition: "transform 0.15s ease-in-out"
-//     },
-//     cardHovered: {
-//       transform: "scale3d(1.05, 1.05, 1)"
-//     }
-//   });
-const StyledCard = styled(Card)(({ theme }) => ({
-    transition: "transform 0.15s ease-in-out",
-    "&:hover": { transform: "scale3d(1.3, 1.3, 1)" },
-  }))
-
-function ProfileCard(props: { displayName: string, id: number, imgSrc: string }) {
-
-    const [raised, setRaised] = useState(false);
-
-    function hoverCard(){
-        console.log("hovered");
-        setRaised(true);
-    }
-
-    function outHoverCard(){
-        console.log("hovered out");
-        setRaised(false);
-    }
-
-    return (
-        <StyledCard raised={raised} sx={{width: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
-            <CardActionArea onMouseOver={()=> hoverCard()} onMouseOut={() => outHoverCard()}>
-                <RoundProfilePic altText={"test"} pictureSrc={props.imgSrc}/>
-                <Typography variant="h4" color={"white"} sx={{paddingBottom: 3}}>{props.displayName}</Typography>
-            </CardActionArea>                
-        </StyledCard>
-    )
-}
 
 interface ProfilesType {
     id: number;
@@ -83,14 +57,15 @@ export default function AdminSignIn() {
 
     const getAllAdminProfiles = async () => {
         const response: any = await makeHttpRequest('GET', BACKEND_URL + '/users/allAdmins');
-        const data = response.adminUsers;
+        // const data = response.adminUsers;
+        const data = response.data.message;
+
         console.log(data);
     
         setProfiles(data);
     }
 
     useEffect(() => {
-        console.log("***IN useEffect()***")
         getAllAdminProfiles();
     }, []);
     
@@ -102,11 +77,11 @@ export default function AdminSignIn() {
             
                 <Grid container>
                     {profiles.map(eachProfile => (
-                        <Grid item md={4} display="flex" justifyContent="center" alignItems="center">
+                        <Grid item md={4} display="flex" justifyContent="center" alignItems="center" key={eachProfile.id}>
 
                             <ProfileCard
-                                displayName={eachProfile.name}
                                 id={eachProfile.id}
+                                displayName={eachProfile.name}
                                 imgSrc={eachProfile.imageId}
                             />
                         </Grid>
