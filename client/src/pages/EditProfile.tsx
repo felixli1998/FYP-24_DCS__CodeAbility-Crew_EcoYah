@@ -1,91 +1,239 @@
-import { useState } from "react";
+import { useEffect, useReducer } from "react";
 import "../styles/App.css";
-import { ThemeProvider } from '@mui/material';
-import { theme } from '../styles/Palette';
+import { ThemeProvider } from "@mui/material";
+import { theme } from "../styles/Palette";
 import profilePic from "../assets/ProfilePicture.png";
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 // Components
 import ProfilePic from "../components/EditProfile/ProfilePic";
 import ProfileTextField from "../components/EditProfile/ProfileTextField";
-import TerminateModal from "../components/EditProfile/TerminateModal";
+import { useFeedbackNotification } from "../components/useFeedbackNotification";
+// import TerminateModal from "../components/EditProfile/TerminateModal";
+import { makeHttpRequest } from "../utils/Utility";
+import { USER_ROUTES } from "../services/routes";
+import { useNavigate } from "react-router-dom";
+
+type ErrorActionT = {
+  type: "requiredField" | "invalidContact" | "reset" | "resetAll";
+  payload: keyof UserStateT;
+};
+
+type ErrorStateT = {
+  [key in keyof UserStateT]: {
+    error: boolean;
+    helperText: string;
+  };
+};
+
+type UserActionT =
+  | { type: keyof UserStateT; payload: string }
+  | { type: "all"; payload: UserStateT };
+
+type UserStateT = {
+  name: string;
+  contactNum: string;
+  email: string;
+  profilePic: string | File;
+};
 
 export default function EditProfile() {
-  // Function to get current user data
-  const [userData, setUserData] = useState({
-    name: "John Timonthy",
-    contact: "12345678",
-    email: "johntimonthy@gmail.com",
-    profilePic: profilePic,
-  });
+  const email = localStorage.getItem("ecoyah-email") || "";
+  const { displayNotification, FeedbackNotification } =
+    useFeedbackNotification();
+  const navigate = useNavigate();
 
-  // User data state variables
-  const [nameInput, setNameInput] = useState(userData.name);
-  const [contactInput, setContactInput] = useState(userData.contact);
-  const [profilePicInput, setProfilePicInput] = useState<File | null>(null);
+  const defaultUserState: UserStateT = {
+    name: '',
+    contactNum: '',
+    email: '',
+    profilePic: '',
+  }; 
 
-  // Function to handle changes
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNameInput(event.target.value);
+  const defaultErrorState: ErrorStateT = {
+    name: { error: false, helperText: "" },
+    contactNum: { error: false, helperText: "" },
+    email: { error: false, helperText: "" },
+    profilePic: { error: false, helperText: "" },
   };
 
-  const handleContactChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContactInput(event.target.value);
+  // TODO: Note to self, can I just use a regular useState and achieve the same outcome?
+  const userDataReducer = (state: UserStateT, action: UserActionT) => {
+    switch (action.type) {
+      case "name":
+        return { ...state, name: action.payload };
+      case "contactNum":
+        return { ...state, contactNum: action.payload };
+      case "profilePic":
+        return { ...state, profilePic: action.payload };
+      case "all":
+        return { ...state, ...action.payload };
+      default:
+        throw new Error();
+    }
+  };
+
+  const errorReducer = (state: ErrorStateT, action: ErrorActionT) => {
+    const FIELDS_MAPPER = {
+      name: "name",
+      contactNum: "contact number",
+      email: "email",
+      profilePic: "profile picture",
+    };
+
+    switch (action.type) {
+      case "requiredField":
+        return {
+          ...state,
+          [action.payload]: {
+            error: true,
+            helperText: `Please enter your ${FIELDS_MAPPER[action.payload]}`,
+          },
+        };
+      case "invalidContact":
+        return {
+          ...state,
+          [action.payload]: {
+            error: true,
+            helperText: "Please enter a valid contact number",
+          },
+        };
+      case "reset":
+        return { ...state, [action.payload]: { error: false, helperText: "" } };
+      case "resetAll":
+        return { ...defaultErrorState };
+    }
+  };
+
+  const [userData, userDataDispatch] = useReducer(
+    userDataReducer,
+    defaultUserState
+  );
+  const [errorData, errorDataDispatch] = useReducer(
+    errorReducer,
+    defaultErrorState
+  );
+
+  const retrieveProfileInfo = async () => {
+    try {
+      const res: any = await makeHttpRequest(
+        "GET",
+        USER_ROUTES.RETRIEVE_BY_EMAIL.replace(":email", email)
+      );
+      const { action, data } = res.data;
+
+      if (action) {
+        const { name, email, contactNum, imageUrl = profilePic } = data;
+        userDataDispatch({
+          type: "all",
+          payload: { name, email, contactNum, profilePic: imageUrl },
+        });
+      } else {
+        // TODO: Currently, we do not really have any robust error message
+        displayNotification(
+          "error",
+          "We encountered some error while retrieving your profile information. Please try again later"
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      displayNotification(
+        "error",
+        "Whoooops. We might be facing some technical error! Please try again later"
+      );
+    }
+  };
+
+  useEffect(() => {
+    retrieveProfileInfo();
+  }, [email]);
+
+  // Function to validate changes are valid
+  const validateChanges = () => {
+    const requiredFieldS: (keyof UserStateT)[] = [
+      "name",
+      "contactNum",
+      "email",
+    ];
+    let isValid = true;
+
+    requiredFieldS.forEach((field) => {
+      if (userData[field] === "") {
+        isValid = false;
+        errorDataDispatch({ type: "requiredField", payload: field });
+      }
+    });
+
+    // Ensure contact is a number
+    if (isNaN(Number(userData["contactNum"]))) {
+      isValid = false;
+      errorDataDispatch({ type: "invalidContact", payload: "contactNum" });
+    }
+
+    return isValid;
   };
 
   // Function to handle photo upload
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setProfilePicInput(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUserData((prevUserData) => ({
-          ...prevUserData,
-          profilePic: reader.result as string, 
-        }));
+        userDataDispatch({
+          type: "profilePic",
+          payload: reader.result as string,
+        });
       };
       reader.readAsDataURL(file);
     }
   };
 
-  // Function to validate changes are valid
-  const validateChanges = () => {
-    console.log("Basic validation, might need to ensure OTP etc");
-    // Ensure not empty
-    if (nameInput === "" || contactInput === "" || userData.email === "") {
-      console.log("All fields cannot be empty");
-      return false;
-    }
-    // Ensure contact is a number
-    if (isNaN(Number(contactInput))) {
-      console.log("Contact must be a number");
-    }
-    return true;
-  };
-
   // Function to handle save changes
-  const handleSaveChanges = () => {
-    // Validate changes
-    if (validateChanges()) {
-      console.log("Backend request to server to change details!");
-      console.log("Name:", nameInput);
-      console.log("Contact:", contactInput);
-      console.log("Email:", userData.email);
-      return true;
+  const handleSaveChanges = async () => {
+    if (!validateChanges()) return;
+
+    try {
+      const res: any = await makeHttpRequest(
+        "PUT",
+        USER_ROUTES.UPDATE_USER,
+        userData
+      );
+      if (res.data.action) {
+        displayNotification(
+          "success",
+          "Your profile has been updated successfully!"
+        );
+        retrieveProfileInfo();
+      } else {
+        displayNotification(
+          "error",
+          "Encountered an error while saving changes. Please try again"
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      displayNotification(
+        "error",
+        "Whoooops. We might be facing some technical error! Please try again later"
+      );
     }
-    console.log("Validation failed, will not send to server!")
-    return false;
   };
 
-  // Function to handle terminate account
-  const handleTerminateAccount = () => {
-    console.log("Backend request to server to terminate account!");
-    console.log("Email:", userData.email);
-    return true;
+  const handleFieldChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: keyof UserStateT
+  ) => {
+    userDataDispatch({ type: field, payload: event.target.value });
+    errorDataDispatch({ type: "reset", payload: field }); // Remove existing error message
   };
+
+  // // Function to handle terminate account
+  // const handleTerminateAccount = () => {
+  //   // console.log("Email:", userData.email);
+  //   return true;
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -100,7 +248,7 @@ export default function EditProfile() {
         noValidate
         autoComplete="off"
       >
-        <Stack spacing={3} justifyContent={"space-between"} >
+        <Stack spacing={6}>
           <Box
             sx={{
               width: 350,
@@ -108,37 +256,68 @@ export default function EditProfile() {
               flexDirection: "column",
               justifyContent: "left",
               alignItems: "center",
-              marginBottom: "3rem",
             }}
           >
-            <ProfilePic 
-              profilePic={userData.profilePic} 
-              handlePhotoUpload={handlePhotoUpload} 
+            <ProfilePic
+              profilePic={userData.profilePic}
+              handlePhotoUpload={handlePhotoUpload}
             />
-            {/* Name */}
-            <ProfileTextField label="Name" value={userData.name} onChange={handleNameChange} />
-            {/* Contact */}
-            <ProfileTextField label="Contact" value={userData.contact} onChange={handleContactChange} />
-            {/* Email */}
-            <ProfileTextField label="Email" value={userData.email} disabled={true} />
-      
+            <ProfileTextField
+              label="Name"
+              value={userData.name}
+              onChange={(e) => handleFieldChange(e, "name")}
+              error={errorData.name.error}
+              helperText={errorData.name.helperText}
+            />
+            <ProfileTextField
+              label="Contact"
+              value={userData.contactNum}
+              onChange={(e) => handleFieldChange(e, "contactNum")}
+              error={errorData.contactNum.error}
+              helperText={errorData.contactNum.helperText}
+            />
+            <ProfileTextField
+              label="Email"
+              value={userData.email}
+              disabled={true}
+            />
           </Box>
-
-          <Button
-            variant="contained"
-            color="primary"
+          <Box
             sx={{
-              fontWeight: 'bold', // Make the font bold
-              height: '3rem', // Adjust the height to make it thicker
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "left",
+              gap: "1rem",
             }}
-            onClick={() => handleSaveChanges()}
           >
-            Save changes
-          </Button>
-
-          < TerminateModal handleConfirmTerminate={handleTerminateAccount}/>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                fontWeight: "bold", // Make the font bold
+                height: "3rem", // Adjust the height to make it thicker
+              }}
+              onClick={() => handleSaveChanges()}
+            >
+              Save changes
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{
+                fontWeight: "bold", // Make the font bold
+                height: "3rem", // Adjust the height to make it thicker
+              }}
+              onClick={() => navigate("/profile")}
+            >
+              Cancel
+            </Button>
+          </Box>
+          {/* TODO */}
+          {/* <TerminateModal handleConfirmTerminate={handleTerminateAccount}/> */}
         </Stack>
-      </Box >
-    </ThemeProvider >
+      </Box>
+      <FeedbackNotification />
+    </ThemeProvider>
   );
 }

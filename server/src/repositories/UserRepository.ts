@@ -14,4 +14,8 @@ export class UserRepository {
   async getUserByEmail(email: User['email']) {
     return await AppDataSource.getRepository(User).findOne({ where: { email } });
   }
+
+  async updateUser(email: string, payload: Partial<User>) {
+    await AppDataSource.getRepository(User).update({ email: email }, payload)
+  }
 }
