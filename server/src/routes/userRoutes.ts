@@ -14,6 +14,15 @@ router.get("/", async (req, res) => {
 
 });
 
+// Get all users that are admin and staff
+router.get("/allAdmins", async (req, res) => {
+  console.log("BACKEND /allAdmins userRoutes")
+  const adminUsers = await userService.getAllAdminUsers();
+  // console.log(adminUsers);
+  res.status(200).json({adminUsers});
+
+});
+
 router.post('/', async (req, res) => {
   // Create user
   try {

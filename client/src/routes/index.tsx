@@ -4,11 +4,10 @@ import ErrorPage from "../pages/ErrorPage";
 import Home from "../pages/Index";
 import SignUp from "../pages/SignUp";
 import SignIn from "../pages/SignIn";
-import AdminSignIn from "../pages/admin/AdminSignIn";
-
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
-// import ContactUs from "../pages/ContactUs";
+import ImageComponentExample from "../pages/ImageComponentExample";
+import AdminSignIn from "../pages/admin/AdminSignIn";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/edit-profile",
         element: <EditProfile />,
+      },
+      {
+        path: "/image-component-example",
+        element: <ImageComponentExample />,
       },
       {
         path: "/admin/sign-in",

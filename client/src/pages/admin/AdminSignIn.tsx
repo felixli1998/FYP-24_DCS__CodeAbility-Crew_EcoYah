@@ -1,27 +1,17 @@
-import { useState, useEffect } from "react";
-import {styled} from "@mui/material/styles";
 import {
-    Box,
-    Container,
-    ThemeProvider,
-    Typography,
-    Avatar,
-    ListItemAvatar,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText,
-    IconButton,
     Card,
-    CardContent,
     CardActionArea,
-    CardMedia,
-    Stack
-  } from "@mui/material";
+    Container,
+    Grid,
+    ThemeProvider,
+    Typography
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 import RoundProfilePic from "../../components/RoundProfilePic";
-import {theme} from "../../styles/Palette";
+import { theme } from "../../styles/Palette";
+import { makeHttpRequest } from "../../utils/Utility";
 
-import profilePic from "../../assets/ProfilePicture.png";
 
 // interface ProfileCardProps {
 // displayName: string;
@@ -54,7 +44,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
     "&:hover": { transform: "scale3d(1.3, 1.3, 1)" },
   }))
 
-function ProfileCard(props: { displayName: string, username: string }) {
+function ProfileCard(props: { displayName: string, id: number, imgSrc: string }) {
 
     const [raised, setRaised] = useState(false);
 
@@ -69,37 +59,60 @@ function ProfileCard(props: { displayName: string, username: string }) {
     }
 
     return (
-        <StyledCard raised={raised} sx={{maxWidth: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
+        <StyledCard raised={raised} sx={{width: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
             <CardActionArea onMouseOver={()=> hoverCard()} onMouseOut={() => outHoverCard()}>
-                <RoundProfilePic altText={"test"} pictureSrc={profilePic}/>
-                <Typography variant="h5" color={"white"} sx={{paddingBottom: 3}}>{props.displayName}</Typography>
+                <RoundProfilePic altText={"test"} pictureSrc={props.imgSrc}/>
+                <Typography variant="h4" color={"white"} sx={{paddingBottom: 3}}>{props.displayName}</Typography>
             </CardActionArea>                
         </StyledCard>
     )
 }
 
+interface ProfilesType {
+    id: number;
+    name: string;
+    imageId: string;
+    email: string;
+  }
+
 export default function AdminSignIn() {
 
-    const [profiles, setProfiles] = useState([]);
+    const [profiles, setProfiles] = useState<ProfilesType[]>([]);
+
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+    const getAllAdminProfiles = async () => {
+        const response: any = await makeHttpRequest('GET', BACKEND_URL + '/users/allAdmins');
+        const data = response.adminUsers;
+        console.log(data);
+    
+        setProfiles(data);
+    }
+
+    useEffect(() => {
+        console.log("***IN useEffect()***")
+        getAllAdminProfiles();
+    }, []);
     
     return (
         <ThemeProvider theme={theme}>
             <Container sx={{textAlign: "center", marginY: 9}}>
-                <Typography variant="h2" sx={{marginBottom: 5}}>Welcome Back, Admin.</Typography>
-                <Typography variant="h3" sx={{marginBottom: 3}}>Choose your profile.</Typography>
+                <Typography variant="h3" sx={{marginBottom: 3}}>Welcome Back, Admin.</Typography>
+                <Typography variant="h4" sx={{marginBottom: 6}}>Choose your profile.</Typography>
             
-            <Stack direction="row" spacing={2}>
+                <Grid container>
+                    {profiles.map(eachProfile => (
+                        <Grid item md={4} display="flex" justifyContent="center" alignItems="center">
 
-                <ProfileCard
-                    displayName={"Name"}
-                    username={"test-userName"}
-                />
+                            <ProfileCard
+                                displayName={eachProfile.name}
+                                id={eachProfile.id}
+                                imgSrc={eachProfile.imageId}
+                            />
+                        </Grid>
+                    ))}
+                </Grid>
 
-                <ProfileCard
-                    displayName={"Name"}
-                    username={"test-userName"}
-                />
-            </Stack>
             </Container>
 
         </ThemeProvider>
