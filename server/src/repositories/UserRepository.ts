@@ -1,4 +1,4 @@
-import { User } from "../entities/User";
+import { User, UserRole } from "../entities/User";
 import { AppDataSource } from "../config/data-source";
 import { In } from "typeorm";
 
@@ -8,15 +8,11 @@ export class UserRepository {
     return await AppDataSource.getRepository(User).find();
   }
 
-  // async getAllAdminUsers() {
-  //   return await AppDataSource.getRepository(User).find({ where: { role: In(["admin", "staff"]) }});
-  // }
-
   async getAllAdminUsers() {
     return await AppDataSource.getRepository(User)
       .createQueryBuilder("user")
       .select(["user.id", "user.name", "user.email", "user.imageId"])
-      .where({ role: In(["admin", "staff"]) })
+      .where({ role: In([UserRole.ADMIN, UserRole.STAFF]) })
       .orderBy("user.name", "ASC")
       .getMany();
   }

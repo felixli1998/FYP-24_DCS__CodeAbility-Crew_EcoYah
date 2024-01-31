@@ -10,19 +10,17 @@ import RoundProfilePic from "./RoundProfilePic";
 const StyledCard = styled(Card)(({ theme }) => ({
     transition: "transform 0.15s ease-in-out",
     "&:hover": { transform: "scale3d(1.3, 1.3, 1)" },
-  }))
+}))
 
 export default function ProfileCard(props: { displayName: string, imgSrc: string, id: number }) {
 
     const [raised, setRaised] = useState(false);
 
     function hoverCard(){
-        console.log("hovered");
         setRaised(true);
     }
 
     function outHoverCard(){
-        console.log("hovered out");
         setRaised(false);
     }
 
