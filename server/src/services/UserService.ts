@@ -1,7 +1,7 @@
-// External imports
+// External Imports
 import { compare } from 'bcrypt';
 
-// services/ItemService.ts
+// Internal Imports
 import { User } from '../entities/User';
 import { UserRepository } from '../repositories/UserRepository';
 

@@ -1,4 +1,4 @@
-// services/DonationEventItemService.ts
+// Internal Imports
 import { DonationEventItem } from '../entities/DonationEventItem';
 import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
 
