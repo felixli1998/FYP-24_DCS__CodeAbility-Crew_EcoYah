@@ -20,6 +20,7 @@ const ProfileTextField: React.FC<ProfileTextFieldProps> = ({ label, value, onCha
   >
     <Typography variant="body1" align="left" sx={{ fontWeight: "bold" }}> {label} </Typography>
     <TextField
+      sx={{ ".MuiFormHelperText-root": { marginLeft: "0" } }}
       id="outlined-basic"
       InputLabelProps={{ shrink: false }}
       variant="outlined"
