@@ -14,6 +14,10 @@ export class EventTypeService {
     return this.eventTypeRepository.createEventType(eventType);
   }
 
+  async retrieveEventTypes() {
+    return this.eventTypeRepository.retrieveEventTypes();
+  }
+
   async retrieveEventTypeById(id: number) {
     return this.eventTypeRepository.retrieveEventTypeById(id);
   }

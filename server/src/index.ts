@@ -16,6 +16,7 @@ import userRoutes from './routes/userRoutes';
 import imageRoutes from './routes/imageRoutes';
 import donationEventRoutes from './routes/donationEventRoutes';
 import itemRoutes from './routes/itemRoutes';
+import eventRoutes from './routes/eventTypeRoutes';
 
 dotenv.config();
 
@@ -51,7 +52,7 @@ app.use('/users', userRoutes);
 app.use('/images', imageRoutes);
 app.use('/donation-events', donationEventRoutes);
 app.use('/items', itemRoutes);
-
+app.use('/eventTypes', eventRoutes)
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
