@@ -18,16 +18,21 @@ interface DonationEventFilterParams {
     eventType?: string;
     name?: string;
     isActive?: string
+    pageNumber: number;
 }
 
 router.get("/all", async (req, res) =>{
     // Check if req.query is empty
-    if (Object.keys(req.query).length === 0) {
+    let pageNumber = parseInt(req.query['pageNumber'] as string); 
+    if (isNaN(pageNumber)) {
+        pageNumber = 1;
+    }
+    if (Object.keys(req.query).length <= 1 ) {
         // This handles getting all donationEvents
-        const {data, pagination} = await donationEventService.getAllDonationEvents();
+        const {data, pagination} = await donationEventService.getAllDonationEvents(pageNumber);
         // Return donationEvents
         return generateResponse(res, 200, data, pagination);
-    }
+    } 
     const filters:DonationEventFilterParams = {
         startDate: req.query['startDate'] as string,
         endDate: req.query['endDate'] as string, 
@@ -35,6 +40,7 @@ router.get("/all", async (req, res) =>{
         eventType: req.query['eventType'] as string,
         name: req.query['name'] as string,
         isActive: req.query['isActive'] as string,
+        pageNumber: pageNumber
     };
     try {
         const {data, pagination} = await donationEventService.getFilteredDonationEvents(filters);

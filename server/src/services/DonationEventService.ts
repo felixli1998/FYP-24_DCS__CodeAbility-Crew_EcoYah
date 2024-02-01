@@ -13,8 +13,8 @@ export class DonationEventService {
     return this.donationEventRepository.createDonationEvent(donationEvent);
   }
   
-  async getAllDonationEvents(): Promise<{ data: DonationEvent[], pagination:IPagination }> {
-    return this.donationEventRepository.getAllDonationEvents();
+  async getAllDonationEvents(pageNumber: number = 1): Promise<{ data: DonationEvent[], pagination:IPagination }> {
+    return this.donationEventRepository.getAllDonationEvents(pageNumber);
   }
 
   async getDonationEventById(id: number): Promise<DonationEvent | null> {

@@ -6,25 +6,25 @@ import IPagination from "../common/IPagination";
 // There should not be any business logic in this particular segment.
 // Business logic shoudl reside in the Service layer.
 export class DonationEventRepository {
+    static PAGE_SIZE: number = 1;
     async createDonationEvent(donationEvent: DonationEvent) {
         return await AppDataSource.getRepository(DonationEvent).save(donationEvent)
     }
 
     async getAllDonationEvents(
         page: number = 1,
-        pageSize: number = 50
     ): Promise<{ data: DonationEvent[], pagination: IPagination }> {
         // Pagination
         const totalCount = await AppDataSource.getRepository(DonationEvent).count();
-        const totalPages = Math.ceil(totalCount / pageSize);
-        const offset = (page - 1) * pageSize;
+        const totalPages = Math.ceil(totalCount / DonationEventRepository.PAGE_SIZE); 
+        const offset = (page - 1) * DonationEventRepository.PAGE_SIZE;
         const queryBuilder = AppDataSource.getRepository(DonationEvent)
             .createQueryBuilder("donationEvent")
             .orderBy("donationEvent.startDate", "ASC")
             .addOrderBy("donationEvent.endDate", "ASC")
             .addOrderBy("donationEvent.createdAt", "ASC")
             .skip(offset)
-            .take(pageSize);
+            .take(DonationEventRepository.PAGE_SIZE);
         const data = await queryBuilder.getMany();
         const pagination: IPagination = {
             pageNumber: page,
@@ -53,7 +53,7 @@ export class DonationEventRepository {
     async filterDonationEvents(
         filters: any, 
         page: number = 1, 
-        pageSize: number  = 50): Promise<{ data: DonationEvent[], pagination:IPagination }> {
+        ): Promise<{ data: DonationEvent[], pagination:IPagination }> {
 
         const queryBuilder = AppDataSource.getRepository(DonationEvent)
             .createQueryBuilder("donationEvent");
@@ -97,14 +97,14 @@ export class DonationEventRepository {
         }
         // Pagination
         const totalCount = await queryBuilder.getCount();
-        const totalPages = Math.ceil(totalCount / pageSize);
-        const offset = (page - 1) * pageSize;
+        const totalPages = Math.ceil(totalCount / DonationEventRepository.PAGE_SIZE);
+        const offset = (page - 1) * DonationEventRepository.PAGE_SIZE;
         queryBuilder
             .orderBy("donationEvent.startDate", "ASC")
             .addOrderBy("donationEvent.endDate", "ASC")
             .addOrderBy("donationEvent.createdAt", "ASC")
             .offset(offset)
-            .limit(pageSize);
+            .limit(DonationEventRepository.PAGE_SIZE);
         const data = await queryBuilder.getMany();
         const pagination: IPagination = {
             pageNumber: page,
