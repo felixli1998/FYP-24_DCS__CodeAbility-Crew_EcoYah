@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import '../styles/App.css';
+import '../../styles/App.css';
 import { Box, Alert, Stack, Button, Typography, Link } from '@mui/material';
-import logo from '../assets/EcoYah.png';
+import logo from '../../assets/EcoYah.png';
 import TextFields from '../../components/TextFields';
 import Checkboxes from '../../components/CheckBox';
 import LongButtons from '../../components/LongButton';

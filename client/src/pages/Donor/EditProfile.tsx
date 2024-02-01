@@ -1,8 +1,8 @@
 import { useEffect, useReducer } from 'react';
-import '../styles/App.css';
+import '../../styles/App.css';
 import { ThemeProvider } from '@mui/material';
 import { theme } from '../../styles/Palette';
-import profilePic from '../assets/ProfilePicture.png';
+import profilePic from '../../assets/ProfilePicture.png';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';

@@ -7,11 +7,11 @@ type SuccessCardProps = {
 }
 
 export default function SuccessCard(props: SuccessCardProps) {
-  
+
   return (
     <Stack spacing={3}>
-        <Box 
-          component="img" 
+        <Box
+          component="img"
           alt="Account Creation"
           sx={{ width: 500, height: 400, margin: "auto" }}
           src={AccountCreation}>

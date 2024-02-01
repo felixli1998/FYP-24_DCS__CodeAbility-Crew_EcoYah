@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import '../styles/App.css';
+import '../../styles/App.css';
 import {
   Box,
   Container,
@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 
 import { theme } from '../../styles/Palette';
-import logo from '../assets/EcoYah.png';
+import logo from '../../assets/EcoYah.png';
 import { useNavigate } from 'react-router-dom';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -26,7 +26,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import { green, pink, orange, blue } from '@mui/material/colors';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
-import pointsPicture from '../assets/Reward.png';
+import pointsPicture from '../../assets/Reward.png';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import PaidOutlinedIcon from '@mui/icons-material/Paid';
 import { makeHttpRequest } from '../../utils/Utility';
