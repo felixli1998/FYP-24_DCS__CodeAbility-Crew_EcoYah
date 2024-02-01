@@ -2,13 +2,6 @@ import axios from "axios";
 
 const URL = process.env.REACT_APP_BACKEND_URL + "/event-types";
 
-export interface EventType {
-  id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 // Create a new event type
 export const createEventType = async (eventTypeName: string) => {
   try {

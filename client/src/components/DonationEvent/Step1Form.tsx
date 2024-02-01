@@ -12,13 +12,13 @@ import AddIcon from "@mui/icons-material/Add";
 
 // Components
 import StaffTypography from "../Typography/StaffTypography";
+// import Image from "../Image/Image";
 import BoxButton from "../Button/BoxButton";
 import FormDialog from "../Dialog/FormDialog";
 import OutlinedTextField from "../TextFields/OutlinedTextField";
 
 // Common Methods & APIs
 import {
-  EventType,
   createEventType,
   fetchEventTypes,
 } from "../../services/eventTypesApi";
@@ -26,6 +26,7 @@ import {
   formatAndCapitalizeString,
   isValueExistsInObjectArray,
 } from "../../utils/Common";
+import { EventType } from "../../utils/Types";
 
 type Step1FormProps = {
   validate: boolean;
@@ -36,9 +37,9 @@ type Step1FormProps = {
 
 export default function Step1Form(props: Step1FormProps) {
   const theme = useTheme();
-  const [fileUpload, setFileUpload] = useState(false);
-  const [image, setImage] = useState<any>(null);
-  const [name, setName] = useState("");
+  const [fileUpload, setFileUpload] = useState<boolean>(false);
+  const [image, setImage] = useState<string | undefined>(undefined);
+  const [name, setName] = useState<string>("");
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     setFileUpload(true);
@@ -155,6 +156,7 @@ export default function Step1Form(props: Step1FormProps) {
         size={1.5}
         text="1. Upload an Image of the Donation Event"
       />
+      {/* <Image imageId="1.png" imageSource="local" type="rectangle" editable={true} /> */}
       <Box
         display="flex"
         flexDirection="column"
@@ -215,7 +217,7 @@ export default function Step1Form(props: Step1FormProps) {
           />
         )}
       </Box>
-      {props.validate && image === null && (
+      {props.validate && image === undefined && (
         <StaffTypography
           type="helperText"
           size={1.5}

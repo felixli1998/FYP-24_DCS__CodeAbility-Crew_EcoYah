@@ -2,14 +2,6 @@ import axios from "axios";
 
 const URL = process.env.REACT_APP_BACKEND_URL + "/items";
 
-export interface Item {
-  id: number;
-  name: string;
-  unit: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 // Create a new event type
 export const createItem = async (
   name: string,

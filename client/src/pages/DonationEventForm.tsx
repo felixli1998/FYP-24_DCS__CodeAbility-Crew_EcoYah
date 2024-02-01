@@ -9,6 +9,9 @@ import Step3Form from "../components/DonationEvent/Step3Form";
 import dayjs from "dayjs";
 import { useNavigate, useLocation } from "react-router-dom";
 
+// Utils Imports
+import { FormDataType } from "../utils/Types";
+
 export default function DonationEventForm() {
 
     const navigate = useNavigate();
@@ -22,7 +25,16 @@ export default function DonationEventForm() {
     const [backStep2, setBackStep2] = useState(false);
     const [validateStep3, setValidateStep3] = useState(false);
     const [backStep3, setBackStep3] = useState(false);
-    const [formData, setFormData] = useState<{ [key: string] : any }>({});
+    const [formData, setFormData] = useState<FormDataType>({
+      name: "",
+      imageId: "",
+      eventType: null,
+      startDate: new Date(),
+      endDate: new Date(),
+      isActive: false,
+      donationEventItems: [],
+      createdBy: 0,
+    });
 
     const handleBack = () => {
         switch(activeStep) {
@@ -61,7 +73,9 @@ export default function DonationEventForm() {
         setFormData((prevData) => ({...prevData, [key] : value}));
     }
 
-    const form: any = {
+    const form: {
+      [key: number]: JSX.Element;
+    } = {
       0: (
         <Step1Form
           validate={validateStep1}

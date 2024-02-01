@@ -15,9 +15,8 @@ import FormDialog from "../Dialog/FormDialog";
 import OutlinedTextField from "../TextFields/OutlinedTextField";
 import BasicSelect from "../Select/Select";
 
-// Common Methods & APIs
+// Utils Imports
 import {
-  Item,
   createItem,
   getItemsByEventTypeName,
 } from "../../services/itemApi";
@@ -25,6 +24,7 @@ import {
   formatAndCapitalizeString,
   isValueExistsInObjectArray,
 } from "../../utils/Common";
+import { Item } from "../../utils/Types";
 
 type Step2FormProps = {
   validate: boolean;
