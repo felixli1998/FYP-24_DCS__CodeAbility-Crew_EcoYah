@@ -6,7 +6,7 @@ import IPagination from "../common/IPagination";
 // There should not be any business logic in this particular segment.
 // Business logic shoudl reside in the Service layer.
 export class DonationEventRepository {
-    static PAGE_SIZE: number = 1;
+    static PAGE_SIZE: number = 25;
     async createDonationEvent(donationEvent: DonationEvent) {
         return await AppDataSource.getRepository(DonationEvent).save(donationEvent)
     }

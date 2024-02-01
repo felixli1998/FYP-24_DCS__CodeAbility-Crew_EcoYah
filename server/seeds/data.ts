@@ -50,7 +50,13 @@ export const EVENT_TYPE_SEED_DATA = [
   },
   {
     name: "Food Waste"
-  }
+  },
+  {
+    name: "Book Donation"
+  },
+  {
+    name: "Clothing Waste"
+  },
 ]
 
 export const ITEM_SEED_DATA = [
@@ -73,7 +79,32 @@ export const ITEM_SEED_DATA = [
     name: "Mobile Phone",
     unit: "unit",
     eventType: "Electronic Waste"
-  }
+  },
+  {
+    name: "Children's Books",
+    unit: "unit",
+    eventType: "Book Donation"
+  },
+  {
+    name: "Young Adult Fiction",
+    unit: "unit",
+    eventType: "Book Donation"
+  },
+  {
+    name: "Adult Fiction",
+    unit: "unit",
+    eventType: "Book Donation"
+  },
+  {
+    name: "Children's Clothing",
+    unit: "unit",
+    eventType: "Clothing Donation"
+  },
+  {
+    name: "Young Adult Clothing",
+    unit: "unit",
+    eventType: "Clothing Donation"
+  },
 ]
 
 export const DONATION_EVENT_SEED_DATA = [
@@ -120,5 +151,49 @@ export const DONATION_EVENT_SEED_DATA = [
         pointsPerUnit: 500
       }
     ]
-  }
+  },
+  {
+    name: "Book Driver123",
+    imageId: "https://picsum.photos/200/300",
+    user: "Michael Jackson",
+    eventType: "Book Donation",
+    startDate: new Date("2024-03-01"),
+    endDate: new Date("2024-03-30"),
+    donationEventItems: [
+      {
+        name: "Children's Books",
+        targetQty: 500,
+        minQty: 10,
+        pointsPerUnit: 20
+      },
+      {
+        name: "Young Adult Fiction",
+        targetQty: 300,
+        minQty: 5,
+        pointsPerUnit: 30
+      }
+    ]
+  },
+  {
+    name: "Book Drive456",
+    imageId: "https://picsum.photos/200/300",
+    user: "Michael Jackson",
+    eventType: "Book Donation",
+    startDate: new Date("2024-03-01"),
+    endDate: new Date("2024-03-30"),
+    donationEventItems: [
+      {
+        name: "Children's Books",
+        targetQty: 500,
+        minQty: 10,
+        pointsPerUnit: 20
+      },
+      {
+        name: "Young Adult Fiction",
+        targetQty: 300,
+        minQty: 5,
+        pointsPerUnit: 30
+      }
+    ]
+  },
 ]
