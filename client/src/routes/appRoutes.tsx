@@ -1,9 +1,9 @@
-import Home from '../pages/Index';
-import SignUp from '../pages/SignUp';
-import SignIn from '../pages/SignIn';
-import Profile from '../pages/Profile';
-import EditProfile from '../pages/EditProfile';
-import ImageComponentExample from '../pages/ImageComponentExample';
+import Home from '../pages/Donor/Index';
+import SignUp from '../pages/Donor/SignUp';
+import SignIn from '../pages/Donor/SignIn';
+import Profile from '../pages/Donor/Profile';
+import EditProfile from '../pages/Donor/EditProfile';
+import ImageComponentExample from '../pages/Donor/ImageComponentExample';
 
 type AppRoutesT = {
   path: string;

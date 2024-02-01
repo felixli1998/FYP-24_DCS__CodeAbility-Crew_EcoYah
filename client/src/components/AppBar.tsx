@@ -7,7 +7,6 @@ import { Box } from "@mui/material";
 import logo from "../assets/Kunyah.png";
 
 function ResponsiveAppBar() {
-
   const actionList = ["Sign up", "Sign in", "Sign out"];
   const navigationList = ["Home", "Reward", "Profile", "Contact us"];
 
