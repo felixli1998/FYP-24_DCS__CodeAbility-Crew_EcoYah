@@ -75,7 +75,7 @@ const FormDialog: React.FC<FormDialogProps> = ({
           },
         }}
       >
-        <DialogTitle sx={{paddingX: "4rem"}}>{dialogTitle}</DialogTitle>
+        <DialogTitle sx={{paddingX: "4rem", textAlign: "center"}}>{dialogTitle}</DialogTitle>
         <DialogContent>
           {formComponent}
           {errorMessage && (

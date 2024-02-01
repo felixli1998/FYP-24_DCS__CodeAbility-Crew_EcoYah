@@ -14,7 +14,12 @@ import {
   isValueExistsInObjectArray,
 } from "../utils/Common";
 
+import {Item, createItem, getItemsByEventTypeName} from "../services/itemApi";
+import {Divider} from "@mui/material";
+import BasicSelect from "../components/Select/Select";
+
 const Home: React.FC = () => {
+  // === For Event Type View and Create ===
   const [eventTypes, setEventTypes] = useState<EventType[]>([]);
   const [selectedEventType, setSelectedEventType] = useState<EventType | null>(
     null
@@ -76,11 +81,106 @@ const Home: React.FC = () => {
     }
     return createEventTypeMutateAsync(sanitisedEventType);
   };
+  // === For Event Type View and Create ===
+
+  // === For Item View and Create ===
+  const [items, setItems] = useState<Item[]>([]);
+  const [selectedItems, setSelectedItems] = useState<Item[] | null>(null);
+  const eventTypeName = "Food Waste"; // Hardcode by right is passed from the previous page
+  const menuItems = [
+    {label: "Kilogram", value: "kilogram"},
+    {label: "Litre", value: "litre"},
+    {label: "Dollar", value: "dollar"},
+    {label: "Hour", value: "hour"},
+    {label: "Unit", value: "unit"},
+  ];
+  const [selectMenuItems, setSelectedMenuItems] = useState<string>("");
+
+  const {
+    data: itemsData,
+    isLoading: itemsIsLoading,
+    refetch: itemsRefetch,
+  } = useQuery({
+    queryKey: ["items", {eventTypeName: eventTypeName}],
+    queryFn: () => getItemsByEventTypeName(eventTypeName),
+  });
+
+  useEffect(() => {
+    if (!itemsIsLoading && itemsData) {
+      setItems(itemsData.data.items);
+    }
+  }, [itemsData, itemsIsLoading]);
+
+  const handleItemBoxButtonClick = (item: Item) => {
+    if (selectedItems?.includes(item)) {
+      // If the item is already in the array, remove it
+      setSelectedItems(
+        selectedItems.filter((selectedItem) => selectedItem !== item)
+      );
+    } else {
+      // If the item is not in the array, add it
+      setSelectedItems(selectedItems ? [...selectedItems, item] : [item]);
+    }
+  };
+
+  const {mutateAsync: createItemMutateAsync} = useMutation({
+    mutationKey: ["createItem"],
+    // mutationFn: Performing the actual API call
+    mutationFn: ({
+      name,
+      unit,
+      eventTypeName,
+    }: {
+      name: string;
+      unit: string;
+      eventTypeName: string;
+    }) => {
+      return createItem(name, unit, eventTypeName);
+    },
+    // Execution after successful API call
+    onSuccess: (response) => {
+      if (response && response.data.item) {
+        itemsRefetch();
+        return true;
+      }
+      return false;
+    },
+    onError: (error: any) => {
+      console.error("Error creating item: ", error);
+      setErrorMessage("An error occurred while creating the item.");
+    },
+  });
+
+  const handleItemFormSubmit = async (formData: any): Promise<boolean> => {
+    setErrorMessage("");
+    const {item, unit} = formData;
+    const sanitisedItem = formatAndCapitalizeString(item); // Sanitize input to safeguard duplicate creation of event type
+    const existingItems = itemsData.data.items;
+    console.log(existingItems);
+    const isItemExists = isValueExistsInObjectArray(
+      existingItems,
+      "name",
+      sanitisedItem
+    );
+
+    if (isItemExists) {
+      setErrorMessage("Input item already exists!");
+      return false;
+    }
+    return createItemMutateAsync({
+      name: sanitisedItem,
+      unit: unit,
+      eventTypeName: eventTypeName,
+    });
+  };
+
+  // === For Item View and Create ===
 
   return (
     <div>
       <h1>Welcome to the Homepage</h1>
       <p>This is a simple React homepage template.</p>
+      {/* === For Event Type View and Create ===  */}
       {eventTypesIsLoading ? (
         <div>Loading</div>
       ) : (
@@ -114,6 +214,57 @@ const Home: React.FC = () => {
         }
         handleFormSubmit={handleFormSubmit}
       ></FormDialog>
+      {/* === For Event Type View and Create ===  */}
+
+      {/* === For Item View and Create ===  */}
+      <Divider />
+      <div>For Item Ticket</div>
+      {itemsIsLoading ? (
+        <div>Loading</div>
+      ) : (
+        items &&
+        items.map((item: any) => (
+          <BoxButton
+            key={item.id}
+            handleClick={() => handleItemBoxButtonClick(item)}
+            color="primary"
+            size="small"
+            name={item.name}
+            isSelected={selectedItems?.includes(item) ? true : false}
+          ></BoxButton>
+        ))
+      )}
+      <FormDialog
+        buttonName="Add"
+        buttonIcon={<AddIcon />}
+        dialogTitle="Create a New Item"
+        leftActionButtonName="Cancel"
+        rightActionButtonName="Add"
+        errorMessage={errorMessage}
+        formComponent={
+          <div>
+            <OutlinedTextField
+              id={"create-item"}
+              name="item"
+              label="Item"
+              helperText="Please enter non-numerical values"
+              regExpression={/^[a-zA-Z\s]+$/}
+            />
+            <BasicSelect
+              name="unit"
+              labelId="select-item-label"
+              label="Unit"
+              selectId="select-item-id"
+              menuItems={menuItems}
+              selectValue={selectMenuItems}
+              onChange={setSelectedMenuItems}
+            />
+          </div>
+        }
+        handleFormSubmit={handleItemFormSubmit}
+      ></FormDialog>
+
+      {/* === For Item View and Create ===  */}
     </div>
   );
 };
