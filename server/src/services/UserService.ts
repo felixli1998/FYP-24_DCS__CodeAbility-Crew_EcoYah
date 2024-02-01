@@ -1,7 +1,7 @@
-// External imports
+// External Imports
 import { compare } from 'bcrypt';
 
-// services/ItemService.ts
+// Internal Imports
 import { User } from '../entities/User';
 import { UserRepository } from '../repositories/UserRepository';
 
@@ -26,6 +26,10 @@ export class UserService {
 
   async getAllUsers() {
     return this.userRepository.getAllUsers();
+  }
+
+  async getUserById(id: number) {
+    return this.userRepository.getUserById(id);
   }
 
   async getUserByEmail(email: string) {

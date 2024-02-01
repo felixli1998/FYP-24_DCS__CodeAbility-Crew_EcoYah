@@ -1,3 +1,4 @@
+// Internal Imports
 import { EventType } from '../entities/EventType';
 import { EventTypeRepository } from '../repositories/EventTypeRepository';
 
@@ -15,6 +16,10 @@ export class EventTypeService {
 
   async retrieveEventTypes() {
     return this.eventTypeRepository.retrieveEventTypes();
+  }
+
+  async retrieveEventTypeById(id: number) {
+    return this.eventTypeRepository.retrieveEventTypeById(id);
   }
 
   async retrieveEventTypeByName(name: string) {
