@@ -14,9 +14,6 @@ import {
   Button,
 } from "@mui/material";
 
-// Other Imports
-import dayjs from "dayjs";
-
 // Icons
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -25,7 +22,10 @@ import AddIcon from "@mui/icons-material/Add";
 // Components
 import StaffTypography from "../components/Typography/StaffTypography";
 
-// APIs
+// Other Imports
+import dayjs from "dayjs";
+
+// Utils Imports
 import { createDonationEvent } from "../services/donationEventApi";
 
 export default function DonationEventPreview() {

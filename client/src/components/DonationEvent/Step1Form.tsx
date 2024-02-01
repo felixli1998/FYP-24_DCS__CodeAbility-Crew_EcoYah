@@ -17,7 +17,7 @@ import BoxButton from "../Button/BoxButton";
 import FormDialog from "../Dialog/FormDialog";
 import OutlinedTextField from "../TextFields/OutlinedTextField";
 
-// Common Methods & APIs
+// Utils Imports
 import {
   createEventType,
   fetchEventTypes,

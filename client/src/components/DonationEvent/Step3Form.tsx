@@ -1,11 +1,18 @@
+// React Imports
 import { useState, useEffect } from "react";
+
+// MUI Imports
 import { Typography, Grid, FormControlLabel, Switch } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+
+// Components
 import StaffTypography from "../Typography/StaffTypography";
+
+// Other Imports
 import dayjs, { Dayjs } from "dayjs";
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 
 type Step3FormProps = {
     validate: boolean

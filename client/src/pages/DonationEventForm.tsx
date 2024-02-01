@@ -1,11 +1,20 @@
+// React Imports
 import { useState, useEffect } from 'react';
+
+// MUI Imports
 import { Stack, Box, Stepper, Step, StepLabel, Grid, Button } from '@mui/material';
-import StaffTypography from "../components/Typography/StaffTypography";
+
+// Icons
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
+// Components
+import StaffTypography from "../components/Typography/StaffTypography";
 import Step1Form from "../components/DonationEvent/Step1Form";
 import Step2Form from "../components/DonationEvent/Step2Form";
 import Step3Form from "../components/DonationEvent/Step3Form";
+
+// Other Imports
 import dayjs from "dayjs";
 import { useNavigate, useLocation } from "react-router-dom";
 
