@@ -39,14 +39,12 @@ router.post('/create', async (req, res) => {
         newDonationEvent.endDate = filteredEventParams.endDate;
         newDonationEvent.isActive = filteredEventParams.isActive;
 
-        // get the existing User and EventType by Id
+        // get the existing User by Id
         const createdByUser = await userRepository.getUserById(filteredEventParams.createdBy);
-        // const eventType = await eventTypeRepository.retrieveEventTypeById(filteredEventParams.eventType);
 
-        // apply association to User and EventType
+        // apply association to User 
         if (createdByUser) {
             newDonationEvent.createdBy = createdByUser;
-            // newDonationEvent.eventType = eventType;
         }
 
         // get the existing items by Id and create new Donation Event Item objects

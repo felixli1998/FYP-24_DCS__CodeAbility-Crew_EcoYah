@@ -29,6 +29,7 @@ import {
 type Step2FormProps = {
   validate: boolean;
   data: (key: string, value: any) => void;
+  nextData: any;
   back: boolean;
   prevData: any;
 };
@@ -45,9 +46,9 @@ export default function Step2Form(props: Step2FormProps) {
     Array.isArray(props.prevData["donationEventItems"])
     ? props.prevData["donationEventItems"]
     : []
-    );
+    ); // REFACTOR: maybe don't need this, can add the extra attributes into selectedItems
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const eventTypeName = "Food Waste"; // Hardcode by right is passed from the previous page
+  const eventTypeName = props.nextData.name;
 
   const menuItems = [
     { label: "Kilogram", value: "kilogram" },
@@ -69,17 +70,29 @@ export default function Step2Form(props: Step2FormProps) {
 
   useEffect(() => {
     if (!itemsIsLoading && itemsData) {
-      setItems(itemsData.data.items);
-    }
-  }, [itemsData, itemsIsLoading]);
+        const updatedItems = itemsData.data.items;
+        setItems(updatedItems);
 
-  console.log(items);
+        if (selectedItems) {
+            const checkSubset = selectedItems.every(
+                selectedItem => updatedItems.some((item: Item) => item.id === selectedItem.id)
+            );
+            if (checkSubset) {
+                // console.log('Partial array is a subset of full array');
+            } else {
+                // console.log('Partial array is not a subset of full array');
+                setSelectedItems(null);
+                setSelectedItemsInfo([]);
+            }
+        }
+    }
+  }, [itemsData, itemsIsLoading, selectedItems]);
 
   const handleItemBoxButtonClick = (item: Item) => {
-    if (selectedItems?.includes(item)) {
+    if (selectedItems?.some(selectedItem => selectedItem.id === item.id)) {
       // If the item is already in the array, remove it
       setSelectedItems(
-        selectedItems.filter((selectedItem) => selectedItem !== item)
+        selectedItems.filter((selectedItem) => selectedItem.id !== item.id)
       );
       setSelectedItemsInfo(selectedItemsInfo.filter((selectedItemInfo: Item) => selectedItemInfo.id !== item.id));
     } else {
@@ -175,9 +188,6 @@ export default function Step2Form(props: Step2FormProps) {
       });
     };
 
-  console.log(selectedItems);
-  console.log(selectedItemsInfo);
-
   useEffect(() => {
     // check that each value is neither empty nor NaN, then update the state
     if (
@@ -246,7 +256,7 @@ export default function Step2Form(props: Step2FormProps) {
                     color="primary"
                     size="small"
                     name={item.name}
-                    isSelected={selectedItems!.some(selectedItem => selectedItem.id === item.id)}
+                    isSelected={selectedItems ? selectedItems.some(selectedItem => selectedItem.id === item.id) : false}
                 ></BoxButton>
             </Grid>
             )) }

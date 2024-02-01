@@ -52,9 +52,6 @@ export default function Step3Form(props: Step3FormProps) {
         }
     }
 
-    // console.log(startDate);
-    // console.log(endDate);
-
     useEffect(() => {
         // set the time of the currentDate to be midnight so comparison with the startDate can be done based on the date
         if (startDate! >= dayjs(new Date().setHours(0,0,0,0)) &&  endDate! >= startDate!) {

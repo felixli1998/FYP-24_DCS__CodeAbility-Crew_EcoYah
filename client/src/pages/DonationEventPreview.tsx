@@ -87,8 +87,6 @@ export default function DonationEventPreview() {
     },
   });
 
-  // console.log(formData);
-
   useEffect(() => {
     if (formData === null) {
       navigate("/admin/donation-event-form");

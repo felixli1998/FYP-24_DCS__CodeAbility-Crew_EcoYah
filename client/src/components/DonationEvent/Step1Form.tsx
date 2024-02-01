@@ -285,7 +285,7 @@ export default function Step1Form(props: Step1FormProps) {
                   color="primary"
                   size="small"
                   name={eventType.name}
-                  isSelected={selectedEventType!.id === eventType.id}
+                  isSelected={selectedEventType ? selectedEventType.id === eventType.id : false}
                 ></BoxButton>
               </Grid>
             ))}

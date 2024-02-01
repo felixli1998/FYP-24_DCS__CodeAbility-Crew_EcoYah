@@ -61,13 +61,33 @@ export default function DonationEventForm() {
         setFormData((prevData) => ({...prevData, [key] : value}));
     }
 
-    console.log(formData);
-
-    const form: any = { 
-            0: <Step1Form validate={validateStep1} data={handleData} back={backStep1} prevData={formData}/> , 
-            1: <Step2Form validate={validateStep2} data={handleData} back={backStep2} prevData={formData}/>, 
-            2: <Step3Form validate={validateStep3} data={handleData} back={backStep3} prevData={formData}/> 
-    }
+    const form: any = {
+      0: (
+        <Step1Form
+          validate={validateStep1}
+          data={handleData}
+          back={backStep1}
+          prevData={formData}
+        />
+      ),
+      1: (
+        <Step2Form
+          validate={validateStep2}
+          data={handleData}
+          nextData={formData["eventType"]}
+          back={backStep2}
+          prevData={formData}
+        />
+      ),
+      2: (
+        <Step3Form
+          validate={validateStep3}
+          data={handleData}
+          back={backStep3}
+          prevData={formData}
+        />
+      ),
+    };
 
     useEffect(() => {
         if (location.state) {
