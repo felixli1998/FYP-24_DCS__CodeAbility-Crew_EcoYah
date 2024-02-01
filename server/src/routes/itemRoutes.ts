@@ -5,9 +5,11 @@ import {ItemService} from "../services/ItemService";
 import {ItemRepository} from "../repositories/ItemRepository";
 import {generateResponse, strongParams} from "../common/methods";
 import {EventType} from "../entities/EventType";
+import { EventTypeRepository } from "../repositories/EventTypeRepository";
 
 const router = express.Router();
 const itemRepository = new ItemRepository();
+const eventTypeRepository = new EventTypeRepository();
 const itemService = new ItemService(itemRepository);
 
 router.get("/items-by-event-type-name", async (req, res) => {
@@ -43,11 +45,12 @@ router.post("/create-item", async (req, res) => {
       });
     }
     const newItem = new Item();
-    const eventType = new EventType();
-    eventType.name = eventTypeName;
+    const eventType = await eventTypeRepository.retrieveEventTypeByName(eventTypeName);
     newItem.name = name;
     newItem.unit = unit;
-    newItem.eventType = eventType;
+    if (eventType) {
+      newItem.eventType = eventType;
+    }
     const item = await itemService.createItem(newItem);
     return generateResponse(res, 200, {
       item,
