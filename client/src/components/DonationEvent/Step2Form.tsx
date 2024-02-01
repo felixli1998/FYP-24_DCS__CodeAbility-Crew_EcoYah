@@ -36,14 +36,16 @@ type Step2FormProps = {
 export default function Step2Form(props: Step2FormProps) {
   // === For Item View and Create ===
   const [items, setItems] = useState<Item[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Item[] | null>(null);
-  const [selectedItemsInfo, setSelectedItemsInfo] = useState(() => {
-    if (props.back && props.prevData["donationEventItems"]) {
-      return props.prevData["donationEventItems"];
-    } else {
-        return [];
-    }
-  });
+  const [selectedItems, setSelectedItems] = useState<Item[] | null>(
+    Array.isArray(props.prevData["selectedItems"])
+    ? props.prevData["selectedItems"]
+    : null
+  );
+  const [selectedItemsInfo, setSelectedItemsInfo] = useState(
+    Array.isArray(props.prevData["donationEventItems"])
+    ? props.prevData["donationEventItems"]
+    : []
+    );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const eventTypeName = "Food Waste"; // Hardcode by right is passed from the previous page
 
@@ -79,18 +81,19 @@ export default function Step2Form(props: Step2FormProps) {
       setSelectedItems(
         selectedItems.filter((selectedItem) => selectedItem !== item)
       );
+      setSelectedItemsInfo(selectedItemsInfo.filter((selectedItemInfo: Item) => selectedItemInfo.id !== item.id));
     } else {
       // If the item is not in the array, add it
       setSelectedItems((prevSelectedItems: Item[] | null) => {
         const newSelectedItems = prevSelectedItems ? [...prevSelectedItems, item] : [item];
         setSelectedItemsInfo((prevSelectedItemsInfo: any) => [
           ...prevSelectedItemsInfo,
-          ...newSelectedItems.map((newlyAddedItem) => ({
-            ...newlyAddedItem,
+          {
+            ...item,
             minQty: "",
             targetQty: "",
             pointsPerUnit: "",
-          })),
+          },
         ]);
         return newSelectedItems;
       });
@@ -137,8 +140,13 @@ export default function Step2Form(props: Step2FormProps) {
       sanitisedItem
     );
 
+    if (item === "" && unit === "") {
+        setErrorMessage("Please enter an item and choose a unit");
+        return false;
+    }
+
     if (isItemExists) {
-      setErrorMessage("Input item already exists!");
+      setErrorMessage("This item already exists!");
       return false;
     }
     return createItemMutateAsync({
@@ -159,8 +167,6 @@ export default function Step2Form(props: Step2FormProps) {
         const updatedItemsInfo = [...prevData];
         updatedItemsInfo[index] = {
           ...updatedItemsInfo[index],
-          name: items[index].name,
-          unit: items[index].unit,
           [itemKey]: parseFloat(event.target.value),
         };
         return updatedItemsInfo;
@@ -179,6 +185,7 @@ export default function Step2Form(props: Step2FormProps) {
         )
       )
     ) {
+      props.data("selectedItems", selectedItems);
       props.data("donationEventItems", selectedItemsInfo);
     } else {
       props.data("donationEventItems", []);

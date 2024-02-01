@@ -16,7 +16,9 @@ export default function DonationEventPreview() {
     const donationEventDetails: any = {'Name' : 'name', 'Type': 'eventType', 'Period': [ 'startDate', 'endDate'], 'Status': 'isActive'};
 
     const displayValue = (detail: string) => {
-        if (formData && detail === "Status") {
+        if (detail === "Type") {
+            return formData[donationEventDetails[detail]].name;
+        } else if (detail === "Status") {
             if (formData[donationEventDetails[detail]]) return "Active";
             else return "Inactive";
         } else if (detail === "Period") {
