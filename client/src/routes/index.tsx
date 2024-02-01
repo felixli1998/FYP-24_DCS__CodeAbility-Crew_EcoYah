@@ -8,6 +8,8 @@ import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 import ImageComponentExample from "../pages/ImageComponentExample";
 // import ContactUs from "../pages/ContactUs";
+import DonationEventForm from "../pages/DonationEventForm";
+import DonationEventPreview from "../pages/DonationEventPreview";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
       //   path: "/contactUs",
       //   element: <ContactUs />,
       // }
+      {
+        path: "/admin/donation-event-form",
+        element: <DonationEventForm />,
+      }, 
+      {
+        path: "/admin/donation-event-preview",
+        element: <DonationEventPreview />,
+      }
     ],
   },
 ]);
