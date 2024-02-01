@@ -14,7 +14,7 @@ router.post("/create-event-type", async (req, res) => {
     const {eventTypeName} = req.body;
     if (!eventTypeName || eventTypeName.trim() === "") {
       return generateResponse(res, 400, {
-        error: "Invalid input: eventTypeName is required",
+        error: "Invalid input: eventTypeName parameter is required",
       });
     }
     const newEventType = new EventType();
