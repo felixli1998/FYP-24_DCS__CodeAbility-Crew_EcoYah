@@ -10,6 +10,7 @@ import { theme } from "../../styles/Palette";
 import { makeHttpRequest } from "../../utils/Utility";
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { USER_ROUTES } from "../../services/routes";
+import PinSignIn from "../../components/PinSignIn";
 
 interface ProfilesType {
     id: number;
@@ -66,6 +67,7 @@ export default function AdminSignIn() {
     return (
         <ThemeProvider theme={theme}>
             <Container sx={{textAlign: "center", marginY: 9}}>
+                {/* <PinSignIn /> */}
             {errorFetchingProfiles ? 
                 <>
                     <ReportProblemIcon sx={{color: "#FF0000", marginBottom: 3, height: "70px", width: "70px"}}/>
