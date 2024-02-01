@@ -2,7 +2,7 @@ import axios from "axios";
 
 const URL = process.env.REACT_APP_BACKEND_URL + "/donation-events";
 
-// Create a new donation event
+// Create a new donation event and donation event item(s)
 export const createDonationEvent = async (donationEvent: any, adminID: number) => {
   try {
     const response = await axios.post(URL + "/create", {
