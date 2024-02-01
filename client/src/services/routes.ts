@@ -5,6 +5,7 @@ export const USER_ROUTES = {
   RETRIEVE_BY_EMAIL: `${BASE_URL}/users/:email`,
   CREATE_USER: `${BASE_URL}/users`,
   ADMIN_LOGIN: `${BASE_URL}/users/allAdmins`,
+  UPDATE_USER: `${BASE_URL}/users/update`,
 }
 
 // General Related Routes //
