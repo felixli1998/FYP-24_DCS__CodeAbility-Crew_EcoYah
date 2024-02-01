@@ -11,7 +11,6 @@ const router = express.Router();
 const donationEventRepository= new DonationEventRepository();
 const donationEventService = new DonationEventService(donationEventRepository);
 
-// TODO: @Felix, I need some clarification on what can be filtered by
 interface DonationEventFilterParams {
     startDate?: string;
     endDate?: string;
@@ -29,7 +28,6 @@ router.get("/all", async (req, res) =>{
         // Return donationEvents
         return generateResponse(res, 200, data, pagination);
     }
-
     const filters:DonationEventFilterParams = {
         startDate: req.query['startDate'] as string,
         endDate: req.query['endDate'] as string, 
@@ -87,9 +85,7 @@ router.put(`/:id`, async (req, res) => {
     }
     // Updating donationEvent
     const updateDonationEvent = Object.assign(donationEvent, updateParams);
-
     const updatedDonationEvent = await donationEventService.updateDonationEvent(updateDonationEvent);
-    
     return generateResponse(res, 200, updatedDonationEvent); 
 });
 

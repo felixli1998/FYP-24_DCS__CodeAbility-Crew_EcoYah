@@ -1,13 +1,10 @@
 import { DonationEvent } from "../entities/DonationEvent";
 import { AppDataSource } from "../config/data-source";
 import IPagination from "../common/IPagination";
-import { ILike } from "typeorm";
-import { query } from "express";
 
 // A repository interacts with the data base only. 
 // There should not be any business logic in this particular segment.
 // Business logic shoudl reside in the Service layer.
-
 export class DonationEventRepository {
     async createDonationEvent(donationEvent: DonationEvent) {
         return await AppDataSource.getRepository(DonationEvent).save(donationEvent)
@@ -21,7 +18,6 @@ export class DonationEventRepository {
         const totalCount = await AppDataSource.getRepository(DonationEvent).count();
         const totalPages = Math.ceil(totalCount / pageSize);
         const offset = (page - 1) * pageSize;
-    
         const queryBuilder = AppDataSource.getRepository(DonationEvent)
             .createQueryBuilder("donationEvent")
             .orderBy("donationEvent.startDate", "ASC")
@@ -29,9 +25,7 @@ export class DonationEventRepository {
             .addOrderBy("donationEvent.createdAt", "ASC")
             .skip(offset)
             .take(pageSize);
-    
         const data = await queryBuilder.getMany();
-    
         const pagination: IPagination = {
             pageNumber: page,
             hasNext: page < totalPages
@@ -101,26 +95,21 @@ export class DonationEventRepository {
         if (filters.name) {
             queryBuilder.andWhere("donationEvent.name ILIKE :name", { name: `%${filters.name}%` });
         }
-
         // Pagination
         const totalCount = await queryBuilder.getCount();
         const totalPages = Math.ceil(totalCount / pageSize);
         const offset = (page - 1) * pageSize;
-
         queryBuilder
             .orderBy("donationEvent.startDate", "ASC")
             .addOrderBy("donationEvent.endDate", "ASC")
             .addOrderBy("donationEvent.createdAt", "ASC")
             .offset(offset)
             .limit(pageSize);
-
         const data = await queryBuilder.getMany();
-
         const pagination: IPagination = {
             pageNumber: page,
             hasNext: page < totalPages
         };
-
         return { data:data, pagination: pagination };
     }
 }
