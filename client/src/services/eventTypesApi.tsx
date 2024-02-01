@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = process.env.REACT_APP_BACKEND_URL + "/eventTypes";
+const URL = process.env.REACT_APP_BACKEND_URL + "/event-types";
 
 export interface EventType {
   id: number;

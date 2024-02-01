@@ -89,7 +89,9 @@ export default function Step2Form(props: Step2FormProps) {
         setSelectedItemsInfo((prevSelectedItemsInfo: any) => [
           ...prevSelectedItemsInfo,
           {
-            ...item,
+            id: item.id, 
+            name: item.name,
+            unit: item.unit,
             minQty: "",
             targetQty: "",
             pointsPerUnit: "",

@@ -33,6 +33,7 @@ router.post('/create', async (req, res) => {
         // create new DonationEvent object to avoid typing errors
         const newDonationEvent = new DonationEvent();
         newDonationEvent.name = filteredEventParams.name;
+        newDonationEvent.eventType = filteredEventParams.eventType;
         newDonationEvent.imageId = filteredEventParams.imageId;
         newDonationEvent.startDate = filteredEventParams.startDate;
         newDonationEvent.endDate = filteredEventParams.endDate;
@@ -40,19 +41,19 @@ router.post('/create', async (req, res) => {
 
         // get the existing User and EventType by Id
         const createdByUser = await userRepository.getUserById(filteredEventParams.createdBy);
-        const eventType = await eventTypeRepository.retrieveEventTypeById(filteredEventParams.eventType);
+        // const eventType = await eventTypeRepository.retrieveEventTypeById(filteredEventParams.eventType);
 
         // apply association to User and EventType
-        if (createdByUser && eventType) {
+        if (createdByUser) {
             newDonationEvent.createdBy = createdByUser;
-            newDonationEvent.eventType = eventType;
+            // newDonationEvent.eventType = eventType;
         }
 
         // get the existing items by Id and create new Donation Event Item objects
         const newDonationEventItems: any = await Promise.all(
-            filteredEventParams.donationEventItems.map(async (donationEventItem: { item: number; targetQty: number; minQty: number; pointsPerUnit: number; }) => {
+            filteredEventParams.donationEventItems.map(async (donationEventItem: any) => {
             const newItem = new DonationEventItem();
-            const item = await itemRepository.getItemById(donationEventItem.item);
+            const item = await itemRepository.getItemById(donationEventItem.id);
             if (item) {
                 newItem.item = item;
             } 

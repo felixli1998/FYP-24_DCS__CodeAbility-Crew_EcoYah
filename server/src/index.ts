@@ -21,7 +21,7 @@ import eventRoutes from './routes/eventTypeRoutes';
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.use(cors());
 
 const port = process.env.PORT;
@@ -52,7 +52,7 @@ app.use('/users', userRoutes);
 app.use('/images', imageRoutes);
 app.use('/donation-events', donationEventRoutes);
 app.use('/items', itemRoutes);
-app.use('/eventTypes', eventRoutes)
+app.use('/event-types', eventRoutes)
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
