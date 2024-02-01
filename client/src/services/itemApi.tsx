@@ -11,12 +11,16 @@ export interface Item {
 }
 
 // Create a new event type
-export const createItem = async (name: string, unit: string, eventTypeName: string) => {
+export const createItem = async (
+  name: string,
+  unit: string,
+  eventTypeName: string
+) => {
   try {
     const response = await axios.post(URL + "/create-item", {
       name: name,
       unit: unit,
-      eventTypeName: eventTypeName
+      eventTypeName: eventTypeName,
     });
     return response.data;
   } catch (error) {
@@ -29,9 +33,9 @@ export const createItem = async (name: string, unit: string, eventTypeName: stri
 export const getItemsByEventTypeName = async (eventTypeName: string) => {
   try {
     const response = await axios.get(URL + "/items-by-event-type-name", {
-        params: {
-            eventTypeName: eventTypeName
-        }
+      params: {
+        eventTypeName: eventTypeName,
+      },
     });
     return response.data;
   } catch (error) {

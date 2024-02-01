@@ -34,6 +34,7 @@ router.get("/items-by-event-type-name", async (req, res) => {
 
 router.post("/create-item", async (req, res) => {
   // Your item-related route logic here
+  let EVENT_TYPE_OBJECTS: any = {};
   try {
     const {name, unit, eventTypeName} = req.body;
     if (!name || !unit || !eventTypeName) {

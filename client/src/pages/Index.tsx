@@ -16,6 +16,7 @@ import {
 
 import {Item, createItem, getItemsByEventTypeName} from "../services/itemApi";
 import {Divider} from "@mui/material";
+import BasicSelect from "../components/Select/Select";
 
 const Home: React.FC = () => {
   // === For Event Type View and Create ===
@@ -86,6 +87,15 @@ const Home: React.FC = () => {
   const [items, setItems] = useState<Item[]>([]);
   const [selectedItems, setSelectedItems] = useState<Item[] | null>(null);
   const eventTypeName = "Food Waste"; // Hardcode by right is passed from the previous page
+  const menuItems = [
+    {label: "Kilogram", value: "kilogram"},
+    {label: "Litre", value: "litre"},
+    {label: "Dollar", value: "dollar"},
+    {label: "Hour", value: "hour"},
+    {label: "Unit", value: "unit"},
+  ];
+  const [selectMenuItems, setSelectedMenuItems] = useState<string>("");
+
   const {
     data: itemsData,
     isLoading: itemsIsLoading,
@@ -111,6 +121,57 @@ const Home: React.FC = () => {
       // If the item is not in the array, add it
       setSelectedItems(selectedItems ? [...selectedItems, item] : [item]);
     }
+  };
+
+  const {mutateAsync: createItemMutateAsync} = useMutation({
+    mutationKey: ["createItem"],
+    // mutationFn: Performing the actual API call
+    mutationFn: ({
+      name,
+      unit,
+      eventTypeName,
+    }: {
+      name: string;
+      unit: string;
+      eventTypeName: string;
+    }) => {
+      return createItem(name, unit, eventTypeName);
+    },
+    // Execution after successful API call
+    onSuccess: (response) => {
+      if (response && response.data.item) {
+        itemsRefetch();
+        return true;
+      }
+      return false;
+    },
+    onError: (error: any) => {
+      console.error("Error creating item: ", error);
+      setErrorMessage("An error occurred while creating the item.");
+    },
+  });
+
+  const handleItemFormSubmit = async (formData: any): Promise<boolean> => {
+    setErrorMessage("");
+    const {item, unit} = formData;
+    const sanitisedItem = formatAndCapitalizeString(item); // Sanitize input to safeguard duplicate creation of event type
+    const existingItems = itemsData.data.items;
+    console.log(existingItems);
+    const isItemExists = isValueExistsInObjectArray(
+      existingItems,
+      "name",
+      sanitisedItem
+    );
+
+    if (isItemExists) {
+      setErrorMessage("Input item already exists!");
+      return false;
+    }
+    return createItemMutateAsync({
+      name: sanitisedItem,
+      unit: unit,
+      eventTypeName: eventTypeName,
+    });
   };
 
   // === For Item View and Create ===
@@ -181,15 +242,26 @@ const Home: React.FC = () => {
         rightActionButtonName="Add"
         errorMessage={errorMessage}
         formComponent={
-          <OutlinedTextField
-            id={"create-item"}
-            name="item"
-            label="Required"
-            helperText="Please enter non-numerical values"
-            regExpression={/^[a-zA-Z\s]+$/}
-          />
+          <div>
+            <OutlinedTextField
+              id={"create-item"}
+              name="item"
+              label="Item"
+              helperText="Please enter non-numerical values"
+              regExpression={/^[a-zA-Z\s]+$/}
+            />
+            <BasicSelect
+              name="unit"
+              labelId="select-item-label"
+              label="Unit"
+              selectId="select-item-id"
+              menuItems={menuItems}
+              selectValue={selectMenuItems}
+              onChange={setSelectedMenuItems}
+            />
+          </div>
         }
-        handleFormSubmit={handleFormSubmit}
+        handleFormSubmit={handleItemFormSubmit}
       ></FormDialog>
 
       {/* === For Item View and Create ===  */}
