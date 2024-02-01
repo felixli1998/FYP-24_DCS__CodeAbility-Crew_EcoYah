@@ -11,6 +11,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Divider, 
   Button,
 } from "@mui/material";
 
@@ -108,8 +109,9 @@ export default function DonationEventPreview() {
           sx={{
             width: "70rem",
             height: "25rem",
-            maxWidth: { xs: "22rem", md: "60rem" },
-            maxHeight: { xs: "10rem", md: "45rem" },
+            maxWidth: { xs: "25rem", md: "60rem" },
+            maxHeight: { xs: "15rem", md: "45rem" },
+            paddingBottom: { xs: 2, md: 5 },
             objectFit: "contain",
           }}
           alt={formData && formData["name"]}
@@ -117,7 +119,7 @@ export default function DonationEventPreview() {
         />
         <Accordion>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon sx={{ color: "primary.dark", width: "2.75rem", height: "2.75rem" }}/>}
             aria-controls="panel1-content"
             id="panel1-header"
           >
@@ -128,6 +130,7 @@ export default function DonationEventPreview() {
               customStyles={{ textAlign: "center" }}
             />
           </AccordionSummary>
+          <Divider/>
           {formData &&
             Object.keys(donationEventDetails).map((detail: any, i: number) => {
               return (
@@ -139,6 +142,7 @@ export default function DonationEventPreview() {
                     customStyles={{
                       color: "secondary.main",
                       fontWeight: "none",
+                      marginTop: "1.5rem"
                     }}
                   />
                 </AccordionDetails>
@@ -147,7 +151,7 @@ export default function DonationEventPreview() {
         </Accordion>
         <Accordion>
           <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
+            expandIcon={<ExpandMoreIcon sx={{ color: "primary.dark", width: "2.75rem", height: "2.75rem" }}/>}
             aria-controls="panel2-content"
             id="panel2-header"
           >
@@ -158,6 +162,7 @@ export default function DonationEventPreview() {
               customStyles={{ textAlign: "center" }}
             />
           </AccordionSummary>
+          <Divider/>
           {formData &&
             formData["donationEventItems"].map(function (item: any, i: number) {
               return (
@@ -180,6 +185,7 @@ export default function DonationEventPreview() {
                     customStyles={{
                       color: "secondary.main",
                       fontWeight: "none",
+                      marginTop: "1.5rem"
                     }}
                   />
                 </AccordionDetails>

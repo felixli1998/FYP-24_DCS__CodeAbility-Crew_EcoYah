@@ -73,7 +73,7 @@ export default function Step3Form(props: Step3FormProps) {
    
     return (
         <>
-        <StaffTypography type="title" size={1.5} text="Choose the Donation Event Period" />
+        <StaffTypography type="title" size={1.5} text="6. Choose the Donation Event Period" />
         <Grid container justifyContent="space-between">
         { datePickerFields.map(function(field, i) {
             return <Grid item xs={12} md={12} lg={6} key={i}>
@@ -97,7 +97,7 @@ export default function Step3Form(props: Step3FormProps) {
                 </LocalizationProvider>
             </Grid> }) }
         </Grid>
-        <StaffTypography type="title" size={1.5} text="Activate the Donation Event" />
+        <StaffTypography type="title" size={1.5} text="7. Activate the Donation Event" />
         <FormControlLabel control={<Switch checked={isActive} onClick={() => setIsActive(!isActive)} sx={{ width: "9rem", height: "5.25rem", ".MuiSwitch-thumb": { width: "4.4rem", height: "4.1rem",  marginLeft: ( isActive ? "2rem" : null ) } }}/>} 
             label={ <Typography variant="h5" gutterBottom sx={{ color: isActive ? "primary.dark" : "secondary.dark", letterSpacing: "0.18rem", marginLeft: "0.5rem" }}>{ isActive ? "Active" : "Inactive" }</Typography> }/>
         </>

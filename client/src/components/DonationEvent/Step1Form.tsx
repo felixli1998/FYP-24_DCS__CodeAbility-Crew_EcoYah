@@ -7,12 +7,11 @@ import { useTheme } from "@mui/system";
 import { Box, TextField, Button, Grid } from "@mui/material";
 
 // Icons
-import UploadFileIcon from "@mui/icons-material/UploadFile";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import AddIcon from "@mui/icons-material/Add";
 
 // Components
 import StaffTypography from "../Typography/StaffTypography";
-// import Image from "../Image/Image";
 import BoxButton from "../Button/BoxButton";
 import FormDialog from "../Dialog/FormDialog";
 import OutlinedTextField from "../TextFields/OutlinedTextField";
@@ -156,7 +155,6 @@ export default function Step1Form(props: Step1FormProps) {
         size={1.5}
         text="1. Upload an Image of the Donation Event"
       />
-      {/* <Image imageId="1.png" imageSource="local" type="rectangle" editable={true} /> */}
       <Box
         display="flex"
         flexDirection="column"
@@ -167,44 +165,15 @@ export default function Step1Form(props: Step1FormProps) {
           [theme.breakpoints.up("sm")]: {
             width: "40.25rem",
           },
-          height: "12.5rem",
+          height: "20.5rem",
+          padding: "4.5rem",
           border: `1px dashed ${
             props.validate && !fileUpload ? "#d32f2f" : "#5A5858"
           }`,
           borderRadius: "4px",
         }}
       >
-        {!fileUpload ? (
-          <>
-            <UploadFileIcon
-              sx={{
-                width: "3.44rem",
-                height: "3.44rem",
-                color: "primary.dark",
-              }}
-            />
-            <Button sx={{ color: "primary.dark" }}>
-              <label htmlFor="ImageInput" style={{ cursor: "pointer" }}>
-                <StaffTypography
-                  type="title"
-                  size={1.5}
-                  text="Click to Upload"
-                  customStyles={{
-                    textDecoration: "underline",
-                    marginTop: "1rem",
-                  }}
-                />
-              </label>
-              <input
-                type="file"
-                id="ImageInput"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleImageUpload}
-              />
-            </Button>
-          </>
-        ) : (
+        {fileUpload && (
           <img
             src={image}
             alt="donationImage"
@@ -216,6 +185,29 @@ export default function Step1Form(props: Step1FormProps) {
             }}
           />
         )}
+        <Button
+          variant="outlined"
+          sx={{ borderColor: "primary.dark", marginTop: 2 }}
+          startIcon={<CloudUploadIcon sx={{ color: "primary.dark" }} />}
+        >
+          <label htmlFor="ImageInput" style={{ cursor: "pointer" }}>
+            <StaffTypography
+              type="title"
+              size={1.5}
+              text="Upload File"
+              customStyles={{
+                marginTop: "1rem",
+              }}
+            />
+          </label>
+          <input
+            type="file"
+            id="ImageInput"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageUpload}
+          />
+        </Button>
       </Box>
       {props.validate && image === undefined && (
         <StaffTypography
@@ -287,7 +279,11 @@ export default function Step1Form(props: Step1FormProps) {
                   color="primary"
                   size="small"
                   name={eventType.name}
-                  isSelected={selectedEventType ? selectedEventType.id === eventType.id : false}
+                  isSelected={
+                    selectedEventType
+                      ? selectedEventType.id === eventType.id
+                      : false
+                  }
                 ></BoxButton>
               </Grid>
             ))}
