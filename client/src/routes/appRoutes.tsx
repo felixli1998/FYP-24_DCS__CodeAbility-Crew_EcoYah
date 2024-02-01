@@ -1,9 +1,11 @@
+import AdminHome from '../pages/Admin/AdminHome';
 import Home from '../pages/Donor/Index';
 import SignUp from '../pages/Donor/SignUp';
 import SignIn from '../pages/Donor/SignIn';
 import Profile from '../pages/Donor/Profile';
 import EditProfile from '../pages/Donor/EditProfile';
 import ImageComponentExample from '../pages/Donor/ImageComponentExample';
+import { DonorHome } from '../pages/Donor/DonorHome';
 
 type AppRoutesT = {
   path: string;
@@ -47,6 +49,18 @@ export const APP_ROUTES: AppRoutesT[] = [
     path: 'image-component-example',
     description: 'Image component example page for the donor',
     element: <ImageComponentExample />,
+    isAdmin: false,
+  },
+  {
+    path: 'home',
+    description: 'Home page for authenticated admin',
+    element: <AdminHome />,
+    isAdmin: true,
+  },
+  {
+    path: 'home',
+    description: 'Home page for authenticated donor',
+    element: <DonorHome />,
     isAdmin: false,
   },
 ];
