@@ -1,120 +1,95 @@
 import {
-    Card,
-    CardActionArea,
     Container,
     Grid,
     ThemeProvider,
     Typography
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
-import RoundProfilePic from "../../components/RoundProfilePic";
+import ProfileCard from "../../components/ProfileCard";
 import { theme } from "../../styles/Palette";
 import { makeHttpRequest } from "../../utils/Utility";
-
-
-// interface ProfileCardProps {
-// displayName: string;
-// username: string;
-// }
-
-// const ProfileCard: React.FC<ProfileCardProps> = ({
-//     displayName,
-//     username }) => {
-//         return (
-//             <Card sx={{maxWidth: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
-//                 <CardActionArea onMouseOver={()=> console.log("hovered")}>
-//                     <RoundProfilePic altText={"test"} pictureSrc={profilePic}/>
-//                     <Typography variant="h5" color={"white"} sx={{paddingBottom: 3}}>{displayName}</Typography>
-//                 </CardActionArea>                
-//             </Card>
-//         )
-//     }
-// const useStyles = makeStyles({
-//     root: {
-//       maxWidth: 310,
-//       transition: "transform 0.15s ease-in-out"
-//     },
-//     cardHovered: {
-//       transform: "scale3d(1.05, 1.05, 1)"
-//     }
-//   });
-const StyledCard = styled(Card)(({ theme }) => ({
-    transition: "transform 0.15s ease-in-out",
-    "&:hover": { transform: "scale3d(1.3, 1.3, 1)" },
-  }))
-
-function ProfileCard(props: { displayName: string, id: number, imgSrc: string }) {
-
-    const [raised, setRaised] = useState(false);
-
-    function hoverCard(){
-        console.log("hovered");
-        setRaised(true);
-    }
-
-    function outHoverCard(){
-        console.log("hovered out");
-        setRaised(false);
-    }
-
-    return (
-        <StyledCard raised={raised} sx={{width: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
-            <CardActionArea onMouseOver={()=> hoverCard()} onMouseOut={() => outHoverCard()}>
-                <RoundProfilePic altText={"test"} pictureSrc={props.imgSrc}/>
-                <Typography variant="h4" color={"white"} sx={{paddingBottom: 3}}>{props.displayName}</Typography>
-            </CardActionArea>                
-        </StyledCard>
-    )
-}
+import ReportProblemIcon from '@mui/icons-material/ReportProblem';
+import { USER_ROUTES } from "../../services/routes";
 
 interface ProfilesType {
     id: number;
     name: string;
     imageId: string;
     email: string;
-  }
+}
+
+interface ApiResponse {
+    status: number;
+    data: {
+        action: boolean;
+        message: Object[]; // Adjust the type based on the actual structure
+    };
+ }
 
 export default function AdminSignIn() {
 
     const [profiles, setProfiles] = useState<ProfilesType[]>([]);
+    const [errorFetchingProfiles, setErrorFetchingProfiles] = useState(false);
 
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-    const getAllAdminProfiles = async () => {
-        const response: any = await makeHttpRequest('GET', BACKEND_URL + '/users/allAdmins');
-        const data = response.adminUsers;
-        console.log(data);
-    
-        setProfiles(data);
+    const getAllAdminProfiles = async (): Promise<ApiResponse> => {
+        try {
+            const response = await makeHttpRequest('GET', USER_ROUTES.ADMIN_LOGIN);
+            console.log(response);
+            return response as ApiResponse;
+        } catch (error) {
+            console.error('Error:', error);
+            throw error; 
+        }
     }
 
     useEffect(() => {
-        console.log("***IN useEffect()***")
-        getAllAdminProfiles();
+        const fetchData = async () => {
+            try {
+              const res = await getAllAdminProfiles();
+        
+              if (res && res.status === 200) {
+                const adminUsers = res.data.message;
+                console.log(adminUsers);
+                setProfiles(adminUsers as ProfilesType[]);
+              } 
+            } catch (error) {
+              // Handle errors from getAllAdminProfiles or other async operations
+              console.error('Error:', error);
+              setErrorFetchingProfiles(true);
+            }
+        }
+        fetchData();
     }, []);
     
     return (
         <ThemeProvider theme={theme}>
             <Container sx={{textAlign: "center", marginY: 9}}>
-                <Typography variant="h3" sx={{marginBottom: 3}}>Welcome Back, Admin.</Typography>
-                <Typography variant="h4" sx={{marginBottom: 6}}>Choose your profile.</Typography>
-            
-                <Grid container>
-                    {profiles.map(eachProfile => (
-                        <Grid item md={4} display="flex" justifyContent="center" alignItems="center">
-
-                            <ProfileCard
-                                displayName={eachProfile.name}
-                                id={eachProfile.id}
-                                imgSrc={eachProfile.imageId}
-                            />
-                        </Grid>
-                    ))}
-                </Grid>
-
+            {errorFetchingProfiles ? 
+                <>
+                    <ReportProblemIcon sx={{color: "#FF0000", marginBottom: 3, height: "70px", width: "70px"}}/>
+                    <Typography variant="h4" sx={{letterSpacing: "0.12em"}}>Error fetching profiles. Please try again later.</Typography>
+                </>
+                    :
+                <>
+                    <Typography variant="h3" sx={{marginBottom: 3}}>Welcome Back, Admin.</Typography>
+                    <Typography variant="h4" sx={{marginBottom: 6}}>Choose your profile.</Typography>
+                
+                    <Grid container>
+                        {profiles.map(eachProfile => (
+                            <Grid item md={4} display="flex" justifyContent="center" alignItems="center" key={eachProfile.id}>
+                                <ProfileCard
+                                    id={eachProfile.id}
+                                    displayName={eachProfile.name}
+                                    imgSrc={eachProfile.imageId}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </>
+            }
             </Container>
-
         </ThemeProvider>
     )
 }

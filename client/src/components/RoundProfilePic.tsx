@@ -7,7 +7,6 @@ type RoundProfilePicProps = {
 
 export default function RoundProfilePic(props: RoundProfilePicProps) {
     return (
-        
         <Box
             component="img"
             display="flex"
