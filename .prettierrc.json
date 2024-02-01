@@ -1,0 +1,6 @@
+{
+  "trailingComma": "es5",
+  "jsxSingleQuote": true,
+  "singleQuote": true,
+  "endOfLine": "auto"
+}

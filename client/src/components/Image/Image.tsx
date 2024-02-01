@@ -21,8 +21,8 @@ const VisuallyHiddenInput = styled('input')({
 
 interface ImageProps {
   imageId: string;
-  imageSource: "local" | "s3";
-  type: "square" | "circle" | "rectangle";
+  imageSource: 'local' | 's3';
+  type: 'square' | 'circle' | 'rectangle';
   folderPrefix?: string;
   editable?: boolean | false;
   width?: string | number;
@@ -30,12 +30,12 @@ interface ImageProps {
 }
 
 const defaultProps: ImageProps = {
-  imageId: "1.png",  // Default value for imageId
-  imageSource: "local",
-  type: "square",
-  editable: false,  // Default value for editable
-  width: "250px",
-  height: "250px",
+  imageId: '1.png', // Default value for imageId
+  imageSource: 'local',
+  type: 'square',
+  editable: false, // Default value for editable
+  width: '250px',
+  height: '250px',
 };
 
 export default function Image(props: ImageProps): JSX.Element {
@@ -52,18 +52,22 @@ export default function Image(props: ImageProps): JSX.Element {
     formData.append('file', selectedFile);
 
     try {
-      const response = await axios.put(IMAGE_ROUTES.UPDATE.replace(':id', props.imageId), formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.put(
+        IMAGE_ROUTES.UPDATE.replace(':id', props.imageId),
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
 
       if (response.status === 200) {
         // Update the displayed image after successful upload
         console.log(`${response.data.filename} uploaded successfully`);
         console.log(
-          "TODO: This is likely where you update the database with this particular image id, so that on the next refresh it will know which ID to request."
-        )
+          'TODO: This is likely where you update the database with this particular image id, so that on the next refresh it will know which ID to request.'
+        );
       } else {
         console.error('Failed to update image');
       }
@@ -87,14 +91,19 @@ export default function Image(props: ImageProps): JSX.Element {
   useEffect(() => {
     const fetchImage = async () => {
       try {
-        const filepath = `${props.folderPrefix ? props.folderPrefix + "/" : ""}${props.imageId}`;
-        const response = await axios.get(IMAGE_ROUTES.RETRIEVE_BY_FILE_PATH.replace(":filePath", filepath), {
-          responseType: 'arraybuffer',
-        });
+        const filepath = `${props.folderPrefix ? props.folderPrefix + '/' : ''}${props.imageId}`;
+        const response = await axios.get(
+          IMAGE_ROUTES.RETRIEVE_BY_FILE_PATH.replace(':filePath', filepath),
+          {
+            responseType: 'arraybuffer',
+          }
+        );
 
         if (response.status === 200) {
           const arrayBufferView = new Uint8Array(response.data);
-          const blob = new Blob([arrayBufferView], { type: response.headers['content-type'] });
+          const blob = new Blob([arrayBufferView], {
+            type: response.headers['content-type'],
+          });
           const imageUrl = URL.createObjectURL(blob);
           setImagePath(imageUrl);
         } else {
@@ -125,12 +134,12 @@ export default function Image(props: ImageProps): JSX.Element {
     <Box
       sx={{
         width: props.width,
-        marginBottom: "1rem",
+        marginBottom: '1rem',
       }}
     >
       <img
         src={imagePath}
-        alt="Image"
+        alt='Image'
         style={{
           width: '100%',
           height: props.height,
@@ -139,19 +148,21 @@ export default function Image(props: ImageProps): JSX.Element {
       />
       {props.editable && (
         <>
-          <Box display="flex" flexDirection={"column"} sx= {{
-
-          }}>
-            <Button component="label"
-              variant="outlined"
+          <Box display='flex' flexDirection={'column'} sx={{}}>
+            <Button
+              component='label'
+              variant='outlined'
               sx={{
                 marginBottom: 1,
               }}
-              startIcon={<CloudUploadIcon/>}>
+              startIcon={<CloudUploadIcon />}
+            >
               Upload image
-              <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+              <VisuallyHiddenInput type='file' onChange={handleFileChange} />
             </Button>
-            <Button variant="contained" color="primary" onClick={updateImage}>Update Image</Button>
+            <Button variant='contained' color='primary' onClick={updateImage}>
+              Update Image
+            </Button>
           </Box>
         </>
       )}

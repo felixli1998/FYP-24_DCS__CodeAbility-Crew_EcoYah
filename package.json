@@ -1,18 +1,25 @@
 {
-    "name": "ecoyah",
-    "version": "1.0.0",
-    "description": "",
-    "scripts": {
-        "format": "npx prettier --write ."
-    },
-    "devDependencies": {
-        "husky": "^9.0.7",
-        "pretty-quick": "^4.0.0"
-    }, 
-    "husky": {
-        "hooks": {
-          "pre-commit": "npx pretty-quick --staged"
-        }
-    }
+  "name": "root",
+  "version": "1.0.0",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.0.7",
+    "lint-staged": "^15.2.1",
+    "prettier": "3.2.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint",
+      "prettier --write"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
+  }
 }
-

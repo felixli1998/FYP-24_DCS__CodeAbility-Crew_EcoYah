@@ -2,7 +2,6 @@
 import { Item } from '../entities/Item';
 import { ItemRepository } from '../repositories/ItemRepository';
 
-
 export class ItemService {
   private itemRepository: ItemRepository;
 

@@ -7,7 +7,7 @@ import { UserRepository } from '../repositories/UserRepository';
 import { UserService } from '../services/UserService';
 
 const router = express.Router();
-const userRepository= new UserRepository();
+const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
 
 router.post('/login', async (req, res) => {
@@ -19,14 +19,25 @@ router.post('/login', async (req, res) => {
     const { email = '', password = '' } = filteredParams; // In the event that these params are not properly supplied
 
     const isValidEmail = await userService.getUserByEmail(email);
-    if(!isValidEmail) return generateResponse(res, 200, { action: false, message: 'wrong_email' });
+    if (!isValidEmail)
+      return generateResponse(res, 200, {
+        action: false,
+        message: 'wrong_email',
+      });
 
     const authenticated = await userService.login(email, password);
-    if(!authenticated) return generateResponse(res, 200, { action: false, message: 'wrong_credentials' });
+    if (!authenticated)
+      return generateResponse(res, 200, {
+        action: false,
+        message: 'wrong_credentials',
+      });
 
-    return generateResponse(res, 200, { action: true, message: 'login_success' });
+    return generateResponse(res, 200, {
+      action: true,
+      message: 'login_success',
+    });
   } catch (error) {
-    return generateResponse(res, 500, "Something went wrong");
+    return generateResponse(res, 500, 'Something went wrong');
   }
 });
 

@@ -1,5 +1,5 @@
-import { User } from "../entities/User";
-import { AppDataSource } from "../config/data-source";
+import { User } from '../entities/User';
+import { AppDataSource } from '../config/data-source';
 
 // Interacts database open close
 export class UserRepository {
@@ -12,10 +12,12 @@ export class UserRepository {
   }
 
   async getUserByEmail(email: User['email']) {
-    return await AppDataSource.getRepository(User).findOne({ where: { email } });
+    return await AppDataSource.getRepository(User).findOne({
+      where: { email },
+    });
   }
 
   async updateUser(email: string, payload: Partial<User>) {
-    await AppDataSource.getRepository(User).update({ email: email }, payload)
+    await AppDataSource.getRepository(User).update({ email: email }, payload);
   }
 }

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Alert, Snackbar } from '@mui/material'
+import React, { useState } from 'react';
+import { Alert, Snackbar } from '@mui/material';
 import { set } from 'lodash';
 
 // ***********************************************************************************************************************************************//
@@ -16,50 +16,58 @@ type FeedBackNotificationProps = {
   message: string;
   severity: 'success' | 'info' | 'warning' | 'error';
   displayTime?: number;
-}
+};
 
 export const useFeedbackNotification = () => {
   const [open, setOpen] = useState(false);
   const [notification, setNotification] = useState<FeedBackNotificationProps>({
     message: '',
     severity: 'info',
-    displayTime: 5000
+    displayTime: 5000,
   });
 
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
     setOpen(false);
   };
 
   // TODO: Feel free to expand on this for more customizability (e.g. custom display time)
-  const displayNotification = (severity: 'success' | 'info' | 'warning' | 'error', message: string) => {
+  const displayNotification = (
+    severity: 'success' | 'info' | 'warning' | 'error',
+    message: string
+  ) => {
     setNotification({
       message,
       severity,
-      displayTime: 5000
+      displayTime: 5000,
     });
     setOpen(true);
   };
 
   const FeedbackNotification = () => {
-    if(!open) return null;
+    if (!open) return null;
 
-    return (<Snackbar
-      open={open}
-      autoHideDuration={notification.displayTime}
-      onClose={handleClose}
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      message={notification.message}
-    >
-      <Alert
+    return (
+      <Snackbar
+        open={open}
+        autoHideDuration={notification.displayTime}
         onClose={handleClose}
-        severity={notification.severity}
-        variant="filled"
-        sx={{ width: '100%' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        message={notification.message}
       >
-        {notification.message}
-      </Alert>
-    </Snackbar>)
-  }
+        <Alert
+          onClose={handleClose}
+          severity={notification.severity}
+          variant='filled'
+          sx={{ width: '100%' }}
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
+    );
+  };
 
   return { displayNotification, FeedbackNotification };
 };

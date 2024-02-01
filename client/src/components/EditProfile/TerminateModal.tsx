@@ -5,10 +5,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 interface TerminateModalProps {
-    handleConfirmTerminate: () => void;
-};
+  handleConfirmTerminate: () => void;
+}
 
-const TerminateModal: React.FC<TerminateModalProps> = ({handleConfirmTerminate}) => {
+const TerminateModal: React.FC<TerminateModalProps> = ({
+  handleConfirmTerminate,
+}) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -41,39 +43,46 @@ const TerminateModal: React.FC<TerminateModalProps> = ({handleConfirmTerminate})
 
   return (
     <div>
-      <Button 
-        variant="outlined" 
-        color="error"
+      <Button
+        variant='outlined'
+        color='error'
         sx={{
           fontWeight: 'bold', // Make the font bold
           height: '3rem', // Adjust the height to make it thicker
         }}
         fullWidth
-        onClick={handleOpen}>
+        onClick={handleOpen}
+      >
         Terminate
       </Button>
-      
+
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-        <Typography variant="h4" mb={"1rem"}>
+          <Typography variant='h4' mb={'1rem'}>
             Woah, there!
-        </Typography>
-          <Typography id="modal-modal-title" variant="body1" component="h2" sx={{ mb: 2 }}>
-            Once you delete your account, there's no going back. All your points will be gone.
-            <br/>
-            <br/> 
+          </Typography>
+          <Typography
+            id='modal-modal-title'
+            variant='body1'
+            component='h2'
+            sx={{ mb: 2 }}
+          >
+            Once you delete your account, there's no going back. All your points
+            will be gone.
+            <br />
+            <br />
             Are you sure you want to terminate?
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleClose} color='primary'>
               Cancel
             </Button>
-            <Button onClick={handleConfirm} color="error">
+            <Button onClick={handleConfirm} color='error'>
               Terminate
             </Button>
           </Box>

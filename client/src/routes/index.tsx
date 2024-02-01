@@ -1,42 +1,42 @@
-import {createBrowserRouter} from "react-router-dom";
-import App from "../App";
-import ErrorPage from "../pages/ErrorPage";
-import Home from "../pages/Index";
-import SignUp from "../pages/SignUp";
-import SignIn from "../pages/SignIn";
-import Profile from "../pages/Profile";
-import EditProfile from "../pages/EditProfile";
-import ImageComponentExample from "../pages/ImageComponentExample";
+import { createBrowserRouter } from 'react-router-dom';
+import App from '../App';
+import ErrorPage from '../pages/ErrorPage';
+import Home from '../pages/Index';
+import SignUp from '../pages/SignUp';
+import SignIn from '../pages/SignIn';
+import Profile from '../pages/Profile';
+import EditProfile from '../pages/EditProfile';
+import ImageComponentExample from '../pages/ImageComponentExample';
 // import ContactUs from "../pages/ContactUs";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/",
+        path: '/',
         element: <Home />,
       },
       {
-        path: "/sign-up",
+        path: '/sign-up',
         element: <SignUp />,
       },
       {
-        path: "/sign-in",
+        path: '/sign-in',
         element: <SignIn />,
       },
       {
-        path: "/profile",
+        path: '/profile',
         element: <Profile />,
       },
       {
-        path: "/edit-profile",
+        path: '/edit-profile',
         element: <EditProfile />,
       },
       {
-        path: "/image-component-example",
+        path: '/image-component-example',
         element: <ImageComponentExample />,
       },
       // {

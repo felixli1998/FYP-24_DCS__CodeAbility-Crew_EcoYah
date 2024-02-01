@@ -1,7 +1,6 @@
 import { DonationEvent } from '../entities/DonationEvent';
 import { DonationEventRepository } from '../repositories/DonationEventRepository';
 
-
 export class DonationEventService {
   private donationEventRepository: DonationEventRepository;
 

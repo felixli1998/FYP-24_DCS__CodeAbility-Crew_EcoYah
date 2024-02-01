@@ -10,7 +10,7 @@ const itemService = new ItemService(itemRepository);
 router.get('/', async (req, res) => {
   // Your item-related route logic here
   try {
-    res.json("Hello world from here");
+    res.json('Hello world from here');
     // const items = await itemService.getAllItems();
     // res.json(items);
   } catch (error) {

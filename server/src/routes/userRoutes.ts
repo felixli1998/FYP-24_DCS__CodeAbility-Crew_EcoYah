@@ -10,9 +10,9 @@ const userService = new UserService(userRepository);
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   // Get all users
-  res.json("Successfully accessed user routes");
+  res.json('Successfully accessed user routes');
 });
 
 router.post('/', async (req, res) => {
@@ -21,13 +21,24 @@ router.post('/', async (req, res) => {
     // Hash password
     req.body.passwordDigest = hashSync(req.body.passwordDigest, 10);
     const user = await userService.createUser(req.body);
-    res.status(201).json({ id: user.id, message: "User created successfully." });
+    res
+      .status(201)
+      .json({ id: user.id, message: 'User created successfully.' });
   } catch (error) {
-    if (error instanceof QueryFailedError && error.driverError.code === '23505') {
+    if (
+      error instanceof QueryFailedError &&
+      error.driverError.code === '23505'
+    ) {
       // Handle duplicate email error
-      res.status(409).json({ message: "A user with this email already exists." });
+      res
+        .status(409)
+        .json({ message: 'A user with this email already exists.' });
     } else {
-      res.status(500).json({ message: "Internal Server Error. Please refresh and try again." });
+      res
+        .status(500)
+        .json({
+          message: 'Internal Server Error. Please refresh and try again.',
+        });
     }
   }
 });
@@ -35,31 +46,41 @@ router.post('/', async (req, res) => {
 router.put('/update', async (req, res) => {
   try {
     const payload = req.body;
-    const allowedParams = ['name', 'contactNum', 'email']
+    const allowedParams = ['name', 'contactNum', 'email'];
     const sanitisedPayload = strongParams(payload, allowedParams);
-    const { email = "" } = sanitisedPayload;
+    const { email = '' } = sanitisedPayload;
 
     // Defensive Line - Check if email exists
     const user = await userService.getUserByEmail(email);
-    if(!user) {
-      generateResponse(res, 200, { action: false, message: "User not found" });
+    if (!user) {
+      generateResponse(res, 200, { action: false, message: 'User not found' });
       return;
     }
     await userService.updateUser(email, sanitisedPayload);
-    generateResponse(res, 200, { action: true, message: "User is updated successfully!" });
+    generateResponse(res, 200, {
+      action: true,
+      message: 'User is updated successfully!',
+    });
   } catch (error) {
-    generateResponse(res, 500, { action: false, message: "An error occured while updating user" });
+    generateResponse(res, 500, {
+      action: false,
+      message: 'An error occured while updating user',
+    });
   }
 });
 
-router.get("/:email", async (req, res) => {
+router.get('/:email', async (req, res) => {
   try {
     const { email } = req.params;
 
     const user = await userService.getUserByEmail(email);
 
     if (user === null) {
-      generateResponse(res, 200, { action: false, message: "User not found", data: null });
+      generateResponse(res, 200, {
+        action: false,
+        message: 'User not found',
+        data: null,
+      });
     } else {
       const payload = {
         name: user.name,
@@ -68,10 +89,18 @@ router.get("/:email", async (req, res) => {
         imageId: user.imageId,
         role: user.role,
       };
-      generateResponse(res, 200, { action: true, message: "User found", data: payload });
+      generateResponse(res, 200, {
+        action: true,
+        message: 'User found',
+        data: payload,
+      });
     }
   } catch (error) {
-    generateResponse(res, 500, { action: false, message: "Internal Server Error. Please refresh and try again.", data: null });
+    generateResponse(res, 500, {
+      action: false,
+      message: 'Internal Server Error. Please refresh and try again.',
+      data: null,
+    });
   }
 });
 

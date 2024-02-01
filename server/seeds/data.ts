@@ -1,4 +1,4 @@
-import { UserRole } from "../src/entities/User";
+import { UserRole } from '../src/entities/User';
 
 type UserSeedDataT = {
   name: string;
@@ -16,7 +16,7 @@ export const USER_SEED_DATA: UserSeedDataT[] = [
     passwordInput: 'Testpassw0rd!',
     contactNum: '+6512345678',
     imageURL: 'https://picsum.photos/200/300',
-    role: UserRole.DONOR
+    role: UserRole.DONOR,
   },
   {
     name: 'Alex',
@@ -24,7 +24,7 @@ export const USER_SEED_DATA: UserSeedDataT[] = [
     passwordInput: '1234',
     contactNum: '+6512345678',
     imageURL: 'https://picsum.photos/200/300',
-    role: UserRole.STAFF
+    role: UserRole.STAFF,
   },
   {
     name: 'Siu Mei',
@@ -32,7 +32,7 @@ export const USER_SEED_DATA: UserSeedDataT[] = [
     passwordInput: '1234',
     contactNum: '+6512345678',
     imageURL: 'https://picsum.photos/200/300',
-    role: UserRole.STAFF
+    role: UserRole.STAFF,
   },
   {
     name: 'Aaron',
@@ -40,85 +40,85 @@ export const USER_SEED_DATA: UserSeedDataT[] = [
     passwordInput: '1234',
     contactNum: '+6512345678',
     imageURL: 'https://picsum.photos/200/300',
-    role: UserRole.ADMIN
-  }
-]
+    role: UserRole.ADMIN,
+  },
+];
 
 export const EVENT_TYPE_SEED_DATA = [
   {
-    name: "Electronic Waste"
+    name: 'Electronic Waste',
   },
   {
-    name: "Food Waste"
-  }
-]
+    name: 'Food Waste',
+  },
+];
 
 export const ITEM_SEED_DATA = [
   {
-    name: "Laptop",
-    unit: "unit",
-    eventType: "Electronic Waste"
+    name: 'Laptop',
+    unit: 'unit',
+    eventType: 'Electronic Waste',
   },
   {
-    name: "Bok Choy",
-    unit: "gram",
-    eventType: "Food Waste"
+    name: 'Bok Choy',
+    unit: 'gram',
+    eventType: 'Food Waste',
   },
   {
-    name: "Bread",
-    unit: "slice",
-    eventType: "Food Waste"
+    name: 'Bread',
+    unit: 'slice',
+    eventType: 'Food Waste',
   },
   {
-    name: "Mobile Phone",
-    unit: "unit",
-    eventType: "Electronic Waste"
-  }
-]
+    name: 'Mobile Phone',
+    unit: 'unit',
+    eventType: 'Electronic Waste',
+  },
+];
 
 export const DONATION_EVENT_SEED_DATA = [
   {
-    name: "Do good with food",
-    imageId: "https://picsum.photos/200/300",
-    user: "Siu Mei",
-    eventType: "Food Waste",
-    startDate: new Date("2024-01-01"),
-    endDate: new Date("2024-01-30"),
+    name: 'Do good with food',
+    imageId: 'https://picsum.photos/200/300',
+    user: 'Siu Mei',
+    eventType: 'Food Waste',
+    startDate: new Date('2024-01-01'),
+    endDate: new Date('2024-01-30'),
     donationEventItems: [
       {
-        name: "Bok Choy",
+        name: 'Bok Choy',
         targetQty: 100000, // 100000g = 100kg
         minQty: 500,
-        pointsPerUnit: 50
+        pointsPerUnit: 50,
       },
       {
-        name: "Bread",
+        name: 'Bread',
         targetQty: 1000,
         minQty: 10,
-        pointsPerUnit: 5
-      }
-    ]
+        pointsPerUnit: 5,
+      },
+    ],
   },
   {
-    name: "Do good with electronics",
-    imageId: "https://picsum.photos/200/300",
-    user: "Aaron",
-    eventType: "Electronic Waste",
-    startDate: new Date("2024-02-02"),
-    endDate: new Date("2024-02-30"),
+    name: 'Do good with electronics',
+    imageId: 'https://picsum.photos/200/300',
+    user: 'Aaron',
+    eventType: 'Electronic Waste',
+    startDate: new Date('2024-02-02'),
+    endDate: new Date('2024-02-30'),
     donationEventItems: [
       {
-        name: "Laptop",
+        name: 'Laptop',
         targetQty: 10,
         minQty: 1,
-        pointsPerUnit: 1000
+        pointsPerUnit: 1000,
       },
       {
-        name: "Mobile Phone",
+        name: 'Mobile Phone',
         targetQty: 10,
         minQty: 1,
-        pointsPerUnit: 500
-      }
-    ]
-  }
-]
+        pointsPerUnit: 500,
+      },
+    ],
+  },
+];

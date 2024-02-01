@@ -1,14 +1,14 @@
 // External Imports
-import dotenv from "dotenv";
-import express from "express";
-import cors from "cors";
+import dotenv from 'dotenv';
+import express from 'express';
+import cors from 'cors';
 
 // Internal Imports
-import generateSeedData from "../seeds/seed";
+import generateSeedData from '../seeds/seed';
 
 // For TypeORM
-import "reflect-metadata";
-import { AppDataSource } from "./config/data-source";
+import 'reflect-metadata';
+import { AppDataSource } from './config/data-source';
 
 // Routes
 import itemRoutes from './routes/itemRoutes';
@@ -24,27 +24,27 @@ app.use(cors());
 
 const port = process.env.PORT;
 
-const runSeedFile = ():boolean => {
+const runSeedFile = (): boolean => {
   // By default, it will not run the seed file unless you specify it in the .env file
-  const seedFileConfig = process.env.RUN_SEED_FILE || "false";
+  const seedFileConfig = process.env.RUN_SEED_FILE || 'false';
 
   // Prematurely return false if it is on production //
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === 'production') {
     return false;
   }
 
-  return seedFileConfig === "true";
-}
+  return seedFileConfig === 'true';
+};
 
 // Database
 AppDataSource.initialize()
-    .then(() => {
-      if(runSeedFile()) generateSeedData()
-    })
-    .catch((error) => console.log(error))
+  .then(() => {
+    if (runSeedFile()) generateSeedData();
+  })
+  .catch((error) => console.log(error));
 
 // testing
-const project = "EcoYah";
+const project = 'EcoYah';
 
 // Routes
 // app.use('/', itemRoutes);

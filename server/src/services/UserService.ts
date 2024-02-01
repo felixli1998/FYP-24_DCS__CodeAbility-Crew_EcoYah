@@ -5,7 +5,6 @@ import { compare } from 'bcrypt';
 import { User } from '../entities/User';
 import { UserRepository } from '../repositories/UserRepository';
 
-
 export class UserService {
   private userRepository: UserRepository;
 
@@ -17,7 +16,7 @@ export class UserService {
     const user = await this.userRepository.getUserByEmail(email);
 
     // Defensive line; But unlikely since we check for email existence in the controller before calling this service
-    if(!user) return false;
+    if (!user) return false;
 
     const authenticated = await compare(password, user.passwordDigest);
 
