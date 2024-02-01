@@ -1,5 +1,7 @@
 # Images
 *.png
+# Custom
+uploaded_images/
 
 # Logs
 logs

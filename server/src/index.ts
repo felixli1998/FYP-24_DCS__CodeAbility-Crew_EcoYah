@@ -15,6 +15,7 @@ import itemRoutes from './routes/itemRoutes';
 import userRoutes from './routes/userRoutes';
 import baseRoutes from './routes/baseRoutes';
 import donationEventRoutes from './routes/donationEventRoutes';
+import imageRoutes from './routes/imageRoutes';
 
 dotenv.config();
 
@@ -67,6 +68,7 @@ app.post('/test', (req, res) => {
 app.use('/items', itemRoutes);
 app.use('/users', userRoutes);
 app.use('/donation-events', donationEventRoutes);
+app.use('/images', imageRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

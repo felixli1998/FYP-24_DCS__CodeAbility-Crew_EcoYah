@@ -35,4 +35,8 @@ export class UserService {
   async createUser(user: User) {
     return this.userRepository.createUser(user);
   }
+
+  async updateUser(email: string, payload: Partial<User>) {
+    return this.userRepository.updateUser(email, payload);
+  }
 }
