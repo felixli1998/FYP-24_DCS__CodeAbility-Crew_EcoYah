@@ -19,9 +19,33 @@ interface DonationEventFilterParams {
     eventType?: string;
     name?: string;
     isActive?: string
-    createdAt?: string;
-    updatedAt?: string;
 }
+
+router.get("/all", async (req, res) =>{
+    // Check if req.query is empty
+    if (Object.keys(req.query).length === 0) {
+        // This handles getting all donationEvents
+        const {data, pagination} = await donationEventService.getAllDonationEvents();
+        // Return donationEvents
+        return generateResponse(res, 200, data, pagination);
+    }
+
+    const filters:DonationEventFilterParams = {
+        startDate: req.query['startDate'] as string,
+        endDate: req.query['endDate'] as string, 
+        createdBy: req.query['createdBy'] as string,
+        eventType: req.query['eventType'] as string,
+        name: req.query['name'] as string,
+        isActive: req.query['isActive'] as string,
+    };
+    try {
+        const {data, pagination} = await donationEventService.getFilteredDonationEvents(filters);
+        // Return donationEvents
+        return generateResponse(res, 200, data, pagination);
+    } catch (error) {
+        return generateResponse(res, 500, "Something went wrong.");
+    }
+})
 
 router.get(`/:id?`, async (req, res) => {
     try {
@@ -36,28 +60,6 @@ router.get(`/:id?`, async (req, res) => {
             // Return donationEvent
             return generateResponse(res, 200, donationEvent);
         } 
-        
-        if (Object.keys(req.query).length === 0) {
-            // This handles getting all donationEvents
-            const donationEvents = await donationEventService.getAllDonationEvents();
-            // Return donationEvents
-            return generateResponse(res, 200, donationEvents);
-        }
-
-        // Getting filters
-        // TODO: @Felix, I need you to help standardised what we can filter by over here.
-        const filters:DonationEventFilterParams = {
-            startDate: req.query['startDate'] as string,
-            endDate: req.query['endDate'] as string, 
-            createdBy: req.query['createdBy'] as string,
-            eventType: req.query['eventType'] as string,
-            name: req.query['name'] as string,
-            isActive: req.query['isActive'] as string,
-            createdAt: req.query['createdAt'] as string,
-        };
-        const {data, pagination} = await donationEventService.getFilteredDonationEvents(filters);
-        // Return donationEvents
-        return generateResponse(res, 200, data, pagination);
     } catch (error) {
        return generateResponse(res, 500, "Something went wrong.");
     }
@@ -77,15 +79,12 @@ router.put(`/:id`, async (req, res) => {
     // Updating timestamp
     const updateParams = req.body as Record<string, unknown>;
     updateParams.updated_at = new Date();
-    console.log("Original donationEvent", donationEvent)
-    console.log("These are update", updateParams);
     // Apply partial updates
     for (const key in updateParams) {
         if (updateParams.hasOwnProperty(key)) {
             (donationEvent as any)[key] = updateParams[key];
         }
     }
-    console.log("Updated donationEvent", donationEvent)
     // Updating donationEvent
     const updateDonationEvent = Object.assign(donationEvent, updateParams);
 

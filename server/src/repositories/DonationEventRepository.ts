@@ -13,9 +13,33 @@ export class DonationEventRepository {
         return await AppDataSource.getRepository(DonationEvent).save(donationEvent)
     }
 
-    async getAllDonationEvents(): Promise<DonationEvent[]> {
-        return await AppDataSource.getRepository(DonationEvent).find();
+    async getAllDonationEvents(
+        page: number = 1,
+        pageSize: number = 50
+    ): Promise<{ data: DonationEvent[], pagination: IPagination }> {
+        // Pagination
+        const totalCount = await AppDataSource.getRepository(DonationEvent).count();
+        const totalPages = Math.ceil(totalCount / pageSize);
+        const offset = (page - 1) * pageSize;
+    
+        const queryBuilder = AppDataSource.getRepository(DonationEvent)
+            .createQueryBuilder("donationEvent")
+            .orderBy("donationEvent.startDate", "ASC")
+            .addOrderBy("donationEvent.endDate", "ASC")
+            .addOrderBy("donationEvent.createdAt", "ASC")
+            .skip(offset)
+            .take(pageSize);
+    
+        const data = await queryBuilder.getMany();
+    
+        const pagination: IPagination = {
+            pageNumber: page,
+            hasNext: page < totalPages
+        };
+    
+        return { data, pagination };
     }
+    
 
     async getDonationEventById(id: number): Promise<DonationEvent | null> {
         const donationEvent = await AppDataSource.getRepository(DonationEvent).findOne({
