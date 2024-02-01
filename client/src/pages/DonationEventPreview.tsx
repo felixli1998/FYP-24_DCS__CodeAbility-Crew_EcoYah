@@ -76,6 +76,7 @@ export default function DonationEventPreview() {
     // Execution after successful API call
     onSuccess: (response) => {
       if (response && response.data.action) {
+        navigate("/admin/donation-events");
         return true;
       }
       return false;

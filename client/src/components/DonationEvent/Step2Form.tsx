@@ -246,7 +246,7 @@ export default function Step2Form(props: Step2FormProps) {
                     color="primary"
                     size="small"
                     name={item.name}
-                    isSelected={selectedItems?.includes(item) ? true : false}
+                    isSelected={selectedItems!.some(selectedItem => selectedItem.id === item.id)}
                 ></BoxButton>
             </Grid>
             )) }
