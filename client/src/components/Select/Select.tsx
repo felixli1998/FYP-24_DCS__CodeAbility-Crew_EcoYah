@@ -1,5 +1,4 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -33,7 +32,7 @@ const BasicSelect: React.FC<BasicSelectProps> = ({
       fullWidth
       sx={{marginTop: "1rem"}}
     >
-      <InputLabel id={labelId}>{label}</InputLabel>
+      <InputLabel shrink id={labelId}>{label}</InputLabel>
       <Select
         name={name}
         labelId={labelId}

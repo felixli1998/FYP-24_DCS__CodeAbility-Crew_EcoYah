@@ -24,11 +24,13 @@ const BoxButton: React.FC<BoxButtonProps> = ({
       color={color}
       size={size}
       sx={{
-        height: "1rem",
-        width: "1rem",
-        padding: "3.5rem",
+        height: "5.75rem",
+        width: "5.75rem",
+        padding: "5.5rem",
+        fontSize: "1.125rem",
         fontWeight: "bold",
-        margin: 0.5,
+        letterSpacing: "0.135rem",
+        marginTop: "2rem",
         ...customStyles, // Merge custom styles with existing styles
       }}
     >

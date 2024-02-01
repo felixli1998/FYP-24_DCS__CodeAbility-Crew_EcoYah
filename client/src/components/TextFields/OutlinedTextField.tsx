@@ -29,7 +29,6 @@ const OutlinedTextField: React.FC<OutlinedTextFieldProps> = ({
 
   return (
     <TextField
-      required
       id={id}
       name={name}
       label={label}
@@ -40,6 +39,7 @@ const OutlinedTextField: React.FC<OutlinedTextFieldProps> = ({
       onChange={handleChange}
       error={error}
       helperText={error ? helperText : ""}
+      InputLabelProps={{ shrink: true }}
     />
   );
 };

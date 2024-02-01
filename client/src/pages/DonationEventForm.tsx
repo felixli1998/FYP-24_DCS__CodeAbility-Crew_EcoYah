@@ -44,7 +44,7 @@ export default function DonationEventForm() {
         switch(activeStep) {
             case 0:
                 setValidateStep1(true);
-                if ((formData['name'] !== "") && (formData['imageId'] !== null)) setActiveStep(1);
+                if ((formData['name'] !== "") && (formData['imageId'] !== null) && formData['eventType'] !== null) setActiveStep(1);
                 break;
             case 1:
                 setValidateStep2(true);

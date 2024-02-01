@@ -61,6 +61,7 @@ const FormDialog: React.FC<FormDialogProps> = ({
         variant="contained"
         startIcon={buttonIcon}
         onClick={handleClickOpen}
+        sx={{ backgroundColor: "primary.dark", fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem" }}
       >
         {buttonName}
       </Button>
@@ -94,6 +95,10 @@ const FormDialog: React.FC<FormDialogProps> = ({
             variant="outlined"
             onClick={handleClose}
             disabled={loading}
+            sx={{   
+            fontSize: "1.125rem",
+            letterSpacing: "0.135rem", 
+            margin: 2 }}
           >
             {leftActionButtonName}
           </Button>
@@ -101,6 +106,10 @@ const FormDialog: React.FC<FormDialogProps> = ({
             variant="contained"
             type="submit"
             disabled={loading}
+            sx={{   
+              fontSize: "1.125rem",
+              letterSpacing: "0.135rem", 
+              margin: 2 }}
           >
             {loading ? <CircularProgress /> : rightActionButtonName}
           </Button>
