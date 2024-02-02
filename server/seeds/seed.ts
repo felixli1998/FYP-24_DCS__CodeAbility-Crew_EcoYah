@@ -21,8 +21,10 @@ import { Item } from '../src/entities/Item';
 // Donation Event Items
 import { DonationEventItemRepository } from '../src/repositories/DonationEventItemRepository';
 import { DonationEventItemService } from '../src/services/DonationEventItemService';
-import { DonationEventItem } from '../src/entities/DonationEventItem';
 
+import UserGenerator from './UserGenerator';
+import DonationEventGenerator from './DonationEventGenerator';
+import DonationItemGenerator from './DonationItemGenerator';
 // TODO: Want to refactor this to use a singleton pattern instead of constantly creating new instances of the services //
 // Users
 const userRepository = new UserRepository();
@@ -47,7 +49,10 @@ const donationEventService = new DonationEventService(donationEventRepository);
 let USER_OBJECTS: any = {};
 let EVENT_TYPE_OBJECTS: any = {};
 let ITEM_OBJECTS: any = {};
-let DONATION_EVENT_OBJECTS: any = {};
+
+const NO_OF_USER_TO_CREATE = 50;
+const NO_OF_DONATION_EVENT_TO_CREATE = 50;
+const NO_OF_ITEM_PER_EVENT = 5;
 
 // TODO: Feel free to populate more into the seed data as we add more tables //
 const generateSeedData = async () => {
@@ -55,20 +60,12 @@ const generateSeedData = async () => {
 
   // Create users seed data //
   console.log("=== Generating users seed data ... ===")
-  await Promise.all(USER_SEED_DATA.map(async (user) => {
-    const newUser = new User();
-    const passwordDigest = hashSync(user.passwordInput, 10); // 10 is the salt rounds
-
-    newUser.name = user.name;
-    newUser.email = user.email;
-    newUser.passwordDigest = passwordDigest;
-    newUser.contactNum = user.contactNum;
-    newUser.imageId = user.imageURL;
-    newUser.role = user.role;
-    const createdUser = await userService.createUser(newUser);
-
-    USER_OBJECTS[user.name] = createdUser;
-  }));
+  const userGenerator = UserGenerator();
+  for (let i = 0; i < NO_OF_USER_TO_CREATE; i ++){
+    const user = userGenerator.next().value;
+    console.log("Generated user number " + i + ": " + user.name);
+    await userService.createUser(user)
+  }
 
   console.log("=== Generating event type seed data ... ===")
   await Promise.all(EVENT_TYPE_SEED_DATA.map(async (eventType) => {
@@ -90,32 +87,20 @@ const generateSeedData = async () => {
     ITEM_OBJECTS[item.name] = createdItem;
   }));
 
-  console.log("=== Generating donation event and donation event items seed data ... ===")
-  await Promise.all(DONATION_EVENT_SEED_DATA.map(async (donationEvent) => {
-    const newDonationEvent = new DonationEvent();
-    newDonationEvent.name = donationEvent.name;
-    newDonationEvent.imageId = donationEvent.imageId;
-    newDonationEvent.startDate = donationEvent.startDate;
-    newDonationEvent.endDate = donationEvent.endDate;
-    newDonationEvent.eventType = EVENT_TYPE_OBJECTS[donationEvent.eventType];
-    newDonationEvent.createdBy = USER_OBJECTS[donationEvent.user];
-    console.log(USER_OBJECTS[donationEvent.user])
-    const createdDonationEvent = await donationEventService.createDonationEvent(newDonationEvent);
-    DONATION_EVENT_OBJECTS[donationEvent.name] = createdDonationEvent;
+  const eventGenerator = DonationEventGenerator(EVENT_TYPE_OBJECTS, USER_OBJECTS, ITEM_OBJECTS);
+  for (let i = 0; i < NO_OF_DONATION_EVENT_TO_CREATE; i ++){
+    const event = eventGenerator.next().value;
+    await donationEventService.createDonationEvent(event);
+    // Adding in items
+    const donationItemGenerator = DonationItemGenerator(event, ITEM_OBJECTS);
+    for (let j = 0; j < NO_OF_ITEM_PER_EVENT; j++) {
+      const donationItem = donationItemGenerator.next().value;
+      console.log("DoonationItem is " + donationItem)
+      await donationEventItemService.createDonationEventItem(donationItem);
 
-    await Promise.all(donationEvent.donationEventItems.map(async (donationEventItem: any) => {
-      const newDonationEventItem = new DonationEventItem();
-      newDonationEventItem.targetQty = donationEventItem.targetQty;
-      newDonationEventItem.minQty = donationEventItem.minQty;
-      newDonationEventItem.pointsPerUnit = donationEventItem.pointsPerUnit;
-      newDonationEventItem.donationEvent = createdDonationEvent;
-      newDonationEventItem.item = ITEM_OBJECTS[donationEventItem.name]; // Associate the item to the donation event item
-      newDonationEventItem.donationEvent = createdDonationEvent;
-
-      await donationEventItemService.createDonationEventItem(newDonationEventItem);
-    }));
-  }));
-
+    }
+    // Adding in event objects
+}
   console.log("=== Generating of seed data completed ===")
 }
 
