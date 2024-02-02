@@ -55,6 +55,8 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
           </ListItem>
         );
       }
+
+      return null;
     });
   };
 

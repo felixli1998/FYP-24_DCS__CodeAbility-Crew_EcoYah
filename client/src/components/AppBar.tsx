@@ -131,9 +131,8 @@ function ResponsiveAppBar() {
               sx={{
                 m: 'auto',
                 marginTop: 2,
-                width: '4rem',
-                height: '4rem',
-                borderRadius: '100%',
+                width: '5rem',
+                height: '5rem',
               }}
               alt='Kunyah'
               src={logo}
