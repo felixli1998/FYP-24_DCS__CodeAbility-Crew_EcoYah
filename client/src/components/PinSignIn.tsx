@@ -10,15 +10,11 @@ import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "../styles/Palette";
 
-export default function PinSignIn(props: {open: boolean}) {
+export default function PinSignIn(props: {open: boolean, handleCloseBackdrop: () => void}) {
   const [pin, setPin] = useState<string>('');
 
   const handleChange = (newValue: string) => {
     setPin(newValue);
-  }
-
-  const handleComplete = (finalValue: string) => {
-    fetch('...')
   }
 
   const validateChar = (value: any, index: number) => {
@@ -29,14 +25,13 @@ export default function PinSignIn(props: {open: boolean}) {
 
   return (
     <ThemeProvider theme={theme}>
-    <Backdrop open={props.open}>
+    <Backdrop open={props.open} onClick={props.handleCloseBackdrop}>
         <Card sx={{display: "flex", justifyContent: "center", zIndex: 7}}>
             <CardContent sx={{marginTop: 3}}>
                 <Typography variant='h3' sx={{marginBottom: 4}}><LockRoundedIcon fontSize="large" sx={{marginRight: 2}}/>Enter your PIN number</Typography>
                 <MuiOtpInput
                     value={pin}
                     onChange={handleChange}
-                    onComplete={handleComplete}
                     length={4}
                     autoFocus
                     validateChar={validateChar}

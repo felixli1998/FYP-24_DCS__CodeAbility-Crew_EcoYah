@@ -47,8 +47,11 @@ export default function AdminSignIn() {
     function handleClick(id: number){
         console.log(`Clicked on profile with id: ${id}`);
         setOpenPinSignIn(true);
-    
-     }
+    }
+
+    function handleCloseBackdrop(){
+        setOpenPinSignIn(false);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -94,7 +97,7 @@ export default function AdminSignIn() {
                         ))}
                     </Grid>
 
-                    <PinSignIn open={openPinSignIn} />
+                    <PinSignIn open={openPinSignIn} handleCloseBackdrop={handleCloseBackdrop}/>
 
                 </>
             }
