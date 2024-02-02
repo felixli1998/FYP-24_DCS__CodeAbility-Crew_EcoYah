@@ -15,6 +15,17 @@ router.get("/", async (req, res) => {
   res.json("Successfully accessed user routes");
 });
 
+// Get all users that are admin and staff
+router.get("/allAdmins", async (req, res) => {
+  try {
+    const adminUsers = await userService.getAllAdminUsers();
+    return generateResponse(res, 200, { action: true, message: adminUsers });
+  } catch (error) {
+    return generateResponse(res, 500, { action: false, message: "Internal Server Error. Please refresh and try again." });
+  }
+
+});
+
 router.post('/', async (req, res) => {
   // Create user
   try {
