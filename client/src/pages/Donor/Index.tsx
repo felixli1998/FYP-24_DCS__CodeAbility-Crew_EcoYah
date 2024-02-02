@@ -4,7 +4,10 @@ const Home: React.FC = () => {
   return (
     <div>
       <h1>Welcome to the Homepage</h1>
-      <p>This is a simple React homepage template.</p>
+      <p>
+        This is a generic landing page that does not require donor to be
+        authenticated
+      </p>
     </div>
   );
 };
