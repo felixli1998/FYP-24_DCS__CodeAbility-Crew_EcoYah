@@ -32,8 +32,6 @@ export default function AdminSignIn() {
     const [profiles, setProfiles] = useState<ProfilesType[]>([]);
     const [errorFetchingProfiles, setErrorFetchingProfiles] = useState(false);
 
-    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
     const getAllAdminProfiles = async (): Promise<ApiResponse> => {
         try {
             const response = await makeHttpRequest('GET', USER_ROUTES.ADMIN_LOGIN);

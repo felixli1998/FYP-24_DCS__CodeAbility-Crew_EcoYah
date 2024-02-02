@@ -33,13 +33,13 @@ export default function SignIn() {
     // console.log(rmbMe);
 
     const handleLocalStorage = () => {
-        if (rmbMe) {
-            localStorage.setItem("ecoyah-email", formData['email']);
-            localStorage.setItem("ecoyah-password", formData['password']);
-        } else {
-            localStorage.removeItem("ecoyah-email");
-            localStorage.removeItem("ecoyah-password");
-        }
+    if (rmbMe) {
+        localStorage.setItem('ecoyah-email', formData['email']);
+        localStorage.setItem('ecoyah-password', formData['password']);
+    } else {
+        localStorage.removeItem('ecoyah-email');
+        localStorage.removeItem('ecoyah-password');
+    }
     }
 
     const navigate = useNavigate();
