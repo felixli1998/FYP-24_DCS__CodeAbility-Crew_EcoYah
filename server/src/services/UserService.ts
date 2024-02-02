@@ -28,15 +28,23 @@ export class UserService {
     return this.userRepository.getAllUsers();
   }
 
+  async getAllAdminUsers() {
+    return this.userRepository.getAllAdminUsers();
+  }
+
   async getUserById(id: number) {
     return this.userRepository.getUserById(id);
   }
-
+  
   async getUserByEmail(email: string) {
     return this.userRepository.getUserByEmail(email);
   }
 
   async createUser(user: User) {
     return this.userRepository.createUser(user);
+  }
+
+  async updateUser(email: string, payload: Partial<User>) {
+    return this.userRepository.updateUser(email, payload);
   }
 }

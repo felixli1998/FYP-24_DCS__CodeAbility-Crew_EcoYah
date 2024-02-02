@@ -27,9 +27,11 @@ import {green, pink, orange, blue} from "@mui/material/colors";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
 import pointsPicture from "../assets/Reward.png";
-import {useTheme} from "@mui/material/styles";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import PaidOutlinedIcon from "@mui/icons-material/Paid";
+import { makeHttpRequest } from "../utils/Utility";
+import { USER_ROUTES } from "../services/routes";
+import { capitalize } from "lodash";
 
 const navigationItems = [
   {
@@ -249,11 +251,34 @@ const Others = () => {
 };
 
 export default function Profile() {
+  const email = localStorage.getItem("ecoyah-email") || "";
+
   const [userInfo, setUserInfo] = useState({
-    name: "John Timonthy",
-    role: "Donor",
-    points: 1200,
+    name: "",
+    role: "",
+    points: 0,
   });
+
+  const retrieveProfileInfo = async () => {
+    try {
+      const res: any = await makeHttpRequest('GET', USER_ROUTES.RETRIEVE_BY_EMAIL.replace(':email', email));
+      const { action, data } = res.data;
+      if(action) {
+        // Currently, we do not have points so it will be null
+        const { name, role, points = 1000 } = data;
+        setUserInfo({ name, role: capitalize(role), points });
+      } else {
+        // TODO: Currently, we do not really have any robust error message
+        console.log("Error retrieving user info");
+      }
+    } catch (error) {
+      console.log("Error retrieving user info");
+    }
+  };
+
+  useEffect(() => {
+    retrieveProfileInfo();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
