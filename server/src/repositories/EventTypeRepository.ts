@@ -7,6 +7,14 @@ export class EventTypeRepository {
       return await AppDataSource.getRepository(EventType).save(eventType)
     }
 
+    async retrieveEventTypes() {
+      return await AppDataSource.getRepository(EventType).find()
+    }
+
+    async retrieveEventTypeById(id: number) {
+      return await AppDataSource.getRepository(EventType).findOne({ where: { id } })
+    }
+
     async retrieveEventTypeByName(name: string) {
       return await AppDataSource.getRepository(EventType).findOne({ where: { name } })
     }

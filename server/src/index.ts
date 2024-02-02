@@ -11,15 +11,17 @@ import "reflect-metadata";
 import { AppDataSource } from "./config/data-source";
 
 // Routes
-import itemRoutes from './routes/itemRoutes';
-import userRoutes from './routes/userRoutes';
 import baseRoutes from './routes/baseRoutes';
+import userRoutes from './routes/userRoutes';
 import imageRoutes from './routes/imageRoutes';
+import donationEventRoutes from './routes/donationEventRoutes';
+import itemRoutes from './routes/itemRoutes';
+import eventRoutes from './routes/eventTypeRoutes';
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.use(cors());
 
 const port = process.env.PORT;
@@ -43,16 +45,21 @@ AppDataSource.initialize()
     })
     .catch((error) => console.log(error))
 
-// testing
-const project = "EcoYah";
 
 // Routes
-// app.use('/', itemRoutes);
 app.use('/', baseRoutes);
+app.use('/users', userRoutes);
+app.use('/images', imageRoutes);
+app.use('/donation-events', donationEventRoutes);
+app.use('/items', itemRoutes);
+app.use('/event-types', eventRoutes)
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+// testing
+const project = "EcoYah";
 
 app.post('/test', (req, res) => {
   if (req.body.msg === 'start project') {
@@ -64,9 +71,6 @@ app.post('/test', (req, res) => {
   }
 });
 
-app.use('/items', itemRoutes);
-app.use('/users', userRoutes);
-app.use('/images', imageRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
