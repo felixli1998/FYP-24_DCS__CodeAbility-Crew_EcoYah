@@ -5,6 +5,7 @@ import {
     Typography
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import StaffTypography from "../../components/Typography/StaffTypography";
 import ProfileCard from "../../components/ProfileCard";
 import { theme } from "../../styles/Palette";
 import { makeHttpRequest } from "../../utils/Utility";
@@ -71,10 +72,9 @@ export default function AdminSignIn() {
                 </>
                     :
                 <>
-                    <Typography variant="h3" sx={{marginBottom: 3}}>Welcome Back, Admin.</Typography>
-                    <Typography variant="h4" sx={{marginBottom: 6}}>Choose your profile.</Typography>
-                
-                    <Grid container>
+                    <StaffTypography type="title" size={3} text="Welcome Back, Admin." customStyles={{ color: "secondary.main", marginBottom: "3rem" }} />
+                    <StaffTypography type="title" size={2.125} text="Choose Your Profile." customStyles={{ color: "secondary.main", marginBottom: "5rem" }} />
+                    <Grid container justifyContent="center">
                         {profiles.map(eachProfile => (
                             <Grid item md={4} display="flex" justifyContent="center" alignItems="center" key={eachProfile.id}>
                                 <ProfileCard

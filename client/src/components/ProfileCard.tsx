@@ -25,7 +25,7 @@ export default function ProfileCard(props: { displayName: string, imgSrc: string
     }
 
     return (
-        <StyledCard raised={raised} sx={{width: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
+        <StyledCard raised={raised} sx={{width: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23", marginBottom: "3rem"}}>
             <CardActionArea onMouseOver={()=> hoverCard()} onMouseOut={() => outHoverCard()}>
                 <RoundProfilePic altText={"test"} pictureSrc={props.imgSrc}/>
                 <Typography variant="h4" color={"white"} sx={{paddingBottom: 3, letterSpacing: "0.12em"}}>{props.displayName}</Typography>

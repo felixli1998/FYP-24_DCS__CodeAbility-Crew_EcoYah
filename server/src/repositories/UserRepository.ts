@@ -21,6 +21,10 @@ export class UserRepository {
     return await AppDataSource.getRepository(User).save(user);
   }
 
+  async getUserById(id: User['id']) {
+    return await AppDataSource.getRepository(User).findOne({ where: { id } });
+  }
+
   async getUserByEmail(email: User['email']) {
     return await AppDataSource.getRepository(User).findOne({ where: { email } });
   }
