@@ -7,7 +7,6 @@ function* DonationItemGenerator(
     itemObjects: {[key:string]:Item}
 ): Generator<DonationEventItem>{
     let i = 0;
-    console.log("Here")
     while (true) {
         const newItem = new DonationEventItem();
         newItem.targetQty = Math.floor(Math.random() * 100) + 1;
@@ -16,7 +15,6 @@ function* DonationItemGenerator(
         const randomItem = Object.values(itemObjects)[Math.floor(Math.random() * Object.values(itemObjects).length)];
         newItem.item = randomItem;
         newItem.donationEvent = event;
-        console.log("DonationItemGenerator is " + newItem)
         yield newItem;
         i++;
     }
