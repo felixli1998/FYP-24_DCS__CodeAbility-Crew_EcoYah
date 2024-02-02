@@ -32,6 +32,12 @@ function ResponsiveAppBar() {
     navActionLogicMap(); // handle use case if there's no change in the URL
   };
 
+  const handleAdminLogOut = () => {
+    localStorage.removeItem('ecoyah-email');
+    navigate('/admin/sign-in');
+    navActionLogicMap(); // handle use case if there's no change in the URL
+  }
+
   const navigationReducer = (
     state: NavigationListItemT[],
     action: ActionReducerT
@@ -77,7 +83,7 @@ function ResponsiveAppBar() {
     const { authenticated, admin } = action;
     // TODO: I am assuming that the handleLogOut function is standard across Admin and Donor. Let's refactor this subsequently
     if (authenticated)
-      return [{ item: ActionList.SIGN_OUT, action: handleLogOut }];
+      return [{ item: ActionList.SIGN_OUT, action: admin ? handleAdminLogOut: handleLogOut }];
 
     const ActionItemList = [ActionList.SIGN_IN, ActionList.SIGN_UP];
 
