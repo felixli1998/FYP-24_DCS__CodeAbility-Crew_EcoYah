@@ -23,6 +23,10 @@ export default function PinSignIn(props: {open: boolean, errorMsg: string, error
     return (isNumber || (isString && value !== '')) && !isNaN(Number(value))
   }
 
+  function clearPinOnCancel(){
+    setPin('');
+  }
+
   return (
     <ThemeProvider theme={theme}>
     <Backdrop open={props.open}>
@@ -42,9 +46,18 @@ export default function PinSignIn(props: {open: boolean, errorMsg: string, error
                 <Typography variant='h4' color='error' sx={{marginTop: 4, letterSpacing: "0.12em", display: props.errorDisplay}}>{props.errorMsg}</Typography>
             
                 <CardActions sx={{marginTop: 4, display:'flex', justifyContent:'flex-end'}}>
-                    <Button variant="outlined" size="large" color='error' onClick={props.handleCloseBackdrop} sx={{marginRight: 2}}><Typography variant='h5' sx={{letterSpacing: "0.12em"}}>Cancel</Typography></Button>
+                    <Button 
+                        variant="outlined" size="large" color='error' 
+                        onClick={() => {
+                            clearPinOnCancel()
+                            props.handleCloseBackdrop()
+                        }} 
+                        sx={{marginRight: 2}}>
+                        <Typography variant='h5' sx={{letterSpacing: "0.12em"}}>Cancel</Typography>
+                    </Button>
 
-                    <Button variant="contained" size="large" sx={{bgcolor:'success.dark'}} onClick={() => props.handleSignIn(Number(pin))}><Typography variant='h5' sx={{letterSpacing: "0.12em"}}>Sign In</Typography></Button>
+                    <Button 
+                        variant="contained" size="large" sx={{bgcolor:'success.dark'}} onClick={() => props.handleSignIn(Number(pin))}><Typography variant='h5' sx={{letterSpacing: "0.12em"}}>Sign In</Typography></Button>
                 </CardActions>
 
             </CardContent>
