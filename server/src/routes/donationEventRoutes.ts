@@ -153,7 +153,6 @@ router.put(`/:id`, async (req, res) => {
 
     // Updating timestamp
     const updateParams = req.body as Record<string, unknown>;
-    updateParams.updated_at = new Date();
     // Apply partial updates
     for (const key in updateParams) {
         if (updateParams.hasOwnProperty(key)) {
