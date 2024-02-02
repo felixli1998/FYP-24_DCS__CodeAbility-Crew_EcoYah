@@ -29,6 +29,7 @@ function ResponsiveAppBar() {
   const handleLogOut = () => {
     localStorage.removeItem('ecoyah-email');
     navigate('/');
+    navActionLogicMap(); // handle use case if there's no change in the URL
   };
 
   const navigationReducer = (
