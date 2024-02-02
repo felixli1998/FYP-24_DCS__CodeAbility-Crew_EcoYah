@@ -6,6 +6,7 @@ import Profile from '../pages/Donor/Profile';
 import EditProfile from '../pages/Donor/EditProfile';
 import ImageComponentExample from '../pages/Donor/ImageComponentExample';
 import { DonorHome } from '../pages/Donor/DonorHome';
+import AdminSignIn from '../pages/Admin/AdminSignIn';
 
 type AppRoutesT = {
   path: string;
@@ -64,5 +65,11 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: 'Home page for authenticated donor',
     element: <DonorHome />,
     isAdmin: false,
+  },
+  {
+    path: 'sign-in',
+    description: 'Sign in page for the admin',
+    element: <AdminSignIn />,
+    isAdmin: true,
   },
 ];
