@@ -10,7 +10,7 @@ import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import { ThemeProvider } from "@emotion/react";
 import { theme } from "../styles/Palette";
 
-export default function PinSignIn(props: {open: boolean, handleCloseBackdrop: () => void}) {
+export default function PinSignIn(props: {open: boolean, handleCloseBackdrop: () => void, handleSignIn: () => void}) {
   const [pin, setPin] = useState<string>('');
 
   const handleChange = (newValue: string) => {
@@ -25,7 +25,7 @@ export default function PinSignIn(props: {open: boolean, handleCloseBackdrop: ()
 
   return (
     <ThemeProvider theme={theme}>
-    <Backdrop open={props.open} onClick={props.handleCloseBackdrop}>
+    <Backdrop open={props.open}>
         <Card sx={{display: "flex", justifyContent: "center", zIndex: 7}}>
             <CardContent sx={{marginTop: 3}}>
                 <Typography variant='h3' sx={{marginBottom: 4}}><LockRoundedIcon fontSize="large" sx={{marginRight: 2}}/>Enter your PIN number</Typography>
@@ -38,8 +38,12 @@ export default function PinSignIn(props: {open: boolean, handleCloseBackdrop: ()
                     // TextFieldsProps={{ disabled: true, size: 'medium' }}
                     TextFieldsProps={{required: true, size: 'medium', sx: {paddingX: 1}}}
                 />
-            <CardActions sx={{display:'flex', justifyContent:'flex-end'}}>
-                <Button variant="contained" size="large" sx={{marginTop: 4, bgcolor:'success.dark'}}><Typography variant='h5' sx={{letterSpacing: "0.12em"}}>Sign In</Typography></Button>
+            <CardActions sx={{marginTop: 4, display:'flex', justifyContent:'flex-end'}}>
+                
+                <Button variant="outlined" size="large" color='error' onClick={props.handleCloseBackdrop} sx={{marginRight: 2}}><Typography variant='h5' sx={{letterSpacing: "0.12em"}}>Cancel</Typography></Button>
+
+                <Button variant="contained" size="large" sx={{bgcolor:'success.dark'}} onClick={props.handleSignIn}><Typography variant='h5' sx={{letterSpacing: "0.12em"}}>Sign In</Typography></Button>
+
             </CardActions>
             </CardContent>
         </Card>

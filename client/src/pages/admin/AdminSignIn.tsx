@@ -32,6 +32,7 @@ export default function AdminSignIn() {
     const [profiles, setProfiles] = useState<ProfilesType[]>([]);
     const [errorFetchingProfiles, setErrorFetchingProfiles] = useState(false);
     const [openPinSignIn, setOpenPinSignIn] = useState(false);
+    const [selectedProfile, setSelectedProfile] = useState(0);
 
     const getAllAdminProfiles = async (): Promise<ApiResponse> => {
         try {
@@ -47,10 +48,15 @@ export default function AdminSignIn() {
     function handleClick(id: number){
         console.log(`Clicked on profile with id: ${id}`);
         setOpenPinSignIn(true);
+        setSelectedProfile(id);
     }
 
     function handleCloseBackdrop(){
         setOpenPinSignIn(false);
+    }
+
+    function handleSignIn(){
+        console.log("Sign in clicked. Profile id: ", selectedProfile);
     }
 
     useEffect(() => {
@@ -97,7 +103,10 @@ export default function AdminSignIn() {
                         ))}
                     </Grid>
 
-                    <PinSignIn open={openPinSignIn} handleCloseBackdrop={handleCloseBackdrop}/>
+                    <PinSignIn 
+                        open={openPinSignIn}
+                        handleCloseBackdrop={handleCloseBackdrop}
+                        handleSignIn={handleSignIn}/>
 
                 </>
             }
