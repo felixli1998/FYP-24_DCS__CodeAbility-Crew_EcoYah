@@ -28,7 +28,7 @@ function ResponsiveAppBar() {
   // TODO: Let's refactor this subsequently using useContext
   const handleLogOut = () => {
     localStorage.removeItem('ecoyah-email');
-    navigate('/');
+    navigate('/sign-in');
     navActionLogicMap(); // handle use case if there's no change in the URL
   };
 
