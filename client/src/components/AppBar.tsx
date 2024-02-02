@@ -39,25 +39,31 @@ function ResponsiveAppBar() {
 
     if (authenticated) {
       if (admin) {
+        // Admin + Authenticated //
         const NavList = [
-          NavigationList.CUSTOMER,
-          NavigationList.DONATION_EVENTS,
-          NavigationList.DONATION,
+          NavigationList.HOME,
+          NavigationList.DONATION_EVENT_FORM,
+          NavigationList.DONATION_EVENT_OVERVIEW,
+          NavigationList.REWARD,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, true));
       } else {
+        // Donor + Authenticated //
         const NavList = [
           NavigationList.HOME,
           NavigationList.REWARD,
           NavigationList.PROFILE,
+          NavigationList.CONTACT_US,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, false));
       }
     } else {
       if (admin) {
+        // Admin + Unauthenticated //
         return [];
       } else {
-        const NavList = [NavigationList.CONTACT_US, NavigationList.ABOUT];
+        // Donor + Unauthenticated //
+        const NavList = [NavigationList.HOME, NavigationList.REWARD, NavigationList.CONTACT_US];
         return NavList.map((navItem) => generateNavItem(navItem, false));
       }
     }

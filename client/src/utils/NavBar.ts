@@ -2,13 +2,12 @@ import slugify from 'slugify';
 
 export enum NavigationList {
   HOME = 'Home',
-  ABOUT = 'About',
   CONTACT_US = 'Contact us',
   REWARD = 'Reward',
   PROFILE = 'Profile',
-  CUSTOMER = 'Customer',
   DONATION = 'Donation',
-  DONATION_EVENTS = 'Donation Events',
+  DONATION_EVENT_FORM = 'Donation Event Form',
+  DONATION_EVENT_OVERVIEW = 'Donation Event Overview',
 }
 
 export enum ActionList {
@@ -28,7 +27,7 @@ export type NavigationListItemT = {
 // returns the item and the path { 'Contact', '/contact'}
 export const generateNavItem = (
   item: NavigationList | ActionList,
-  isAdmin: boolean
+  isAdmin: boolean,
 ): NavigationListItemT => {
   const slugOptions = { lower: true };
   const prefix = isAdmin ? '/admin/' : '/';
