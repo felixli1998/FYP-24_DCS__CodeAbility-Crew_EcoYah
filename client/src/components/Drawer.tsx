@@ -14,9 +14,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link, useNavigate } from 'react-router-dom';
 import slugify from 'slugify';
+import { navigationListItemT } from '../utils/NavBar';
 
 type DrawerListProps = {
-  topDrawerList: string[];
+  topDrawerList: navigationListItemT[];
   bottomDrawerList: string[];
 };
 
@@ -53,15 +54,11 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
       }}
     >
       <List>
-        {topDrawerList.map((text, index) => (
+        {topDrawerList.map((navItem, index) => (
           <ListItem key={index} disablePadding>
             <ListItemButton>
-              <Link
-                to={
-                  text === 'Home' ? `/` : `/${slugify(text, { lower: true })}`
-                }
-              >
-                <ListItemText primary={text} />
+              <Link to={navItem.path}>
+                <ListItemText primary={navItem.item} />
               </Link>
             </ListItemButton>
           </ListItem>

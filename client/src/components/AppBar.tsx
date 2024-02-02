@@ -6,56 +6,51 @@ import { Link, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import logo from '../assets/Kunyah.png';
 import { useEffect, useReducer } from 'react';
+import { NavigationList, ActionList, generateNavItem } from '../utils/NavBar';
 
-export enum NavigationList {
-  HOME = 'Home',
-  ABOUT = 'About',
-  CONTACT_US = 'Contact us',
-  REWARD = 'Reward',
-  PROFILE = 'Profile',
-  CUSTOMER = 'Customer',
-  DONATION = 'Donation',
-  DONATION_EVENTS = 'Donation Events',
-}
-
-export enum ActionList {
-  SIGN_IN = 'Sign in',
-  SIGN_UP = 'Sign up',
-  SIGN_OUT = 'Sign out',
-}
+type navigationListItemT = {
+  item: NavigationList | ActionList;
+  path: string;
+};
 
 function ResponsiveAppBar() {
   const location = useLocation();
 
-  const defaultNavigationList: NavigationList[] = [];
+  const defaultNavigationList: navigationListItemT[] = [];
   const defaultActionList: ActionList[] = [
     ActionList.SIGN_IN,
     ActionList.SIGN_UP,
     ActionList.SIGN_OUT,
   ];
 
-  const navigationReducer = (state: NavigationList[], action: any) => {
+  const navigationReducer = (
+    state: navigationListItemT[],
+    action: any
+  ): navigationListItemT[] => {
     const { authenticated, admin } = action;
 
     if (authenticated) {
       if (admin) {
-        return [
+        const NavList = [
           NavigationList.CUSTOMER,
           NavigationList.DONATION_EVENTS,
           NavigationList.DONATION,
         ];
+        return NavList.map((navItem) => generateNavItem(navItem, true));
       } else {
-        return [
+        const NavList = [
           NavigationList.HOME,
           NavigationList.REWARD,
           NavigationList.PROFILE,
         ];
+        return NavList.map((navItem) => generateNavItem(navItem, true));
       }
     } else {
       if (admin) {
         return [];
       } else {
-        return [NavigationList.CONTACT_US, NavigationList.ABOUT];
+        const NavList = [NavigationList.CONTACT_US, NavigationList.ABOUT];
+        return NavList.map((navItem) => generateNavItem(navItem, false));
       }
     }
   };
@@ -67,22 +62,23 @@ function ResponsiveAppBar() {
     return [ActionList.SIGN_IN, ActionList.SIGN_UP];
   };
 
-  const [navigationList, dispatchNav] = useReducer(
-    navigationReducer,
-    defaultNavigationList
-  );
+  const [navigationList, dispatchNav] = useReducer<
+    React.Reducer<navigationListItemT[], any>
+  >(navigationReducer, defaultNavigationList);
 
   const [actionList, dispatchAction] = useReducer(
     actionReducer,
     defaultActionList
   );
 
+  // TODO: Let's refactor this subsequently using useContext or token
   const isAdmin = () => {
     const currentPath = location.pathname;
 
     return currentPath.includes('admin');
   };
 
+  // TODO: Let's refactor this subsequently using useContext
   const isAuthenticated = () => {
     const email = localStorage.getItem('ecoyah-email');
 
