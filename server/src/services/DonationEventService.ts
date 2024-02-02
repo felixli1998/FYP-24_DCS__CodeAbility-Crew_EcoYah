@@ -1,7 +1,7 @@
 // Internal Imports
 import { DonationEvent } from '../entities/DonationEvent';
 import { DonationEventRepository } from '../repositories/DonationEventRepository';
-
+import IPagination from '../common/IPagination';
 
 export class DonationEventService {
   private donationEventRepository: DonationEventRepository;
@@ -21,5 +21,23 @@ export class DonationEventService {
         }
         throw new Error(errorMessage);
     }
+  }
+  
+  async getAllDonationEvents(pageNumber: number = 1): Promise<{ data: DonationEvent[], pagination:IPagination }> {
+    return this.donationEventRepository.getAllDonationEvents(pageNumber);
+  }
+
+  async getDonationEventById(id: number): Promise<DonationEvent | null> {
+    return this.donationEventRepository.getDonationEventById(id);
+  }
+
+  async updateDonationEvent(donationEvent: DonationEvent): Promise<DonationEvent> {
+    return this.donationEventRepository.updateDonationEvent(donationEvent);
+  }
+
+  // Filtering
+
+  async getFilteredDonationEvents(filters: any): Promise<{ data: DonationEvent[], pagination:IPagination }> {
+    return this.donationEventRepository.filterDonationEvents(filters);
   }
 }

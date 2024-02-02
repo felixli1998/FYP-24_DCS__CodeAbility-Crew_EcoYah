@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState, Fragment } from 'react';
 import {
   Box,
   Drawer,
@@ -9,94 +9,85 @@ import {
   ListItemText,
   IconButton,
   Button,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
-import { Link, useNavigate } from "react-router-dom";
-import slugify from "slugify";
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
+import { Link } from 'react-router-dom';
+import { NavigationListItemT } from '../utils/NavBar';
 
 type DrawerListProps = {
-  topDrawerList: string[];
-  bottomDrawerList: string[];
+  topDrawerList: NavigationListItemT[];
+  bottomDrawerList: NavigationListItemT[];
 };
 
-function TemporaryDrawer({topDrawerList, bottomDrawerList}: DrawerListProps) {
+function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const navigate = useNavigate();
+  const BottomList = () => {
+    return bottomDrawerList.map((actionItem, idx) => {
+      if (actionItem.path) {
+        return (
+          <ListItem key={idx} disablePadding>
+            <Button
+              sx={{ marginX: 2, marginY: 2 }}
+              variant='outlined'
+              fullWidth={true}
+            >
+              <Link to={actionItem.path}>
+                <ListItemText primary={actionItem.item} />
+              </Link>
+            </Button>
+          </ListItem>
+        );
+      }
 
-  const handleLogOut = () => {
-    setIsLoggedIn(false); 
-    localStorage.removeItem("ecoyah-email"); 
-    navigate("/"); 
-  }
+      if (actionItem.action) {
+        return (
+          <ListItem disablePadding>
+            <Button
+              sx={{ marginX: 2, marginY: 2 }}
+              variant='outlined'
+              fullWidth={true}
+              onClick={actionItem.action}
+            >
+              {actionItem.item}
+            </Button>
+          </ListItem>
+        );
+      }
 
-  useEffect(() => {
-    const storedEmail = localStorage.getItem("ecoyah-email") || "";
-
-    if (storedEmail !== "") {
-      setIsLoggedIn(true);
-    } 
-  }, [localStorage.getItem("ecoyah-email")]);
+      return null;
+    });
+  };
 
   const list = () => (
     <Box
-      role="presentation"
+      role='presentation'
       onClick={() => setIsDrawerOpen(true)}
       sx={{
         width: 150,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        height: "100%",
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100%',
       }}
     >
       <List>
-        {topDrawerList.map((text, index) => (
-          <ListItem
-            key={index}
-            disablePadding
-          >
+        {topDrawerList.map((navItem, index) => (
+          <ListItem key={index} disablePadding>
             <ListItemButton>
-              <Link
-                to={text === "Home" ? `/` : `/${slugify(text, {lower: true})}`}
-              >
-                <ListItemText primary={text} />
-              </Link>
+              {navItem.path && (
+                <Link to={navItem.path}>
+                  <ListItemText primary={navItem.item} />
+                </Link>
+              )}
             </ListItemButton>
           </ListItem>
         ))}
       </List>
       <List>
         <Divider />
-        { !isLoggedIn ? bottomDrawerList.slice(0, 2).map(function(label, i) {
-          return (
-          <ListItem disablePadding key={i}>
-            <Button
-              sx={{marginX: 2, marginY: 2}}
-              variant="outlined"
-              fullWidth={true}
-            >
-                <Link
-                  to={`/${slugify(bottomDrawerList[i], {
-                    lower: true,
-                  })}`}
-                >
-                  {bottomDrawerList[i]}
-                </Link>
-            </Button>
-          </ListItem>) }) :
-          <ListItem disablePadding>
-            <Button
-              sx={{marginX: 2, marginY: 2}}
-              variant="outlined"
-              fullWidth={true}
-              onClick={handleLogOut}
-            >
-              {bottomDrawerList[2]}
-            </Button>
-          </ListItem> }
+        {BottomList()}
       </List>
     </Box>
   );
@@ -108,14 +99,14 @@ function TemporaryDrawer({topDrawerList, bottomDrawerList}: DrawerListProps) {
           <MenuIcon></MenuIcon>
         </IconButton>
         <Drawer
-          anchor={"right"}
+          anchor={'right'}
           open={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
         >
           <IconButton
             disableRipple={true}
             onClick={() => setIsDrawerOpen(false)}
-            sx={{justifyContent: "flex-end"}}
+            sx={{ justifyContent: 'flex-end' }}
           >
             <CloseIcon></CloseIcon>
           </IconButton>
