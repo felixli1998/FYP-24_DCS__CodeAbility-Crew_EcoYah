@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from 'react';
+import { useState, Fragment } from 'react';
 import {
   Box,
   Drawer,
@@ -12,34 +12,51 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link, useNavigate } from 'react-router-dom';
-import slugify from 'slugify';
-import { navigationListItemT } from '../utils/NavBar';
+import { Link } from 'react-router-dom';
+import { NavigationListItemT } from '../utils/NavBar';
 
 type DrawerListProps = {
-  topDrawerList: navigationListItemT[];
-  bottomDrawerList: string[];
+  topDrawerList: NavigationListItemT[];
+  bottomDrawerList: NavigationListItemT[];
 };
 
 function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const navigate = useNavigate();
+  const BottomList = () => {
+    return bottomDrawerList.map((actionItem, idx) => {
+      if (actionItem.path) {
+        return (
+          <ListItem key={idx} disablePadding>
+            <Button
+              sx={{ marginX: 2, marginY: 2 }}
+              variant='outlined'
+              fullWidth={true}
+            >
+              <Link to={actionItem.path}>
+                <ListItemText primary={actionItem.item} />
+              </Link>
+            </Button>
+          </ListItem>
+        );
+      }
 
-  const handleLogOut = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem('ecoyah-email');
-    navigate('/');
+      if (actionItem.action) {
+        return (
+          <ListItem disablePadding>
+            <Button
+              sx={{ marginX: 2, marginY: 2 }}
+              variant='outlined'
+              fullWidth={true}
+              onClick={actionItem.action}
+            >
+              {actionItem.item}
+            </Button>
+          </ListItem>
+        );
+      }
+    });
   };
-
-  useEffect(() => {
-    const storedEmail = localStorage.getItem('ecoyah-email') || '';
-
-    if (storedEmail !== '') {
-      setIsLoggedIn(true);
-    }
-  }, [localStorage.getItem('ecoyah-email')]);
 
   const list = () => (
     <Box
@@ -57,47 +74,18 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
         {topDrawerList.map((navItem, index) => (
           <ListItem key={index} disablePadding>
             <ListItemButton>
-              <Link to={navItem.path}>
-                <ListItemText primary={navItem.item} />
-              </Link>
+              {navItem.path && (
+                <Link to={navItem.path}>
+                  <ListItemText primary={navItem.item} />
+                </Link>
+              )}
             </ListItemButton>
           </ListItem>
         ))}
       </List>
       <List>
         <Divider />
-        {!isLoggedIn ? (
-          bottomDrawerList.slice(0, 2).map(function (label, i) {
-            return (
-              <ListItem disablePadding key={i}>
-                <Button
-                  sx={{ marginX: 2, marginY: 2 }}
-                  variant='outlined'
-                  fullWidth={true}
-                >
-                  <Link
-                    to={`/${slugify(bottomDrawerList[i], {
-                      lower: true,
-                    })}`}
-                  >
-                    {bottomDrawerList[i]}
-                  </Link>
-                </Button>
-              </ListItem>
-            );
-          })
-        ) : (
-          <ListItem disablePadding>
-            <Button
-              sx={{ marginX: 2, marginY: 2 }}
-              variant='outlined'
-              fullWidth={true}
-              onClick={handleLogOut}
-            >
-              {bottomDrawerList[2]}
-            </Button>
-          </ListItem>
-        )}
+        {BottomList()}
       </List>
     </Box>
   );

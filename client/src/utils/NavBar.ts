@@ -17,9 +17,10 @@ export enum ActionList {
   SIGN_OUT = 'Sign out',
 }
 
-export type navigationListItemT = {
+export type NavigationListItemT = {
   item: NavigationList | ActionList;
-  path: string;
+  path?: string;
+  action?: () => void;
 };
 
 // Takes in a NavigationList or ActionList
@@ -28,7 +29,7 @@ export type navigationListItemT = {
 export const generateNavItem = (
   item: NavigationList | ActionList,
   isAdmin: boolean
-): navigationListItemT => {
+): NavigationListItemT => {
   const slugOptions = { lower: true };
   const prefix = isAdmin ? '/admin/' : '/';
   const slugifiedItem = slugify(item, slugOptions);
