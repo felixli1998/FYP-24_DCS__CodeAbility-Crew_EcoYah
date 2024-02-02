@@ -34,6 +34,9 @@ export default function AdminSignIn() {
     const [errorFetchingProfiles, setErrorFetchingProfiles] = useState(false);
     const [openPinSignIn, setOpenPinSignIn] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState(0);
+    const [errorDisplay, setErrorDisplay] = useState('none');
+    const [errorMsg, setErrorMsg] = useState('');
+
 
     const getAllAdminProfiles = async (): Promise<ApiResponse> => {
         try {
@@ -56,8 +59,21 @@ export default function AdminSignIn() {
         setOpenPinSignIn(false);
     }
 
-    function handleSignIn(){
+    function handleSignIn(pin: number){
         console.log("Sign in clicked. Profile id: ", selectedProfile);
+        console.log("Sign in clicked. pin: ", pin);
+
+        const pinLength = pin.toString().length;
+        console.log("Pin length: ", pinLength);
+
+        if(pin === 0 || pinLength === 0){
+            setErrorDisplay("block");
+            setErrorMsg("Please enter your PIN.");
+        }
+        else if(pinLength > 0 && pinLength < 4){
+            setErrorDisplay("block");
+            setErrorMsg("PIN must be 4 digits long.");
+        }
     }
 
     useEffect(() => {
@@ -103,7 +119,9 @@ export default function AdminSignIn() {
                         ))}
                     </Grid>
 
-                    <PinSignIn 
+                    <PinSignIn
+                        errorMsg={errorMsg}
+                        errorDisplay={errorDisplay} 
                         open={openPinSignIn}
                         handleCloseBackdrop={handleCloseBackdrop}
                         handleSignIn={handleSignIn}/>
