@@ -1,4 +1,4 @@
-import AdminHome from '../pages/Admin/AdminHome';
+// Donor routes //
 import Home from '../pages/Donor/Index';
 import SignUp from '../pages/Donor/SignUp';
 import SignIn from '../pages/Donor/SignIn';
@@ -6,7 +6,12 @@ import Profile from '../pages/Donor/Profile';
 import EditProfile from '../pages/Donor/EditProfile';
 import ImageComponentExample from '../pages/Donor/ImageComponentExample';
 import { DonorHome } from '../pages/Donor/DonorHome';
+
+// Admin routes //
+import AdminHome from '../pages/Admin/AdminHome';
 import AdminSignIn from '../pages/Admin/AdminSignIn';
+import DonationEventForm from '../pages/Admin/DonationEventForm';
+import DonationEventPreview from '../pages/Admin/DonationEventPreview';
 
 type AppRoutesT = {
   path: string;
@@ -70,6 +75,18 @@ export const APP_ROUTES: AppRoutesT[] = [
     path: 'sign-in',
     description: 'Sign in page for the admin',
     element: <AdminSignIn />,
+    isAdmin: true,
+  },
+  {
+    path: "donation-event-form",
+    description: "Creation of donation event form for the admin",
+    element: <DonationEventForm />,
+    isAdmin: true,
+  },
+  {
+    path: "donation-event-preview",
+    description: "Preview of donation event for the admin",
+    element: <DonationEventPreview />,
     isAdmin: true,
   },
 ];
