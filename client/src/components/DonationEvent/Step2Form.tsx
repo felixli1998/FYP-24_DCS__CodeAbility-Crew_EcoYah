@@ -148,7 +148,6 @@ export default function Step2Form(props: Step2FormProps) {
     const { item, unit } = formData;
     const sanitisedItem = formatAndCapitalizeString(item); // Sanitize input to safeguard duplicate creation of event type
     const existingItems = itemsData.data.items;
-    console.log(existingItems);
     const isItemExists = isValueExistsInObjectArray(
       existingItems,
       "name",

@@ -76,14 +76,14 @@ const FormDialog: React.FC<FormDialogProps> = ({
           },
         }}
       >
-        <DialogTitle sx={{paddingX: "4rem", textAlign: "center"}}>{dialogTitle}</DialogTitle>
+        <DialogTitle sx={{paddingX: "4rem", textAlign: "center", fontSize: "1.5rem", letterSpacing: "0.18rem"}}>{dialogTitle}</DialogTitle>
         <DialogContent>
           {formComponent}
           {errorMessage && (
             <Alert
               variant="filled"
               severity="error"
-              sx={{marginTop: "1rem"}}
+              sx={{marginTop: "1rem", fontSize: "1rem", letterSpacing: "0.12rem"}}
             >
               {errorMessage}
             </Alert>
