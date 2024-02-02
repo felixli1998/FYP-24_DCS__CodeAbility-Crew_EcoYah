@@ -9,15 +9,17 @@ import { DonorHome } from '../pages/Donor/DonorHome';
 
 type AppRoutesT = {
   path: string;
-  description: string;
+  description: string; // for developers to understand what this route is for
   element: JSX.Element;
-  isAdmin: boolean;
+  isAdmin: boolean; // all admin routes are prefixed with /admin
 };
+
+export const ADMIN_PREFIX = 'admin';
 
 export const APP_ROUTES: AppRoutesT[] = [
   {
     path: '',
-    description: 'Generic landing page for donor',
+    description: 'Generic landing page for unauthenticated donor',
     element: <Home />,
     isAdmin: false,
   },
