@@ -40,8 +40,6 @@ function TemporaryDrawer({topDrawerList, bottomDrawerList}: DrawerListProps) {
     } 
   }, [localStorage.getItem("ecoyah-email")]);
 
-  console.log(isLoggedIn);
-
   const list = () => (
     <Box
       role="presentation"

@@ -32,10 +32,6 @@ const userService = new UserService(userRepository);
 const eventTypeRepository = new EventTypeRepository();
 const eventTypeService = new EventTypeService(eventTypeRepository);
 
-// Donation Events
-const donationEventRepository = new DonationEventRepository();
-const donationEventService = new DonationEventService(donationEventRepository);
-
 // Items
 const itemRepository = new ItemRepository();
 const itemService = new ItemService(itemRepository);
@@ -43,6 +39,10 @@ const itemService = new ItemService(itemRepository);
 // Donation Event Items
 const donationEventItemRepository = new DonationEventItemRepository();
 const donationEventItemService = new DonationEventItemService(donationEventItemRepository);
+
+// Donation Events
+const donationEventRepository = new DonationEventRepository();
+const donationEventService = new DonationEventService(donationEventRepository);
 
 let USER_OBJECTS: any = {};
 let EVENT_TYPE_OBJECTS: any = {};
