@@ -20,7 +20,7 @@ function* UserGenerator(): Generator<User>{
         newUser.email = email;
         newUser.passwordDigest = passwordDigest;
         newUser.contactNum = `+65 ${uuidv4().substr(0,8)}`;
-        newUser.role = UserRole.DONOR;
+        newUser.role = UserRole.ADMIN; // Admin so no error when using this to create Donation Event
         yield newUser;
         i++;
     }
