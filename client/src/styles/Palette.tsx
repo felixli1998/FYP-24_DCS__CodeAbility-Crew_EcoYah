@@ -9,6 +9,14 @@ export const theme = createTheme({
     secondary: {
       main: "#000000",
       light: "#666363"
+    },
+    success:{
+      main: "#008000",
+      dark: "#013B23"
     }
+    
+    // admin: {
+    //   success: "#013B23"
+    // }
   },
 });

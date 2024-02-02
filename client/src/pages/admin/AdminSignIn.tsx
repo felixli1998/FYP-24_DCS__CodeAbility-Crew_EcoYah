@@ -23,7 +23,7 @@ interface ApiResponse {
     status: number;
     data: {
         action: boolean;
-        message: Object[]; // Adjust the type based on the actual structure
+        message: Object[];
     };
  }
 
@@ -31,6 +31,7 @@ export default function AdminSignIn() {
 
     const [profiles, setProfiles] = useState<ProfilesType[]>([]);
     const [errorFetchingProfiles, setErrorFetchingProfiles] = useState(false);
+    const [openPinSignIn, setOpenPinSignIn] = useState(false);
 
     const getAllAdminProfiles = async (): Promise<ApiResponse> => {
         try {
@@ -42,6 +43,12 @@ export default function AdminSignIn() {
             throw error; 
         }
     }
+
+    function handleClick(id: number){
+        console.log(`Clicked on profile with id: ${id}`);
+        setOpenPinSignIn(true);
+    
+     }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -65,7 +72,6 @@ export default function AdminSignIn() {
     return (
         <ThemeProvider theme={theme}>
             <Container sx={{textAlign: "center", marginY: 9}}>
-                {/* <PinSignIn /> */}
             {errorFetchingProfiles ? 
                 <>
                     <ReportProblemIcon sx={{color: "#FF0000", marginBottom: 3, height: "70px", width: "70px"}}/>
@@ -78,7 +84,7 @@ export default function AdminSignIn() {
                 
                     <Grid container>
                         {profiles.map(eachProfile => (
-                            <Grid item md={4} display="flex" justifyContent="center" alignItems="center" key={eachProfile.id}>
+                            <Grid item md={4} display="flex" justifyContent="center" alignItems="center" key={eachProfile.id} onClick={() => handleClick(eachProfile.id)}>
                                 <ProfileCard
                                     id={eachProfile.id}
                                     displayName={eachProfile.name}
@@ -87,6 +93,9 @@ export default function AdminSignIn() {
                             </Grid>
                         ))}
                     </Grid>
+
+                    <PinSignIn open={openPinSignIn} />
+
                 </>
             }
             </Container>

@@ -24,6 +24,10 @@ export default function ProfileCard(props: { displayName: string, imgSrc: string
         setRaised(false);
     }
 
+    // function handleClick(id: number){
+    //     console.log(`Clicked on profile with id: ${id}`);
+    // }
+
     return (
         <StyledCard raised={raised} sx={{width: "220px", textAlign: "center", borderRadius: "20%", backgroundColor: "#013B23"}}>
             <CardActionArea onMouseOver={()=> hoverCard()} onMouseOut={() => outHoverCard()}>
