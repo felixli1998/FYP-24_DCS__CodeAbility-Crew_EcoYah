@@ -43,7 +43,7 @@ export class DonationEventItem{
     @UpdateDateColumn()
     updatedAt: Date
 
-     // Validates before inserting the data into the database
+    // Validates before inserting the data into the database
     // NOTE: Use try catch to handle the error graciously inside your service / repository
     @BeforeInsert()
     beforeInsert(){
