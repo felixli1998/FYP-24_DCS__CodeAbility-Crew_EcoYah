@@ -7,6 +7,7 @@ import SignIn from "../pages/SignIn";
 import Profile from "../pages/Profile";
 import EditProfile from "../pages/EditProfile";
 import ImageComponentExample from "../pages/ImageComponentExample";
+import DonationEventsAdmin from "../pages/DonationEventsAdmin";
 // import ContactUs from "../pages/ContactUs";
 
 const router = createBrowserRouter([
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
         path: "/image-component-example",
         element: <ImageComponentExample />,
       },
+      {
+        path: "/admin/donation-events",
+        element: <DonationEventsAdmin />,
+      }
       // {
       //   path: "/contactUs",
       //   element: <ContactUs />,
