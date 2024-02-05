@@ -35,7 +35,8 @@ export default function AdminSignIn() {
     const [errorFetchingProfiles, setErrorFetchingProfiles] = useState(false);
     const [openPinSignIn, setOpenPinSignIn] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState('');
-    const [errorDisplay, setErrorDisplay] = useState('none');
+    const [currentAdminId, setCurrentAdminId] = useState(0);
+    const [errorDisplay, setErrorDisplay] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
     const navigate = useNavigate();
@@ -51,48 +52,46 @@ export default function AdminSignIn() {
         }
     }
 
-    function handleClick(email: string){
-        console.log(`Clicked on profile with email: ${email}`);
+    function handleClick(email: string, id: number){
         setOpenPinSignIn(true);
         setSelectedProfile(email);
+        setCurrentAdminId(id);
     }
 
     function handleCloseBackdrop(){
         setOpenPinSignIn(false);
+        setErrorDisplay(false);
     }
 
-    const handleSignIn = async (pin: number) => {
-        console.log("Sign in clicked. Profile id: ", selectedProfile);
-        console.log("Sign in clicked. pin: ", pin);
+    const handleSignIn = async (pin: string) => {
+        const pinLength = pin.length;
 
-        const pinLength = pin.toString().length;
-        console.log("Pin length: ", pinLength);
-
-        if(pin === 0 || pinLength === 0){
-            setErrorDisplay("block");
+        if(pinLength === 0){
+            setErrorDisplay(true);
             setErrorMsg("Please enter your PIN.");
         }
         else if(pinLength > 0 && pinLength < 4){
-            setErrorDisplay("block");
+            setErrorDisplay(true);
             setErrorMsg("PIN must be 4 digits long.");
         } else {
             try {
                 const res: any = await makeHttpRequest('POST', GENERAL_ROUTES.LOGIN, {
                     email: selectedProfile,
-                    password: pin.toString()
+                    password: pin
                 });
                 console.log(res);
 
                 if(res.data.action){
-                    setErrorDisplay("none");
+                    setErrorDisplay(false);
                     localStorage.setItem("ecoyah-email", selectedProfile);
-                    navigate("/");
+                    localStorage.setItem("admin-id", currentAdminId.toString());
+                    navigate("/admin/home");
                 } else {
-                    setErrorDisplay("block");
-                    setErrorMsg("An error occurred. Please try again.");
+                    setErrorDisplay(true);
+                    setErrorMsg("Your PIN is incorrect. Please try again.");
                 }
             } catch (error) {
-                setErrorDisplay("block");
+                setErrorDisplay(true);
                 setErrorMsg("An error occurred. Please try again.");
                 console.error('Error:', error);
             }
@@ -106,7 +105,6 @@ export default function AdminSignIn() {
         
               if (res && res.status === 200) {
                 const adminUsers = res.data.message;
-                console.log(adminUsers);
                 setProfiles(adminUsers as ProfilesType[]);
               } 
             } catch (error) {
@@ -132,7 +130,7 @@ export default function AdminSignIn() {
                     <StaffTypography type="title" size={2.125} text="Choose Your Profile." customStyles={{ color: "secondary.main", marginBottom: "5rem" }} />
                     <Grid container justifyContent="center">
                         {profiles.map(eachProfile => (
-                            <Grid item md={4} display="flex" justifyContent="center" alignItems="center" key={eachProfile.id} onClick={() => handleClick(eachProfile.email)}>
+                            <Grid item md={4} display="flex" justifyContent="center" alignItems="center" key={eachProfile.id} onClick={() => handleClick(eachProfile.email, eachProfile.id)}>
                                 <ProfileCard
                                     id={eachProfile.id}
                                     displayName={eachProfile.name}
@@ -148,7 +146,6 @@ export default function AdminSignIn() {
                         open={openPinSignIn}
                         handleCloseBackdrop={handleCloseBackdrop}
                         handleSignIn={handleSignIn}/>
-
                 </>
             }
             </Container>

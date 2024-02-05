@@ -19,9 +19,5 @@ export const theme = createTheme({
       main: "#008000",
       dark: "#013B23"
     }
-    
-    // admin: {
-    //   success: "#013B23"
-    // }
   },
 });
