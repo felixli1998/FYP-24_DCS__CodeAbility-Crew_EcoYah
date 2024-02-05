@@ -23,7 +23,8 @@ const userServices = new UserService(userRepository);
 // Donation Event Item Service
 const donationEventItemRepository = new DonationEventItemRepository();
 
-// TODO: This was creating during model creation. Feel free to delete or expand it as needed
+// TODO: This was created during model creation. Feel free to delete or expand it as needed
+// TODO: This is to create a donation request
 router.post('/test/create', async (req, res) => {
   try {
     const donationRequest = new DonationRequest();
@@ -48,7 +49,8 @@ router.post('/test/create', async (req, res) => {
   }
 });
 
-// TODO: This was creating during model creation. Feel free to delete or expand it as needed
+// TODO: This was created during model creation. Feel free to delete or expand it as needed
+// TODO: This is to soft delete a donation request
 router.post('/test/cancel', async (req, res) => {
   const params = req.body;
   const { id } = params;
