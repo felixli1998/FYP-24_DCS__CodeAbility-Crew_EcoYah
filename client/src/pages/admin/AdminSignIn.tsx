@@ -23,7 +23,7 @@ interface ApiResponse {
     status: number;
     data: {
         action: boolean;
-        message: Object[]; // Adjust the type based on the actual structure
+        message: Object[];
     };
  }
 

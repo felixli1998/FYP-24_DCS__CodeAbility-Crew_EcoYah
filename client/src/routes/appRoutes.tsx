@@ -6,6 +6,7 @@ import Profile from '../pages/Donor/Profile';
 import EditProfile from '../pages/Donor/EditProfile';
 import ImageComponentExample from '../pages/Donor/ImageComponentExample';
 import { DonorHome } from '../pages/Donor/DonorHome';
+import DonationEvents from '../pages/Donor/DonationEvents';
 
 // Admin routes //
 import AdminHome from '../pages/Admin/AdminHome';
@@ -69,6 +70,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     path: 'home',
     description: 'Home page for authenticated donor',
     element: <DonorHome />,
+    isAdmin: false,
+  },
+  {
+    path: 'donation-events',
+    description: 'All donation events page for the donor',
+    element: <DonationEvents />,
     isAdmin: false,
   },
   {
