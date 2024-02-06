@@ -39,7 +39,7 @@ export default function DonationEventsAdmin() {
   const [typeFilter, setTypeFilter] = useState(0);
   const [events, setEvents] = useState<DonationEvent[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [hasNext, setHasNext] = useState(true)
+  const [hasNext, setHasNext] = useState(true);
 
   function getData(eventStatus: string, eventTypeId: number, getMore: boolean) {
     let queryParams = "";
@@ -60,7 +60,7 @@ export default function DonationEventsAdmin() {
         let newEvents = resp.data.data;
         if (getMore) newEvents = [...events, ...newEvents];
         setEvents(newEvents);
-        setHasNext(resp.data.pagination.hasNext)
+        setHasNext(resp.data.pagination.hasNext);
       })
       .catch((err) => console.log(err));
   }
@@ -80,7 +80,7 @@ export default function DonationEventsAdmin() {
         <Typography variant="h5" fontWeight="bold" color="primary.main">
           Donation Events
         </Typography>
-        <Button>+ Create</Button>
+        <Button variant="contained">+ Create</Button>
       </Box>
 
       <Box
@@ -94,7 +94,7 @@ export default function DonationEventsAdmin() {
           onChange={(e) => {
             setStatusFilter(e.target.value);
             getData(e.target.value, typeFilter, false);
-            setPage(1)
+            setPage(1);
           }}
           sx={{ height: "2.5rem", width: "20rem" }}
         >
@@ -109,7 +109,7 @@ export default function DonationEventsAdmin() {
           onChange={(e) => {
             setTypeFilter(+e.target.value);
             getData(statusFilter, +e.target.value, false);
-            setPage(1)
+            setPage(1);
           }}
           sx={{ height: "2.5rem", width: "20rem" }}
         >
@@ -128,8 +128,8 @@ export default function DonationEventsAdmin() {
               <CardMedia sx={{ height: "8rem" }} image={event.imageId} />
               <CardContent>
                 <Typography color="#C51818" fontWeight="bold">
-                  [{+event.endDate.slice(8, 10) - +event.startDate.slice(8, 10)}{" "}
-                  DAYS LEFT] {event.startDate.slice(0, 10)} -{" "}
+                  [{+event.endDate.slice(8, 10) - new Date().getDate()} DAYS
+                  LEFT] {event.startDate.slice(0, 10)} -{" "}
                   {event.endDate.slice(0, 10)}
                 </Typography>
                 <Typography marginTop="0.5rem" fontWeight="bold">
@@ -153,7 +153,8 @@ export default function DonationEventsAdmin() {
         count={Math.ceil(events.length / 4)}
         page={page}
         onChange={(e, v) => {
-          if (hasNext && events.length - v * 4 < 8) getData(statusFilter, typeFilter, true);
+          if (hasNext && events.length - v * 4 < 8)
+            getData(statusFilter, typeFilter, true);
           setPage(v);
         }}
       />
