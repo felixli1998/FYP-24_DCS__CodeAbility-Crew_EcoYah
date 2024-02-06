@@ -12,7 +12,7 @@ import AdminHome from "../pages/Admin/AdminHome";
 import AdminSignIn from "../pages/Admin/AdminSignIn";
 import DonationEventForm from "../pages/Admin/DonationEventForm";
 import DonationEventPreview from "../pages/Admin/DonationEventPreview";
-import DonationEventsAdmin from "../pages/DonationEventsAdmin";
+import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
 
 type AppRoutesT = {
   path: string;
