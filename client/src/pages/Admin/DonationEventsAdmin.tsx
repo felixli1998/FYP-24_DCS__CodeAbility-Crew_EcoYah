@@ -80,7 +80,7 @@ export default function DonationEventsAdmin() {
         <Typography variant="h5" fontWeight="bold" color="primary.main">
           Donation Events
         </Typography>
-        <Button variant="contained">+ Create</Button>
+        <Button href="donation-event-form" variant="contained">+ Create</Button>
       </Box>
 
       <Box
