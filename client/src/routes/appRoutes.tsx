@@ -6,6 +6,7 @@ import Profile from '../pages/Donor/Profile';
 import EditProfile from '../pages/Donor/EditProfile';
 import ImageComponentExample from '../pages/Donor/ImageComponentExample';
 import { DonorHome } from '../pages/Donor/DonorHome';
+import DonationRequestForm from '../pages/Donor/DonationRequestForm';
 
 // Admin routes //
 import AdminHome from '../pages/Admin/AdminHome';
@@ -88,5 +89,11 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "Preview of donation event for the admin",
     element: <DonationEventPreview />,
     isAdmin: true,
+  },
+  {
+    path: "donation-request-form",
+    description: "Submission of donation request form for the donor",
+    element: <DonationRequestForm />,
+    isAdmin: false,
   },
 ];

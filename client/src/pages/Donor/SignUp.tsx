@@ -9,10 +9,10 @@ import {
   Link,
 } from '@mui/material';
 import logo from '../../assets/EcoYah.png';
-import TextFields from '../../components/TextFields';
-import Checkboxes from '../../components/CheckBox';
-import LongButtons from '../../components/LongButton';
-import SuccessCard from '../../components/SuccessCard';
+import TextFields from '../../components/TextFields/FormTextFields';
+import Checkboxes from '../../components/Checkbox/FormCheckBox';
+import LongButtons from '../../components/Button/LongButton';
+import SuccessCard from '../../components/Card/SuccessCard';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { makeHttpRequest } from '../../utils/Utility';
 import axios from 'axios';
