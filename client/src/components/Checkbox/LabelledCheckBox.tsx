@@ -1,9 +1,16 @@
 import { useState, useEffect, ChangeEvent } from 'react';
-import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import {
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  FormHelperText,
+} from '@mui/material';
 
 type LabelledCheckBoxType = {
   label: string[];
   onCheckBoxChange: (checkedState: Record<string, boolean>) => void;
+  validateForm?: boolean; // to account for scenarios where it's optional to select an option
 };
 
 export default function LabelledCheckBox(props: LabelledCheckBoxType) {
@@ -24,29 +31,37 @@ export default function LabelledCheckBox(props: LabelledCheckBoxType) {
     });
   };
 
+  // check if at least one checkbox is selected
+  const isAtLeastOneChecked = Object.values(checked).some((value) => value);
+
   // update the final state of all the labels to parent component
   useEffect(() => {
     props.onCheckBoxChange(checked);
   }, [checked]);
 
   return (
-    <FormGroup>
-      {props.label.map(function (eachLabel: string, index: number) {
-        return (
-          <FormControlLabel
-            key={index}
-            control={
-              <Checkbox
-                size='medium'
-                name={eachLabel}
-                checked={checked[eachLabel]}
-                onChange={handleChange}
-              />
-            }
-            label={eachLabel}
-          />
-        );
-      })}
-    </FormGroup>
+    <FormControl error={props.validateForm && !isAtLeastOneChecked}>
+      <FormGroup>
+        {props.label.map(function (eachLabel: string, index: number) {
+          return (
+            <FormControlLabel
+              key={index}
+              control={
+                <Checkbox
+                  size='medium'
+                  name={eachLabel}
+                  checked={checked[eachLabel]}
+                  onChange={handleChange}
+                />
+              }
+              label={eachLabel}
+            />
+          );
+        })}
+      </FormGroup>
+      {props.validateForm && !isAtLeastOneChecked && (
+        <FormHelperText>Please select at least one option</FormHelperText>
+      )}
+    </FormControl>
   );
 }

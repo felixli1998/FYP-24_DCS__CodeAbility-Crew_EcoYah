@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 type DateTimePickerValueType = {
   label: string;
   onDateTimeChange: (dateTime: Dayjs | null) => void;
+  validateForm: boolean;
 };
 
 export default function DateTimePickerValue(props: DateTimePickerValueType) {
@@ -25,6 +26,8 @@ export default function DateTimePickerValue(props: DateTimePickerValueType) {
         slotProps={{
           textField: {
             InputLabelProps: { shrink: true },
+            error: props.validateForm && value === null,
+            helperText: props.validateForm && value === null && "Please choose a date and time"
           },
         }}
       />

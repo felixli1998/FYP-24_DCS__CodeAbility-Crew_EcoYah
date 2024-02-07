@@ -20,6 +20,7 @@ export default function DonationRequestForm() {
   const items: string[] = ['Broccoli', 'Cabbage', 'Eggplants']; // Hardcode for now
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [omitPoints, setOmitPoints] = useState<boolean>(true);
+  const [validateForm, setValidateForm] = useState<boolean>(false);
 
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
@@ -64,6 +65,7 @@ export default function DonationRequestForm() {
 
   const handleButtonChange = (status: boolean) => {
     console.log(status);
+    setValidateForm(true);
   };
 
   useEffect(() => {
@@ -89,6 +91,7 @@ export default function DonationRequestForm() {
         <LabelledCheckBox
           label={items}
           onCheckBoxChange={handleCheckBoxChange}
+          validateForm={validateForm}
         />
         <Typography variant='h6' gutterBottom>
           2. Indicate the quantity to donate:
@@ -103,6 +106,7 @@ export default function DonationRequestForm() {
         <DateTimePicker
           label={'Date & Time'}
           onDateTimeChange={handleDateTimeChange}
+          validateForm={validateForm}
         />
         <LabelledCheckBox
           label={['Receive Points Upon A Successful Donation']}
