@@ -1,6 +1,5 @@
 // React Imports
 import { useState, useEffect } from 'react';
-import DonationRequestPlaceholder from '../../assets/DonationRequestPlaceholder.png';
 
 // MUI Imports
 import { Box, Stack, Typography } from '@mui/material';
@@ -11,11 +10,15 @@ import ItemQuantityCard from '../../components/Card/ItemQuantityCard';
 import ContainedButton from '../../components/Button/ContainedButton';
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker';
 
+// Other Imports
+import DonationRequestPlaceholder from '../../assets/DonationRequestPlaceholder.png';
 import { Dayjs } from 'dayjs';
+import _ from 'lodash';
 
-export default function DonorRequestForm() {
+export default function DonationRequestForm() {
   const [donationRequest, setDonationRequest] = useState({});
-  const items = ['Broccoli', 'Cabbage', 'Eggplants'];
+  const items: string[] = ['Broccoli', 'Cabbage', 'Eggplants']; // Hardcode for now
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [omitPoints, setOmitPoints] = useState<boolean>(true);
 
   const handleCheckBoxChange = (
@@ -23,10 +26,31 @@ export default function DonorRequestForm() {
   ) => {
     console.log(updatedCheckedState);
 
-    if (updatedCheckedState['Receive Points Upon A Successful Donation'])
-      setOmitPoints(false);
-    else setOmitPoints(true);
+    if ('Receive Points Upon A Successful Donation' in updatedCheckedState) {
+      if (updatedCheckedState['Receive Points Upon A Successful Donation'])
+        setOmitPoints(false);
+      else setOmitPoints(true);
+    } else {
+      _.mapValues(updatedCheckedState, function (value, key) {
+        if (value) {
+          // If value is true, add to selectedItems if not already present
+          if (!selectedItems.includes(key)) {
+            setSelectedItems((prevSelectedItems) => [
+              ...prevSelectedItems,
+              key,
+            ]);
+          }
+        } else {
+          // If value is false, remove from selectedItems if present
+          setSelectedItems((prevSelectedItems) =>
+            prevSelectedItems.filter((item) => item !== key)
+          );
+        }
+      });
+    }
   };
+
+  console.log(selectedItems);
 
   const handleItemQuantityChange = (
     updatedItemQuantity: Record<string, number>
@@ -70,7 +94,7 @@ export default function DonorRequestForm() {
           2. Indicate the quantity to donate:
         </Typography>
         <ItemQuantityCard
-          label={items}
+          label={selectedItems}
           onItemQuantityChange={handleItemQuantityChange}
         />
         <Typography variant='h6' gutterBottom>
