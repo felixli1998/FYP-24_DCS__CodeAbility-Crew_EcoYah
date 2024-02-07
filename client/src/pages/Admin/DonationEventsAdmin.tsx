@@ -80,7 +80,9 @@ export default function DonationEventsAdmin() {
         <Typography variant="h5" fontWeight="bold" color="primary.main">
           Donation Events
         </Typography>
-        <Button href="donation-event-form" variant="contained">+ Create</Button>
+        <Button href="donation-event-form" variant="contained">
+          + Create
+        </Button>
       </Box>
 
       <Box
@@ -128,8 +130,12 @@ export default function DonationEventsAdmin() {
               <CardMedia sx={{ height: "8rem" }} image={event.imageId} />
               <CardContent>
                 <Typography color="#C51818" fontWeight="bold">
-                  [{+event.endDate.slice(8, 10) - new Date().getDate()} DAYS
-                  LEFT] {event.startDate.slice(0, 10)} -{" "}
+                  [
+                  {Math.floor(
+                    (+new Date(event.endDate) - +new Date()) /
+                      (1000 * 60 * 60 * 24)
+                  )}{" "}
+                  DAYS LEFT] {event.startDate.slice(0, 10)} -{" "}
                   {event.endDate.slice(0, 10)}
                 </Typography>
                 <Typography marginTop="0.5rem" fontWeight="bold">
