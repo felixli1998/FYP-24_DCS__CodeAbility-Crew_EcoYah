@@ -9,6 +9,7 @@ import LabelledCheckBox from '../../components/Checkbox/LabelledCheckBox';
 import ItemQuantityCard from '../../components/Card/ItemQuantityCard';
 import ContainedButton from '../../components/Button/ContainedButton';
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker';
+import InfoToolTip from '../../components/ToolTip/InfoToolTip';
 
 // Other Imports
 import DonationRequestPlaceholder from '../../assets/DonationRequestPlaceholder.png';
@@ -84,25 +85,37 @@ export default function DonationRequestForm() {
         alt='donation event name'
         src={DonationRequestPlaceholder}
       />
-      <Stack spacing={3} sx={{ margin: '1rem 2rem' }}>
-        <Typography variant='h6' gutterBottom>
-          1. Choose the following items to donate:
+      <Stack spacing={3} sx={{ margin: '1rem 1.5rem' }}>
+        <Typography variant='h5' gutterBottom>
+          1. Choose the items to donate:
         </Typography>
         <LabelledCheckBox
           label={items}
           onCheckBoxChange={handleCheckBoxChange}
           validateForm={validateForm}
         />
-        <Typography variant='h6' gutterBottom>
-          2. Indicate the quantity to donate:
-        </Typography>
-        <ItemQuantityCard
-          label={selectedItems}
-          onItemQuantityChange={handleItemQuantityChange}
-        />
-        <Typography variant='h6' gutterBottom>
-          3. Drop-off Date & Time:
-        </Typography>
+        {selectedItems.length >= 1 && (
+          <>
+            <Typography variant='h5' gutterBottom>
+              2. Indicate the quantity to donate:
+            </Typography>
+            <ItemQuantityCard
+              label={selectedItems}
+              onItemQuantityChange={handleItemQuantityChange}
+            />
+          </>
+        )}
+        <Box display='flex'>
+          <Typography variant='h5' gutterBottom>
+            3. Drop-off Date & Time:
+          </Typography>
+          <InfoToolTip
+            label={`The drop-off location is at Kunyah Cafe Food Kiosk.
+                    90 Stamford Rd, 
+                    #01-76 Opposite YMCA, 
+                    Singapore 178903`}
+          />
+        </Box>
         <DateTimePicker
           label={'Date & Time'}
           onDateTimeChange={handleDateTimeChange}
