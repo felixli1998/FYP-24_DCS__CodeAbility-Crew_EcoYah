@@ -4,7 +4,7 @@ import { Box, Alert, Stack, Button, Typography, Link } from '@mui/material';
 import logo from '../../assets/EcoYah.png';
 import TextFields from '../../components/TextFields/FormTextFields';
 import Checkboxes from '../../components/Checkbox/FormCheckBox';
-import LongButtons from '../../components/Button/LongButton';
+import ContainedButton from '../../components/Button/ContainedButton';
 import EmailCard from '../../components/Card/EmailCard';
 import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import { makeHttpRequest } from '../../utils/Utility';
@@ -48,7 +48,7 @@ export default function SignIn() {
 
   const navigate = useNavigate();
 
-  const handleClickStatus = async (status: boolean) => {
+  const handleButtonChange = async (status: boolean) => {
     setValidateForm(status);
 
     if (formData['email'] !== '' && formData['password'] !== '') {
@@ -190,10 +190,10 @@ export default function SignIn() {
               text='none'
               isChecked={handleRmbMe}
             ></Checkboxes>
-            <LongButtons
+            <ContainedButton
               label='Sign In'
-              clickStatus={handleClickStatus}
-            ></LongButtons>
+              onButtonChange={handleButtonChange}
+            ></ContainedButton>
           </Stack>
         ) : (
           <EmailCard />

@@ -11,7 +11,7 @@ import {
 import logo from '../../assets/EcoYah.png';
 import TextFields from '../../components/TextFields/FormTextFields';
 import Checkboxes from '../../components/Checkbox/FormCheckBox';
-import LongButtons from '../../components/Button/LongButton';
+import ContainedButton from '../../components/Button/ContainedButton';
 import SuccessCard from '../../components/Card/SuccessCard';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { makeHttpRequest } from '../../utils/Utility';
@@ -49,7 +49,7 @@ export default function SignUp() {
     setIsChecked(status);
   };
 
-  const handleClickStatus = async (status: boolean) => {
+  const handleButtonChange = async (status: boolean) => {
     setValidateForm(status);
 
     if (isPasswordValid && isPasswordSame && isChecked) {
@@ -217,10 +217,10 @@ export default function SignUp() {
                 Please indicate that you have read
               </FormHelperText>
             )}
-            <LongButtons
+            <ContainedButton
               label='Sign Up'
-              clickStatus={handleClickStatus}
-            ></LongButtons>
+              onButtonChange={handleButtonChange}
+            ></ContainedButton>
           </Stack>
         ) : (
           <SuccessCard type='sign up' />
