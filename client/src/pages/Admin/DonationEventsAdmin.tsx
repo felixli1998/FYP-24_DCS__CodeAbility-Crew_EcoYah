@@ -135,8 +135,9 @@ export default function DonationEventsAdmin() {
                     (+new Date(event.endDate) - +new Date()) /
                       (1000 * 60 * 60 * 24)
                   )}{" "}
-                  DAYS LEFT] {event.startDate.slice(0, 10)} -{" "}
-                  {event.endDate.slice(0, 10)}
+                  DAYS LEFT]{" "}
+                  {new Date(event.startDate).toLocaleDateString("en-GB")} -{" "}
+                  {new Date(event.endDate).toLocaleDateString("en-GB")}
                 </Typography>
                 <Typography marginTop="0.5rem" fontWeight="bold">
                   {event.name}
