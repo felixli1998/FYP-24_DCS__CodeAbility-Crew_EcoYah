@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Box, Stack, Typography } from '@mui/material';
 
 // Components
+import ImageCoverCard from '../../components/Card/ImageCoverCard';
 import LabelledCheckBox from '../../components/Checkbox/LabelledCheckBox';
 import ItemQuantityCard from '../../components/Card/ItemQuantityCard';
 import ContainedButton from '../../components/Button/ContainedButton';
@@ -75,17 +76,8 @@ export default function DonationRequestForm() {
 
   return (
     <>
-      <Box
-        component='img'
-        sx={{
-          width: '100%',
-          height: '20rem',
-          objectFit: 'cover',
-        }}
-        alt='donation event name'
-        src={DonationRequestPlaceholder}
-      />
-      <Stack spacing={3} sx={{ margin: '1rem 1.5rem' }}>
+      <ImageCoverCard image={DonationRequestPlaceholder} name={'Food Rescue'}/>
+      <Stack spacing={3} sx={{ margin: '2rem 1.5rem' }}>
         <Typography variant='h5' gutterBottom>
           1. Choose the items to donate:
         </Typography>
@@ -107,7 +99,7 @@ export default function DonationRequestForm() {
         )}
         <Box display='flex'>
           <Typography variant='h5' gutterBottom>
-            3. Drop-off Date & Time:
+            3. Drop-off date & time:
           </Typography>
           <InfoToolTip
             label={`The drop-off location is at Kunyah Cafe Food Kiosk.
