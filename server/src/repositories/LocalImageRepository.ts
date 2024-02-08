@@ -1,4 +1,4 @@
-import ImageRepositoryInterface from "./ImageRepostitoryInterface";
+import ImageRepositoryInterface from "./ImageRepositoryInterface";
 import fs from 'fs';
 import { promisify } from 'util';
 import path from 'path';
