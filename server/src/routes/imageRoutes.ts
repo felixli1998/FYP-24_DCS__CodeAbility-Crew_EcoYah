@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { ImageService } from '../services/ImageService';
+import { generateResponse } from '../common/methods';
 
 const router = express.Router();
 const imageService = ImageService.getInstance(); // Create an instance of ImageService
@@ -26,18 +27,18 @@ router.get('/:folderPrefix/:imageId', async function (req, res, next) {
     const imageData = await imageService.getImage(imageId, folderPrefix);
     if (imageData) {
         res.setHeader('Content-Type', 'image/jpeg'); 
-        res.send(imageData);
+        return generateResponse(res, 200, imageData);
     } else {
-        res.status(404).json({ success: false, message: 'Image not found' });
+        return generateResponse(res, 404, 'Image not found');
     }
 }); 
 
 router.post('/', function (req: Request, res: Response, next: NextFunction) {
     upload(req, res, async function (err) {
         if (err instanceof MulterError) {
-            return res.status(500).json({ error: 'MulterError', message: err.message });
+            return generateResponse(res, 500, { error: 'MulterError', message: err.message });
         } else if (err) {
-            return res.status(500).json({ error: 'UnknownError', message: err.message });
+            return generateResponse(res, 500, { error: 'UnknownError', message: err.message });
         }
 
         const prefix = req.body.folderPrefix || 'default'; // Default prefix if not provided
@@ -46,14 +47,13 @@ router.post('/', function (req: Request, res: Response, next: NextFunction) {
 
         try {
             await Promise.all(promises);
-            res.status(200).json({
+            return generateResponse(res, 200, {
                 success: true,
                 message: 'Files uploaded successfully',
-                filenames: uploadedFiles.map(file => file.filename),
+                filename: uploadedFiles.map(file => file.filename),
             });
         } catch (error) {
-            console.error('Error:', error);
-            res.status(500).json({ success: false, message: 'Internal server error' });
+            return generateResponse(res, 500, { message: 'Internal server error' });
         }
     });
 });
@@ -67,29 +67,28 @@ router.put('/:imageId', function (req: Request, res: Response, next: NextFunctio
         const folderPrefix = req.body.folderPrefix || 'default'; // Default prefix if not provided
 
         if (err instanceof MulterError) {
-            return res.status(500).json({ error: 'MulterError', message: err.message });
+            return generateResponse(res, 500, { error: 'MulterError', message: err.message });
         } else if (err) {
-            return res.status(500).json({ error: 'UnknownError', message: err.message });
+            return generateResponse(res, 500, { error: 'UnknownError', message: err.message });
         }
 
         const uploadedFiles: Express.Multer.File[] = req.files as Express.Multer.File[];
 
         if (!uploadedFiles || uploadedFiles.length === 0) {
-            return res.status(400).json({ success: false, message: 'No file uploaded' });
+            return generateResponse(res, 400, { message: 'No file uploaded' });
         }
 
         const promises = uploadedFiles.map(file => imageService.updateImage(fs.readFileSync(file.path), file.filename, folderPrefix));
 
         try {
             await Promise.all(promises);
-            res.status(200).json({
+            return generateResponse(res, 200, {
                 success: true,
                 message: 'Files updated successfully! Please update database entry for images too.',
-                filenames: uploadedFiles.map(file => file.filename),
+                filename: uploadedFiles.map(file => file.filename),
             });
         } catch (error) {
-            console.error('Error:', error);
-            res.status(500).json({ success: false, message: 'Internal server error' });
+            return generateResponse(res, 500, { message: 'Internal server error' });
         }
     });
 });
