@@ -30,7 +30,7 @@ router.get('/:folderPrefix/:imageId', async function (req, res, next) {
     } else {
         res.status(404).json({ success: false, message: 'Image not found' });
     }
-});
+}); 
 
 router.post('/', function (req: Request, res: Response, next: NextFunction) {
     upload(req, res, async function (err) {
@@ -59,21 +59,26 @@ router.post('/', function (req: Request, res: Response, next: NextFunction) {
 });
 
 router.put('/:imageId', function (req: Request, res: Response, next: NextFunction) {
+    // This function is a false update.
+    // It does not delete the old image from the server.
+    // It simply uploads a new image and returns a new unique ID.
+    // The unique ID should be saved into our database. 
     upload(req, res, async function (err) {
+        const folderPrefix = req.body.folderPrefix || 'default'; // Default prefix if not provided
+
         if (err instanceof MulterError) {
             return res.status(500).json({ error: 'MulterError', message: err.message });
         } else if (err) {
             return res.status(500).json({ error: 'UnknownError', message: err.message });
         }
 
-        const imageId = req.params.imageId;
         const uploadedFiles: Express.Multer.File[] = req.files as Express.Multer.File[];
 
         if (!uploadedFiles || uploadedFiles.length === 0) {
             return res.status(400).json({ success: false, message: 'No file uploaded' });
         }
 
-        const promises = uploadedFiles.map(file => imageService.updateImage(fs.readFileSync(file.path), file.filename, imageId));
+        const promises = uploadedFiles.map(file => imageService.updateImage(fs.readFileSync(file.path), file.filename, folderPrefix));
 
         try {
             await Promise.all(promises);

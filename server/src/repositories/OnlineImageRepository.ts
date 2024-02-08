@@ -1,5 +1,6 @@
 import ImageRepositoryInterface from "./ImageRepositoryInterface";
-import AWS, { S3 } from 'aws-sdk';
+import AWS, { S3, AWSError} from 'aws-sdk';
+
 
 // Interface for the configuration options
 interface S3Config {
@@ -9,6 +10,7 @@ interface S3Config {
 
 export default class OnlineImageRepository implements ImageRepositoryInterface {
     private s3: S3;
+    private bucketName: string = process.env.S3_BUCKET || "";
 
     constructor(private config: S3Config) {
 
@@ -17,7 +19,7 @@ export default class OnlineImageRepository implements ImageRepositoryInterface {
 
     async saveImage(imageData: Buffer, imageId: string, prefix: string = 'default'): Promise<string> {
         const params: S3.PutObjectRequest = {
-            Bucket: 'ecoyah',
+            Bucket: this.bucketName,
             Key: `${prefix}/${imageId}`,
             Body: imageData,
             ContentType: 'image/jpeg' // Specify the content type here
@@ -39,7 +41,7 @@ export default class OnlineImageRepository implements ImageRepositoryInterface {
 
     async getImage(imageId: string, prefix: string = 'default'): Promise<Buffer | null> {
         const params: S3.GetObjectRequest = {
-            Bucket: 'ecoyah',
+            Bucket: this.bucketName,
             Key: `${prefix}/${imageId}`
         };
 
@@ -47,22 +49,25 @@ export default class OnlineImageRepository implements ImageRepositoryInterface {
             const data = await this.s3.getObject(params).promise();
             return data.Body as Buffer; // Return the image data
         } catch (error) {
-            console.error("Error getting image:", error);
+            if (error as AWS.AWSError && (error as AWS.AWSError).code === 'NoSuchKey') {
+                return null; // Return null if the image is not found
+            }    
             throw error;
         }
     }
 
-    async deleteImage(imageId: string, prefix: string = 'default'): Promise<void> {
+    async deleteImage(imageId: string, prefix: string = 'default'): Promise<boolean> {
         const params: S3.DeleteObjectRequest = {
-            Bucket: 'ecoyah',
+            Bucket: this.bucketName,
             Key: `${prefix}/${imageId}`
         };
 
         try {
             await this.s3.deleteObject(params).promise();
+            return true; // Return true if the image is deleted successfully
         } catch (error) {
             console.error("Error deleting image:", error);
-            throw error;
+            return false
         }
     }
 }

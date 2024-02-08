@@ -68,17 +68,18 @@ export default class LocalImageRepository implements ImageRepositoryInterface {
         }
     }
 
-    async deleteImage(imageId: string, prefix: string = 'default'): Promise<void> {
+    async deleteImage(imageId: string, prefix: string = 'default'): Promise<boolean> {
         const imagePath = this.getImagePath(imageId, prefix);
         try {
             if (fs.existsSync(imagePath)) {
                 await unlinkAsync(imagePath);
+                return true;
             } else {
-                throw new Error('Image to be deleted not found');
-            }
+                return false;
+        }
         } catch (error) {
             console.error('Error:', error);
-            throw new Error('Internal server error');
+            return false;
         }
     }
 
