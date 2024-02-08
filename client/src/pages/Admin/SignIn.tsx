@@ -29,7 +29,7 @@ interface ApiResponse {
     };
  }
 
-export default function AdminSignIn() {
+export default function SignIn() {
 
     const [profiles, setProfiles] = useState<ProfilesType[]>([]);
     const [errorFetchingProfiles, setErrorFetchingProfiles] = useState(false);
@@ -70,7 +70,7 @@ export default function AdminSignIn() {
             setErrorDisplay(true);
             setErrorMsg("Please enter your PIN.");
         }
-        else if(pinLength > 0 && pinLength < 4){
+        else if(pinLength < 4){
             setErrorDisplay(true);
             setErrorMsg("PIN must be 4 digits long.");
         } else {
@@ -108,7 +108,6 @@ export default function AdminSignIn() {
                 setProfiles(adminUsers as ProfilesType[]);
               } 
             } catch (error) {
-              // Handle errors from getAllAdminProfiles or other async operations
               console.error('Error:', error);
               setErrorFetchingProfiles(true);
             }
