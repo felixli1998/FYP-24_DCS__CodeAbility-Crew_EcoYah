@@ -19,6 +19,7 @@ const ImageComponentExample: React.FC = () => {
         imageId='1.png'
         imageSource='local'
         type='rectangle'
+        folderPrefix='donor'
         editable={true}
       />
       Standard, local, editable circle image.
