@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/uuid": "^9.0.7",
+    "aws-sdk": "^2.1553.0",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -21,8 +22,8 @@
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
     "typeorm": "^0.3.19",
-    "uuid": "^9.0.1",
-    "typeorm-naming-strategies": "^4.1.0"
+    "typeorm-naming-strategies": "^4.1.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
