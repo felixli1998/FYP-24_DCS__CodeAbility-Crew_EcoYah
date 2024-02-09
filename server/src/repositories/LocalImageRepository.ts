@@ -38,17 +38,14 @@ export default class LocalImageRepository implements ImageRepositoryInterface {
         
         try {
             // Ensure the directories exist for both temporary and final images
-            await this.ensureDirectoryExists(path.join(LocalImageRepository.destinationParent, prefix));
-    
             // Write the image data to the temporary path
-            console.log('Writing image to:', tempImagePath)
             await writeFileAsync(tempImagePath, imageData);
     
             // Rename the temporary image to the final path
             await renameAsync(tempImagePath, finalImagePath);
     
             // Remove the temporary file
-            await unlinkAsync(tempImagePath);
+            await unlinkAsync(LocalImageRepository.destinationParent + "/" + imageId);
     
             return finalImagePath;
         } catch (error) {
@@ -63,7 +60,6 @@ export default class LocalImageRepository implements ImageRepositoryInterface {
         
         try {
             await writeFileAsync(tempImagePath, imageData);
-            await this.ensureDirectoryExists(prefix);
             await renameAsync(tempImagePath, finalImagePath);
             return finalImagePath;
         } catch (error) {
@@ -94,18 +90,4 @@ export default class LocalImageRepository implements ImageRepositoryInterface {
     private getTempImagePath(imageId: string): string {
         return path.join(LocalImageRepository.tempFolder, imageId);
     }
-
-    private async ensureDirectoryExists(prefix: string): Promise<void> {
-        const folderPath = path.join(LocalImageRepository.destinationParent, prefix);
-        if (!fs.existsSync(folderPath)) {
-            try {
-                await mkdirAsync(folderPath, { recursive: true });
-            } catch (error) {
-                console.error('Error creating directory:', error);
-                throw new Error('Internal server error');
-            }
-        }
-    }
-
- 
 }
