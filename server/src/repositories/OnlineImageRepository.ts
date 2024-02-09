@@ -17,6 +17,21 @@ export default class OnlineImageRepository implements ImageRepositoryInterface {
         this.s3 = new AWS.S3(this.config);
     }
 
+    async checkFolderExistence(prefix: string): Promise<boolean> {
+        const params = {
+            Bucket: this.bucketName,
+            Prefix: prefix + '/'
+        };
+        try {
+            const data = await this.s3.listObjectsV2(params).promise();
+            if (data.Contents === undefined) { return false };
+            return data.Contents.length > 0; // Folder exists if there are objects inside
+        } catch (error) {
+            console.error('Error checking folder existence:', error);
+            return false; // Assume folder does not exist if there's an error
+        }
+    }
+
     async saveImage(imageData: Buffer, imageId: string, prefix: string = 'default'): Promise<string> {
         const params: S3.PutObjectRequest = {
             Bucket: this.bucketName,

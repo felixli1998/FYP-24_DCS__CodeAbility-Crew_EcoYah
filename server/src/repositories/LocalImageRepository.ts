@@ -13,6 +13,10 @@ export default class LocalImageRepository implements ImageRepositoryInterface {
     static tempFolder = './uploaded_images/temp';
     static destinationParent = './uploaded_images';
 
+    async checkFolderExistence(prefix: string): Promise<boolean> {
+        return fs.existsSync(path.join(LocalImageRepository.destinationParent, prefix));
+    }
+
     async getImage(imageId: string, prefix: string = 'default'): Promise<Buffer | null> {
         const imagePath = this.getImagePath(imageId, prefix);
         try {
@@ -102,4 +106,6 @@ export default class LocalImageRepository implements ImageRepositoryInterface {
             }
         }
     }
+
+ 
 }

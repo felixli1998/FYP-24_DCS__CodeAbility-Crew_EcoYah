@@ -8,26 +8,22 @@ const ImageComponentExample: React.FC = () => {
       <h1>Image Component Example</h1>
       Standard, local, not editable square image.
       <Image
-        imageId='1.png'
-        imageSource='local'
         type='circle'
         width='125px'
         height='125px'
+        folderPrefix='default'
       />
       Standard, local, editable square image.
       <Image
-        imageId='1.png'
-        imageSource='local'
         type='rectangle'
-        folderPrefix='donor'
         editable={true}
+        folderPrefix='default'
       />
       Standard, local, editable circle image.
       <Image
-        imageId='1.png'
-        imageSource='local'
         type='circle'
         editable={true}
+        folderPrefix='donor'
       />
     </Box>
   );

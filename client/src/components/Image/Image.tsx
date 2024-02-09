@@ -20,18 +20,17 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 interface ImageProps {
-  imageId: string;
-  imageSource: "local" | "s3";
+  imageId: string ;
   type: "square" | "circle" | "rectangle";
-  folderPrefix?: string;
+  folderPrefix: string;
   editable?: boolean | false;
   width?: string | number;
   height?: string | number;
 }
 
 const defaultProps: ImageProps = {
-  imageId: "1.png",  // Default value for imageId
-  imageSource: "local",
+  imageId: "404_image.jpg",  
+  folderPrefix:"default",// Default value for imageId
   type: "square",
   editable: false,  // Default value for editable
   width: "250px",
@@ -41,7 +40,7 @@ const defaultProps: ImageProps = {
 export default function Image(props: ImageProps): JSX.Element {
   const [imagePath, setImagePath] = useState<string | undefined>();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
+  
   const updateImage = async () => {
     if (!selectedFile) {
       console.error('No file selected');
@@ -50,6 +49,7 @@ export default function Image(props: ImageProps): JSX.Element {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
+    formData.append('folderPrefix', props.folderPrefix);
 
     try {
       const response = await axios.put(IMAGE_ROUTES.UPDATE.replace(':id', props.imageId), formData, {
@@ -130,7 +130,7 @@ export default function Image(props: ImageProps): JSX.Element {
     >
       <img
         src={imagePath}
-        alt="Image"
+        alt="Sample Text"
         style={{
           width: '100%',
           height: props.height,
@@ -151,6 +151,7 @@ export default function Image(props: ImageProps): JSX.Element {
               Upload image
               <VisuallyHiddenInput type="file" onChange={handleFileChange} />
             </Button>
+           
             <Button variant="contained" color="primary" onClick={updateImage}>Update Image</Button>
           </Box>
         </>

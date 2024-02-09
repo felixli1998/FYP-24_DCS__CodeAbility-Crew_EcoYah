@@ -27,9 +27,9 @@ router.get('/:folderPrefix/:imageId', async function (req, res, next) {
     const imageData = await imageService.getImage(imageId, folderPrefix);
     if (imageData) {
         res.setHeader('Content-Type', 'image/jpeg'); 
-        return generateResponse(res, 200, imageData);
+        res.send(imageData);
     } else {
-        return generateResponse(res, 404, 'Image not found');
+        generateResponse(res, 404, 'Image not found');
     }
 }); 
 
@@ -40,14 +40,20 @@ router.post('/', function (req: Request, res: Response, next: NextFunction) {
         } else if (err) {
             return generateResponse(res, 500, { error: 'UnknownError', message: err.message });
         }
+        
+        const prefix = req.body.folderPrefix || 'default'; 
 
-        const prefix = req.body.folderPrefix || 'default'; // Default prefix if not provided
+        const folderExists = await imageService.checkFolderExistence(prefix);
+        if (!folderExists) {
+            return generateResponse(res, 404, { message: 'Folder not found' });
+        }
+
         const uploadedFiles: Express.Multer.File[] = req.files as Express.Multer.File[];
         const promises = uploadedFiles.map(file => imageService.saveImage(fs.readFileSync(file.path), file.filename, prefix));
 
         try {
             await Promise.all(promises);
-            return generateResponse(res, 200, {
+            generateResponse(res, 200, {
                 success: true,
                 message: 'Files uploaded successfully',
                 filename: uploadedFiles.map(file => file.filename),
@@ -72,6 +78,12 @@ router.put('/:imageId', function (req: Request, res: Response, next: NextFunctio
             return generateResponse(res, 500, { error: 'UnknownError', message: err.message });
         }
 
+        const folderExists = await imageService.checkFolderExistence(folderPrefix);
+        if (!folderExists) {
+            return generateResponse(res, 404, { message: 'Folder not found' });
+        }
+
+
         const uploadedFiles: Express.Multer.File[] = req.files as Express.Multer.File[];
 
         if (!uploadedFiles || uploadedFiles.length === 0) {
@@ -88,6 +100,7 @@ router.put('/:imageId', function (req: Request, res: Response, next: NextFunctio
                 filename: uploadedFiles.map(file => file.filename),
             });
         } catch (error) {
+            console.error('Error:', error);
             return generateResponse(res, 500, { message: 'Internal server error' });
         }
     });

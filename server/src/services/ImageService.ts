@@ -58,5 +58,8 @@ export class ImageService {
     public async deleteImage(imageId: string, prefix?: string): Promise<boolean> {
         return this.repository.deleteImage(imageId, prefix);
     }
-    // Other methods remain the same...
+
+    public checkFolderExistence(folderName: string): Promise<boolean> {
+        return this.repository.checkFolderExistence(folderName);
+    }
 }

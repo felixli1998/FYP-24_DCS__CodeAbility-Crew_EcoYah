@@ -4,6 +4,7 @@ interface ImageRepositoryInterface {
     updateImage(imageData: Buffer,imageId:string): Promise<string>;
     getImage(imageId:string): Promise<Buffer | null>;
     deleteImage(imageId:string): Promise<boolean>;
+    checkFolderExistence(prefix:string): Promise<boolean>;
 }
 
 export default ImageRepositoryInterface;
