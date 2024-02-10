@@ -20,7 +20,7 @@ export default function LabelledCheckBox(props: LabelledCheckBoxType) {
     props.label.forEach((key: string) => {
       initialCheckedState[key] = false;
     });
-    return initialCheckedState;
+    return initialCheckedState;  
   });
 
   // handle state change for each label

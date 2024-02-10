@@ -23,7 +23,7 @@ export default function ImageCoverCard(props: ImageCoverCardType) {
           height: '100%',
           objectFit: 'cover',
         }}
-        alt='donation event name'
+        alt={props.name}
         src={props.image}
       />
       <Box

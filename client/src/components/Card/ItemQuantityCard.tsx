@@ -14,14 +14,67 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 
 type ItemQuantityCardType = {
-  label: string[];
-  onItemQuantityChange: (itemQuantity: Record<string, number>) => void;
+  label: Record<string, string | number>[];
+  onItemQuantityChange: (
+    itemQuantity: Record<string, Record<string, number>>
+  ) => void;
+};
+
+type DonationRequestItemType = {
+  [item: string]: {
+    quantity: number;
+    points: number;
+  };
 };
 
 export default function ItemQuantityCard(props: ItemQuantityCardType) {
+  const [donationRequestItems, setDonationRequestItems] =
+    useState<DonationRequestItemType>({});
+
+  // to recompute the state each time props.label changes based on user's selection
+  useEffect(() => {
+    const initialDonationRequestItems: DonationRequestItemType = {};
+    props.label.forEach((eachLabel: Record<string, string | number>) => {
+      initialDonationRequestItems[eachLabel.item] = {
+        quantity: eachLabel.minQty as number,
+        points: (eachLabel.minQty as number) * (eachLabel.pointsPerUnit as number),
+      };
+    });
+    setDonationRequestItems(initialDonationRequestItems);
+  }, [props.label]);
+
+  console.log(donationRequestItems);
+
+  const handleDeduction = (name: string, pointsPerUnit: number): void => {
+    setDonationRequestItems((prevItems) => ({
+      ...prevItems,
+      [name]: {
+        quantity: prevItems[name].quantity - 1,
+        points: (prevItems[name].quantity - 1) * pointsPerUnit,
+      },
+    }));
+  };
+
+  const handleAddition = (name: string, pointsPerUnit: number): void => {
+    setDonationRequestItems((prevItems) => ({
+      ...prevItems,
+      [name]: {
+        quantity: prevItems[name].quantity + 1,
+        points: (prevItems[name].quantity + 1) * pointsPerUnit,
+      },
+    }));
+  };
+
+  useEffect(() => {
+    props.onItemQuantityChange(donationRequestItems);
+  }, [donationRequestItems]);
+
   return (
     <>
-      {props.label.map(function (eachLabel: string, index: number) {
+      {props.label.map(function (
+        eachLabel: Record<string, string | number>,
+        index: number
+      ) {
         return (
           <Card
             key={index}
@@ -33,14 +86,15 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
           >
             <CardContent>
               <Typography variant='h5' component='div'>
-                {eachLabel}
+                {eachLabel.item}
               </Typography>
               <Typography
                 variant='subtitle1'
                 component='div'
                 color='secondary.light'
               >
-                Earn 20 points per kilogram donated
+                Earn {eachLabel.pointsPerUnit} points per {eachLabel.unit}{' '}
+                donated
               </Typography>
               <Typography
                 variant='subtitle1'
@@ -51,21 +105,45 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
                 <PaidOutlinedIcon
                   sx={{ color: '#EE8F0F', marginRight: '0.5rem' }}
                 />{' '}
-                20
+                {donationRequestItems[eachLabel.item]
+                  ? donationRequestItems[eachLabel.item].points
+                  : ((eachLabel.minQty as number) *
+                      (eachLabel.pointsPerUnit as number))}
               </Typography>
             </CardContent>
-            <CardActions sx={{ width: '8rem', border: '1px solid #D4D4D4', borderRadius: "2rem", justifyContent: 'center', margin: '0rem 1rem 1rem auto' }}>
-              <IconButton>
-                <RemoveIcon sx={{ color: "primary.main" }}/>
-              </IconButton>
-              <Typography
-                variant='subtitle1'
-                component='div'
+            <CardActions
+              sx={{
+                width: '8rem',
+                border: '1px solid #D4D4D4',
+                borderRadius: '2rem',
+                justifyContent: 'center',
+                margin: '0rem 1rem 1rem auto',
+              }}
+            >
+              <IconButton
+                onClick={() =>
+                  handleDeduction(
+                    eachLabel.item as string,
+                    eachLabel.pointsPerUnit as number
+                  )
+                }
               >
-                1
+                <RemoveIcon sx={{ color: 'primary.main' }} />
+              </IconButton>
+              <Typography variant='subtitle1' component='div'>
+                {donationRequestItems[eachLabel.item]
+                  ? donationRequestItems[eachLabel.item].quantity
+                  : eachLabel.minQty}
               </Typography>
-              <IconButton>
-                <AddIcon sx={{ color: "primary.main" }}/>
+              <IconButton
+                onClick={() =>
+                  handleAddition(
+                    eachLabel.item as string,
+                    eachLabel.pointsPerUnit as number
+                  )
+                }
+              >
+                <AddIcon sx={{ color: 'primary.main' }} />
               </IconButton>
             </CardActions>
           </Card>

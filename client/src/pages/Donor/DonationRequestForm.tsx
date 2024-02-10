@@ -17,10 +17,43 @@ import DonationRequestPlaceholder from '../../assets/DonationRequestPlaceholder.
 import { Dayjs } from 'dayjs';
 import _ from 'lodash';
 
+type DonationRequestType = {
+  donationEventID: number;
+  user: number;
+  dropOffDate: Date;
+  dropOffTime: Date;
+  omitPoints: boolean;
+  donationRequestItems: Record<string, string | number>[];
+};
+
 export default function DonationRequestForm() {
-  const [donationRequest, setDonationRequest] = useState({});
+  const [donationRequest, setDonationRequest] = useState<DonationRequestType>({
+    donationEventID: 0,
+    user: 0,
+    dropOffDate: new Date(),
+    dropOffTime: new Date(),
+    omitPoints: false,
+    donationRequestItems: [],
+  });
   const items: string[] = ['Broccoli', 'Cabbage', 'Eggplants']; // Hardcode for now
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const itemsInfo: Record<string, string | number>[] = [
+    { item: 'Broccoli', unit: 'kilogram', minQty: 1, pointsPerUnit: 20 },
+    {
+      item: 'Cabbage',
+      unit: 'kilogram',
+      minQty: 2,
+      pointsPerUnit: 40,
+    },
+    {
+      item: 'Eggplants',
+      unit: 'kilogram',
+      minQty: 1,
+      pointsPerUnit: 25,
+    },
+  ]; // Hardcode for now
+  const [selectedItems, setSelectedItems] = useState<
+    Record<string, string | number>[]
+  >([]);
   const [omitPoints, setOmitPoints] = useState<boolean>(true);
   const [validateForm, setValidateForm] = useState<boolean>(false);
 
@@ -37,16 +70,21 @@ export default function DonationRequestForm() {
       _.mapValues(updatedCheckedState, function (value, key) {
         if (value) {
           // If value is true, add to selectedItems if not already present
-          if (!selectedItems.includes(key)) {
+          const itemExists = selectedItems.some(
+            (selectedItem) => selectedItem['item'] === key
+          );
+
+          if (!itemExists) {
+            const foundItem = itemsInfo.find((item) => item['item'] === key);
             setSelectedItems((prevSelectedItems) => [
               ...prevSelectedItems,
-              key,
+              { ...foundItem },
             ]);
           }
         } else {
           // If value is false, remove from selectedItems if present
           setSelectedItems((prevSelectedItems) =>
-            prevSelectedItems.filter((item) => item !== key)
+            prevSelectedItems.filter((item) => item['item'] !== key)
           );
         }
       });
@@ -56,7 +94,7 @@ export default function DonationRequestForm() {
   console.log(selectedItems);
 
   const handleItemQuantityChange = (
-    updatedItemQuantity: Record<string, number>
+    updatedItemQuantity: Record<string, Record<string, number>>
   ) => {
     console.log(updatedItemQuantity);
   };
@@ -76,7 +114,7 @@ export default function DonationRequestForm() {
 
   return (
     <>
-      <ImageCoverCard image={DonationRequestPlaceholder} name={'Food Rescue'}/>
+      <ImageCoverCard image={DonationRequestPlaceholder} name={'Food Rescue'} />
       <Stack spacing={3} sx={{ margin: '2rem 1.5rem' }}>
         <Typography variant='h5' gutterBottom>
           1. Choose the items to donate:
