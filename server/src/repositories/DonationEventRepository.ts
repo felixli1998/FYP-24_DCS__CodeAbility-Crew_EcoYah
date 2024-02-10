@@ -59,14 +59,19 @@ export class DonationEventRepository {
             .createQueryBuilder("donationEvent");
 
         if (filters.startDate && !filters.endDate) {
+            console.log("^^^^^ IN 1st IF ^^^^^^")
             queryBuilder
                 .andWhere("donationEvent.startDate >= :startDate", { startDate: filters.startDate })
                 .orderBy("donationEvent.startDate", "ASC");
         } else if (!filters.startDate && filters.endDate) {
+            console.log("^^^^^ IN 2nd ELSE IF ^^^^^^")
+
             queryBuilder
                 .andWhere("donationEvent.endDate <= :endDate", { endDate: filters.endDate })
                 .orderBy("donationEvent.endDate", "ASC");
         } else if (filters.startDate && filters.endDate) {
+            console.log("^^^^^ IN 3rd ELSE IF ^^^^^^")
+
             queryBuilder
                 .andWhere("donationEvent.startDate >= :startDate AND donationEvent.endDate <= :endDate", {
                     startDate: filters.startDate,
@@ -77,22 +82,30 @@ export class DonationEventRepository {
         }
 
         if (filters.createdBy) {
+            console.log("^^^^^ IN FILTERS.CREATEDBY IF ^^^^^^")
+
             queryBuilder
             .andWhere("donationEvent.createdBy = :userId", { userId: filters.createdBy })
             .orderBy("donationEvent.createdAt", "ASC");
         }
 
         if (filters.eventType) {
+            console.log("^^^^^ IN FILTERS.EVENTTYPE IF ^^^^^^")
+
             queryBuilder
             .andWhere("donationEvent.eventType = :eventTypeId", { eventTypeId: filters.eventType })
             .orderBy("donationEvent.createdAt", "ASC");
         }
 
         if (filters.isActive){
+            console.log("^^^^^ IN FILTERS.isActive IF ^^^^^^")
+
             queryBuilder.andWhere("donationEvent.isActive = :isActive", { isActive: filters.isActive });
         }
         
         if (filters.name) {
+            console.log("^^^^^ IN FILTERS.name IF ^^^^^^")
+
             queryBuilder.andWhere("donationEvent.name ILIKE :name", { name: `%${filters.name}%` });
         }
         // Pagination

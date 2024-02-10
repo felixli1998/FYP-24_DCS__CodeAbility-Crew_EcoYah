@@ -51,6 +51,10 @@ router.get("/all", async (req, res) =>{
         isActive: req.query['isActive'] as string,
         pageNumber: pageNumber
     };
+    console.log("******* FILTERS [START]: ********")
+    console.log(filters)
+    console.log("******* FILTERS [END]: ********")
+
     try {
         const {data, pagination} = await donationEventService.getFilteredDonationEvents(filters);
         // Return donationEvents
