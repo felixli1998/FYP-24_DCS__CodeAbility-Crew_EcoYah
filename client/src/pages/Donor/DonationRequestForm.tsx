@@ -21,7 +21,7 @@ type DonationRequestType = {
   donationEventID: number;
   user: number;
   dropOffDate: Date;
-  dropOffTime: Date;
+  dropOffTime: string;
   omitPoints: boolean;
   donationRequestItems: Record<string, string | number>[];
 };
@@ -31,7 +31,7 @@ export default function DonationRequestForm() {
     donationEventID: 0,
     user: 0,
     dropOffDate: new Date(),
-    dropOffTime: new Date(),
+    dropOffTime: '',
     omitPoints: false,
     donationRequestItems: [],
   });
