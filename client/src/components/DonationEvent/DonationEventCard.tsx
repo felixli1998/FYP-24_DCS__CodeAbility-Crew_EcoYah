@@ -30,7 +30,7 @@ type DonationEventCardProps = {
 
 export default function DonationEventCard(props: DonationEventCardProps) {
     return (
-        <Card sx={{ maxWidth:'400px', borderRadius: '25px'}} elevation={2}>
+        <Card sx={{ width:"400px", borderRadius: '25px'}} elevation={2}>
             <CardMedia
                 component="img" 
                 image={props.imgSrc}

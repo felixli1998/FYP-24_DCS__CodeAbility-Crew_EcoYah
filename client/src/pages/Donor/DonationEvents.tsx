@@ -5,6 +5,7 @@ import { fetchDonationEvents } from '../../services/donationEventApi';
 import {
     Box,
     Container,
+    Grid,
     Typography,
     Avatar,
     ListItemAvatar,
@@ -60,7 +61,7 @@ export default function DonationEvents() {
     }, []);
 
     return (
-        <Box sx={{marginTop: 3, marginX: 3}}>
+        <Container sx={{marginTop: 3, marginX: 3}}>
             <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
             
             <DonationEventCard
@@ -70,19 +71,23 @@ export default function DonationEvents() {
                 numJoined={8}
                 numHoursLeft={8}
             />
+            
             <Typography sx={{fontWeight: 'bold', marginY: 2}}>Donation Categories</Typography>
 
-            {events.map((event: eventType) => (
-                <DonationEventCard
-                    name={event.name}
-                    description='This is an example description'
-                    imgSrc={event.imageId}
-                    numJoined={8}
-                    numHoursLeft={8}
-                    sx={{marginBottom: 2}}
-                />
-            ))}
-        </Box>
+            <Grid container spacing={3}>
+                {events.map((event: eventType) => (
+                    <Grid item sx={{marginBottom: 2}}>
+                        <DonationEventCard
+                            name={event.name}
+                            description='This is an example description'
+                            imgSrc={event.imageId}
+                            numJoined={8}
+                            numHoursLeft={8}
+                        />
+                    </Grid>
+                ))}
+            </Grid>
+        </Container>
         // <div>
         //     <h1>Donation Events</h1>
         //     <ul>
