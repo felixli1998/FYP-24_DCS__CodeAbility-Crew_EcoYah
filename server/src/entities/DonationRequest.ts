@@ -9,7 +9,6 @@ import {
   Index,
   OneToMany,
 } from 'typeorm';
-import { DonationEventItem } from './DonationEventItem';
 import { User } from './User';
 import { DonationRequestItem } from './DonationRequestItem';
 
