@@ -11,6 +11,7 @@ import { DonationEventItemRepository } from '../repositories/DonationEventItemRe
 import { generateResponse } from '../common/methods';
 import { DonationRequestItem } from '../entities/DonationRequestItem';
 import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
+import { DonationRequestItemService } from '../services/DonationRequestItemService';
 
 const router = express.Router();
 
@@ -26,6 +27,9 @@ const userServices = new UserService(userRepository);
 const donationEventItemRepository = new DonationEventItemRepository();
 // Donation Request Item Service
 const donationRequestItemRepository = new DonationRequestItemRepository();
+const donationRequestItemService = new DonationRequestItemService(
+  donationRequestItemRepository
+);
 
 // TODO: This was created during model creation. Feel free to delete or expand it as needed
 router.post('/test/create', async (req, res) => {
@@ -52,10 +56,10 @@ router.post('/test/create', async (req, res) => {
 
     // Create donation request item
     await Promise.all([
-      donationRequestItemRepository.createDonationRequestItem(
+      donationRequestItemService.createDonationRequestItem(
         donationRequestItem1
       ),
-      donationRequestItemRepository.createDonationRequestItem(
+      donationRequestItemService.createDonationRequestItem(
         donationRequestItem2
       ),
     ]);
