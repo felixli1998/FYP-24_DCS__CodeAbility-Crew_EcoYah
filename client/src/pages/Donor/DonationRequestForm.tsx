@@ -60,7 +60,6 @@ export default function DonationRequestForm() {
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
   ) => {
-    console.log(updatedCheckedState);
 
     if ('Receive Points Upon A Successful Donation' in updatedCheckedState) {
       if (updatedCheckedState['Receive Points Upon A Successful Donation'])
@@ -91,26 +90,17 @@ export default function DonationRequestForm() {
     }
   };
 
-  console.log(selectedItems);
-
   const handleItemQuantityChange = (
-    updatedItemQuantity: Record<string, Record<string, number>>
+    updatedItemQuantity: Record<string, Record<string, number | string>>
   ) => {
-    console.log(updatedItemQuantity);
   };
 
   const handleDateTimeChange = (dateTime: Dayjs | null) => {
-    console.log(dateTime);
   };
 
   const handleButtonChange = (status: boolean) => {
-    console.log(status);
     setValidateForm(true);
   };
-
-  useEffect(() => {
-    console.log(omitPoints);
-  }, [omitPoints]);
 
   return (
     <>
