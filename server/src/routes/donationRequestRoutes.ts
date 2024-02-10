@@ -12,6 +12,7 @@ import { generateResponse } from '../common/methods';
 import { DonationRequestItem } from '../entities/DonationRequestItem';
 import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
 import { DonationRequestItemService } from '../services/DonationRequestItemService';
+import { DonationEventItemService } from '../services/DonationEventItemService';
 
 const router = express.Router();
 
@@ -23,13 +24,14 @@ const donationRequestService = new DonationRequestService(
 // User Service
 const userRepository = new UserRepository();
 const userServices = new UserService(userRepository);
+
 // Donation Event Item Service
 const donationEventItemRepository = new DonationEventItemRepository();
+const donationEventItemService = new DonationEventItemService(donationEventItemRepository);
+
 // Donation Request Item Service
 const donationRequestItemRepository = new DonationRequestItemRepository();
-const donationRequestItemService = new DonationRequestItemService(
-  donationRequestItemRepository
-);
+const donationRequestItemService = new DonationRequestItemService(donationRequestItemRepository);
 
 // TODO: This was created during model creation. Feel free to delete or expand it as needed
 router.post('/test/create', async (req, res) => {
@@ -40,9 +42,9 @@ router.post('/test/create', async (req, res) => {
     donationRequest.dropOffTime = '12:00';
 
     const donationEventItem1 =
-      await donationEventItemRepository.retrieveDonationEventItemById(1);
+      await donationEventItemService.retrieveDonationEventItemById(1);
     const donationEventItem2 =
-      await donationEventItemRepository.retrieveDonationEventItemById(2);
+      await donationEventItemService.retrieveDonationEventItemById(2);
 
     const donationRequestItem1 = new DonationRequestItem();
     const donationRequestItem2 = new DonationRequestItem();
