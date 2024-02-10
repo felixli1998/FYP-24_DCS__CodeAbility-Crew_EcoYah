@@ -9,8 +9,6 @@ import {
 } from 'typeorm';
 import { DonationRequest } from './DonationRequest';
 import { DonationEventItem } from './DonationEventItem';
-// import { DonationEventItem } from './DonationEventItem';
-// import { User } from './User';
 
 export enum Status {
   SUBMITTED = 'submitted',
