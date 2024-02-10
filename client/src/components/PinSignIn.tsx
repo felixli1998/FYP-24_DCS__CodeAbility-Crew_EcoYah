@@ -6,10 +6,12 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "../styles/Palette";
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import { Backdrop,
+         Box,
          Button,
          Card,
          CardActions,
          CardContent,
+         Container,
          Grid,
          IconButton,
          Typography} from '@mui/material';
@@ -47,25 +49,33 @@ export default function PinSignIn(props: PinSignInProps) {
     <Backdrop open={props.open}>
         <Card sx={{display: 'flex', justifyContent: 'center', marginX: 4}}>
             <CardContent sx={{marginTop: 3}}>
-                <Typography variant='h3' sx={{marginBottom: 3, letterSpacing: '0.12em'}}><LockRoundedIcon fontSize='large' sx={{marginRight: 2}}/>Enter your PIN number</Typography>
 
-                <IconButton sx={{ width: 100, height: 100 }} onClick={handleToggleShowPin}>
-                  {showPin ? <VisibilityOff sx={{fontSize: 60}}/> : <Visibility sx={{fontSize: 60}}/>}
-                </IconButton>
+                <Typography variant='h3' sx={{marginBottom: 3, letterSpacing: '0.12em'}}>
+                  <LockRoundedIcon fontSize='large' sx={{marginRight: 2}}/>Enter your PIN number
+                </Typography>
 
-                <MuiOtpInput
-                    value={pin}
-                    onChange={handleChange}
-                    length={4}
-                    autoFocus
-                    validateChar={validateChar}
-                    TextFieldsProps={{
-                      required: true,
-                      InputProps: {
-                        style: { fontSize: '4.3rem' },
-                        type: showPin ? 'text' : 'password',
-                    }}}
-                />
+                <Grid container sx={{ marginBottom: 2, alignItems: "center"}}>
+                  <Grid item xs={12} sm={11}>
+                      <MuiOtpInput
+                        value={pin}
+                        onChange={handleChange}
+                        length={4}
+                        autoFocus
+                        validateChar={validateChar}
+                        TextFieldsProps={{
+                          required: true,
+                          InputProps: {
+                            style: { fontSize: '4.3rem' },
+                            type: showPin ? 'text' : 'password',
+                        }}}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={1}>
+                    <IconButton sx={{ width: 100, height: 100}} onClick={handleToggleShowPin}>
+                      {showPin ? <VisibilityOff sx={{fontSize: 60}}/> : <Visibility sx={{fontSize: 60}}/>}
+                    </IconButton>
+                  </Grid>
+                </Grid>
 
                 {props.errorDisplay && 
                     (<Typography variant='h4' color='error' sx={{marginTop: 4, letterSpacing: '0.12em'}}>{props.errorMsg}</Typography>)}
