@@ -23,8 +23,45 @@ export class DonationRequestRepository {
     const start = startOfDay(date);
     const end = endOfDay(date);
 
+    const selectOptions = {
+      id: true,
+      dropOffTime: true,
+      dropOffDate: true,
+      status: true,
+      user: { name: true },
+      donationRequestItems: {
+        id: true,
+        quantity: true,
+        donationEventItem: {
+          id: true,
+          pointsPerUnit: true,
+          donationEvent: {
+            id: true,
+            name: true,
+          },
+          item: {
+            name: true,
+            unit: true,
+          },
+        },
+      },
+    };
+
     return await AppDataSource.getRepository(DonationRequest).find({
+      select: selectOptions,
+      withDeleted: false, // only return active records
       where: { dropOffDate: Between(start, end) },
+      cache: {
+        id: date.toISOString(), // Cache key by date
+        milliseconds: 30000, // 30 seconds for now
+      },
+      relations: [
+        'user',
+        'donationRequestItems',
+        'donationRequestItems.donationEventItem',
+        'donationRequestItems.donationEventItem.item',
+        'donationRequestItems.donationEventItem.donationEvent',
+      ],
     });
   }
 }
