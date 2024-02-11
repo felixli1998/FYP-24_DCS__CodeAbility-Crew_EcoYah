@@ -1,56 +1,78 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne, BeforeInsert, BeforeUpdate } from "typeorm"
-import { Item } from "./Item"
-import { DonationEvent } from "./DonationEvent"
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  BeforeInsert,
+  BeforeUpdate,
+  OneToMany,
+} from 'typeorm';
+import { Item } from './Item';
+import { DonationEvent } from './DonationEvent';
+import { DonationRequest } from './DonationRequest';
+import { DonationRequestItem } from './DonationRequestItem';
 
 @Entity()
-export class DonationEventItem{
-    // Stick to using TypeORM style using PrimaryGeneratedColumn() to generate the primary key
-    // This will help to facilitate in create OneToMany and ManyToOne relationships, join tables, etc.
-    @PrimaryGeneratedColumn()
-    id: number
+export class DonationEventItem {
+  // Stick to using TypeORM style using PrimaryGeneratedColumn() to generate the primary key
+  // This will help to facilitate in create OneToMany and ManyToOne relationships, join tables, etc.
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    // DonationEventItem can only belong to one Item | Item can have many DonationEventItems
-    @ManyToOne(() => Item, (item) => item.donationEventItems)
-    item: Item
+  // DonationEventItem can only belong to one Item | Item can have many DonationEventItems
+  @ManyToOne(() => Item, (item) => item.donationEventItems)
+  item: Item;
 
-    // DonationEventItem can only belong to one DonationEvent | DonationEvent can have many DonationEventItems
-    @ManyToOne(() => DonationEvent, (donationEvent) => donationEvent.donationEventItems)
-    donationEvent: DonationEvent
+  // DonationEventItem can only belong to one DonationEvent | DonationEvent can have many DonationEventItems
+  @ManyToOne(
+    () => DonationEvent,
+    (donationEvent) => donationEvent.donationEventItems
+  )
+  donationEvent: DonationEvent;
 
-    @Column({
-      nullable: false
-    })
-    targetQty: number
+  @OneToMany(
+    () => DonationRequestItem,
+    (donationRequestItem) => donationRequestItem.donationEventItem
+  )
+  donationRequestItems: DonationRequestItem[];
 
-    @Column({
-      default: 0
-    })
-    currentQty: number
+  @Column({
+    nullable: false,
+  })
+  targetQty: number;
 
-    @Column({
-      nullable: false
-    })
-    minQty: number
+  @Column({
+    default: 0,
+  })
+  currentQty: number;
 
-    @Column({
-      nullable: false
-    })
-    pointsPerUnit: number
+  @Column({
+    nullable: false,
+  })
+  minQty: number;
 
-    @CreateDateColumn()
-    createdAt: Date
+  @Column({
+    nullable: false,
+  })
+  pointsPerUnit: number;
 
-    @UpdateDateColumn()
-    updatedAt: Date
+  @CreateDateColumn()
+  createdAt: Date;
 
-    // Validates before inserting the data into the database
-    // NOTE: Use try catch to handle the error graciously inside your service / repository
-    @BeforeInsert()
-    beforeInsert(){
-      if(!this.isValidTargetQty()) throw new Error("Target Qty has to be more than 0")
-    }
+  @UpdateDateColumn()
+  updatedAt: Date;
 
-    private isValidTargetQty(){
-      return this.targetQty > 0
-    }
+  // Validates before inserting the data into the database
+  // NOTE: Use try catch to handle the error graciously inside your service / repository
+  @BeforeInsert()
+  beforeInsert() {
+    if (!this.isValidTargetQty())
+      throw new Error('Target Qty has to be more than 0');
+  }
+
+  private isValidTargetQty() {
+    return this.targetQty > 0;
+  }
 }
