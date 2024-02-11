@@ -8,7 +8,7 @@ import { DonationRequest } from '../entities/DonationRequest';
 import { UserRepository } from '../repositories/UserRepository';
 import { UserService } from '../services/UserService';
 import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
-import { generateResponse } from '../common/methods';
+import { generateResponse, strongParams } from '../common/methods';
 import { DonationRequestItem } from '../entities/DonationRequestItem';
 import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
 import { DonationRequestItemService } from '../services/DonationRequestItemService';
@@ -27,11 +27,15 @@ const userServices = new UserService(userRepository);
 
 // Donation Event Item Service
 const donationEventItemRepository = new DonationEventItemRepository();
-const donationEventItemService = new DonationEventItemService(donationEventItemRepository);
+const donationEventItemService = new DonationEventItemService(
+  donationEventItemRepository
+);
 
 // Donation Request Item Service
 const donationRequestItemRepository = new DonationRequestItemRepository();
-const donationRequestItemService = new DonationRequestItemService(donationRequestItemRepository);
+const donationRequestItemService = new DonationRequestItemService(
+  donationRequestItemRepository
+);
 
 // TODO: This was created during model creation. Feel free to delete or expand it as needed
 router.post('/test/create', async (req, res) => {
@@ -93,6 +97,22 @@ router.post('/test/cancel', async (req, res) => {
     return generateResponse(res, 200, result);
   } catch (error) {
     console.error(error);
+  }
+});
+
+router.get('/retrieve-by-date', async (req, res) => {
+  const params = req.query;
+  const filteredParams = strongParams(params, ['date']);
+  const { date } = filteredParams;
+
+  try {
+    const result =
+      await donationRequestRepository.retrieveDonationRequestByDate(
+        new Date(date as string)
+      );
+    return generateResponse(res, 200, result);
+  } catch (error) {
+    return generateResponse(res, 500, 'Something went wrong.');
   }
 });
 
