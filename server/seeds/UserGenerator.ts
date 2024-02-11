@@ -9,7 +9,7 @@ function* UserGenerator(): Generator<User>{
     let i = 0;
     while (true) {
         const newUser = new User();
-        
+
         const firstName = FIRST_NAMES[Math.floor(Math.random() * FIRST_NAMES.length)];
         const lastName = LAST_NAMES[Math.floor(Math.random() * LAST_NAMES.length)];
         const uuid = uuidv4().substr(0, 4); // Extracting the first 4 characters of the UUID
@@ -20,7 +20,7 @@ function* UserGenerator(): Generator<User>{
         newUser.email = email;
         newUser.passwordDigest = passwordDigest;
         newUser.contactNum = `+65 ${uuidv4().substr(0,8)}`;
-        newUser.role = UserRole.ADMIN; // Admin so no error when using this to create Donation Event
+        newUser.role = UserRole.DONOR; // Admin so no error when using this to create Donation Event
         yield newUser;
         i++;
     }
