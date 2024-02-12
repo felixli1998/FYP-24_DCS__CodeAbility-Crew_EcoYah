@@ -14,7 +14,7 @@ import InfoToolTip from '../../components/ToolTip/InfoToolTip';
 
 // Other Imports
 import DonationRequestPlaceholder from '../../assets/DonationRequestPlaceholder.png';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import _ from 'lodash';
 
 type DonationRequestType = {
@@ -54,17 +54,22 @@ export default function DonationRequestForm() {
   const [selectedItems, setSelectedItems] = useState<
     Record<string, string | number>[]
   >([]);
-  const [omitPoints, setOmitPoints] = useState<boolean>(true);
   const [validateForm, setValidateForm] = useState<boolean>(false);
 
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
   ) => {
-
     if ('Receive Points Upon A Successful Donation' in updatedCheckedState) {
-      if (updatedCheckedState['Receive Points Upon A Successful Donation'])
-        setOmitPoints(false);
-      else setOmitPoints(true);
+      if (!updatedCheckedState['Receive Points Upon A Successful Donation'])
+        setDonationRequest((prevData) => ({
+          ...prevData,
+          omitPoints: true,
+        }));
+      else
+        setDonationRequest((prevData) => ({
+          ...prevData,
+          omitPoints: false,
+        }));
     } else {
       _.mapValues(updatedCheckedState, function (value, key) {
         if (value) {
@@ -93,10 +98,28 @@ export default function DonationRequestForm() {
   const handleItemQuantityChange = (
     updatedItemQuantity: Record<string, Record<string, number | string>>
   ) => {
+    console.log(updatedItemQuantity);
+    // setDonationRequest((prevData) => ({
+    //   ...prevData,
+    //   donationRequestItems: [updatedItemQuantity],
+    // }));
   };
 
   const handleDateTimeChange = (dateTime: Dayjs | null) => {
+    if (dateTime !== null) {
+      const formattedDate = dayjs(dateTime).format('DD/MM/YYYY');
+      const formattedTime = dayjs(dateTime).format('HH:mm:ss');
+      const [day, month, year] = formattedDate.split('/').map(Number);
+      const dateObject = new Date(year, month - 1, day);
+      setDonationRequest((prevData) => ({
+        ...prevData,
+        dropOffDate: dateObject,
+        dropOffTime: formattedTime,
+      }));
+    }
   };
+
+  console.log(donationRequest);
 
   const handleButtonChange = (status: boolean) => {
     setValidateForm(true);
