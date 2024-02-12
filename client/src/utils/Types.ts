@@ -19,6 +19,7 @@ export type DonationEventItems = {
   minQty: number;
   targetQty: number;
   pointsPerUnit: number;
+  currentQty: number | null;
 };
 
 export type FormDataType = {

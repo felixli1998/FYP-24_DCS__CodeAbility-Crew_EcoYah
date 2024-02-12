@@ -152,7 +152,7 @@ router.put(`/:id`, async (req, res) => {
     if (!donationEvent) return generateResponse(res, 404, "Donation Event not found!");
 
     // Updating timestamp
-    const updateParams = req.body as Record<string, unknown>;
+    const updateParams = req.body.updateParams;
     // Apply partial updates
     for (const key in updateParams) {
         if (updateParams.hasOwnProperty(key)) {

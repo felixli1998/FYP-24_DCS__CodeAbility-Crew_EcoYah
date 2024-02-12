@@ -74,19 +74,19 @@ export default function Step2Form(props: Step2FormProps) {
         setItems(updatedItems);
 
         if (selectedItems) {
-            const checkSubset = selectedItems.every(
+            const filteredSelectedItems = selectedItems.filter(
                 selectedItem => updatedItems.some((item: Item) => item.id === selectedItem.id)
             );
-            if (checkSubset) {
-                // console.log('Partial array is a subset of full array');
+
+            if (filteredSelectedItems.length > 0) {
+                setSelectedItems(filteredSelectedItems);
             } else {
-                // console.log('Partial array is not a subset of full array');
                 setSelectedItems(null);
                 setSelectedItemsInfo([]);
             }
         }
     }
-  }, [itemsData, itemsIsLoading, selectedItems]);
+}, [itemsData, itemsIsLoading, selectedItems]);
 
   const handleItemBoxButtonClick = (item: Item) => {
     if (selectedItems?.some(selectedItem => selectedItem.id === item.id)) {
@@ -97,21 +97,22 @@ export default function Step2Form(props: Step2FormProps) {
       setSelectedItemsInfo(selectedItemsInfo.filter((selectedItemInfo: Item) => selectedItemInfo.id !== item.id));
     } else {
       // If the item is not in the array, add it
-      setSelectedItems((prevSelectedItems: Item[] | null) => {
-        const newSelectedItems = prevSelectedItems ? [...prevSelectedItems, item] : [item];
-        setSelectedItemsInfo((prevSelectedItemsInfo: any) => [
-          ...prevSelectedItemsInfo,
-          {
-            id: item.id, 
-            name: item.name,
-            unit: item.unit,
-            minQty: "",
-            targetQty: "",
-            pointsPerUnit: "",
-          },
-        ]);
-        return newSelectedItems;
-      });
+      // If the item is not in the array, add it
+      setSelectedItems(prevSelectedItems => [
+        ...(prevSelectedItems || []), // Ensure prevSelectedItems is not null
+        item,
+      ]);
+      setSelectedItemsInfo(prevSelectedItemsInfo => [
+        ...prevSelectedItemsInfo,
+        {
+          id: item.id,
+          name: item.name,
+          unit: item.unit,
+          minQty: "",
+          targetQty: "",
+          pointsPerUnit: "",
+        },
+      ]);
     };
   }
 

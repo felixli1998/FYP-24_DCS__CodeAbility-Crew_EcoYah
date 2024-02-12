@@ -13,6 +13,9 @@ import {
   AccordionDetails,
   Divider,
   Button,
+  FormControlLabel,
+  Switch,
+  Typography,
 } from '@mui/material';
 
 // Icons
@@ -27,14 +30,21 @@ import StaffTypography from '../../components/Typography/StaffTypography';
 import dayjs from 'dayjs';
 
 // Utils Imports
-import { createDonationEvent } from '../../services/donationEventApi';
+import {
+  createDonationEvent,
+  updateDonationEventById,
+} from '../../services/donationEventApi';
+import SimpleDialog from '../../components/Dialog/SimpleDialog';
 
 export default function DonationEventPreview() {
   const location = useLocation();
   const navigate = useNavigate();
   const adminID = 4; // Hardcode for now
-  const formData = location.state ? JSON.parse(location.state) : null;
+  const locationStateData = location.state ? JSON.parse(location.state) : null;
+  const formData = locationStateData.formData || null;
+  const isPreview = locationStateData.isPreview || false;
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
 
   const donationEventDetails: any = {
     Name: 'name',
@@ -94,6 +104,77 @@ export default function DonationEventPreview() {
     }
   }, [formData]);
 
+  // === For Donation Event Form Edit ===
+  const [isActive, setIsActive] = useState(formData?.isActive || false);
+
+  const handleDialogOpen = () => {
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setIsActive(formData.isActive); // Reset to original
+  };
+
+  const handleEdit = async () => {
+    const {
+      name,
+      donationEventItems,
+      eventType,
+      isActive,
+      startDate,
+      endDate,
+      createdBy,
+    } = formData;
+    const todayDate = new Date().toISOString();
+    if (startDate < todayDate) {
+      handleDialogOpen();
+    } else {
+      navigate('/admin/donation-event-form', {
+        state: JSON.stringify({
+          formData,
+          isPreview: false,
+        }),
+      });
+    }
+  };
+
+  const { mutateAsync: updateDonationEventMutateAsync } = useMutation({
+    mutationKey: ['updateDonationEvent'],
+    // mutationFn: Performing the actual API call
+    mutationFn: ({
+      donationEventId,
+      updateParams,
+    }: {
+      donationEventId: string;
+      updateParams: any;
+    }) => {
+      return updateDonationEventById(donationEventId, updateParams);
+    },
+    // Execution after successful API call
+    onSuccess: (response) => {
+      if (response && response.data) {
+        setOpenDialog(false);
+      }
+    },
+    onError: (error: any) => {
+      console.error('Error creating donation event: ', error);
+      setErrorMessage('An error occurred while creating the donation event.');
+    },
+  });
+
+  const updateDonationIsActive = async () => {
+    try {
+      const response = await updateDonationEventMutateAsync({
+        donationEventId: formData.id,
+        updateParams: { isActive },
+      });
+    } catch (error) {
+      console.error('Error updating donation event');
+    }
+  };
+  // === For Donation Event Form Edit ===
+
   return (
     <Box display='flex' justifyContent='center' sx={{ m: 5 }}>
       <Stack spacing={3}>
@@ -102,12 +183,36 @@ export default function DonationEventPreview() {
             The request encountered an issue. Please refresh and try again!
           </Alert>
         )}
-        <StaffTypography
-          type='title'
-          size={2.125}
-          text='Preview the Donation Event'
-          customStyles={{ textAlign: 'center' }}
-        />
+        <Box
+          display='flex'
+          justifyContent={isPreview ? 'center' : 'space-between'}
+        >
+          <StaffTypography
+            type='title'
+            size={2.125}
+            text={
+              isPreview
+                ? `Preview the Donation Event`
+                : `Edit the Donation Event`
+            }
+            customStyles={{ textAlign: isPreview ? 'center' : 'left' }}
+          />
+          {!isPreview && (
+            <Button
+              variant='contained'
+              sx={{
+                fontSize: '1.25rem',
+                letterSpacing: '0.15rem',
+                width: '9.375rem',
+                height: '3.75rem',
+                backgroundColor: 'primary.dark',
+              }}
+              onClick={handleEdit}
+            >
+              Edit
+            </Button>
+          )}
+        </Box>
         <Box
           component='img'
           sx={{
@@ -212,38 +317,80 @@ export default function DonationEventPreview() {
               );
             })}
         </Accordion>
-        <Box display='flex' justifyContent='space-between'>
-          <Button
-            variant='outlined'
-            sx={{
-              fontSize: '1.25rem',
-              letterSpacing: '0.15rem',
-              width: '9.375rem',
-              height: '3.75rem',
-              borderColor: 'primary.dark',
-              color: 'primary.dark',
-            }}
-            startIcon={<ArrowBackIosIcon />}
-            onClick={handleBack}
-          >
-            BACK
-          </Button>
-          <Button
-            variant='contained'
-            sx={{
-              fontSize: '1.25rem',
-              letterSpacing: '0.15rem',
-              width: '9.375rem',
-              height: '3.75rem',
-              backgroundColor: 'primary.dark',
-            }}
-            startIcon={<AddIcon />}
-            onClick={handleCreate}
-          >
-            CREATE
-          </Button>
-        </Box>
+        {isPreview && (
+          <Box display='flex' justifyContent='space-between'>
+            <Button
+              variant='outlined'
+              sx={{
+                fontSize: '1.25rem',
+                letterSpacing: '0.15rem',
+                width: '9.375rem',
+                height: '3.75rem',
+                borderColor: 'primary.dark',
+                color: 'primary.dark',
+              }}
+              startIcon={<ArrowBackIosIcon />}
+              onClick={handleBack}
+            >
+              BACK
+            </Button>
+            <Button
+              variant='contained'
+              sx={{
+                fontSize: '1.25rem',
+                letterSpacing: '0.15rem',
+                width: '9.375rem',
+                height: '3.75rem',
+                backgroundColor: 'primary.dark',
+              }}
+              startIcon={<AddIcon />}
+              onClick={handleCreate}
+            >
+              CREATE
+            </Button>
+          </Box>
+        )}
       </Stack>
+      <SimpleDialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        title={'Edit Donation Event'}
+        children={
+          <FormControlLabel
+            control={
+              <Switch
+                checked={isActive}
+                onClick={() => setIsActive(!isActive)}
+                sx={{
+                  width: '9rem',
+                  height: '5.25rem',
+                  '.MuiSwitch-thumb': {
+                    width: '4.4rem',
+                    height: '4.1rem',
+                    marginLeft: isActive ? '2rem' : null,
+                  },
+                }}
+              />
+            }
+            label={
+              <Typography
+                variant='h5'
+                gutterBottom
+                sx={{
+                  color: isActive ? 'primary.dark' : 'secondary.dark',
+                  letterSpacing: '0.18rem',
+                  marginLeft: '0.5rem',
+                }}
+              >
+                {isActive ? 'Active' : 'Inactive'}
+              </Typography>
+            }
+          />
+        }
+        leftButtonLabel={'Cancel'}
+        rightButtonLabel={'Save'}
+        updateDonationIsActive={updateDonationIsActive}
+      />
     </Box>
   );
 }

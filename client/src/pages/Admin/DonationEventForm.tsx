@@ -51,6 +51,7 @@ export default function DonationEventForm() {
     donationEventItems: [],
     createdBy: 0,
   });
+  const [isPreview, setIsPreview] = useState(false);
 
   const handleBack = () => {
     switch (activeStep) {
@@ -82,6 +83,7 @@ export default function DonationEventForm() {
       case 1:
         setValidateStep2(true);
         if (formData['donationEventItems'].length !== 0) setActiveStep(2);
+        if (!isPreview) setBackStep3(true); // Edit mode
         break;
       case 2:
         setValidateStep3(true);
@@ -89,8 +91,11 @@ export default function DonationEventForm() {
           dayjs(formData['startDate']).isValid() &&
           dayjs(formData['endDate']).isValid()
         )
-          navigate('/admin/donation-event-preview', {
-            state: JSON.stringify(formData),
+          navigate('/admin/donation-event-edit', {
+            state: JSON.stringify({
+              formData,
+              isPreview: true,
+            }),
           });
         break;
     }
@@ -132,9 +137,16 @@ export default function DonationEventForm() {
 
   useEffect(() => {
     if (location.state) {
-      setFormData(JSON.parse(location.state));
-      setActiveStep(2);
-      setBackStep3(true);
+      const locationStateObject = JSON.parse(location.state);
+      setIsPreview(locationStateObject.isPreview ? locationStateObject.isPreview : false)
+      setFormData(locationStateObject.formData);
+      if (isPreview) {
+        setActiveStep(2);
+        setBackStep3(true);
+      } else {
+        setActiveStep(0);
+        setBackStep1(true);
+      }
     }
   }, [location.state]);
 
