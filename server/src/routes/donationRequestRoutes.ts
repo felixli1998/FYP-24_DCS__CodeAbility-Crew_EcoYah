@@ -14,6 +14,13 @@ import { DonationRequestItemRepository } from '../repositories/DonationRequestIt
 import { DonationRequestItemService } from '../services/DonationRequestItemService';
 import { DonationEventItemService } from '../services/DonationEventItemService';
 
+export type DonationRequestUpdatePayload = {
+  id: DonationRequest['id'];
+  dropOffDate?: DonationRequest['dropOffDate'];
+  dropOffTime?: DonationRequest['dropOffTime'];
+  requestItems?: any;
+};
+
 const router = express.Router();
 
 // Donation Request Service
@@ -117,18 +124,26 @@ router.get('/retrieve-by-id', async (req, res) => {
 
 router.post('/update', async (req, res) => {
   const payload = req.body;
-  const allowedParams = [
-    'donationRequestId',
-    'dropOffDate',
-    'dropOffTime',
-    'requestItems',
-  ];
+  const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'requestItems'];
   const sanitisedPayload = strongParams(payload, allowedParams);
 
-  const { donationRequestId, dropOffDate, dropOffTime, requestItems } =
-    sanitisedPayload;
+  if (!('id' in sanitisedPayload))
+    return generateResponse(res, 200, 'Missing id');
 
-  // Donation Request Level
+  type DonationRequestUpdatePayloadWithId = DonationRequestUpdatePayload & {
+    id: string;
+  };
+
+  try {
+    // Type assertion that an id is definitely present due to my previous checks
+    const result = await donationRequestService.update(
+      sanitisedPayload as DonationRequestUpdatePayloadWithId
+    );
+
+    return generateResponse(res, 200, result);
+  } catch (err) {
+    return generateResponse(res, 500, 'Something went wrong');
+  }
 });
 
 export default router;

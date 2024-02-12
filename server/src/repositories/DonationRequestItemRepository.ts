@@ -7,4 +7,10 @@ export class DonationRequestItemRepository {
       donationRequestItem
     );
   }
+
+  async retrieveById(id: number) {
+    return await AppDataSource.getRepository(DonationRequestItem).findOne({
+      where: { id },
+    });
+  }
 }

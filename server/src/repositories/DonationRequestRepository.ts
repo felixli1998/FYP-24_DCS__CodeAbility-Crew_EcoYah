@@ -12,8 +12,8 @@ export class DonationRequestRepository {
     return await AppDataSource.getRepository(DonationRequest).softDelete(id);
   }
 
-  async updateDonationRequest(id: number, payload: Partial<DonationRequest>) {
-    return await AppDataSource.getRepository(DonationRequest).save(payload);
+  async updateDonationRequest(donationRequest: DonationRequest) {
+    return await AppDataSource.getRepository(DonationRequest).save(donationRequest);
   }
 
   async retrieveById(id: number) {
