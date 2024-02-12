@@ -34,7 +34,7 @@ export default function DatePickerValue(props: DatePickerValueType) {
           },
         }}
         format='DD/MM/YYYY'
-        sx={{ width: 350, marginBottom: '1.5rem' }}
+        sx={{ width: 300, marginBottom: '1.5rem' }}
       />
     </LocalizationProvider>
   );
