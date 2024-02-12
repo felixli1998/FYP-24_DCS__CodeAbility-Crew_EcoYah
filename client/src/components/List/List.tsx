@@ -1,3 +1,4 @@
+// React Imports
 import { useState } from 'react';
 
 // MUI Imports
@@ -33,45 +34,39 @@ export default function ItemList() {
             sx={{ width: '5rem', height: '5rem', marginRight: '1rem' }}
           />
         </ListItemAvatar>
-        <ListItemText
-          primary={
-            <>
-              <StaffTypography
-                size={1.25}
-                text={`John Doe`}
-                type={'title'}
-                customStyles={{ color: 'secondary.main', fontWeight: 'none' }}
-              />
-            </>
-          }
-          secondary={
-            <Box
-              display='flex'
-              justifyContent='space-between'
-              alignItems='center'
-            >
-              <StaffTypography
-                size={1}
-                text={`Drop off on <br/> 10/12/2024, 1:00 PM`}
-                type={'title'}
-                customStyles={{ color: 'secondary.dark', fontWeight: 'none' }}
-              />
-              <BasicButton
-                variant='outlined'
-                label={'View More'}
-                customStyles={{
-                  fontSize: '1rem',
-                  letterSpacing: '0.12rem',
-                  width: '9.375rem',
-                  height: '3.75rem',
-                  color: 'primary.dark',
-                  borderColor: 'primary.dark',
-                }}
-                onButtonChange={handleButtonChange}
-              />
-            </Box>
-          }
-        />
+        <ListItemText>
+          <StaffTypography
+            size={1.25}
+            text={`John Doe`}
+            type={'title'}
+            customStyles={{ color: 'secondary.main', fontWeight: 'none' }}
+          />
+          <Box
+            display='flex'
+            justifyContent='space-between'
+            alignItems='center'
+          >
+            <StaffTypography
+              size={1}
+              text={`Drop off on <br> 10/12/2024, 1:00 PM`}
+              type={'title'}
+              customStyles={{ color: 'secondary.dark', fontWeight: 'none' }}
+            />
+            <BasicButton
+              variant='outlined'
+              label={'View More'}
+              customStyles={{
+                fontSize: '1rem',
+                letterSpacing: '0.12rem',
+                width: '9.375rem',
+                height: '3.75rem',
+                color: 'primary.dark',
+                borderColor: 'primary.dark',
+              }}
+              onButtonChange={handleButtonChange}
+            />
+          </Box>
+        </ListItemText>
         <BasicModal
           open={openModal}
           onModalChange={(status: boolean) => setOpenModal(status)}
