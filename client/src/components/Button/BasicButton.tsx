@@ -1,14 +1,14 @@
 import { CSSProperties, MouseEvent } from 'react';
 import Button from '@mui/material/Button';
 
-type BasicButtonProps = {
+type BasicButtonType = {
   label: string;
   variant: 'contained' | 'outlined' | 'text';
   customStyles?: CSSProperties;
   onButtonChange: (status: boolean) => void;
 };
 
-export default function BasicButton(props: BasicButtonProps) {
+export default function BasicButton(props: BasicButtonType) {
   const handleSubmit = (event: MouseEvent<HTMLButtonElement>) => {
     props.onButtonChange(true);
   };
