@@ -54,9 +54,13 @@ export class DonationRequestService {
     return requestItem;
   }
 
+  async retrieveById(id: number) {
+    return await this.donationRequestRepository.retrieveById(id);
+  }
+
   async update(payload: DonationRequestUpdatePayload) {
     const { id } = payload;
-    const donationRequestObj = await this.donationRequestRepository.retrieveById(id);
+    const donationRequestObj = await this.retrieveById(id);
 
     if (donationRequestObj == null) {
       return {
