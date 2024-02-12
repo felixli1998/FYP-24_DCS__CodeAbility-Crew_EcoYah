@@ -26,35 +26,8 @@ export class DonationRequestService {
     return await this.donationRequestRepository.cancelDonationRequest(id);
   }
 
-  async updateDonationRequestItem(
-    requestItems: Partial<DonationRequestItem>[]
-  ) {
-    const res = await requestItems.map(async (requestItem) => {
-      // Updating an existing item
-      if (requestItem.id) {
-        const donationRequestItemObj =
-          await this.donationRequestItemRepository.retrieveById(requestItem.id);
-
-        if (donationRequestItemObj && requestItem.quantity) {
-          donationRequestItemObj.quantity = requestItem.quantity;
-        }
-
-        return donationRequestItemObj;
-      } else {
-        return;
-      }
-    });
-
-    return res;
-  }
-
-  async retrieveById(id: number) {
-    return await this.donationRequestRepository.retrieveById(id);
-  }
-
   async updateExistingDonationRequestItem(id: number, quantity: number) {
-    const donationRequestItemObj =
-      await this.donationRequestItemRepository.retrieveById(id);
+    const donationRequestItemObj = await this.donationRequestItemRepository.retrieveById(id);
 
     if (donationRequestItemObj) {
       donationRequestItemObj.quantity = quantity;
@@ -83,11 +56,15 @@ export class DonationRequestService {
 
   async update(payload: DonationRequestUpdatePayload) {
     const { id } = payload;
-    const donationRequestObj = await this.retrieveById(id);
+    const donationRequestObj = await this.donationRequestRepository.retrieveById(id);
 
     if (donationRequestObj == null) {
-      return { action: false, data: [], message: 'Donation Request do not exist.' };
-    };
+      return {
+        action: false,
+        data: [],
+        message: 'Donation Request do not exist.',
+      };
+    }
 
     for (const [key, value] of Object.entries(payload)) {
       switch (key) {
@@ -115,12 +92,19 @@ export class DonationRequestService {
               }
             });
 
-            const existingRequestItems = await this.donationRequestItemRepository.retrieveByDonationRequestId(donationRequestObj.id);
-            const updatedRequestItems = await Promise.all(requestItemsPromises) as DonationRequestItem[];
+            const existingRequestItems =
+              await this.donationRequestItemRepository.retrieveByDonationRequestId(
+                donationRequestObj.id
+              );
+            const updatedRequestItems = (await Promise.all(
+              requestItemsPromises
+            )) as DonationRequestItem[];
 
-            existingRequestItems.forEach(existingItem => {
-            // If the item is not in the updatedRequestItems array, append it to ensure it is not removed in an update
-              if (!updatedRequestItems.find(item => item.id === existingItem.id)) {
+            existingRequestItems.forEach((existingItem) => {
+              // If the item is not in the updatedRequestItems array, append it to ensure it is not removed in an update
+              if (
+                !updatedRequestItems.find((item) => item.id === existingItem.id)
+              ) {
                 updatedRequestItems.push(existingItem);
               }
             });
@@ -134,8 +118,15 @@ export class DonationRequestService {
       }
     }
 
-    const res = await this.donationRequestRepository.updateDonationRequest(donationRequestObj);
+    const res =
+      await this.donationRequestRepository.updateDonationRequest(
+        donationRequestObj
+      );
 
-    return { action: true, data: res, message: 'Successfully updated donation request' }
+    return {
+      action: true,
+      data: res,
+      message: 'Successfully updated donation request',
+    };
   }
 }
