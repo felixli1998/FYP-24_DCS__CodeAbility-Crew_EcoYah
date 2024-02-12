@@ -4,7 +4,7 @@ import { Box, Alert, Stack, Button, Typography, Link } from '@mui/material';
 import logo from '../../assets/EcoYah.png';
 import TextFields from '../../components/TextFields/FormTextFields';
 import Checkboxes from '../../components/Checkbox/FormCheckBox';
-import ContainedButton from '../../components/Button/ContainedButton';
+import BasicButton from '../../components/Button/BasicButton';
 import EmailCard from '../../components/Card/EmailCard';
 import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import { makeHttpRequest } from '../../utils/Utility';
@@ -190,10 +190,11 @@ export default function SignIn() {
               text='none'
               isChecked={handleRmbMe}
             ></Checkboxes>
-            <ContainedButton
+            <BasicButton
               label='Sign In'
+              variant='contained'
               onButtonChange={handleButtonChange}
-            ></ContainedButton>
+            />
           </Stack>
         ) : (
           <EmailCard />

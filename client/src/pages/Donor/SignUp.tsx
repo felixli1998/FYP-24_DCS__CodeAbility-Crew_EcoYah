@@ -11,7 +11,7 @@ import {
 import logo from '../../assets/EcoYah.png';
 import TextFields from '../../components/TextFields/FormTextFields';
 import Checkboxes from '../../components/Checkbox/FormCheckBox';
-import ContainedButton from '../../components/Button/ContainedButton';
+import BasicButton from '../../components/Button/BasicButton';
 import SuccessCard from '../../components/Card/SuccessCard';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { makeHttpRequest } from '../../utils/Utility';
@@ -217,10 +217,11 @@ export default function SignUp() {
                 Please indicate that you have read
               </FormHelperText>
             )}
-            <ContainedButton
+            <BasicButton
               label='Sign Up'
+              variant='contained'
               onButtonChange={handleButtonChange}
-            ></ContainedButton>
+            />
           </Stack>
         ) : (
           <SuccessCard type='sign up' />

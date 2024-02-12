@@ -8,7 +8,7 @@ import { Box, Stack, Typography } from '@mui/material';
 import ImageCoverCard from '../../components/Card/ImageCoverCard';
 import LabelledCheckBox from '../../components/Checkbox/LabelledCheckBox';
 import ItemQuantityCard from '../../components/Card/ItemQuantityCard';
-import ContainedButton from '../../components/Button/ContainedButton';
+import BasicButton from '../../components/Button/BasicButton';
 import DateTimePicker from '../../components/DateTimePicker/DateTimePicker';
 import InfoToolTip from '../../components/ToolTip/InfoToolTip';
 
@@ -168,8 +168,9 @@ export default function DonationRequestForm() {
           label={['Receive Points Upon A Successful Donation']}
           onCheckBoxChange={handleCheckBoxChange}
         />
-        <ContainedButton
+        <BasicButton
           label='Submit Donation'
+          variant='contained'
           onButtonChange={handleButtonChange}
         />
       </Stack>
