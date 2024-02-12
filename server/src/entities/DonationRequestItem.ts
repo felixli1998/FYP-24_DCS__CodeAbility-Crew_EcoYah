@@ -16,6 +16,7 @@ export enum Status {
 }
 
 @Entity()
+@Index(['donationRequest', 'donationEventItem'], { unique: true })
 export class DonationRequestItem {
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,11 +27,17 @@ export class DonationRequestItem {
   quantity: number;
 
   // Belongs to a donation request
-  @ManyToOne(() => DonationRequest, (donationRequest) => donationRequest.donationRequestItems)
+  @ManyToOne(
+    () => DonationRequest,
+    (donationRequest) => donationRequest.donationRequestItems
+  )
   donationRequest: DonationRequest;
 
   // Belongs to a donation event item
-  @ManyToOne(() => DonationEventItem, (donationEventItem) => donationEventItem.donationRequestItems)
+  @ManyToOne(
+    () => DonationEventItem,
+    (donationEventItem) => donationEventItem.donationRequestItems
+  )
   donationEventItem: DonationEventItem;
 
   @CreateDateColumn()

@@ -19,7 +19,7 @@ export class DonationRequestRepository {
   async retrieveById(id: number) {
     return await AppDataSource.getRepository(DonationRequest).findOne({
       where: { id },
-      relations: ['donationRequestItems'],
+      relations: ['donationRequestItems', 'donationRequestItems.donationEventItem'],
     });
   }
 }
