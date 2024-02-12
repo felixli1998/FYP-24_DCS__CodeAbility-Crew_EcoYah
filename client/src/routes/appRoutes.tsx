@@ -12,6 +12,7 @@ import AdminHome from '../pages/Admin/AdminHome';
 import AdminSignIn from '../pages/Admin/AdminSignIn';
 import DonationEventForm from '../pages/Admin/DonationEventForm';
 import DonationEventPreview from '../pages/Admin/DonationEventPreview';
+import DonationRequests from '../pages/Admin/DonationRequests';
 
 type AppRoutesT = {
   path: string;
@@ -87,6 +88,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     path: "donation-event-preview",
     description: "Preview of donation event for the admin",
     element: <DonationEventPreview />,
+    isAdmin: true,
+  },
+  {
+    path: "donation-requests",
+    description: "Preview of donation requests for the admin",
+    element: <DonationRequests />,
     isAdmin: true,
   },
 ];
