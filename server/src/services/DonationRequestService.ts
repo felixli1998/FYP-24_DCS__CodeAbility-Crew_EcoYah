@@ -85,7 +85,9 @@ export class DonationRequestService {
     const { id } = payload;
     const donationRequestObj = await this.retrieveById(id);
 
-    if (donationRequestObj == null) return;
+    if (donationRequestObj == null) {
+      return { action: false, data: [], message: 'Donation Request do not exist.' };
+    };
 
     for (const [key, value] of Object.entries(payload)) {
       switch (key) {
@@ -127,12 +129,13 @@ export class DonationRequestService {
           }
           break;
         default:
-          return 'Invalid key provided.';
+          console.log('Invalid key provided.');
+          break;
       }
     }
 
-    return await this.donationRequestRepository.updateDonationRequest(
-      donationRequestObj
-    );
+    const res = await this.donationRequestRepository.updateDonationRequest(donationRequestObj);
+
+    return { action: true, data: res, message: 'Successfully updated donation request' }
   }
 }

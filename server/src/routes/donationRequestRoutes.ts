@@ -136,11 +136,10 @@ router.post('/update', async (req, res) => {
 
   try {
     // Type assertion that an id is definitely present due to my previous checks
-    const result = await donationRequestService.update(
+    const payload = await donationRequestService.update(
       sanitisedPayload as DonationRequestUpdatePayloadWithId
     );
-
-    return generateResponse(res, 200, result);
+    return generateResponse(res, 200, payload);
   } catch (err) {
     return generateResponse(res, 500, 'Something went wrong');
   }
