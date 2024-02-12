@@ -52,6 +52,35 @@ export class DonationRequestService {
     return await this.donationRequestRepository.retrieveById(id);
   }
 
+  async updateExistingDonationRequestItem(id: number, quantity: number) {
+    const donationRequestItemObj =
+      await this.donationRequestItemRepository.retrieveById(id);
+
+    if (donationRequestItemObj) {
+      donationRequestItemObj.quantity = quantity;
+    }
+
+    return donationRequestItemObj;
+  }
+
+  async createNewDonationRequestItem(
+    donationEventId: number,
+    quantity: number
+  ) {
+    const requestItem = new DonationRequestItem();
+    const donationEventItem =
+      await this.donationEventItemRepository.retrieveDonationEventItemById(
+        donationEventId
+      );
+
+    if (donationEventItem) {
+      requestItem.quantity = quantity;
+      requestItem.donationEventItem = donationEventItem;
+    }
+
+    return requestItem;
+  }
+
   async update(payload: DonationRequestUpdatePayload) {
     const { id } = payload;
     const donationRequestObj = await this.retrieveById(id);
@@ -69,37 +98,32 @@ export class DonationRequestService {
           donationRequestObj.dropOffTime = value as string;
           break;
         case 'requestItems':
-          const newRequestItem = [];
           if (Array.isArray(value)) {
             const requestItemsPromises = value.map(async (item) => {
-              // This is to update an existing request item
               if (item.id) {
-                const requestItem =
-                  await this.donationRequestItemRepository.retrieveById(
-                    item.id
-                  );
-                if (requestItem && item.quantity) {
-                  requestItem.quantity = item.quantity;
-                }
-                return requestItem;
+                return await this.updateExistingDonationRequestItem(
+                  item.id,
+                  item.quantity as number
+                );
               } else {
-                const requestItem = new DonationRequestItem();
-                if (item.donationEventId) {
-                  const donationEventItem =
-                    await this.donationEventItemRepository.retrieveDonationEventItemById(
-                      item.donationEventId
-                    );
-                  if (donationEventItem) {
-                    requestItem.quantity = item.quantity as number;
-                    requestItem.donationEventItem = donationEventItem;
-                  }
-                  return requestItem;
-                }
-                // This is to create a new request item
+                return await this.createNewDonationRequestItem(
+                  item.donationEventId as number,
+                  item.quantity as number
+                );
               }
             });
-            const requestItems = await Promise.all(requestItemsPromises);
-            donationRequestObj.donationRequestItems = requestItems as DonationRequestItem[];
+
+            const existingRequestItems = await this.donationRequestItemRepository.retrieveByDonationRequestId(donationRequestObj.id);
+            const updatedRequestItems = await Promise.all(requestItemsPromises) as DonationRequestItem[];
+
+            existingRequestItems.forEach(existingItem => {
+            // If the item is not in the updatedRequestItems array, append it to ensure it is not removed in an update
+              if (!updatedRequestItems.find(item => item.id === existingItem.id)) {
+                updatedRequestItems.push(existingItem);
+              }
+            });
+
+            donationRequestObj.donationRequestItems = updatedRequestItems;
           }
           break;
         default:

@@ -13,4 +13,10 @@ export class DonationRequestItemRepository {
       where: { id },
     });
   }
+
+  async retrieveByDonationRequestId(donationRequestId: number) {
+    return await AppDataSource.getRepository(DonationRequestItem).find({
+      where: { donationRequest: { id: donationRequestId } },
+    });
+  }
 }
