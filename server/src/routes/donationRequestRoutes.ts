@@ -8,7 +8,7 @@ import { DonationRequest } from '../entities/DonationRequest';
 import { UserRepository } from '../repositories/UserRepository';
 import { UserService } from '../services/UserService';
 import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
-import { generateResponse } from '../common/methods';
+import { generateResponse, strongParams } from '../common/methods';
 import { DonationRequestItem } from '../entities/DonationRequestItem';
 import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
 import { DonationRequestItemService } from '../services/DonationRequestItemService';
@@ -27,11 +27,15 @@ const userServices = new UserService(userRepository);
 
 // Donation Event Item Service
 const donationEventItemRepository = new DonationEventItemRepository();
-const donationEventItemService = new DonationEventItemService(donationEventItemRepository);
+const donationEventItemService = new DonationEventItemService(
+  donationEventItemRepository
+);
 
 // Donation Request Item Service
 const donationRequestItemRepository = new DonationRequestItemRepository();
-const donationRequestItemService = new DonationRequestItemService(donationRequestItemRepository);
+const donationRequestItemService = new DonationRequestItemService(
+  donationRequestItemRepository
+);
 
 // TODO: This was created during model creation. Feel free to delete or expand it as needed
 router.post('/test/create', async (req, res) => {
@@ -94,6 +98,37 @@ router.post('/test/cancel', async (req, res) => {
   } catch (error) {
     console.error(error);
   }
+});
+
+// TODO: Retrieve by request id
+router.get('/retrieve-by-id', async (req, res) => {
+  const params = req.query;
+  const filterParams = strongParams(params, ['id']);
+  const { id } = filterParams;
+
+  try {
+    const result = await donationRequestService.retrieveById(id);
+
+    return generateResponse(res, 200, result);
+  } catch (err) {
+    return generateResponse(res, 500, 'Something went wrong.');
+  }
+});
+
+router.post('/update', async (req, res) => {
+  const payload = req.body;
+  const allowedParams = [
+    'donationRequestId',
+    'dropOffDate',
+    'dropOffTime',
+    'requestItems',
+  ];
+  const sanitisedPayload = strongParams(payload, allowedParams);
+
+  const { donationRequestId, dropOffDate, dropOffTime, requestItems } =
+    sanitisedPayload;
+
+  // Donation Request Level
 });
 
 export default router;

@@ -17,4 +17,12 @@ export class DonationRequestService {
   async cancelDonationRequest(id: number) {
     return await this.donationRequestRepository.cancelDonationRequest(id);
   }
+
+  // async updateDonationRequest(id: number, payload: Partial<DonationRequest>){
+  //   return await this.donationRequestRepository
+  // };
+
+  async retrieveById(id: number) {
+    return await this.donationRequestRepository.retrieveById(id);
+  }
 }
