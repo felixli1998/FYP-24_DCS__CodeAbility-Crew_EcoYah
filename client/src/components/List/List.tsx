@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 
 // MUI Imports
 import {
@@ -14,10 +14,13 @@ import {
 // Components
 import StaffTypography from '../Typography/StaffTypography';
 import BasicButton from '../Button/BasicButton';
+import BasicModal from '../Modal/BasicModal';
 
 export default function ItemList() {
+  const [openModal, setOpenModal] = useState(false);
+
   const handleButtonChange = (status: boolean) => {
-    console.log(status);
+    setOpenModal(true);
   };
 
   return (
@@ -68,6 +71,10 @@ export default function ItemList() {
               />
             </Box>
           }
+        />
+        <BasicModal
+          open={openModal}
+          onModalChange={(status: boolean) => setOpenModal(status)}
         />
       </ListItem>
       <Divider variant='inset' component='li' />

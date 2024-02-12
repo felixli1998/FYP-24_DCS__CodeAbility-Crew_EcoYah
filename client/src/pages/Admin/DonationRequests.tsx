@@ -24,7 +24,7 @@ export default function DonationRequests() {
         size={2.5}
         text={'Active Donation Requests'}
       ></StaffTypography>
-      <DatePicker label={'Date'} onDateChange={handleDateChange}></DatePicker>
+      <DatePicker label={'Date'} defaultValue={new Date()} onDateChange={handleDateChange}></DatePicker>
       <ItemList></ItemList>
     </Stack>
   );

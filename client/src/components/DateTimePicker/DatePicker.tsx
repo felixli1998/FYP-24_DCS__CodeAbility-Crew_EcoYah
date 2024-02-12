@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 type DatePickerValueType = {
   label: string;
+  defaultValue?: Date | null;
   onDateChange: (dateTime: Dayjs | null) => void;
   validateForm?: boolean;
 };
 
 export default function DatePickerValue(props: DatePickerValueType) {
-  const [value, setValue] = useState<Dayjs | null>(null);
+  const [value, setValue] = useState<Dayjs | null>(dayjs(props.defaultValue));
 
   // update the final state of the date value to parent component
   useEffect(() => {
