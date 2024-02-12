@@ -8,8 +8,6 @@ export class DonationRequestRepository {
       donationRequest
     );
   }
-
-  // TODO: This was created during model creation. Feel free to expand upon it as needed
   async cancelDonationRequest(id: number) {
     return await AppDataSource.getRepository(DonationRequest).softDelete(id);
   }
@@ -19,7 +17,7 @@ export class DonationRequestRepository {
   }
 
   async retrieveById(id: number) {
-    return await AppDataSource.getRepository(DonationRequest).find({
+    return await AppDataSource.getRepository(DonationRequest).findOne({
       where: { id },
       relations: ['donationRequestItems'],
     });
