@@ -38,8 +38,7 @@ function* DonationRequestGenerator(
   const donationRequestItem = new DonationRequestItem();
   donationRequestItem.quantity = Math.floor(Math.random() * 10);
 
-  // TODO: For now, let's just associate the first 1 donation_request_items to a random 2 donation_event_items
-  // TODO: Slim possibility of having the same donation_event_item for both donation_request_items
+  // TODO: For now, let's just associate the first 1 donation_request_items to a random donation_event_items
   const randomDonationEventItem =
     Object.values(donationEventItem)[
       Math.floor(Math.random() * Object.values(donationEventItem).length)
