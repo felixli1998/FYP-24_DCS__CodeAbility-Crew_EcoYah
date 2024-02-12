@@ -1,5 +1,5 @@
 // React Imports
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 // MUI Imports
 import { Box, Stack, Typography } from '@mui/material';
@@ -18,22 +18,20 @@ import dayjs, { Dayjs } from 'dayjs';
 import _ from 'lodash';
 
 type DonationRequestType = {
-  donationEventID: number;
   user: number;
+  donationRequestItems: Record<string, string | number>[];
+  omitPoints: boolean;
   dropOffDate: Date;
   dropOffTime: string;
-  omitPoints: boolean;
-  donationRequestItems: Record<string, string | number>[];
 };
 
 export default function DonationRequestForm() {
   const [donationRequest, setDonationRequest] = useState<DonationRequestType>({
-    donationEventID: 0,
     user: 0,
+    donationRequestItems: [],
+    omitPoints: false,
     dropOffDate: new Date(),
     dropOffTime: '',
-    omitPoints: false,
-    donationRequestItems: [],
   });
   const items: string[] = ['Broccoli', 'Cabbage', 'Eggplants']; // Hardcode for now
   const itemsInfo: Record<string, string | number>[] = [
@@ -98,28 +96,30 @@ export default function DonationRequestForm() {
   const handleItemQuantityChange = (
     updatedItemQuantity: Record<string, Record<string, number | string>>
   ) => {
-    console.log(updatedItemQuantity);
-    // setDonationRequest((prevData) => ({
-    //   ...prevData,
-    //   donationRequestItems: [updatedItemQuantity],
-    // }));
+    const donationRequestItems: Record<string, string | number>[] = [];
+    _.mapValues(updatedItemQuantity, function (value, key) {
+      donationRequestItems.push({
+        donationEventItemID: key,
+        quantity: value.quantity,
+      });
+    });
+    setDonationRequest((prevData) => ({
+      ...prevData,
+      donationRequestItems: donationRequestItems,
+    }));
   };
 
   const handleDateTimeChange = (dateTime: Dayjs | null) => {
     if (dateTime !== null) {
       const formattedDate = dayjs(dateTime).format('DD/MM/YYYY');
       const formattedTime = dayjs(dateTime).format('HH:mm:ss');
-      const [day, month, year] = formattedDate.split('/').map(Number);
-      const dateObject = new Date(year, month - 1, day);
       setDonationRequest((prevData) => ({
         ...prevData,
-        dropOffDate: dateObject,
+        dropOffDate: dayjs(formattedDate, 'DD/MM/YYYY').toDate(),
         dropOffTime: formattedTime,
       }));
     }
   };
-
-  console.log(donationRequest);
 
   const handleButtonChange = (status: boolean) => {
     setValidateForm(true);
