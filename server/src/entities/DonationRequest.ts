@@ -26,7 +26,11 @@ export class DonationRequest {
   @ManyToOne(() => User, (user) => user.donationRequests)
   user: User;
 
-  @OneToMany(() => DonationRequestItem, (DonationRequestItem) => DonationRequestItem.donationRequest)
+  @OneToMany(
+    () => DonationRequestItem,
+    (DonationRequestItem) => DonationRequestItem.donationRequest,
+    { cascade: ['update', 'insert'] }
+  )
   donationRequestItems: DonationRequestItem[];
 
   @Column({
@@ -64,7 +68,8 @@ export class DonationRequest {
 
   // To support soft delete
   @DeleteDateColumn({
-    comment: 'The date at which the donor wish to terminate the donation request.'
+    comment:
+      'The date at which the donor wish to terminate the donation request.',
   })
   deletedAt: Date;
 }
