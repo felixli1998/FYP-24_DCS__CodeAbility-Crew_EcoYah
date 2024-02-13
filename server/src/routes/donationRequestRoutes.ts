@@ -107,7 +107,7 @@ router.get('/retrieve-by-date', async (req, res) => {
 
   try {
     const result =
-      await donationRequestRepository.retrieveDonationRequestByDate(
+      await donationRequestService.retrieveDonationRequestByDate(
         new Date(date as string)
       );
     return generateResponse(res, 200, result);
