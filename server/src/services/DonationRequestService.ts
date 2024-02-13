@@ -17,4 +17,10 @@ export class DonationRequestService {
   async cancelDonationRequest(id: number) {
     return await this.donationRequestRepository.cancelDonationRequest(id);
   }
+
+  async retrieveDonationRequestByDate(date: Date) {
+    return await this.donationRequestRepository.retrieveDonationRequestByDate(
+      date
+    );
+  }
 }

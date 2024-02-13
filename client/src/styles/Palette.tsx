@@ -14,6 +14,10 @@ export const theme = createTheme({
     }, 
     error: {
       main: "#d32f2f"
+    },
+    success:{
+      main: "#008000",
+      dark: "#013B23"
     }
   },
 });
