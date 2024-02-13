@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { styled } from "@mui/material/styles";
 
 import {
     Button,
@@ -28,13 +29,25 @@ type DonationEventCardProps = {
     numHoursLeft: number;
 } 
 
+const breakpointSize = "sm";
+const StyledCard = styled(Card)(({ theme }) => ({
+    // maxWidth: '100%', // Initially set to take up full width
+    width: '95%', // Initially set to auto width
+    // margin: '8px', // Add some margin for spacing between cards
+    // Define media query for larger screens
+    [theme.breakpoints.up(breakpointSize)]: {
+    //   maxWidth: '400px', // Set fixed width for larger screens
+      width: '400px', // Set fixed width for larger screens
+    },
+  }));
+
 export default function DonationEventCard(props: DonationEventCardProps) {
     return (
-        <Card sx={{ width:"400px", borderRadius: '25px'}} elevation={2}>
+        <StyledCard sx={{ borderRadius: "25px"}} elevation={2}>
             <CardMedia
                 component="img" 
                 image={props.imgSrc}
-                height='200px'
+                height="200px"
                 title={props.name}
                 sx={{padding: 2, borderRadius: '25px'}}
             />
@@ -66,6 +79,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
                     </Grid>
                 </Grid>
             </CardContent>
-        </Card>
+        </StyledCard>
     );
 }
+

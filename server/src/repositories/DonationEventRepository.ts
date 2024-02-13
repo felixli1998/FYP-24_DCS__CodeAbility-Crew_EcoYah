@@ -108,6 +108,10 @@ export class DonationEventRepository {
 
             queryBuilder.andWhere("donationEvent.name ILIKE :name", { name: `%${filters.name}%` });
         }
+        
+        // Number of Donors/Donation Requests
+
+
         // Pagination
         const totalCount = await queryBuilder.getCount();
         const totalPages = Math.ceil(totalCount / DonationEventRepository.PAGE_SIZE);

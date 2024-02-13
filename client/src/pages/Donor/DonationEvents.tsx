@@ -1,9 +1,11 @@
 import {useState, useEffect } from "react";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
 import { fetchDonationEvents } from '../../services/donationEventApi';
+import { fetchEventTypes } from '../../services/eventTypesApi';
 
 import {
     Box,
+    Chip,
     Container,
     Grid,
     Typography,
@@ -31,6 +33,8 @@ export default function DonationEvents() {
     const [events, setEvents] = useState([]);
     const [errorFetchingEvents, setErrorFetchingEvents] = useState(false);
 
+    const [eventTypes, setEventTypes] = useState([]);
+
     const getAllEvents = async () => {
         try {
             // const response = await fetch('http://localhost:8000/donation-events/all');
@@ -42,7 +46,17 @@ export default function DonationEvents() {
         } catch (error) {
             console.error('Error:', error);
             setErrorFetchingEvents(true);
-            throw error;
+        }
+    }
+
+    const getAllEventTypes = async () => {
+        try {
+            const response = await fetchEventTypes();
+            console.log(response);
+            return response.data.eventTypes;
+        } catch (error) {
+            console.error('Error:', error);
+            // throw error;
         }
     }
 
@@ -58,6 +72,18 @@ export default function DonationEvents() {
             }
         }
         fetchData();
+
+        const fetchEventTypesData = async () => {
+            try {
+                const res = await getAllEventTypes();
+                console.log(res)
+                setEventTypes(res);
+            } catch (error) {
+                console.error('Error:', error);
+                // throw error;
+            }
+        }
+        fetchEventTypesData();
     }, []);
 
     return (
@@ -74,9 +100,18 @@ export default function DonationEvents() {
             
             <Typography sx={{fontWeight: 'bold', marginY: 2}}>Donation Categories</Typography>
 
+            <Box sx={{marginBottom: 2}}>
+                {eventTypes.map((eventType: any) => (
+                    <Chip 
+                        key={eventType.id}
+                        label={eventType.name} 
+                        sx={{marginRight: 1, marginBottom: 1}}/>
+                ))}
+            </Box>
+
             <Grid container spacing={3}>
                 {events.map((event: eventType) => (
-                    <Grid item sx={{marginBottom: 2}}>
+                    <Grid item sx={{marginBottom: 2}} key={event.id}>
                         <DonationEventCard
                             name={event.name}
                             description='This is an example description'
@@ -88,16 +123,5 @@ export default function DonationEvents() {
                 ))}
             </Grid>
         </Container>
-        // <div>
-        //     <h1>Donation Events</h1>
-        //     <ul>
-        //         {events.map((event) => (
-        //             <li key={event.id}>
-        //                 <h2>{event.name}</h2>
-        //                 <p>{event.description}</p>
-        //             </li>
-        //         ))}
-        //     </ul>
-        // </div>
     );
 }
