@@ -2,7 +2,7 @@
 import { startOfDay, endOfDay } from 'date-fns';
 
 // Internal imports
-import { DonationRequest } from '../entities/DonationRequest';
+import { DonationRequest, Status } from '../entities/DonationRequest';
 import { AppDataSource } from '../config/data-source';
 import { Between } from 'typeorm';
 
@@ -50,7 +50,7 @@ export class DonationRequestRepository {
     return await AppDataSource.getRepository(DonationRequest).find({
       select: selectOptions,
       withDeleted: false, // only return active records
-      where: { dropOffDate: Between(start, end) },
+      where: { dropOffDate: Between(start, end), status: Status.SUBMITTED },
       cache: {
         id: `retrieve-by-date-${date.toISOString()}`, // Cache key by date
         milliseconds: 30000, // 30 seconds for now
