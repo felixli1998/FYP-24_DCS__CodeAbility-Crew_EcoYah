@@ -34,6 +34,7 @@ function ResponsiveAppBar() {
 
   const handleAdminLogOut = () => {
     localStorage.removeItem('ecoyah-email');
+    localStorage.removeItem('admin-id');
     navigate('/admin/sign-in');
     navActionLogicMap(); // handle use case if there's no change in the URL
   }
