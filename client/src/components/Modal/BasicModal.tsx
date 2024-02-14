@@ -56,7 +56,7 @@ export default function BasicModal(props: BasicModalType) {
             />
             <StaffTypography
               size={1}
-              text={`<b>Donation Event:</b>`}
+              text={`<b>Donation Event:</b> ${props.data.donationRequestItems[0].donationEventItem.donationEvent.name}`}
               type={'title'}
               customStyles={{ fontWeight: 'none' }}
             />

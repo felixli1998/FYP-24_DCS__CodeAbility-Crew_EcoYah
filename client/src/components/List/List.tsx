@@ -25,10 +25,12 @@ type ItemListType = {
 };
 
 export default function ItemList(props: ItemListType) {
-  const [openModal, setOpenModal] = useState(false);
+  const [openModals, setOpenModals] = useState<Array<boolean>>(Array(props.data.length).fill(false));
 
-  const handleButtonChange = (status: boolean) => {
-    setOpenModal(true);
+  const handleButtonChange = (index: number, status: boolean) => {
+    const newOpenModals = [...openModals];
+    newOpenModals[index] = status;
+    setOpenModals(newOpenModals);
   };
 
   return (
@@ -76,14 +78,14 @@ export default function ItemList(props: ItemListType) {
                       color: 'primary.dark',
                       borderColor: 'primary.dark',
                     }}
-                    onButtonChange={handleButtonChange}
+                    onButtonChange={(status: boolean) => handleButtonChange(index, status)}
                   />
                 </Box>
               </ListItemText>
               <BasicModal
-                open={openModal}
+                open={openModals[index]}
                 data={eachData}
-                onModalChange={(status: boolean) => setOpenModal(status)}
+                onModalChange={(status: boolean) => handleButtonChange(index, status)}
               />
             </ListItem>
             <Divider variant='inset' component='li' />

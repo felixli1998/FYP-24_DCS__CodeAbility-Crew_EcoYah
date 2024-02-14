@@ -34,7 +34,7 @@ export type FormDataType = {
 
 export type DonationRequestType = {
   id: number;
-  user: Record<string, string>;
+  user: { name: string };
   status: string;
   dropOffDate: string;
   dropOffTime: string;
@@ -44,10 +44,17 @@ export type DonationRequestType = {
 export type DonationRequestItemsType = {
   id: number;
   quantity: number;
-  donationEventItem: Record<
-    string,
-    | number
-    | Record<string, Record<string, string | number>>
-    | Record<string, Record<string, string>>
-  >;
+  donationEventItem: {
+    id: number;
+    donationEvent: {
+      id: number;
+      name: string;
+    };
+    item: {
+      id: number;
+      name: string;
+      unit: string;
+    };
+    pointsPerUnit: number;
+  };
 };
