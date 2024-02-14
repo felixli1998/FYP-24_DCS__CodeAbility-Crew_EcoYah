@@ -112,8 +112,7 @@ router.get('/retrieve-active-by-date', async (req, res) => {
         new Date(date as string)
       );
     
-    if (!result) return generateResponse(res, 200, { action: false, message: 'no_data', data: null});
-    return generateResponse(res, 200, { action: true, message: 'retrieve_success', data: result });
+    return generateResponse(res, 200, result);
   } catch (error) {
     console.error("Error:", error);
     return generateResponse(res, 500, 'Something went wrong.');

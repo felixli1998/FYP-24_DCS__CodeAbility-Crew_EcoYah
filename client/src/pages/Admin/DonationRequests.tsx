@@ -1,5 +1,5 @@
 // React Imports
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // MUI Imports
 import { Stack } from '@mui/material';
@@ -15,6 +15,7 @@ import { DONATION_REQUEST_ROUTES } from '../../services/routes';
 import axios from 'axios';
 
 export default function DonationRequests() {
+  const [donationRequests, setDonationRequests] = useState([]);
   const handleDateChange = (date: Dayjs | null) => {
     console.log(date);
     if (date !== null) handleData(date);
@@ -25,11 +26,12 @@ export default function DonationRequests() {
     axios
       .get(DONATION_REQUEST_ROUTES.RETRIEVE_ACTIVE_BY_DATE, {
         params: {
-          date: dayjs(date).format('DD/MM/YYYY'),
+          date: dayjs(date).format('YYYY/MM/DD'),
         },
       })
       .then((resp) => {
         console.log(resp);
+        setDonationRequests(resp.data.data);
       })
       .catch((err) => console.log(err));
   };
@@ -50,7 +52,7 @@ export default function DonationRequests() {
         defaultValue={new Date()}
         onDateChange={handleDateChange}
       ></DatePicker>
-      <ItemList></ItemList>
+      <ItemList data={donationRequests}></ItemList>
     </Stack>
   );
 }
