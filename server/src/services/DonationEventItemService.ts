@@ -2,7 +2,6 @@
 import { DonationEventItem } from '../entities/DonationEventItem';
 import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
 
-
 export class DonationEventItemService {
   private donationItemRepository: DonationEventItemRepository;
 
@@ -11,6 +10,12 @@ export class DonationEventItemService {
   }
 
   async createDonationEventItem(donationEventItem: DonationEventItem) {
-    return this.donationItemRepository.createDonationEventItem(donationEventItem); 
+    return this.donationItemRepository.createDonationEventItem(
+      donationEventItem
+    );
+  }
+
+  async retrieveDonationEventItemById(id: number) {
+    return this.donationItemRepository.retrieveDonationEventItemById(id);
   }
 }
