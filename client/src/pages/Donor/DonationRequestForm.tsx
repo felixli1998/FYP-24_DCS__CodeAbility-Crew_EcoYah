@@ -112,7 +112,7 @@ export default function DonationRequestForm() {
   const handleDateTimeChange = (dateTime: Dayjs | null) => {
     if (dateTime !== null) {
       const formattedDate = dayjs(dateTime).format('DD/MM/YYYY');
-      const formattedTime = dayjs(dateTime).format('HH:mm:ss');
+      const formattedTime = dayjs(dateTime).format('HH:mm');
       setDonationRequest((prevData) => ({
         ...prevData,
         dropOffDate: dayjs(formattedDate, 'DD/MM/YYYY').toDate(),

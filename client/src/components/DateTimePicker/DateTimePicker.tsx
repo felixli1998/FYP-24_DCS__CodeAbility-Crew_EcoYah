@@ -58,7 +58,7 @@ export default function DateTimePickerValue(props: DateTimePickerValueType) {
               'Please choose a date and time',
           },
         }}
-        format='DD/MM/YYYY HH:mm:ss'
+        format='DD/MM/YYYY HH:mm'
       />
     </LocalizationProvider>
   );
