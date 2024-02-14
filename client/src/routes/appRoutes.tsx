@@ -10,7 +10,7 @@ import DonationEvents from '../pages/Donor/DonationEvents';
 
 // Admin routes //
 import AdminHome from '../pages/Admin/AdminHome';
-import AdminSignIn from '../pages/Admin/AdminSignIn';
+import AdminSignIn from '../pages/Admin/SignIn';
 import DonationEventForm from '../pages/Admin/DonationEventForm';
 import DonationEventPreview from '../pages/Admin/DonationEventPreview';
 
