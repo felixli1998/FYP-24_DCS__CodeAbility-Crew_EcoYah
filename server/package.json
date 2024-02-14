@@ -22,7 +22,8 @@
     "reflect-metadata": "^0.2.1",
     "typeorm": "^0.3.19",
     "uuid": "^9.0.1",
-    "typeorm-naming-strategies": "^4.1.0"
+    "typeorm-naming-strategies": "^4.1.0",
+    "date-fns": "^3.3.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

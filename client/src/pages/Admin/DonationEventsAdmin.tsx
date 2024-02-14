@@ -10,9 +10,16 @@ import {
   Pagination,
   Select,
   Typography,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import AddIcon from "@mui/icons-material/Add";
+import {
+  DONATION_EVENT_ROUTES,
+  EVENT_TYPE_ROUTES,
+} from "../../services/routes";
 
 type DonationEvent = {
   id: number;
@@ -25,17 +32,15 @@ type DonationEvent = {
   updatedAt: string;
 };
 
+type EventType = {
+  id: number;
+  name: string;
+};
+
 export default function DonationEventsAdmin() {
   const eventStatuses = ["All", "Active", "Inactive"];
-  const eventTypes = [
-    { typeName: "All", typeId: 0 },
-    { typeName: "Electronic Waste", typeId: 1 },
-    { typeName: "Food Waste", typeId: 2 },
-    { typeName: "Book Donation", typeId: 3 },
-    { typeName: "Clothing Waste", typeId: 4 },
-  ];
-
   const [statusFilter, setStatusFilter] = useState("All");
+  const [eventTypes, setEventTypes] = useState<EventType[]>([]);
   const [typeFilter, setTypeFilter] = useState(0);
   const [events, setEvents] = useState<DonationEvent[]>([]);
   const [page, setPage] = useState<number>(1);
@@ -55,7 +60,7 @@ export default function DonationEventsAdmin() {
     }
     if (queryParams !== "") queryParams = "?" + queryParams;
     axios
-      .get("http://localhost:8000/donation-events/all" + queryParams)
+      .get(DONATION_EVENT_ROUTES.GET_ALL + queryParams)
       .then((resp) => {
         let newEvents = resp.data.data;
         if (getMore) newEvents = [...events, ...newEvents];
@@ -66,6 +71,12 @@ export default function DonationEventsAdmin() {
   }
 
   useEffect(() => {
+    axios
+      .get(EVENT_TYPE_ROUTES.GET_ALL)
+      .then((resp) => {
+        setEventTypes([{ id: 0, name: "All" }, ...resp.data.data.eventTypes]);
+      })
+      .catch((err) => console.log(err));
     getData("All", 0, false);
   }, []);
 
@@ -80,8 +91,13 @@ export default function DonationEventsAdmin() {
         <Typography variant="h5" fontWeight="bold" color="primary.main">
           Donation Events
         </Typography>
-        <Button href="donation-event-form" variant="contained">
-          + Create
+        <Button
+          href="donation-event-form"
+          variant="contained"
+          sx={{ height: "2.75rem" }}
+        >
+          <AddIcon />
+          &nbsp; <Typography>Create</Typography>
         </Button>
       </Box>
 
@@ -91,36 +107,44 @@ export default function DonationEventsAdmin() {
         justifyContent="space-between"
         marginTop="2.5rem"
       >
-        <Select
-          value={statusFilter}
-          onChange={(e) => {
-            setStatusFilter(e.target.value);
-            getData(e.target.value, typeFilter, false);
-            setPage(1);
-          }}
-          sx={{ height: "2.5rem", width: "20rem" }}
-        >
-          {eventStatuses.map((option, i) => (
-            <MenuItem key={i} value={option}>
-              {option}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          value={typeFilter}
-          onChange={(e) => {
-            setTypeFilter(+e.target.value);
-            getData(statusFilter, +e.target.value, false);
-            setPage(1);
-          }}
-          sx={{ height: "2.5rem", width: "20rem" }}
-        >
-          {eventTypes.map((option) => (
-            <MenuItem key={option.typeId} value={option.typeId}>
-              {option.typeName}
-            </MenuItem>
-          ))}
-        </Select>
+        <FormControl>
+          <InputLabel>Status</InputLabel>
+          <Select
+            value={statusFilter}
+            onChange={(e) => {
+              setStatusFilter(e.target.value);
+              getData(e.target.value, typeFilter, false);
+              setPage(1);
+            }}
+            sx={{ height: "2.5rem", width: "20rem" }}
+            label="Status"
+          >
+            {eventStatuses.map((option, i) => (
+              <MenuItem key={i} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel>Event Type</InputLabel>
+          <Select
+            value={typeFilter}
+            onChange={(e) => {
+              setTypeFilter(+e.target.value);
+              getData(statusFilter, +e.target.value, false);
+              setPage(1);
+            }}
+            sx={{ height: "2.5rem", width: "20rem" }}
+            label="Event Type"
+          >
+            {eventTypes.map((option) => (
+              <MenuItem key={option.id} value={option.id}>
+                {option.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Box>
 
       <Grid padding="0 19rem" container marginTop="3rem">
