@@ -18,3 +18,8 @@ export const IMAGE_ROUTES = {
   UPDATE: `${BASE_URL}/images/:id`,
   RETRIEVE_BY_FILE_PATH: `${BASE_URL}/images/:filePath`,
 }
+
+// Donation Request Routes //
+export const DONATION_REQUEST_ROUTES = {
+  RETRIEVE_ACTIVE_BY_DATE: `${BASE_URL}/donation-requests/retrieve-active-by-date`,
+}

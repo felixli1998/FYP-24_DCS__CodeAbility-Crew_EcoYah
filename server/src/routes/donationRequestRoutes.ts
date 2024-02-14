@@ -100,8 +100,9 @@ router.post('/test/cancel', async (req, res) => {
   }
 });
 
-router.get('/retrieve-by-date', async (req, res) => {
+router.get('/retrieve-active-by-date', async (req, res) => {
   const params = req.query;
+  console.log(params)
   const filteredParams = strongParams(params, ['date']);
   const { date } = filteredParams;
 
@@ -110,8 +111,11 @@ router.get('/retrieve-by-date', async (req, res) => {
       await donationRequestService.retrieveDonationRequestByDate(
         new Date(date as string)
       );
-    return generateResponse(res, 200, result);
+    
+    if (!result) return generateResponse(res, 200, { action: false, message: 'no_data', data: null});
+    return generateResponse(res, 200, { action: true, message: 'retrieve_success', data: result });
   } catch (error) {
+    console.error("Error:", error);
     return generateResponse(res, 500, 'Something went wrong.');
   }
 });

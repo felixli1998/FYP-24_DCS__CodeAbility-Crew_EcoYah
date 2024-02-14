@@ -1,5 +1,5 @@
 // React Imports
-import React from 'react';
+import { useEffect } from 'react';
 
 // MUI Imports
 import { Stack } from '@mui/material';
@@ -10,12 +10,33 @@ import DatePicker from '../../components/DateTimePicker/DatePicker';
 import ItemList from '../../components/List/List';
 
 // Other Imports
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { DONATION_REQUEST_ROUTES } from '../../services/routes';
+import axios from 'axios';
 
 export default function DonationRequests() {
   const handleDateChange = (date: Dayjs | null) => {
     console.log(date);
+    if (date !== null) handleData(date);
   };
+
+  const handleData = (date: Dayjs | Date) => {
+    console.log(date);
+    axios
+      .get(DONATION_REQUEST_ROUTES.RETRIEVE_ACTIVE_BY_DATE, {
+        params: {
+          date: dayjs(date).format('DD/MM/YYYY'),
+        },
+      })
+      .then((resp) => {
+        console.log(resp);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    handleData(new Date());
+  }, []);
 
   return (
     <Stack spacing={5} sx={{ margin: { xs: '2rem 2rem', md: '2rem 4rem' } }}>
@@ -24,7 +45,11 @@ export default function DonationRequests() {
         size={2.5}
         text={'Active Donation Requests'}
       ></StaffTypography>
-      <DatePicker label={'Date'} defaultValue={new Date()} onDateChange={handleDateChange}></DatePicker>
+      <DatePicker
+        label={'Date'}
+        defaultValue={new Date()}
+        onDateChange={handleDateChange}
+      ></DatePicker>
       <ItemList></ItemList>
     </Stack>
   );
