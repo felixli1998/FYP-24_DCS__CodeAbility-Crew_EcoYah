@@ -17,12 +17,10 @@ import axios from 'axios';
 export default function DonationRequests() {
   const [donationRequests, setDonationRequests] = useState([]);
   const handleDateChange = (date: Dayjs | null) => {
-    console.log(date);
     if (date !== null) handleData(date);
   };
 
   const handleData = (date: Dayjs | Date) => {
-    console.log(date);
     axios
       .get(DONATION_REQUEST_ROUTES.RETRIEVE_ACTIVE_BY_DATE, {
         params: {
@@ -30,7 +28,6 @@ export default function DonationRequests() {
         },
       })
       .then((resp) => {
-        console.log(resp);
         setDonationRequests(resp.data.data);
       })
       .catch((err) => console.log(err));
