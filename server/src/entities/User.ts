@@ -5,18 +5,19 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   OneToMany,
-} from 'typeorm';
-import { DonationEvent } from './DonationEvent';
+} from "typeorm";
+import { DonationEvent } from "./DonationEvent";
+import { DonationRequest } from "./DonationRequest";
 
 export enum UserRole {
-  ADMIN = 'admin',
-  STAFF = 'staff',
-  DONOR = 'donor',
+  ADMIN = "admin",
+  STAFF = "staff",
+  DONOR = "donor",
 }
 
 export enum Status {
-  ACTIVE = 'active',
-  TERMINATED = 'terminated',
+  ACTIVE = "active",
+  TERMINATED = "terminated",
 }
 
 @Entity()
@@ -49,24 +50,27 @@ export class User {
 
   // By default, the role will always be donor. Only the developers has the autonomy to create profiles of different role //
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: UserRole,
     default: UserRole.DONOR,
-    comment: 'Consist of the user roles: admin, staff, donor',
+    comment: "Consist of the user roles: admin, staff, donor",
   })
   role: string;
 
   // By default, the status will be set as active upon an account creation //
   @Column({
-    type: 'enum',
+    type: "enum",
     enum: Status,
     default: Status.ACTIVE,
-    comment: 'Consist of the user status: active, terminated',
+    comment: "Consist of the user status: active, terminated",
   })
   status: string;
 
   @OneToMany(() => DonationEvent, (donationEvent) => donationEvent.createdBy)
   donationEvents: DonationEvent[];
+
+  @OneToMany(() => DonationRequest, (donationRequest) => donationRequest.user)
+  donationRequests: DonationRequest[];
 
   @CreateDateColumn()
   createdAt: Date;

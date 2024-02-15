@@ -7,6 +7,8 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.4",
     "@mui/material": "^5.15.4",
+    "@tanstack/react-query": "^5.17.19",
+    "@mui/x-date-pickers": "^6.19.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -14,7 +16,9 @@
     "@types/node": "^16.18.70",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
+    "mui-one-time-password-input": "2.0.0",
     "axios": "^1.6.5",
+    "dayjs": "^1.11.10",
     "libphonenumber-js": "^1.10.53",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
@@ -50,7 +54,7 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.202",
-    "@types/uuid": "^9.0.7"
+    "@types/uuid": "^9.0.7",
+    "@types/lodash": "^4.14.202"
   }
 }

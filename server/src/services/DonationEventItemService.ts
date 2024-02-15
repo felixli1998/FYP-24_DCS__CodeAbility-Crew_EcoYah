@@ -1,6 +1,6 @@
-// services/DonationEventItemService.ts
-import { DonationEventItem } from '../entities/DonationEventItem';
-import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
+// Internal Imports
+import { DonationEventItem } from "../entities/DonationEventItem";
+import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
 
 export class DonationEventItemService {
   private donationItemRepository: DonationEventItemRepository;
@@ -9,12 +9,13 @@ export class DonationEventItemService {
     this.donationItemRepository = donationItemRepository;
   }
 
-  async createDonationEventItem(donationItemRepository: DonationEventItem) {
+  async createDonationEventItem(donationEventItem: DonationEventItem) {
     return this.donationItemRepository.createDonationEventItem(
-      donationItemRepository
-    ); // Assuming createItem is a method in your repository
+      donationEventItem
+    );
   }
 
-  // Other business logic methods
-  // ...
+  async retrieveDonationEventItemById(id: number) {
+    return this.donationItemRepository.retrieveDonationEventItemById(id);
+  }
 }

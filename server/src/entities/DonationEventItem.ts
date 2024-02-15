@@ -7,9 +7,12 @@ import {
   ManyToOne,
   BeforeInsert,
   BeforeUpdate,
-} from 'typeorm';
-import { Item } from './Item';
-import { DonationEvent } from './DonationEvent';
+  OneToMany,
+} from "typeorm";
+import { Item } from "./Item";
+import { DonationEvent } from "./DonationEvent";
+import { DonationRequest } from "./DonationRequest";
+import { DonationRequestItem } from "./DonationRequestItem";
 
 @Entity()
 export class DonationEventItem {
@@ -28,6 +31,12 @@ export class DonationEventItem {
     (donationEvent) => donationEvent.donationEventItems
   )
   donationEvent: DonationEvent;
+
+  @OneToMany(
+    () => DonationRequestItem,
+    (donationRequestItem) => donationRequestItem.donationEventItem
+  )
+  donationRequestItems: DonationRequestItem[];
 
   @Column({
     nullable: false,
@@ -60,7 +69,7 @@ export class DonationEventItem {
   @BeforeInsert()
   beforeInsert() {
     if (!this.isValidTargetQty())
-      throw new Error('Target Qty has to be more than 0');
+      throw new Error("Target Qty has to be more than 0");
   }
 
   private isValidTargetQty() {

@@ -1,19 +1,19 @@
 import { useEffect, useReducer } from 'react';
-import '../styles/App.css';
+import '../../styles/App.css';
 import { ThemeProvider } from '@mui/material';
-import { theme } from '../styles/Palette';
-import profilePic from '../assets/ProfilePicture.png';
+import { theme } from '../../styles/Palette';
+import profilePic from '../../assets/ProfilePicture.png';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 // Components
-import ProfilePic from '../components/EditProfile/ProfilePic';
-import ProfileTextField from '../components/EditProfile/ProfileTextField';
-import { useFeedbackNotification } from '../components/useFeedbackNotification';
+import ProfilePic from '../../components/EditProfile/ProfilePic';
+import ProfileTextField from '../../components/EditProfile/ProfileTextField';
+import { useFeedbackNotification } from '../../components/useFeedbackNotification';
 // import TerminateModal from "../components/EditProfile/TerminateModal";
-import { makeHttpRequest } from '../utils/Utility';
-import { USER_ROUTES } from '../services/routes';
+import { makeHttpRequest } from '../../utils/Utility';
+import { USER_ROUTES } from '../../services/routes';
 import { useNavigate } from 'react-router-dom';
 
 type ErrorActionT = {
