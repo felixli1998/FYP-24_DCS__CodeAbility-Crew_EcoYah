@@ -90,23 +90,17 @@ export class DonationRequestService {
         case 'requestItems':
           if (Array.isArray(value)) {
             const requestItemsPromises = value.map(async (item) => {
-              if (item.id) {
-                return await this.updateExistingDonationRequestItem(
-                  item.id,
-                  item.quantity as number
-                );
-              } else {
-                return await this.createNewDonationRequestItem(
-                  item.donationEventId as number,
-                  item.quantity as number
-                );
-              }
+              return await this.updateExistingDonationRequestItem(
+                item.id,
+                item.quantity as number
+              );
             });
 
             const existingRequestItems =
               await this.donationRequestItemRepository.retrieveByDonationRequestId(
                 donationRequestObj.id
               );
+
             const updatedRequestItems = (await Promise.all(
               requestItemsPromises
             )) as DonationRequestItem[];
