@@ -15,15 +15,31 @@ export class DonationRequestRepository {
     page: number = 1
   ): Promise<{ data: DonationRequest[]; pagination: IPagination }> {
     const offset = (page - 1) * DonationRequestRepository.PAGE_SIZE;
+    const selectOptions = {
+      id: true,
+      omitPoints: true,
+      dropOffDate: true,
+      dropOffTime: true,
+      donationRequestItems: {
+        quantity: true,
+        donationEventItem: {
+          pointsPerUnit: true,
+          donationEvent: {
+            imageId: true
+          },
+        }
+      }
+    }
     const [data, totalCount] = await AppDataSource.getRepository(
       DonationRequest
     ).findAndCount({
-      where: { 
-        user: { id: user_id }, 
-        status: Status.SUBMITTED 
+      select: selectOptions,
+      where: {
+        user: { id: user_id },
+        status: Status.SUBMITTED
       },
       relations: [
-        'donationRequestItems', 
+        'donationRequestItems',
         'donationRequestItems.donationEventItem',
         'donationRequestItems.donationEventItem.donationEvent',
       ],
@@ -52,12 +68,12 @@ export class DonationRequestRepository {
     const [data, totalCount] = await AppDataSource.getRepository(
       DonationRequest
     ).findAndCount({
-      where: { 
-        user: { id: user_id }, 
+      where: {
+        user: { id: user_id },
         status: Status.COMPLETED
       },
       relations: [
-        'donationRequestItems', 
+        'donationRequestItems',
         'donationRequestItems.donationEventItem',
         'donationRequestItems.donationEventItem.donationEvent',
       ],
