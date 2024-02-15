@@ -21,6 +21,7 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
+  borderRadius: 1,
   boxShadow: 24,
   p: 4,
 };
@@ -54,8 +55,8 @@ export default function BasicModal(props: BasicModalType) {
   };
 
   const handleButtonChange = () => {
-    console.log("clicked")
-  }
+    console.log('clicked');
+  };
 
   useEffect(() => {
     if (props.open) handleOpen();
@@ -104,18 +105,33 @@ export default function BasicModal(props: BasicModalType) {
             type={'title'}
             customStyles={{ fontWeight: 'none' }}
           />
-          <BasicButton
-            variant='contained'
-            label={'Complete'}
-            customStyles={{
-              fontSize: '1rem',
-              letterSpacing: '0.12rem',
-              width: '9.375rem',
-              height: '3.75rem',
-              backgroundColor: 'primary.dark',
-            }}
-            onButtonChange={handleButtonChange}
-          />
+          <Box display='flex' justifyContent='space-between'>
+            <BasicButton
+              variant='outlined'
+              label={'Close'}
+              customStyles={{
+                fontSize: '1rem',
+                letterSpacing: '0.12rem',
+                width: '9.375rem',
+                height: '3.75rem',
+                color: 'primary.dark',
+                borderColor: 'primary.dark',
+              }}
+              onButtonChange={handleClose}
+            />
+            <BasicButton
+              variant='contained'
+              label={'Complete'}
+              customStyles={{
+                fontSize: '1rem',
+                letterSpacing: '0.12rem',
+                width: '9.375rem',
+                height: '3.75rem',
+                backgroundColor: 'primary.dark',
+              }}
+              onButtonChange={handleButtonChange}
+            />
+          </Box>
         </Stack>
       </Box>
     </Modal>
