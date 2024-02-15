@@ -122,6 +122,21 @@ router.get('/retrieve-by-id', async (req, res) => {
   }
 });
 
+router.get('/retrieve-by-date', async (req, res) => {
+  const params = req.query;
+  const filteredParams = strongParams(params, ['date']);
+  const { date } = filteredParams;
+
+  try {
+    const result = await donationRequestService.retrieveDonationRequestByDate(
+      new Date(date as string)
+    );
+    return generateResponse(res, 200, result);
+  } catch (error) {
+    return generateResponse(res, 500, 'Something went wrong.');
+  }
+});
+
 router.post('/update', async (req, res) => {
   const payload = req.body;
   const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'requestItems'];

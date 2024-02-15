@@ -40,4 +40,5 @@ export const AppDataSource = new DataSource({
   logging: true,
   subscribers: [],
   migrations: [],
+  cache: true,
 });

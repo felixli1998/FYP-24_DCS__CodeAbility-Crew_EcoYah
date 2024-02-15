@@ -27,7 +27,8 @@ export class DonationRequestService {
   }
 
   async updateExistingDonationRequestItem(id: number, quantity: number) {
-    const donationRequestItemObj = await this.donationRequestItemRepository.retrieveById(id);
+    const donationRequestItemObj =
+      await this.donationRequestItemRepository.retrieveById(id);
 
     if (donationRequestItemObj) {
       donationRequestItemObj.quantity = quantity;
@@ -132,5 +133,11 @@ export class DonationRequestService {
       data: res,
       message: 'Successfully updated donation request',
     };
+  }
+
+  async retrieveDonationRequestByDate(date: Date) {
+    return await this.donationRequestRepository.retrieveDonationRequestByDate(
+      date
+    );
   }
 }
