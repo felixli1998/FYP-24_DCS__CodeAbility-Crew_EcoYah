@@ -137,7 +137,7 @@ router.get('/retrieve-by-date', async (req, res) => {
   }
 });
 
-router.post('/update', async (req, res) => {
+router.put('/update', async (req, res) => {
   const payload = req.body;
   const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'requestItems'];
   const sanitisedPayload = strongParams(payload, allowedParams);
