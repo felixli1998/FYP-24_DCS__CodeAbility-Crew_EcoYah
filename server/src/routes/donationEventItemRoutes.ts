@@ -11,19 +11,18 @@ const donationEventItemService = new DonationEventItemService(donationEventItemR
 
 router.get('/items-by-donation-event-id', async (req, res) => {
   try {
-    const params = req.body;
+    const params = req.query;
     const allowedParams = ["donationEventId"];
     const filteredParams = strongParams(params, allowedParams);
 
     const {donationEventId} = filteredParams;
     if (!donationEventId || donationEventId.toString().trim() === "") {
-      return generateResponse(res, 404, {
+      return generateResponse(res, 400, {
         message: "Donation event id parameter is required",
       });
     }
 
     const items = await donationEventItemService.getDonationEventItembyDonationEventId(donationEventId);
-    console.log(items)
     return generateResponse(res, 200, {items});
   } catch (error) {
     console.error(error);

@@ -19,19 +19,33 @@ import {
     IconButton
   } from '@mui/material';
 
-type eventType = {
-    createdAt: string,
-    endDate: string,
+type itemDetailsType = {
     id: number,
+    name: string,
+    unit: string
+}
+
+type itemsType = {
+    id: number,
+    item: itemDetailsType,
+    minQty: number,
+    pointsPerUnit: number
+}
+
+type eventType = {
+    id: number,
+    items: itemsType[],
+    startDate: string,
+    endDate: string,
     imageId: string,
     isActive: boolean,
     name: string,
-    startDate: string,
+    createdAt: string,
     updatedAt: string
 }
 
 export default function DonationEvents() {
-    const [events, setEvents] = useState([]);
+    const [events, setEvents] = useState<eventType[]>([]);
     const [errorFetchingEvents, setErrorFetchingEvents] = useState(false);
 
     const [eventTypes, setEventTypes] = useState([]);
@@ -58,12 +72,32 @@ export default function DonationEvents() {
         }
     }
 
+    const getDonationEventItems = async (donationEventId: number) => {
+        try {
+            const res = await getDonationEventItemsByDonationId(donationEventId);
+            console.log(res.data.items);
+            return res.data.items;
+        } catch (error) {
+            console.error('Error:', error);
+            // throw error;
+        }
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             try {
+                const updatedEvents: eventType[] = [];
                 const res = await getAllEvents();
                 console.log(res)
-                setEvents(res);
+                for(const eachEvent of res){
+                    const items = await getDonationEventItems(eachEvent.id);
+                    // console.log(items);
+                    const updatedEvent = { ...eachEvent, items };
+                    console.log(updatedEvent);
+                    updatedEvents.push(updatedEvent);
+                }
+                console.log(updatedEvents)
+                setEvents(updatedEvents);
             } catch (error) {
                 console.error('Error:', error);
                 setErrorFetchingEvents(true);
@@ -112,7 +146,7 @@ export default function DonationEvents() {
                     <Grid item sx={{marginBottom: 2}} key={event.id}>
                         <DonationEventCard
                             name={event.name}
-                            description={`Take part in this donation by doating ${event.name}!`}
+                            description={`Take part in this donation by donating ${event.items.map(eachItem => eachItem.item.name).join(", ")}!`}
                             imgSrc={event.imageId}
                             numJoined={8}
                             numHoursLeft={8}
