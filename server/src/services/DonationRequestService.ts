@@ -22,6 +22,12 @@ export class DonationRequestService {
     );
   }
 
+  async updateDonationRequest(donationRequest: DonationRequest) {
+    return await this.donationRequestRepository.createDonationRequest(
+      donationRequest
+    );
+  }
+
   async cancelDonationRequest(id: number) {
     return await this.donationRequestRepository.cancelDonationRequest(id);
   }

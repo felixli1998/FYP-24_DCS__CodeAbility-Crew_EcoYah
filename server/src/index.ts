@@ -18,6 +18,7 @@ import donationEventRoutes from './routes/donationEventRoutes';
 import itemRoutes from './routes/itemRoutes';
 import eventRoutes from './routes/eventTypeRoutes';
 import donationRequestRoutes from './routes/donationRequestRoutes';
+import donationRequestItemRoutes from './routes/donationRequestItemRoutes';
 
 dotenv.config();
 
@@ -54,6 +55,7 @@ app.use('/donation-events', donationEventRoutes);
 app.use('/items', itemRoutes);
 app.use('/event-types', eventRoutes);
 app.use('/donation-requests', donationRequestRoutes);
+app.use('/donation-request-items', donationRequestItemRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
