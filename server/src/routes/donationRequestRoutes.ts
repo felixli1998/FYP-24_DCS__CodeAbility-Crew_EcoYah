@@ -37,6 +37,31 @@ const donationRequestItemService = new DonationRequestItemService(
   donationRequestItemRepository
 );
 
+router.get('/active-donation-requests/:id', async (req, res) => {
+  try {
+    // TODO: Ensure that the person requesting the donation request is the same as the user_id
+    const parsedId = parseInt(req.params.id);
+    if (isNaN(parsedId)) return generateResponse(res, 400, 'ID should be a number');
+    const { data, pagination } = await donationRequestService.getActiveDonationRequestFromUser(parsedId);
+    return generateResponse(res, 200, data, pagination);
+    }catch (error) {
+      console.log(res)
+      return generateResponse(res, 500, 'Something went wrong.');
+    }
+});
+
+router.get('/completed-donation-requests/:id', async (req, res) => {
+  try {
+    // TODO: Ensure that the person requesting the donation request is the same as the user_id
+    const parsedId = parseInt(req.params.id);
+    if (isNaN(parsedId)) return generateResponse(res, 400, 'ID should be a number');
+    const { data, pagination } = await donationRequestService.getCompletedDonationRequestFromUser(parsedId);
+    return generateResponse(res, 200, data, pagination);
+    }catch (error) {
+      return generateResponse(res, 500, 'Something went wrong.');
+    }
+});
+
 // TODO: This was created during model creation. Feel free to delete or expand it as needed
 router.post('/test/create', async (req, res) => {
   try {
