@@ -34,6 +34,19 @@ export class DonationRequestRepository {
     });
   }
 
+  async completeDonationRequest(id: number) {
+    const donationRequest = await AppDataSource.getRepository(
+      DonationRequest
+    ).findOne({
+      where: { id },
+    });
+
+    if (donationRequest) {
+      donationRequest.status = Status.COMPLETED;
+      await AppDataSource.getRepository(DonationRequest).save(donationRequest);
+    }
+  }
+
   // TODO: This was created during model creation. Feel free to expand upon it as needed
   async retrieveDonationRequestByDate(date: Date) {
     const start = startOfDay(date);

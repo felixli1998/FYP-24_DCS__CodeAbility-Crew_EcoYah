@@ -160,4 +160,23 @@ router.put('/update', async (req, res) => {
   }
 });
 
+router.put('/complete', async (req, res) => {
+  const payload = req.body;
+  const allowedParams = ['id'];
+  const sanitisedPayload = strongParams(payload, allowedParams);
+
+  if (!('id' in sanitisedPayload))
+    return generateResponse(res, 200, 'Missing id');
+
+  const { id } = sanitisedPayload;
+
+  try {
+    const payload = await donationRequestService.completeDonationRequest(id);
+
+    return generateResponse(res, 200, 'Updated successfully!');
+  } catch (err) {
+    return generateResponse(res, 500, 'Something went wrong');
+  }
+});
+
 export default router;
