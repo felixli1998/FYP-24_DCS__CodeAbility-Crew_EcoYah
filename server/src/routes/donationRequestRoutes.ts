@@ -62,6 +62,12 @@ router.get('/completed-donation-requests/:id', async (req, res) => {
     }
 });
 
+router.post("/", async(req, res) => {
+  // Assume that the request body contains an object of the fom
+  // { request: {requestDetails}, eventId: 1, userId:1  }
+  return generateResponse(res, 200, "Not implemented");
+})
+
 // TODO: This was created during model creation. Feel free to delete or expand it as needed
 router.post('/test/create', async (req, res) => {
   try {
