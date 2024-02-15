@@ -1,7 +1,8 @@
 import {useState, useEffect } from "react";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
-import { fetchDonationEvents } from '../../services/donationEventApi';
+import { fetchActiveDonationEvents } from '../../services/donationEventApi';
 import { fetchEventTypes } from '../../services/eventTypesApi';
+import { getDonationEventItemsByDonationId } from '../../services/donationEventItemApi';
 
 import {
     Box,
@@ -37,10 +38,7 @@ export default function DonationEvents() {
 
     const getAllEvents = async () => {
         try {
-            // const response = await fetch('http://localhost:8000/donation-events/all');
-            // const data = await response.json();
-            // return data;
-            const response = await fetchDonationEvents("");
+            const response = await fetchActiveDonationEvents("");
             console.log(response);
             return response.data;
         } catch (error) {
@@ -114,7 +112,7 @@ export default function DonationEvents() {
                     <Grid item sx={{marginBottom: 2}} key={event.id}>
                         <DonationEventCard
                             name={event.name}
-                            description='This is an example description'
+                            description={`Take part in this donation by doating ${event.name}!`}
                             imgSrc={event.imageId}
                             numJoined={8}
                             numHoursLeft={8}

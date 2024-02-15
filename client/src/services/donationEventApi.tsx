@@ -23,7 +23,7 @@ export const createDonationEvent = async (donationEvent: any, adminID: number) =
 };
 
 // Get all donation events + filter
-export const fetchDonationEvents = async (category: string) => {
+export const fetchActiveDonationEvents = async (category: string) => {
   try {
     const response = await axios.get(URL + "/all", {
       params: {
@@ -32,7 +32,7 @@ export const fetchDonationEvents = async (category: string) => {
         createdBy: "",
         eventType: category,
         name: "",
-        isActive: "",
+        isActive: true,
         pageNumber: 1
       },
     });

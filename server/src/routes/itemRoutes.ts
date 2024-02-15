@@ -7,6 +7,7 @@ import {generateResponse, strongParams} from "../common/methods";
 import {EventType} from "../entities/EventType";
 import { EventTypeRepository } from "../repositories/EventTypeRepository";
 
+
 const router = express.Router();
 const itemRepository = new ItemRepository();
 const eventTypeRepository = new EventTypeRepository();

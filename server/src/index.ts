@@ -18,6 +18,7 @@ import donationEventRoutes from './routes/donationEventRoutes';
 import itemRoutes from './routes/itemRoutes';
 import eventRoutes from './routes/eventTypeRoutes';
 import donationRequestRoutes from './routes/donationRequestRoutes';
+import donationEventItemRoutes from './routes/donationEventItemRoutes';
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use('/', baseRoutes);
 app.use('/users', userRoutes);
 app.use('/images', imageRoutes);
 app.use('/donation-events', donationEventRoutes);
+app.use('/donation-event-item', donationEventItemRoutes);
 app.use('/items', itemRoutes);
 app.use('/event-types', eventRoutes);
 app.use('/donation-requests', donationRequestRoutes);

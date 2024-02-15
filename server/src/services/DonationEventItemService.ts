@@ -18,4 +18,10 @@ export class DonationEventItemService {
   async retrieveDonationEventItemById(id: number) {
     return this.donationItemRepository.retrieveDonationEventItemById(id);
   }
+
+  async getDonationEventItembyDonationEventId(donationEventId: number) {
+    return this.donationItemRepository.getDonationEventItembyDonationEventId(
+      donationEventId
+    );
+  }
 }
