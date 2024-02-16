@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import '../../styles/App.css';
 import { Box, Alert, Stack, Button, Typography, Link } from '@mui/material';
 import logo from '../../assets/EcoYah.png';
-import TextFields from '../../components/TextFields';
-import Checkboxes from '../../components/CheckBox';
-import LongButtons from '../../components/LongButton';
-import EmailCard from '../../components/EmailCard';
+import TextFields from '../../components/TextFields/FormTextFields';
+import Checkboxes from '../../components/Checkbox/FormCheckBox';
+import BasicButton from '../../components/Button/BasicButton';
+import EmailCard from '../../components/Card/EmailCard';
 import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import { makeHttpRequest } from '../../utils/Utility';
 import { GENERAL_ROUTES } from '../../services/routes';
@@ -48,7 +48,7 @@ export default function SignIn() {
 
   const navigate = useNavigate();
 
-  const handleClickStatus = async (status: boolean) => {
+  const handleButtonChange = async (status: boolean) => {
     setValidateForm(status);
 
     if (formData['email'] !== '' && formData['password'] !== '') {
@@ -190,10 +190,11 @@ export default function SignIn() {
               text='none'
               isChecked={handleRmbMe}
             ></Checkboxes>
-            <LongButtons
+            <BasicButton
               label='Sign In'
-              clickStatus={handleClickStatus}
-            ></LongButtons>
+              variant='contained'
+              onButtonChange={handleButtonChange}
+            />
           </Stack>
         ) : (
           <EmailCard />
