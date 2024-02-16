@@ -33,16 +33,17 @@ export default function DonationRequestForm() {
     dropOffDate: new Date(),
     dropOffTime: '',
   });
-  const items: string[] = ['Broccoli', 'Cabbage', 'Eggplants']; // Hardcode for now
   const itemsInfo: Record<string, string | number>[] = [
-    { item: 'Broccoli', unit: 'kilogram', minQty: 1, pointsPerUnit: 20 },
+    { id: 1, item: 'Broccoli', unit: 'kilogram', minQty: 1, pointsPerUnit: 20 },
     {
+      id: 2,
       item: 'Cabbage',
       unit: 'kilogram',
       minQty: 2,
       pointsPerUnit: 40,
     },
     {
+      id: 3,
       item: 'Eggplants',
       unit: 'kilogram',
       minQty: 1,
@@ -57,8 +58,8 @@ export default function DonationRequestForm() {
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
   ) => {
-    if ('Receive Points Upon A Successful Donation' in updatedCheckedState) {
-      if (!updatedCheckedState['Receive Points Upon A Successful Donation'])
+    if ('omitPoints' in updatedCheckedState) {
+      if (!updatedCheckedState['omitPoints'])
         setDonationRequest((prevData) => ({
           ...prevData,
           omitPoints: true,
@@ -73,11 +74,11 @@ export default function DonationRequestForm() {
         if (value) {
           // If value is true, add to selectedItems if not already present
           const itemExists = selectedItems.some(
-            (selectedItem) => selectedItem['item'] === key
+            (selectedItem) => selectedItem['id'] === Number(key)
           );
 
           if (!itemExists) {
-            const foundItem = itemsInfo.find((item) => item['item'] === key);
+            const foundItem = itemsInfo.find((item) => item['id'] === Number(key));
             setSelectedItems((prevSelectedItems) => [
               ...prevSelectedItems,
               { ...foundItem },
@@ -86,7 +87,7 @@ export default function DonationRequestForm() {
         } else {
           // If value is false, remove from selectedItems if present
           setSelectedItems((prevSelectedItems) =>
-            prevSelectedItems.filter((item) => item['item'] !== key)
+            prevSelectedItems.filter((item) => item['id'] !== Number(key))
           );
         }
       });
@@ -128,12 +129,12 @@ export default function DonationRequestForm() {
   return (
     <>
       <ImageCoverCard image={DonationRequestPlaceholder} name={'Food Rescue'} />
-      <Stack spacing={3} sx={{ margin: '2rem 1.5rem' }}>
+      <Stack spacing={3} sx={{ maxWidth: '30rem', margin: '2rem 1.5rem' }}>
         <Typography variant='h5' gutterBottom>
           1. Choose the items to donate:
         </Typography>
         <LabelledCheckBox
-          label={items}
+          label={[{ id: 1, name: 'Broccoli' }, { id: 2, name: 'Cabbage' }, { id: 3, name: 'Eggplants' }]}
           onCheckBoxChange={handleCheckBoxChange}
           validateForm={validateForm}
         />
@@ -165,7 +166,7 @@ export default function DonationRequestForm() {
           validateForm={validateForm}
         />
         <LabelledCheckBox
-          label={['Receive Points Upon A Successful Donation']}
+          label={[{ id: 'omitPoints', name: 'Receive Points Upon A Successful Donation'}]}
           onCheckBoxChange={handleCheckBoxChange}
         />
         <BasicButton

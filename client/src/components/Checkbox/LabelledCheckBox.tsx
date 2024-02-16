@@ -8,17 +8,22 @@ import {
 } from '@mui/material';
 
 type LabelledCheckBoxType = {
-  label: string[];
+  label: LabelType[];
   onCheckBoxChange: (checkedState: Record<string, boolean>) => void;
   validateForm?: boolean; // to account for scenarios where it's optional to select an option
 };
+
+type LabelType = {
+  id: string | number,
+  name: string
+}
 
 export default function LabelledCheckBox(props: LabelledCheckBoxType) {
   // initialise the state of each label to false
   const [checked, setChecked] = useState(() => {
     const initialCheckedState: Record<string, boolean> = {};
-    props.label.forEach((key: string) => {
-      initialCheckedState[key] = false;
+    props.label.forEach((key: LabelType) => {
+      initialCheckedState[key.id] = false;
     });
     return initialCheckedState;  
   });
@@ -27,7 +32,7 @@ export default function LabelledCheckBox(props: LabelledCheckBoxType) {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setChecked({
       ...checked,
-      [event.target.name]: event.target.checked,
+      [event.target.value]: event.target.checked,
     });
   };
 
@@ -42,19 +47,20 @@ export default function LabelledCheckBox(props: LabelledCheckBoxType) {
   return (
     <FormControl error={props.validateForm && !isAtLeastOneChecked}>
       <FormGroup>
-        {props.label.map(function (eachLabel: string, index: number) {
+        {props.label.map(function (eachLabel: LabelType, index: number) {
           return (
             <FormControlLabel
               key={index}
               control={
                 <Checkbox
                   size='medium'
-                  name={eachLabel}
-                  checked={checked[eachLabel]}
+                  name={eachLabel.name}
+                  value={eachLabel.id}
+                  checked={checked[eachLabel.id]}
                   onChange={handleChange}
                 />
               }
-              label={eachLabel}
+              label={eachLabel.name}
             />
           );
         })}
