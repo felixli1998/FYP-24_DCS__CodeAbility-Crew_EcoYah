@@ -23,4 +23,8 @@ export class DonationRequestService {
       date
     );
   }
+
+  async completeDonationRequest(id: number) {
+    return await this.donationRequestRepository.completeDonationRequest(id);
+  }
 }

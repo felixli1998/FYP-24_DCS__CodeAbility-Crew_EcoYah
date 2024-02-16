@@ -64,4 +64,8 @@ export class DonationRequestRepository {
       ],
     });
   }
+
+  async completeDonationRequest(id: number) {
+    await AppDataSource.getRepository(DonationRequest).update({ id: id }, { status: Status.COMPLETED });
+  }
 }
