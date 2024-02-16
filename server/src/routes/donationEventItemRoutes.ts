@@ -22,8 +22,8 @@ router.get('/items-by-donation-event-id', async (req, res) => {
       });
     }
 
-    const items = await donationEventItemService.getDonationEventItembyDonationEventId(donationEventId);
-    return generateResponse(res, 200, {items});
+    const donationEventItems = await donationEventItemService.getDonationEventItembyDonationEventId(donationEventId);
+    return generateResponse(res, 200, {donationEventItems});
   } catch (error) {
     console.error(error);
     return generateResponse(res, 500, {

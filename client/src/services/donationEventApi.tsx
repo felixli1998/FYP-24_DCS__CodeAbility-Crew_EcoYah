@@ -36,7 +36,6 @@ export const fetchActiveDonationEvents = async (category: string) => {
         pageNumber: 1
       },
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error("Error fetching donation events: ", error);

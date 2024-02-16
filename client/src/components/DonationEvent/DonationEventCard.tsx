@@ -26,7 +26,7 @@ type DonationEventCardProps = {
     description: string;
     imgSrc: string;
     numJoined: number;
-    numHoursLeft: number;
+    numHoursLeft: string;
 } 
 
 const breakpointSize = "sm";
@@ -74,7 +74,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
                     <Grid item xs={5} container justifyContent='flex-end' alignItems='center'>
                         <AccessTimeIcon sx={{ color: 'text.secondary', marginRight: 1}}/>
                         <Typography color='text.secondary'>
-                           {props.numHoursLeft} Hours Left
+                           {props.numHoursLeft} Left
                         </Typography>
                     </Grid>
                 </Grid>
