@@ -3,6 +3,7 @@ import DonationEventCard from "../../components/DonationEvent/DonationEventCard"
 import { fetchActiveDonationEvents } from '../../services/donationEventApi';
 import { fetchEventTypes } from '../../services/eventTypesApi';
 import { getDonationEventItemsByDonationId } from '../../services/donationEventItemApi';
+import { retrieveDonationReqCountByEventId } from '../../services/donationRequestApi';
 import SearchIcon from '@mui/icons-material/Search';
 
 import {
@@ -42,6 +43,7 @@ type eventType = {
     startDate: string,
     endDate: string,
     timeLeft: string,
+    numDonors: number,
     imageId: string,
     isActive: boolean,
     name: string,
@@ -86,6 +88,16 @@ export default function DonationEvents() {
         }
     }
 
+    const getDonationReqCount = async (donationEventId: number) => {
+        try {
+            const res = await retrieveDonationReqCountByEventId(donationEventId);
+            return res.data;
+        } catch (error) {
+            console.error('Error:', error);
+            // throw error;
+        }
+    }
+
     const searchEvents = useMemo(() => {
         if(!search || search.trim() === '') return events;
 
@@ -121,7 +133,10 @@ export default function DonationEvents() {
 
                     // Used split('T')[0] as a workaround instead of extracting only Date() from database as I do not want to change the API written
                     const timeLeft = calculateTimeLeft(eachEvent.endDate.split('T')[0] + ' 11:59:59 PM');
-                    const updatedEvent = { ...eachEvent, donationEventItems, timeLeft};
+
+                    const numDonors = await getDonationReqCount(eachEvent.id);
+
+                    const updatedEvent = { ...eachEvent, donationEventItems, timeLeft, numDonors};
                     updatedEvents.push(updatedEvent);
                 }
                 setEvents(updatedEvents);
@@ -169,17 +184,6 @@ export default function DonationEvents() {
                       onChange={(e) => setSearch(e.target.value)}
                 />
 
-            {/* <OutlinedInput
-                id="searchBar-two"
-                fullWidth
-                endAdornment={
-                <InputAdornment position="end">
-                    <SearchIcon />
-                </InputAdornment>
-                }
-                placeholder="Search e.g. Cabbage, Bread"
-            /> */}
-
                 <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
                 
                 <DonationEventCard
@@ -206,9 +210,9 @@ export default function DonationEvents() {
                         <Grid item sx={{marginBottom: 2}} key={event.id}>
                             <DonationEventCard
                                 name={event.name}
-                                description={`Take part in this donation by donating ${event.donationEventItems.map(eachItem => eachItem.item.name).join(", ")}!`}
+                                description={`Take part in this donation by donating ${event.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
                                 imgSrc={event.imageId}
-                                numJoined={8}
+                                numJoined={event.numDonors}
                                 numHoursLeft={event.timeLeft}
                             />
                         </Grid>

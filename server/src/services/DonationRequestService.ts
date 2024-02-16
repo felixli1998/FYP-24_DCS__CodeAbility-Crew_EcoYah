@@ -23,4 +23,12 @@ export class DonationRequestService {
       date
     );
   }
+
+  // async retrieveDonationRequestCountByEventId(
+  //   donationEventId: number
+  // ): Promise<number> {
+  //   return await this.donationRequestRepository.retrieveDonationRequestCountByEventId(
+  //     donationEventId
+  //   );
+  // }
 }

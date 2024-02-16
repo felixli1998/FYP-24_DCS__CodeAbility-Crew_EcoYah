@@ -116,4 +116,20 @@ router.get('/retrieve-by-date', async (req, res) => {
   }
 });
 
+// router.get('/retrieve-donation-request-count-by-event-id', async (req, res) => {
+//   const params = req.query;
+//   const filteredParams = strongParams(params, ['eventId']);
+//   const { donationEventId } = filteredParams;
+
+//   try {
+//     const result =
+//       await donationRequestService.retrieveDonationRequestCountByEventId(
+//         parseInt(donationEventId)
+//       );
+//     return generateResponse(res, 200, result);
+//   } catch (error) {
+//     return generateResponse(res, 500, 'Something went wrong.');
+//   }
+// });
+
 export default router;

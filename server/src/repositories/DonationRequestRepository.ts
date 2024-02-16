@@ -63,5 +63,13 @@ export class DonationRequestRepository {
         'donationRequestItems.donationEventItem.donationEvent',
       ],
     });
+
+    // async function retrieveDonationRequestCountByEventId(
+    //   donationEventId: number
+    // ) {
+    //   return await AppDataSource.getRepository(DonationRequest).count({
+    //     where: { donationEvent: { id: donationEventId } }
+    //   });
+    // }
   }
 }
