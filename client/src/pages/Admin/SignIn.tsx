@@ -5,7 +5,7 @@ import ProfileCard from '../../components/Card/ProfileCard';
 import { theme } from '../../styles/Palette';
 import { makeHttpRequest } from '../../utils/Utility';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import { USER_ROUTES } from '../../services/routes';
+import { USER_ROUTES } from "../../services/routes";
 
 interface ProfilesType {
   id: number;
