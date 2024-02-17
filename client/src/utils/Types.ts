@@ -35,6 +35,10 @@ export type FormDataType = {
 export type DonationRequestType = {
   id: number;
   user: { name: string };
+  donationEvent: {
+    id: number;
+    name: string;
+  };
   status: string;
   dropOffDate: string;
   dropOffTime: string;
@@ -46,10 +50,6 @@ export type DonationRequestItemsType = {
   quantity: number;
   donationEventItem: {
     id: number;
-    donationEvent: {
-      id: number;
-      name: string;
-    };
     item: {
       id: number;
       name: string;

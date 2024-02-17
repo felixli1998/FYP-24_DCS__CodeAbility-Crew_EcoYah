@@ -29,16 +29,16 @@ export class DonationRequestRepository {
       dropOffDate: true,
       status: true,
       user: { name: true },
+      donationEvent: {
+        id: true,
+        name: true,
+      },
       donationRequestItems: {
         id: true,
         quantity: true,
         donationEventItem: {
           id: true,
           pointsPerUnit: true,
-          donationEvent: {
-            id: true,
-            name: true,
-          },
           item: {
             name: true,
             unit: true,
@@ -57,10 +57,10 @@ export class DonationRequestRepository {
       },
       relations: [
         'user',
+        'donationEvent',
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
         'donationRequestItems.donationEventItem.item',
-        'donationRequestItems.donationEventItem.donationEvent',
       ],
     });
   }

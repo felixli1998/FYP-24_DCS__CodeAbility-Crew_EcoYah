@@ -22,6 +22,7 @@ export const IMAGE_ROUTES = {
 // Donation Request Routes //
 export const DONATION_REQUEST_ROUTES = {
   RETRIEVE_ACTIVE_BY_DATE: `${BASE_URL}/donation-requests/retrieve-active-by-date`,
+  UPDATE_STATUS: `${BASE_URL}/donation-requests/complete`,
 };
 
 // Donation Event-related routes //

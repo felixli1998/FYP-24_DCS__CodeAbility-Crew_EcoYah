@@ -13,6 +13,8 @@ import {
   DonationRequestType,
   DonationRequestItemsType,
 } from '../../utils/Types';
+import { DONATION_REQUEST_ROUTES } from "../../services/routes";
+import axios from "axios";
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -55,7 +57,14 @@ export default function BasicModal(props: BasicModalType) {
   };
 
   const handleButtonChange = () => {
-    console.log('clicked');
+    axios
+      .post(DONATION_REQUEST_ROUTES.UPDATE_STATUS, {
+        id: props.data.id,
+      })
+      .then((resp) => {
+        console.log(resp.data.data);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -66,68 +75,68 @@ export default function BasicModal(props: BasicModalType) {
     <Modal
       open={open}
       onClose={handleClose}
-      aria-labelledby='modal-modal-title'
-      aria-describedby='modal-modal-description'
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
     >
       <Box sx={modalStyle}>
         <Stack spacing={3}>
           <StaffTypography
             size={1.5}
             text={`${props.data.user.name}'s Donation`}
-            type={'title'}
+            type={"title"}
           />
           <StaffTypography
             size={1}
-            text={`<b>Donation Event:</b> ${props.data.donationRequestItems[0].donationEventItem.donationEvent.name}`}
-            type={'title'}
-            customStyles={{ fontWeight: 'none' }}
+            text={`<b>Donation Event:</b> ${props.data.donationEvent.name}`}
+            type={"title"}
+            customStyles={{ fontWeight: "none" }}
           />
           <StaffTypography
             size={1}
             text={
-              '<b>Donation Event Item(s):</b>' +
+              "<b>Donation Event Item(s):</b>" +
               populateDonationItems(props.data.donationRequestItems)
             }
-            type={'title'}
-            customStyles={{ fontWeight: 'none' }}
+            type={"title"}
+            customStyles={{ fontWeight: "none" }}
           />
           <StaffTypography
             size={1}
             text={`<b>Drop off Date:</b> ${new Date(
               props.data.dropOffDate
-            ).toLocaleDateString('en-GB')}`}
-            type={'title'}
-            customStyles={{ fontWeight: 'none' }}
+            ).toLocaleDateString("en-GB")}`}
+            type={"title"}
+            customStyles={{ fontWeight: "none" }}
           />
           <StaffTypography
             size={1}
             text={`<b>Drop off Time:</b> ${props.data.dropOffTime}`}
-            type={'title'}
-            customStyles={{ fontWeight: 'none' }}
+            type={"title"}
+            customStyles={{ fontWeight: "none" }}
           />
-          <Box display='flex' justifyContent='space-between'>
+          <Box display="flex" justifyContent="space-between">
             <BasicButton
-              variant='outlined'
-              label={'Close'}
+              variant="outlined"
+              label={"Close"}
               customStyles={{
-                fontSize: '1rem',
-                letterSpacing: '0.12rem',
-                width: '9.375rem',
-                height: '3.75rem',
-                color: 'primary.dark',
-                borderColor: 'primary.dark',
+                fontSize: "1rem",
+                letterSpacing: "0.12rem",
+                width: "9.375rem",
+                height: "3.75rem",
+                color: "primary.dark",
+                borderColor: "primary.dark",
               }}
               onButtonChange={handleClose}
             />
             <BasicButton
-              variant='contained'
-              label={'Complete'}
+              variant="contained"
+              label={"Complete"}
               customStyles={{
-                fontSize: '1rem',
-                letterSpacing: '0.12rem',
-                width: '9.375rem',
-                height: '3.75rem',
-                backgroundColor: 'primary.dark',
+                fontSize: "1rem",
+                letterSpacing: "0.12rem",
+                width: "9.375rem",
+                height: "3.75rem",
+                backgroundColor: "primary.dark",
               }}
               onButtonChange={handleButtonChange}
             />
