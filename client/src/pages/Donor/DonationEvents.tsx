@@ -46,6 +46,7 @@ type eventType = {
 export default function DonationEvents() {
     const [search, setSearch] = useState('');
     const [events, setEvents] = useState<eventType[]>([]);
+    const [eventOfTheWeek, setEventOfTheWeek] = useState<eventType>();
     const [errorFetchingEvents, setErrorFetchingEvents] = useState(false);
 
     const [eventTypes, setEventTypes] = useState([]);
@@ -115,24 +116,49 @@ export default function DonationEvents() {
     }
 
     useEffect(() => {
-        calculateTimeLeft('2024-02-17 11:59:59 PM')
+        console.log(calculateTimeLeft('2024-02-24 11:59:59 PM'))
+
+        const removeEventOfWeekFromEvents = async() => {
+            
+        }
+        
         const fetchData = async () => {
             try {
                 const updatedEvents: eventType[] = [];
                 const res = await getAllEvents();
-                for(const eachEvent of res){
+
+                var maxNumDonors = 0;
+                var maxNumDonorsIndex = 0;
+                const currDay = new Date().getDay(); // ** Sunday - Saturday: 0 - 6 **
+                console.log("currDay: "+ currDay)
+                res.forEach(async (eachEvent: eventType, index: number) => {
                     const donationEventItems = await getDonationEventItems(eachEvent.id);
 
                     // Used split('T')[0] as a workaround instead of extracting only Date() from database as I do not want to change the API written
                     const timeLeft = calculateTimeLeft(eachEvent.endDate.split('T')[0] + ' 11:59:59 PM');
 
                     const numDonors = await getDonationReqCount(eachEvent.id);
-                    console.log(eachEvent.id + ": " + numDonors);
+                    // console.log(eachEvent.id + " numDonors: " + numDonors);
+                    // console.log("timeLeft: " + timeLeft);
+                    // console.log("day of endDate: " + new Date(eachEvent.endDate).getDay());
 
                     const updatedEvent = { ...eachEvent, donationEventItems, timeLeft, numDonors};
                     updatedEvents.push(updatedEvent);
-                }
-                setEvents(updatedEvents);
+                    
+                    // console.log("maxNumDonors: " + maxNumDonors)
+                    // console.log(numDonors > maxNumDonors)
+                    // console.log(timeLeft.includes('Hours'))
+                    // console.log(parseInt(timeLeft.split(' ')[0]) < 7)
+                    // console.log(new Date(eachEvent.endDate).getDay() >= currDay)
+                    if(numDonors > maxNumDonors && (timeLeft.includes('Hours') || parseInt(timeLeft.split(' ')[0]) < 7) && new Date(eachEvent.endDate).getDay() >= currDay){
+                        maxNumDonors = numDonors;
+                        maxNumDonorsIndex = index;
+                        // console.log("maxNumDonorsIndex: " + maxNumDonorsIndex)
+                        setEventOfTheWeek(updatedEvent);
+                    }
+                    
+                    setEvents(updatedEvents);
+                });
             } catch (error) {
                 console.error('Error:', error);
                 setErrorFetchingEvents(true);
@@ -180,11 +206,11 @@ export default function DonationEvents() {
                 <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
                 
                 <DonationEventCard
-                    name='Example'
-                    description='This is an example description'
-                    imgSrc="https://picsum.photos/200/300"
-                    numJoined={8}
-                    numHoursLeft={'8 Hours'}
+                    name={eventOfTheWeek?.name || 'No Donation Event of The Week'}
+                    description={`Take part in this donation by donating ${eventOfTheWeek?.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                    imgSrc={eventOfTheWeek?.imageId || 'https://picsum.photos/200/300'}
+                    numJoined={eventOfTheWeek?.numDonors || 0}
+                    numHoursLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
                 />
                 
                 <Typography variant='h6' sx={{fontWeight: 'bold', marginY: 2}}>Donation Categories</Typography>
