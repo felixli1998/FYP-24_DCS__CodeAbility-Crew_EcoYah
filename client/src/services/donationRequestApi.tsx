@@ -2,11 +2,11 @@ import axios from "axios";
 
 const URL = process.env.REACT_APP_BACKEND_URL + "/donation-requests";
 
-export const retrieveDonationReqCountByEventId = async (eventId: number) => {
+export const retrieveDonationReqCountByEventId = async (donationEventId: number) => {
   try {
     const response = await axios.get(URL + "/retrieve-donation-request-count-by-event-id", {
       params: {
-        eventId: eventId
+        donationEventId: donationEventId
       }
     });
     return response.data;
