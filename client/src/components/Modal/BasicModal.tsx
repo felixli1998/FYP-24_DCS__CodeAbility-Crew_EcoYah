@@ -2,27 +2,27 @@
 import { useState, useEffect } from 'react';
 
 // MUI Imports
-import { Box, Stack, Modal } from '@mui/material';
+import { Box, Stack, Modal, Alert } from "@mui/material";
 
 // Components
-import StaffTypography from '../Typography/StaffTypography';
-import BasicButton from '../Button/BasicButton';
+import StaffTypography from "../Typography/StaffTypography";
+import BasicButton from "../Button/BasicButton";
 
 // Other Imports
 import {
   DonationRequestType,
   DonationRequestItemsType,
-} from '../../utils/Types';
+} from "../../utils/Types";
 import { DONATION_REQUEST_ROUTES } from "../../services/routes";
 import axios from "axios";
 
 const modalStyle = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
+  bgcolor: "background.paper",
   borderRadius: 1,
   boxShadow: 24,
   p: 4,
@@ -32,12 +32,16 @@ type BasicModalType = {
   open: boolean;
   data: DonationRequestType;
   onModalChange: (open: boolean) => void;
+  onRemoveRequest: (id: number) => void;
 };
 
 export default function BasicModal(props: BasicModalType) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
+    setError(false);
     setOpen(false);
     props.onModalChange(false);
   };
@@ -45,26 +49,31 @@ export default function BasicModal(props: BasicModalType) {
   const populateDonationItems = (
     donationRequestItems: DonationRequestItemsType[]
   ): string => {
-    let result = '<ol>';
+    let result = "<ol>";
     donationRequestItems.forEach(
       (donationRequestItem: DonationRequestItemsType) => {
         result += `<li>${donationRequestItem.quantity} ${donationRequestItem.donationEventItem.item.unit} of ${donationRequestItem.donationEventItem.item.name}</li>`;
       }
     );
-    result += '</ol>';
+    result += "</ol>";
 
     return result;
   };
 
   const handleButtonChange = () => {
     axios
-      .post(DONATION_REQUEST_ROUTES.UPDATE_STATUS, {
+      .put(DONATION_REQUEST_ROUTES.UPDATE_STATUS, {
         id: props.data.id,
       })
       .then((resp) => {
-        console.log(resp.data.data);
+        if (resp.data.status === 200) {
+          handleClose();
+          props.onRemoveRequest(props.data.id);
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setError(true);
+      });
   };
 
   useEffect(() => {
@@ -141,6 +150,12 @@ export default function BasicModal(props: BasicModalType) {
               onButtonChange={handleButtonChange}
             />
           </Box>
+          {error && (
+            <Alert severity="error">
+              An error occurred while updating the donation request to
+              completed. Please try again.
+            </Alert>
+          )}
         </Stack>
       </Box>
     </Modal>

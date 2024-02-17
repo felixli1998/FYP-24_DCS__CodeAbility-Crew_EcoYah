@@ -22,6 +22,7 @@ import { DonationRequestType } from '../../utils/Types';
 
 type ItemListType = {
   data: DonationRequestType[];
+  onRemoveRequest: (id: number) => void;
 };
 
 export default function ItemList(props: ItemListType) {
@@ -86,6 +87,7 @@ export default function ItemList(props: ItemListType) {
                 open={openModals[index]}
                 data={eachData}
                 onModalChange={(status: boolean) => handleButtonChange(index, status)}
+                onRemoveRequest={props.onRemoveRequest}
               />
             </ListItem>
             <Divider variant='inset' component='li' />
