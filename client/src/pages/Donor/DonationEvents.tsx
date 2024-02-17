@@ -13,15 +13,7 @@ import {
     Grid,
     InputAdornment,
     TextField,
-    Typography,
-    OutlinedInput,
-    Avatar,
-    ListItemAvatar,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText,
-    IconButton
+    Typography
   } from '@mui/material';
 
 type itemType = {
