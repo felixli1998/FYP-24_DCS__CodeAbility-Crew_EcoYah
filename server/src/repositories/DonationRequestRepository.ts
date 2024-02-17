@@ -32,7 +32,6 @@ export class DonationRequestRepository {
     });
   }
 
-  // TODO: This was created during model creation. Feel free to expand upon it as needed
   async retrieveDonationRequestByDate(date: Date) {
     const start = startOfDay(date);
     const end = endOfDay(date);
