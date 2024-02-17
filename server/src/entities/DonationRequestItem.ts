@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  Index
 } from 'typeorm';
 import { DonationRequest } from './DonationRequest';
 import { DonationEventItem } from './DonationEventItem';
