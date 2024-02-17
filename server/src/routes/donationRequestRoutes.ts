@@ -100,7 +100,7 @@ router.post('/test/cancel', async (req, res) => {
   }
 });
 
-router.get('/retrieve-by-date', async (req, res) => {
+router.get('/retrieve-active-by-date', async (req, res) => {
   const params = req.query;
   const filteredParams = strongParams(params, ['date']);
   const { date } = filteredParams;
@@ -110,6 +110,7 @@ router.get('/retrieve-by-date', async (req, res) => {
       await donationRequestService.retrieveDonationRequestByDate(
         new Date(date as string)
       );
+    
     return generateResponse(res, 200, result);
   } catch (error) {
     return generateResponse(res, 500, 'Something went wrong.');

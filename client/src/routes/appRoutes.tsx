@@ -9,11 +9,12 @@ import { DonorHome } from '../pages/Donor/DonorHome';
 import DonationRequestForm from '../pages/Donor/DonationRequestForm';
 
 // Admin routes //
-import AdminHome from "../pages/Admin/AdminHome";
-import AdminSignIn from "../pages/Admin/SignIn";
-import DonationEventForm from "../pages/Admin/DonationEventForm";
-import DonationEventPreview from "../pages/Admin/DonationEventPreview";
+import AdminHome from '../pages/Admin/AdminHome';
+import AdminSignIn from '../pages/Admin/SignIn';
+import DonationEventForm from '../pages/Admin/DonationEventForm';
+import DonationEventPreview from '../pages/Admin/DonationEventPreview';
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
+import DonationRequests from '../pages/Admin/DonationRequests';
 
 type AppRoutesT = {
   path: string;
@@ -89,6 +90,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     path: "donation-event-preview",
     description: "Preview of donation event for the admin",
     element: <DonationEventPreview />,
+    isAdmin: true,
+  },
+  {
+    path: "donation-requests",
+    description: "Preview of donation requests for the admin",
+    element: <DonationRequests />,
     isAdmin: true,
   },
   {
