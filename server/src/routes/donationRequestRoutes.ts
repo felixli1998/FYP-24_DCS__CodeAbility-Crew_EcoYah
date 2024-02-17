@@ -14,11 +14,16 @@ import { DonationRequestItemRepository } from '../repositories/DonationRequestIt
 import { DonationRequestItemService } from '../services/DonationRequestItemService';
 import { DonationEventItemService } from '../services/DonationEventItemService';
 
+export type RequestItemsPayloadT = {
+  id: DonationRequestItem['id'];
+  quantity: DonationRequestItem['quantity']
+}
+
 export type DonationRequestUpdatePayload = {
   id: DonationRequest['id'];
   dropOffDate?: DonationRequest['dropOffDate'];
   dropOffTime?: DonationRequest['dropOffTime'];
-  requestItems?: any;
+  requestItems?: RequestItemsPayloadT[];
 };
 
 const router = express.Router();
