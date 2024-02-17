@@ -34,6 +34,7 @@ function ResponsiveAppBar() {
 
   const handleAdminLogOut = () => {
     localStorage.removeItem('ecoyah-email');
+    localStorage.removeItem('admin-id');
     navigate('/admin/sign-in');
     navActionLogicMap(); // handle use case if there's no change in the URL
   }
@@ -52,6 +53,7 @@ function ResponsiveAppBar() {
           NavigationList.DONATION_EVENT_FORM,
           NavigationList.DONATION_EVENT_OVERVIEW,
           NavigationList.REWARD,
+          NavigationList.DONATION_REQUEST
         ];
         return NavList.map((navItem) => generateNavItem(navItem, true));
       } else {

@@ -37,7 +37,7 @@ export class DonationEventService {
 
   // Filtering
 
-  async getFilteredDonationEvents(filters: any): Promise<{ data: DonationEvent[], pagination:IPagination }> {
-    return this.donationEventRepository.filterDonationEvents(filters);
+  async getFilteredDonationEvents(filters: any, page: number): Promise<{ data: DonationEvent[], pagination:IPagination }> {
+    return this.donationEventRepository.filterDonationEvents(filters, page);
   }
 }
