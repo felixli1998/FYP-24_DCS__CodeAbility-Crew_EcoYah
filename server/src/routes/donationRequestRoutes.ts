@@ -14,6 +14,19 @@ import { DonationRequestItemRepository } from '../repositories/DonationRequestIt
 import { DonationRequestItemService } from '../services/DonationRequestItemService';
 import { DonationEventItemService } from '../services/DonationEventItemService';
 
+export type RequestItemsPayloadT = {
+  id: DonationRequestItem['id'];
+  quantity: DonationRequestItem['quantity']
+}
+
+export type DonationRequestUpdatePayload = {
+  id: DonationRequest['id'];
+  dropOffDate?: DonationRequest['dropOffDate'];
+  dropOffTime?: DonationRequest['dropOffTime'];
+  omitPoints?: DonationRequest['omitPoints'];
+  requestItems?: RequestItemsPayloadT[];
+};
+
 const router = express.Router();
 
 // Donation Request Service
@@ -100,6 +113,21 @@ router.post('/test/cancel', async (req, res) => {
   }
 });
 
+// TODO: Retrieve by request id
+router.get('/retrieve-by-id', async (req, res) => {
+  const params = req.query;
+  const filterParams = strongParams(params, ['id']);
+  const { id } = filterParams;
+
+  try {
+    const result = await donationRequestService.retrieveById(id);
+
+    return generateResponse(res, 200, result);
+  } catch (err) {
+    return generateResponse(res, 500, 'Something went wrong.');
+  }
+});
+
 router.get('/retrieve-active-by-date', async (req, res) => {
   const params = req.query;
   const filteredParams = strongParams(params, ['date']);
@@ -110,10 +138,33 @@ router.get('/retrieve-active-by-date', async (req, res) => {
       await donationRequestService.retrieveDonationRequestByDate(
         new Date(date as string)
       );
-    
+
     return generateResponse(res, 200, result);
   } catch (error) {
     return generateResponse(res, 500, 'Something went wrong.');
+  }
+});
+
+router.put('/update', async (req, res) => {
+  const payload = req.body;
+  const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'requestItems', 'omitPoints'];
+  const sanitisedPayload = strongParams(payload, allowedParams);
+
+  if (!('id' in sanitisedPayload))
+    return generateResponse(res, 200, 'Missing id');
+
+  type DonationRequestUpdatePayloadWithId = DonationRequestUpdatePayload & {
+    id: string;
+  };
+
+  try {
+    // Type assertion that an id is definitely present due to my previous checks
+    const payload = await donationRequestService.update(
+      sanitisedPayload as DonationRequestUpdatePayloadWithId
+    );
+    return generateResponse(res, 200, payload);
+  } catch (err) {
+    return generateResponse(res, 500, 'Something went wrong');
   }
 });
 

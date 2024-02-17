@@ -13,4 +13,8 @@ export class DonationRequestItemService {
       donationRequestItem
     );
   }
+
+  async retrieveById(id: number) {
+    return await this.donationRequestItemRepository.retrieveById(id);
+  }
 }

@@ -27,7 +27,11 @@ export class DonationRequest {
   @ManyToOne(() => User, (user) => user.donationRequests, { nullable: false })
   user: User;
 
-  @OneToMany(() => DonationRequestItem, (DonationRequestItem) => DonationRequestItem.donationRequest, { nullable: false })
+  @OneToMany(
+    () => DonationRequestItem,
+    (DonationRequestItem) => DonationRequestItem.donationRequest,
+    { cascade: ['update', 'insert'], nullable: false },
+  )
   donationRequestItems: DonationRequestItem[];
 
   @ManyToOne(() => DonationEvent, (donationEvent) => donationEvent.donationRequests, { nullable: false })
@@ -68,7 +72,8 @@ export class DonationRequest {
 
   // To support soft delete
   @DeleteDateColumn({
-    comment: 'The date at which the donor wish to terminate the donation request.'
+    comment:
+      'The date at which the donor wish to terminate the donation request.',
   })
   deletedAt: Date;
 }
