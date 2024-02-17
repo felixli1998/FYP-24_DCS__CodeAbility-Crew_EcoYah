@@ -19,4 +19,8 @@ export class DonationRequestItemRepository {
       where: { donationRequest: { id: donationRequestId } },
     });
   }
+
+  async updateDonationRequestItem(id: number, payload: Partial<DonationRequestItem>){
+    return await AppDataSource.getRepository(DonationRequestItem).update(id, payload)
+  }
 }

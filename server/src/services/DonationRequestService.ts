@@ -67,54 +67,24 @@ export class DonationRequestService {
 
   async update(payload: DonationRequestUpdatePayload) {
     const { id } = payload;
-    const donationRequestObj = await this.retrieveById(id);
-
-    if (donationRequestObj == null) {
-      return {
-        action: false,
-        data: [],
-        message: 'Donation Request do not exist.',
-      };
-    }
+    const updatedRequestPayload: Partial<DonationRequest> = {};
 
     for (const [key, value] of Object.entries(payload)) {
       switch (key) {
         case 'id':
           break;
         case 'dropOffDate':
-          donationRequestObj.dropOffDate = new Date(value as string);
+          updatedRequestPayload.dropOffDate = new Date(value as string);
           break;
         case 'dropOffTime':
-          donationRequestObj.dropOffTime = value as string;
+          updatedRequestPayload.dropOffTime = value as string;
           break;
         case 'requestItems':
           if (Array.isArray(value)) {
-            const requestItemsPromises = value.map(async (item) => {
-              return await this.updateExistingDonationRequestItem(
-                item.id,
-                item.quantity as number
-              );
-            });
-
-            const existingRequestItems =
-              await this.donationRequestItemRepository.retrieveByDonationRequestId(
-                donationRequestObj.id
-              );
-
-            const updatedRequestItems = (await Promise.all(
-              requestItemsPromises
-            )) as DonationRequestItem[];
-
-            existingRequestItems.forEach((existingItem) => {
-              // If the item is not in the updatedRequestItems array, append it to ensure it is not removed in an update
-              if (
-                !updatedRequestItems.find((item) => item.id === existingItem.id)
-              ) {
-                updatedRequestItems.push(existingItem);
-              }
-            });
-
-            donationRequestObj.donationRequestItems = updatedRequestItems;
+            await Promise.all(value.map(async (item) => {
+              const { id, quantity } = item;
+              this.donationRequestItemRepository.updateDonationRequestItem(id, { quantity })
+            }));
           }
           break;
         default:
@@ -123,20 +93,13 @@ export class DonationRequestService {
       }
     }
 
-    const res =
-      await this.donationRequestRepository.updateDonationRequest(
-        donationRequestObj
-      );
+    const res = await this.donationRequestRepository.updateDonationRequest(id, updatedRequestPayload)
 
     return {
       action: true,
       data: res,
       message: 'Successfully updated donation request',
     };
-  }
-
-  async completeDonationRequest(id: number) {
-    return await this.donationRequestRepository.completeDonationRequest(id);
   }
 
   async retrieveDonationRequestByDate(date: Date) {

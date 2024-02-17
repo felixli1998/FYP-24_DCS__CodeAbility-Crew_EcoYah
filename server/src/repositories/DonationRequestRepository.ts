@@ -18,10 +18,8 @@ export class DonationRequestRepository {
     return await AppDataSource.getRepository(DonationRequest).softDelete(id);
   }
 
-  async updateDonationRequest(donationRequest: DonationRequest) {
-    return await AppDataSource.getRepository(DonationRequest).save(
-      donationRequest
-    );
+  async updateDonationRequest(id: number, payload: Partial<DonationRequest>) {
+    await AppDataSource.getRepository(DonationRequest).update(id, payload);
   }
 
   async retrieveById(id: number) {
