@@ -23,6 +23,7 @@ export type DonationRequestUpdatePayload = {
   id: DonationRequest['id'];
   dropOffDate?: DonationRequest['dropOffDate'];
   dropOffTime?: DonationRequest['dropOffTime'];
+  omitPoints?: DonationRequest['omitPoints'];
   requestItems?: RequestItemsPayloadT[];
 };
 
@@ -146,7 +147,7 @@ router.get('/retrieve-active-by-date', async (req, res) => {
 
 router.put('/update', async (req, res) => {
   const payload = req.body;
-  const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'requestItems'];
+  const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'requestItems', 'omitPoints'];
   const sanitisedPayload = strongParams(payload, allowedParams);
 
   if (!('id' in sanitisedPayload))

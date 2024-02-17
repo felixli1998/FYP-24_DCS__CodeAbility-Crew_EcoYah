@@ -71,6 +71,8 @@ export class DonationRequestService {
         case 'dropOffTime':
           updatedRequestPayload.dropOffTime = value as string;
           break;
+        case 'omitPoints':
+          updatedRequestPayload.omitPoints = value as boolean;
         case 'requestItems':
           if (Array.isArray(value)) {
             await Promise.all(value.map(async (item) => {
