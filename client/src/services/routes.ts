@@ -19,8 +19,16 @@ export const IMAGE_ROUTES = {
   RETRIEVE_BY_FILE_PATH: `${BASE_URL}/images/:filePath`,
 }
 
-// Admin Related Routes //
-export const ADMIN_ROUTES = {
+// ITEM Related Routes //
+export const ITEM_ROUTES = {
+  CREATE_ITEM: `${BASE_URL}/items/create`,
+  RETRIEVE_ALL_ITEMS: `${BASE_URL}/items/all`,
+  RETRIEVE_ITEMS_BY_EVENT_TYPE_ID: `${BASE_URL}/items/:eventId`
+}
+
+// DONATION EVENT Related Routes //
+export const DONATION_EVENT_ROUTES = {
+  CREATE_EVENT: `${BASE_URL}/donation-events/create`,
   RETRIEVE_DONATION_EVENTS: `${BASE_URL}/donation-events/all`,
   RETRIEVE_DONATION_EVENT_BY_ID: `${BASE_URL}/donation-events/:id`,
   UPDATE_DONATION_EVENT_BY_ID: `${BASE_URL}/donation-events/:id`

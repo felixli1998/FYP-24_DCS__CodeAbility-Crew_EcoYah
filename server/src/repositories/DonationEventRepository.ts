@@ -20,10 +20,6 @@ export class DonationEventRepository {
         const offset = (page - 1) * DonationEventRepository.PAGE_SIZE;
         const queryBuilder = AppDataSource.getRepository(DonationEvent)
             .createQueryBuilder("donationEvent")
-            .leftJoinAndSelect("donationEvent.createdBy", "createdBy")
-            .leftJoinAndSelect("donationEvent.eventType", "eventType")
-            .leftJoinAndSelect("donationEvent.donationEventItems", "donationEventItems")
-            .leftJoinAndSelect("donationEventItems.item", "item")
             .orderBy("donationEvent.startDate", "ASC")
             .addOrderBy("donationEvent.endDate", "ASC")
             .addOrderBy("donationEvent.createdAt", "ASC")
@@ -44,7 +40,7 @@ export class DonationEventRepository {
             where: {
                 id:id
             },
-            relations: ["eventType", "donationEventItems"]
+            relations: ["eventType", "donationEventItems", "donationEventItems.item"]
         });
         return donationEvent || null;
     }

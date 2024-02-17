@@ -17,40 +17,35 @@ const Home: React.FC = () => {
     queryFn: getDonationEvents,
   });
 
-  const handleDonationEventClick = (donationEvent: any) => {
-    let formData: any = {
-      id: donationEvent.id,
-      name: donationEvent.name,
-      imageId: donationEvent.imageId,
-      eventType: donationEvent.eventType,
-      startDate: donationEvent.startDate,
-      endDate: donationEvent.endDate,
-      isActive: donationEvent.isActive,
-      createdBy: donationEvent.createdBy,
-    };
+  const handleDonationEventClick = (donationEventId: number) => {
+    navigate(`/admin/donation-event/${donationEventId}`)
+    // console.log(donationEvent);
+    // let formData: any = {
+    //   id: donationEvent.id,
+    //   name: donationEvent.name,
+    //   imageId: donationEvent.imageId,
+    //   eventType: donationEvent.eventType,
+    //   startDate: donationEvent.startDate,
+    //   endDate: donationEvent.endDate,
+    //   isActive: donationEvent.isActive,
+    //   createdBy: donationEvent.createdBy,
+    // };
 
-    formData.donationEventItems = donationEvent.donationEventItems.map(
-      (item: any) => ({
-        id: item.id,
-        name: item.item.name,
-        minQty: item.minQty,
-        targetQty: item.targetQty,
-        pointsPerUnit: item.pointsPerUnit,
-        currentQty: item.currentQty,
-        unit: item.item.unit,
-      })
-    );
+    // formData.donationEventItems = donationEvent.donationEventItems.map(
+    //   (item: any) => ({
+    //     id: item.id,
+    //     name: item.item.name,
+    //     minQty: item.minQty,
+    //     targetQty: item.targetQty,
+    //     pointsPerUnit: item.pointsPerUnit,
+    //     currentQty: item.currentQty,
+    //     unit: item.item.unit,
+    //   })
+    // );
 
-    formData.selectedItems = donationEvent.donationEventItems.map(
-      (item: any) => item.item
-    );
-
-    navigate('/admin/donation-event-edit', {
-      state: JSON.stringify({
-        formData,
-        isPreview: false,
-      }),
-    });
+    // formData.selectedItems = donationEvent.donationEventItems.map(
+    //   (item: any) => item.item
+    // );
   };
 
   return (
@@ -65,7 +60,7 @@ const Home: React.FC = () => {
         donationEventsData.map((donationEvent: any) => (
           <button
             key={donationEvent.id}
-            onClick={() => handleDonationEventClick(donationEvent)}
+            onClick={() => handleDonationEventClick(donationEvent.id)}
           >
             {donationEvent.name}
           </button>

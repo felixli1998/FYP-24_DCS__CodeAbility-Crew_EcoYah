@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ADMIN_ROUTES } from './routes';
+import { DONATION_EVENT_ROUTES } from './routes';
 const URL = process.env.REACT_APP_BACKEND_URL + '/donation-events';
 
 // Create a new donation event and donation event item(s)
@@ -8,10 +8,9 @@ export const createDonationEvent = async (
   adminID: number
 ) => {
   try {
-    const response = await axios.post(URL + '/create', {
+    const response = await axios.post(DONATION_EVENT_ROUTES.CREATE_EVENT, {
       name: donationEvent.name,
       imageId: 'https://picsum.photos/200/300', // use https://picsum.photos/200/300 to test to prevent the payload from being too large
-      eventType: donationEvent.eventType,
       startDate: donationEvent.startDate,
       endDate: donationEvent.endDate,
       isActive: donationEvent.isActive,
@@ -28,7 +27,7 @@ export const createDonationEvent = async (
 // Get all donation event
 export const getDonationEvents = async () => {
   try {
-    const response = await axios.get(ADMIN_ROUTES.RETRIEVE_DONATION_EVENTS);
+    const response = await axios.get(DONATION_EVENT_ROUTES.RETRIEVE_DONATION_EVENTS);
     return response.data.data; // change this later to response.data for pagination data
   } catch (error) {
     console.error('Error fetching donation event: ', error);
@@ -37,15 +36,10 @@ export const getDonationEvents = async () => {
 };
 
 // Get a donation event by id
-export const getDonationEventById = async (donationEventId: number) => {
+export const getDonationEventById = async (donationEventId: string) => {
   try {
     const response = await axios.get(
-      ADMIN_ROUTES.RETRIEVE_DONATION_EVENT_BY_ID,
-      {
-        params: {
-          id: donationEventId,
-        },
-      }
+      DONATION_EVENT_ROUTES.RETRIEVE_DONATION_EVENT_BY_ID.replace(':id', donationEventId),
     );
     return response.data;
   } catch (error) {
@@ -61,7 +55,7 @@ export const updateDonationEventById = async (
 ) => {
   try {
     const response = await axios.put(
-      ADMIN_ROUTES.UPDATE_DONATION_EVENT_BY_ID.replace(':id', donationEventId),
+      DONATION_EVENT_ROUTES.UPDATE_DONATION_EVENT_BY_ID.replace(':id', donationEventId),
       {
         updateParams,
       }
