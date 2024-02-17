@@ -1,4 +1,5 @@
 // Internal imports
+import { DonationEvent } from '../src/entities/DonationEvent';
 import { DonationEventItem } from '../src/entities/DonationEventItem';
 import { DonationRequest } from '../src/entities/DonationRequest';
 import { DonationRequestItem } from '../src/entities/DonationRequestItem';
@@ -6,7 +7,8 @@ import { User } from '../src/entities/User';
 
 function* DonationRequestGenerator(
   userObjects: { [key: string]: User },
-  donationEventItem: { [key: string]: DonationEventItem }
+  donationEventItem: { [key: string]: DonationEventItem },
+  donationEventObjects: { [key: string]: DonationEvent }
 ): Generator<{
   donationRequest: DonationRequest;
   donationRequestItems: DonationRequestItem[];
@@ -33,19 +35,24 @@ function* DonationRequestGenerator(
 
   newDonationRequest.user = randomUser;
 
+  // TODO: donation_event_id - let's pick a random donation event
+  const randomDonationEvent =
+    Object.values(donationEventObjects)[
+      Math.floor(Math.random() * Object.values(donationEventObjects).length)
+    ]
+
+  newDonationRequest.donationEvent = randomDonationEvent;
+
   // TODO: associate this event to a random donation_request_item
-  // TODO: For now, let's just create 1 donation_request_items with random quantities for now and associate it to a random donation_event_item
   const donationRequestItem = new DonationRequestItem();
   donationRequestItem.quantity = Math.floor(Math.random() * 10);
 
   // TODO: For now, let's just associate the first 1 donation_request_items to a random donation_event_items
-  const randomDonationEventItem =
-    Object.values(donationEventItem)[
-      Math.floor(Math.random() * Object.values(donationEventItem).length)
-    ];
-  donationRequestItem.donationEventItem = randomDonationEventItem;
+  const filteredDonationEventItems = Object.values(donationEventItem)
+                                          .filter((donationEventItem) => donationEventItem.donationEvent.id === randomDonationEvent.id )
 
-  // TODO: Assign a qty to the donation_request_item
+  const randomDonationEventItem = filteredDonationEventItems[Math.floor(Math.random() * filteredDonationEventItems.length)]
+  donationRequestItem.donationEventItem = randomDonationEventItem;
   donationRequestItem.quantity = Math.floor(Math.random() * 10);
 
   // TODO: Create donation_request_item

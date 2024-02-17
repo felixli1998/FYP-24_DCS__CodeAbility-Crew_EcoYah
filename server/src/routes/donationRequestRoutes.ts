@@ -107,30 +107,17 @@ router.post('/test/cancel', async (req, res) => {
   }
 });
 
-// TODO: Retrieve by request id
-router.get('/retrieve-by-id', async (req, res) => {
-  const params = req.query;
-  const filterParams = strongParams(params, ['id']);
-  const { id } = filterParams;
-
-  try {
-    const result = await donationRequestService.retrieveById(id);
-
-    return generateResponse(res, 200, result);
-  } catch (err) {
-    return generateResponse(res, 500, 'Something went wrong.');
-  }
-});
-
-router.get('/retrieve-by-date', async (req, res) => {
+router.get('/retrieve-active-by-date', async (req, res) => {
   const params = req.query;
   const filteredParams = strongParams(params, ['date']);
   const { date } = filteredParams;
 
   try {
-    const result = await donationRequestService.retrieveDonationRequestByDate(
-      new Date(date as string)
-    );
+    const result =
+      await donationRequestService.retrieveDonationRequestByDate(
+        new Date(date as string)
+      );
+
     return generateResponse(res, 200, result);
   } catch (error) {
     return generateResponse(res, 500, 'Something went wrong.');
