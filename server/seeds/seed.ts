@@ -63,6 +63,7 @@ const donationRequestItemService = new DonationRequestItemService(
 
 let USER_OBJECTS: any = {};
 let EVENT_TYPE_OBJECTS: any = {};
+let DONATION_EVENT_OBJECTS: any = {};
 let ITEM_OBJECTS: any = {};
 let DONATION_EVENT_ITEMS: any = {};
 
@@ -117,12 +118,12 @@ const generateSeedData = async () => {
   );
   for (let i = 0; i < NO_OF_DONATION_EVENT_TO_CREATE; i++) {
     const event = eventGenerator.next().value;
-    await donationEventService.createDonationEvent(event);
+    const createdDonationEvent = await donationEventService.createDonationEvent(event);
+    DONATION_EVENT_OBJECTS[createdDonationEvent.id] = createdDonationEvent;
     // Adding in items
     const donationItemGenerator = DonationItemGenerator(event, ITEM_OBJECTS);
     for (let j = 0; j < NO_OF_ITEM_PER_EVENT; j++) {
       const donationItem = donationItemGenerator.next().value;
-      console.log('DonationItem is ' + donationItem);
       const createdDonationEventItem =
         await donationEventItemService.createDonationEventItem(donationItem);
 
@@ -136,7 +137,8 @@ const generateSeedData = async () => {
   for (let i = 0; i < NO_OF_DONATION_REQUEST_TO_CREATE; i++) {
     const generatorResult = DonationRequestGenerator(
       USER_OBJECTS,
-      DONATION_EVENT_ITEMS
+      DONATION_EVENT_ITEMS,
+      DONATION_EVENT_OBJECTS,
     );
     const { donationRequest, donationRequestItems } =
       generatorResult.next().value;
