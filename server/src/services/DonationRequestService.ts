@@ -32,18 +32,9 @@ export class DonationRequestService {
     return await this.donationRequestRepository.cancelDonationRequest(id);
   }
 
-  async updateExistingDonationRequestItem(id: number, quantity: number) {
-    const donationRequestItemObj =
-      await this.donationRequestItemRepository.retrieveById(id);
-
-    if (donationRequestItemObj) {
-      donationRequestItemObj.quantity = quantity;
-    }
-
-    return donationRequestItemObj;
-  }
 
   async createNewDonationRequestItem(
+    donationRequestObj: DonationRequest,
     donationEventId: number,
     quantity: number
   ) {
@@ -54,6 +45,7 @@ export class DonationRequestService {
       );
 
     if (donationEventItem) {
+      requestItem.donationRequest = donationRequestObj
       requestItem.quantity = quantity;
       requestItem.donationEventItem = donationEventItem;
     }

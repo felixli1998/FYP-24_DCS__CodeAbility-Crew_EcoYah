@@ -5,6 +5,8 @@ import express from 'express';
 import { DonationRequestRepository } from '../repositories/DonationRequestRepository';
 import { DonationRequestService } from '../services/DonationRequestService';
 import { generateResponse, strongParams } from '../common/methods';
+import { DonationRequestItemService } from '../services/DonationRequestItemService';
+import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
 
 const router = express.Router();
 
@@ -13,6 +15,10 @@ const donationRequestRepository = new DonationRequestRepository();
 const donationRequestService = new DonationRequestService(
   donationRequestRepository
 );
+
+// Donation Request Item Service
+const donationRequestItemRepository = new DonationRequestItemRepository();
+const donationRequestItemService = new DonationRequestItemService(donationRequestItemRepository)
 
 type RequestItemT = {
   donationEventItemId: number; // This is to associate donationEventItem
@@ -30,18 +36,17 @@ router.post('/create-from-request', async (req, res) => {
     requestItems: RequestItemT[];
   };
 
-  console.log(sanitisedPayload);
   // Retrieve donation request
   const donationRequestObj =
     await donationRequestService.retrieveById(donationRequestId);
 
   if (!donationRequestObj) return generateResponse(res, 200, 'Invalid ID');
 
-  // TODO: Could look into refactoring this out to a service instead //
   const donationRequestItemsObj = await Promise.all(
     requestItems.map(async (requestItem) => {
       const requestItemObj =
         await donationRequestService.createNewDonationRequestItem(
+          donationRequestObj,
           requestItem.donationEventItemId,
           requestItem.quantity
         );
@@ -50,10 +55,10 @@ router.post('/create-from-request', async (req, res) => {
   );
 
   try {
-    donationRequestObj.donationRequestItems = donationRequestItemsObj;
-    // TODO: updateDonationRequest and createDonationRequest are practically the same. But for semantic purposes
-    const payload =
-      await donationRequestService.updateDonationRequest(donationRequestObj);
+      const payload = await Promise.all((donationRequestItemsObj.map(async (donationRequestItemObj) => {
+        const createdDonationRequestItem = await donationRequestItemService.createDonationRequestItem(donationRequestItemObj)
+        return createdDonationRequestItem;
+      })))
 
     return generateResponse(res, 200, payload);
   } catch (err) {
