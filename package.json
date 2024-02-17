@@ -13,8 +13,5 @@
         "hooks": {
             "pre-commit": "npx pretty-quick --staged"
         }
-    },
-    "dependencies": {
-        "date-fns": "^3.3.1"
     }
 }

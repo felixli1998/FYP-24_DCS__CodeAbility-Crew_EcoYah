@@ -18,3 +18,19 @@ export const IMAGE_ROUTES = {
   UPDATE: `${BASE_URL}/images/:id`,
   RETRIEVE_BY_FILE_PATH: `${BASE_URL}/images/:filePath`,
 }
+
+// Donation Request Routes //
+export const DONATION_REQUEST_ROUTES = {
+  RETRIEVE_ACTIVE_BY_DATE: `${BASE_URL}/donation-requests/retrieve-active-by-date`,
+  UPDATE_STATUS: `${BASE_URL}/donation-requests/complete`,
+};
+
+// Donation Event-related routes //
+export const DONATION_EVENT_ROUTES = {
+  GET_ALL: `${BASE_URL}/donation-events/all`,
+};
+
+// Event Type-related routes //
+export const EVENT_TYPE_ROUTES = {
+  GET_ALL: `${BASE_URL}/event-types/event-types`,
+}

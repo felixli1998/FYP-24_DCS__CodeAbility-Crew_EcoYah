@@ -24,6 +24,10 @@ export class DonationRequestService {
     );
   }
 
+  async completeDonationRequest(id: number) {
+    return await this.donationRequestRepository.completeDonationRequest(id);
+  }
+
   // async retrieveDonationRequestCountByEventId(
   //   donationEventId: number
   // ): Promise<number> {
