@@ -64,13 +64,12 @@ export class DonationRequestRepository {
       ],
     });
 
-    // async function retrieveDonationRequestCountByEventId(
-    //   donationEventId: number
-    // ) {
-    //   return await AppDataSource.getRepository(DonationRequest).count({
-    //     where: { donationEvent: { id: donationEventId } }
-    //   });
-    // }
+  }
+
+  async retrieveDonationRequestCountByEventId(donationEventId: number) {
+    return await AppDataSource.getRepository(DonationRequest).count({
+      where: { donationEvent: { id: donationEventId } }
+    });
   }
 
   async completeDonationRequest(id: number) {
