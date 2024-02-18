@@ -34,6 +34,14 @@ export class DonationEventRepository {
         return { data, pagination };
     }
 
+    async getAllDonationEventById(id: number): Promise<DonationEvent | null> {
+      return await AppDataSource.getRepository(DonationEvent).findOne({
+        where: {
+            id:id
+        },
+      });
+    }
+
 
     async getDonationEventById(id: number): Promise<DonationEvent | null> {
         const donationEvent = await AppDataSource.getRepository(DonationEvent).findOne({

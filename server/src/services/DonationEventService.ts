@@ -4,14 +4,18 @@ import { DonationEventRepository } from '../repositories/DonationEventRepository
 import IPagination from '../common/IPagination';
 import { DonationEventUpdatePayload } from '../routes/donationEventRoutes';
 import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
+import { DonationEventItemService } from './DonationEventItemService';
+import { Item } from '../entities/Item';
 
 export class DonationEventService {
   private donationEventRepository: DonationEventRepository;
   private donationEventItemRepository: DonationEventItemRepository;
+  private donationEventItemService: DonationEventItemService;
 
   constructor(donationEventRepository: DonationEventRepository) {
     this.donationEventRepository = donationEventRepository;
     this.donationEventItemRepository = new DonationEventItemRepository();
+    this.donationEventItemService = new DonationEventItemService(this.donationEventItemRepository);
   }
 
   async createDonationEvent(donationEvent: DonationEvent): Promise<DonationEvent> {
@@ -42,7 +46,7 @@ export class DonationEventService {
   async updateDonationEventV1(id: number, payload: DonationEventUpdatePayload) {
     const updatedDonationEventPayload: Partial<DonationEvent> = {};
 
-    for(const [key, value] of Object.entries(payload)) {
+    const _ = Object.entries(payload).map(async ([key, value]) => {
       switch(key) {
         case 'name':
           updatedDonationEventPayload.name = value as string;
@@ -65,14 +69,28 @@ export class DonationEventService {
             const toBeRemovedIds = await this.removeDonationEventItemIds(id, newDonationEventItemIds as number[]);
 
             if(toBeRemovedIds.length > 0) {
-              Promise.all(toBeRemovedIds.map((id) => {
-                this.donationEventItemRepository.removeDonationEventItem(id)
+              await Promise.all(toBeRemovedIds.map(async (id) => {
+                try {
+                  await this.donationEventItemRepository.removeDonationEventItem(id)
+                } catch (err) {
+                  return {
+                    action: false,
+                    data: [],
+                    message: 'You cannot delete a donation event item from an ongoing event!'
+                  }
+                }
               }))
             }
 
             await Promise.all(value.map(async (donationEventItem) => {
+              // Update existing property
               if(donationEventItem.hasOwnProperty('id')) {
-                this.donationEventItemRepository.updateDonationEventItem(donationEventItem.id as number, donationEventItem)
+                await this.donationEventItemRepository.updateDonationEventItem(donationEventItem.id as number, donationEventItem)
+              } else {
+                const { item } = donationEventItem;
+                const { id: itemId } = item as Item;
+
+                await this.donationEventItemService.createItemFromEvent(itemId, id, donationEventItem);
               }
             }))
           }
@@ -81,7 +99,11 @@ export class DonationEventService {
           // Unlikely, since we already control the params through strongParams
           console.log('Invalid key provided');
       }
-    }
+    })
+
+    await Promise.all(_);
+
+    console.log('let me update', updatedDonationEventPayload)
     const res = await this.donationEventRepository.updateDonationEventv1(id, updatedDonationEventPayload);
 
     return {
