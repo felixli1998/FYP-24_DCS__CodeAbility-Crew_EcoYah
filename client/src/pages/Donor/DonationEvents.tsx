@@ -118,9 +118,9 @@ export default function DonationEvents() {
     useEffect(() => {
         console.log(calculateTimeLeft('2024-02-24 11:59:59 PM'))
 
-        const removeEventOfWeekFromEvents = async() => {
-            
-        }
+        // const removeEventOfWeekFromEvents = async() => {
+
+        // }
         
         const fetchData = async () => {
             try {
