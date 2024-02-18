@@ -1,13 +1,12 @@
-import { DonationRequest } from '../entities/DonationRequest';
-import { DonationRequestItem } from '../entities/DonationRequestItem';
-import { DonationRequestRepository } from '../repositories/DonationRequestRepository';
-import { DonationRequestUpdatePayload } from '../routes/donationRequestRoutes';
-import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
-import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
+import { DonationRequest } from "../entities/DonationRequest";
+import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { DonationRequestRepository } from "../repositories/DonationRequestRepository";
+import { DonationRequestUpdatePayload } from "../routes/donationRequestRoutes";
+import { DonationRequestItemRepository } from "../repositories/DonationRequestItemRepository";
+import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
 
 // Import other services
-import { DonationEventService } from './DonationEventService';
-import { DonationEventRepository } from '../repositories/DonationEventRepository';
+
 export class DonationRequestService {
   private donationRequestRepository: DonationRequestRepository;
   private donationRequestItemRepository: DonationRequestItemRepository;
@@ -19,14 +18,14 @@ export class DonationRequestService {
     this.donationEventItemRepository = new DonationEventItemRepository();
   }
 
-  async getActiveDonationRequestFromUser(user_id:number, page: number = 1) {
+  async getActiveDonationRequestFromUser(user_id: number, page: number = 1) {
     return await this.donationRequestRepository.getActiveDonationRequestFromUser(
       user_id,
       page
     );
   }
 
-  async getCompletedDonationRequestFromUser(user_id:number, page: number = 1) {
+  async getCompletedDonationRequestFromUser(user_id: number, page: number = 1) {
     return await this.donationRequestRepository.getCompletedDonationRequestFromUser(
       user_id,
       page
@@ -43,7 +42,6 @@ export class DonationRequestService {
     return await this.donationRequestRepository.cancelDonationRequest(id);
   }
 
-
   async createNewDonationRequestItem(
     donationRequestObj: DonationRequest,
     donationEventId: number,
@@ -56,7 +54,7 @@ export class DonationRequestService {
       );
 
     if (donationEventItem) {
-      requestItem.donationRequest = donationRequestObj
+      requestItem.donationRequest = donationRequestObj;
       requestItem.quantity = quantity;
       requestItem.donationEventItem = donationEventItem;
     }
@@ -74,36 +72,44 @@ export class DonationRequestService {
 
     for (const [key, value] of Object.entries(payload)) {
       switch (key) {
-        case 'id':
+        case "id":
           break;
-        case 'dropOffDate':
+        case "dropOffDate":
           updatedRequestPayload.dropOffDate = new Date(value as string);
           break;
-        case 'dropOffTime':
+        case "dropOffTime":
           updatedRequestPayload.dropOffTime = value as string;
           break;
-        case 'omitPoints':
+        case "omitPoints":
           updatedRequestPayload.omitPoints = value as boolean;
-        case 'requestItems':
+        case "requestItems":
           if (Array.isArray(value)) {
-            await Promise.all(value.map(async (item) => {
-              const { id, quantity } = item;
-              this.donationRequestItemRepository.updateDonationRequestItem(id, { quantity })
-            }));
+            await Promise.all(
+              value.map(async (item) => {
+                const { id, quantity } = item;
+                this.donationRequestItemRepository.updateDonationRequestItem(
+                  id,
+                  { quantity }
+                );
+              })
+            );
           }
           break;
         default:
-          console.log('Invalid key provided.');
+          console.log("Invalid key provided.");
           break;
       }
     }
 
-    const res = await this.donationRequestRepository.updateDonationRequest(id, updatedRequestPayload)
+    const res = await this.donationRequestRepository.updateDonationRequest(
+      id,
+      updatedRequestPayload
+    );
 
     return {
       action: true,
       data: res,
-      message: 'Successfully updated donation request',
+      message: "Successfully updated donation request",
     };
   }
 
@@ -112,17 +118,20 @@ export class DonationRequestService {
       date
     );
   }
-  
+
   async completeDonationRequest(id: number) {
     return await this.donationRequestRepository.completeDonationRequest(id);
   }
   // Helper functions below
-  validateDonationRequestItems(donationRequestItem: DonationRequestItem[]): {valid: boolean, message: string} {
+  validateDonationRequestItems(donationRequestItem: DonationRequestItem[]): {
+    valid: boolean;
+    message: string;
+  } {
     // Check not empty
     if (donationRequestItem.length === 0) {
       return {
         valid: false,
-        message: "Donation request items cannot be empty"
+        message: "Donation request items cannot be empty",
       };
     }
     // Check quantity
@@ -130,12 +139,13 @@ export class DonationRequestService {
       if (item.quantity < 1) {
         return {
           valid: false,
-          message: "Quantity must be at least 1"
+          message: "Quantity must be at least 1",
         };
       }
-    } 
+    }
     return {
       valid: true,
-      message: "Donation request items are valid"
+      message: "Donation request items are valid",
     };
+  }
 }
