@@ -13,6 +13,8 @@ import { DonationRequestItem } from '../entities/DonationRequestItem';
 import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
 import { DonationRequestItemService } from '../services/DonationRequestItemService';
 import { DonationEventItemService } from '../services/DonationEventItemService';
+import { DonationEventService } from '../services/DonationEventService';
+import { DonationEventRepository } from '../repositories/DonationEventRepository';
 
 export type RequestItemsPayloadT = {
   id: DonationRequestItem['id'];
@@ -38,6 +40,12 @@ const donationRequestService = new DonationRequestService(
 const userRepository = new UserRepository();
 const userServices = new UserService(userRepository);
 
+// DonationEventService
+const donationEventRepository = new DonationEventRepository();
+const donationEventService = new DonationEventService(
+  donationEventRepository
+);
+
 // Donation Event Item Service
 const donationEventItemRepository = new DonationEventItemRepository();
 const donationEventItemService = new DonationEventItemService(
@@ -50,53 +58,30 @@ const donationRequestItemService = new DonationRequestItemService(
   donationRequestItemRepository
 );
 
-// TODO: This was created during model creation. Feel free to delete or expand it as needed
-router.post('/test/create', async (req, res) => {
+router.post('/create', async (req, res) => {
+  // sanitize inputs
+  const params = req.body; 
+  const allowedEventParams = ['donationEventId', 'dropOffDate', 'dropOffTime', 'omitPoints', 'submittedBy', 'donationRequestItems'];
+  const filteredEventParams = strongParams(params, allowedEventParams);
+
   try {
     const donationRequest = new DonationRequest();
-    donationRequest.omitPoints = false;
-    donationRequest.dropOffDate = new Date();
-    donationRequest.dropOffTime = '12:00';
+    donationRequest.dropOffDate = filteredEventParams.dropOffDate;
+    donationRequest.dropOffTime = filteredEventParams.dropOffTime;
+    donationRequest.omitPoints = filteredEventParams.omitPoints;
 
-    const donationEventItem1 =
-      await donationEventItemService.retrieveDonationEventItemById(1);
-    const donationEventItem2 =
-      await donationEventItemService.retrieveDonationEventItemById(2);
+    const donationEvent = await donationEventService.getDonationEventById(filteredEventParams.donationEventId);
+    if (donationEvent) donationRequest.donationEvent = donationEvent;
 
-    const donationRequestItem1 = new DonationRequestItem();
-    const donationRequestItem2 = new DonationRequestItem();
-    donationRequestItem1.quantity = 5;
-    donationRequestItem2.quantity = 2;
-
-    if (donationEventItem1 && donationEventItem2) {
-      donationRequestItem1.donationEventItem = donationEventItem1;
-      donationRequestItem2.donationEventItem = donationEventItem2;
-    }
-
-    // Create donation request item
-    await Promise.all([
-      donationRequestItemService.createDonationRequestItem(
-        donationRequestItem1
-      ),
-      donationRequestItemService.createDonationRequestItem(
-        donationRequestItem2
-      ),
-    ]);
-
-    const user = await userServices.getUserById(1);
+    const user = await userServices.getUserById(filteredEventParams.submittedBy);
     if (user) donationRequest.user = user;
-
-    donationRequest.donationRequestItems = [
-      donationRequestItem1,
-      donationRequestItem2,
-    ];
 
     const newDonationRequest =
       await donationRequestService.createDonationRequest(donationRequest);
 
     return generateResponse(res, 200, newDonationRequest);
   } catch (error) {
-    console.error(error);
+    return generateResponse(res, 500, "Something went wrong.");
   }
 });
 
@@ -182,7 +167,7 @@ router.put('/complete', async (req, res) => {
     const payload = await donationRequestService.completeDonationRequest(id);
 
     return generateResponse(res, 200, 'Updated successfully!');
-  } catch (err) {
+  } catch (error) {
     return generateResponse(res, 500, 'Something went wrong');
   }
 });
