@@ -1,6 +1,3 @@
-// React Imports
-import { useState, useEffect } from 'react';
-
 // MUI Imports
 import { Typography, Grid, FormControlLabel, Switch } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';

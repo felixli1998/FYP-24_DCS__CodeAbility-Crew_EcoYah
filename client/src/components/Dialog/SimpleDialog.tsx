@@ -15,13 +15,9 @@ export interface SimpleDialogProps {
 
 export default function SimpleDialog(props: SimpleDialogProps) {
   const { open, title, children, leftButtonLabel, rightButtonLabel, updateDonationIsActive, onClose } = props;
-  const [loading, setLoading] = React.useState(false);
+  const [loading] = React.useState(false);
 
   const handleClose = () => {
-    onClose(false);
-  };
-
-  const handleListItemClick = (value: string) => {
     onClose(false);
   };
 
