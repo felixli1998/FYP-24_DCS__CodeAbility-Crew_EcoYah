@@ -15,6 +15,7 @@ import DonationEventForm from '../pages/Admin/DonationEventForm';
 import DonationEventPreview from '../pages/Admin/DonationEventPreview';
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
 import DonationRequests from '../pages/Admin/DonationRequests';
+import { DonationRequest } from '../pages/Donor/DonationRequest';
 
 type AppRoutesT = {
   path: string;
@@ -79,6 +80,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "Sign in page for the admin",
     element: <AdminSignIn />,
     isAdmin: true,
+  },
+  {
+    path: "donation-requests",
+    description: "View donation requests for authenticated donor",
+    element: <DonationRequest />,
+    isAdmin: false,
   },
   {
     path: "donation-event-form",
