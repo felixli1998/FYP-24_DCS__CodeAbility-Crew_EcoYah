@@ -2,30 +2,35 @@
 import express from 'express';
 
 // Internal Imports
+import { generateResponse, strongParams } from "../common/methods";
+
+import { DonationRequest } from "../entities/DonationRequest";
+import { DonationRequestService } from "../services/DonationRequestService";
 import { DonationRequestRepository } from '../repositories/DonationRequestRepository';
-import { DonationRequestService } from '../services/DonationRequestService';
-import { DonationRequest } from '../entities/DonationRequest';
-import { UserRepository } from '../repositories/UserRepository';
-import { UserService } from '../services/UserService';
-import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
-import { generateResponse, strongParams } from '../common/methods';
-import { DonationRequestItem } from '../entities/DonationRequestItem';
-import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
-import { DonationRequestItemService } from '../services/DonationRequestItemService';
-import { DonationEventItemService } from '../services/DonationEventItemService';
-import { DonationEventService } from '../services/DonationEventService';
-import { DonationEventRepository } from '../repositories/DonationEventRepository';
+
+import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { DonationRequestItemService } from "../services/DonationRequestItemService";
+import { DonationRequestItemRepository } from "../repositories/DonationRequestItemRepository";
+
+import { UserService } from "../services/UserService";
+import { UserRepository } from "../repositories/UserRepository";
+
+import { DonationEventService } from "../services/DonationEventService";
+import { DonationEventRepository } from "../repositories/DonationEventRepository";
+
+import { DonationEventItemService } from "../services/DonationEventItemService";
+import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
 
 export type RequestItemsPayloadT = {
-  id: DonationRequestItem['id'];
-  quantity: DonationRequestItem['quantity']
-}
+  id: DonationRequestItem["id"];
+  quantity: DonationRequestItem["quantity"];
+};
 
 export type DonationRequestUpdatePayload = {
-  id: DonationRequest['id'];
-  dropOffDate?: DonationRequest['dropOffDate'];
-  dropOffTime?: DonationRequest['dropOffTime'];
-  omitPoints?: DonationRequest['omitPoints'];
+  id: DonationRequest["id"];
+  dropOffDate?: DonationRequest["dropOffDate"];
+  dropOffTime?: DonationRequest["dropOffTime"];
+  omitPoints?: DonationRequest["omitPoints"];
   requestItems?: RequestItemsPayloadT[];
 };
 
@@ -36,11 +41,18 @@ const donationRequestRepository = new DonationRequestRepository();
 const donationRequestService = new DonationRequestService(
   donationRequestRepository
 );
+
+// Donation Request Item Service
+const donationRequestItemRepository = new DonationRequestItemRepository();
+const donationRequestItemService = new DonationRequestItemService(
+  donationRequestItemRepository
+);
+
 // User Service
 const userRepository = new UserRepository();
 const userServices = new UserService(userRepository);
 
-// DonationEventService
+// Donation Event Service
 const donationEventRepository = new DonationEventRepository();
 const donationEventService = new DonationEventService(
   donationEventRepository
@@ -52,12 +64,6 @@ const donationEventItemService = new DonationEventItemService(
   donationEventItemRepository
 );
 
-// Donation Request Item Service
-const donationRequestItemRepository = new DonationRequestItemRepository();
-const donationRequestItemService = new DonationRequestItemService(
-  donationRequestItemRepository
-);
-
 router.post('/create', async (req, res) => {
   // sanitize inputs
   const params = req.body; 
@@ -65,21 +71,45 @@ router.post('/create', async (req, res) => {
   const filteredEventParams = strongParams(params, allowedEventParams);
 
   try {
-    const donationRequest = new DonationRequest();
-    donationRequest.dropOffDate = filteredEventParams.dropOffDate;
-    donationRequest.dropOffTime = filteredEventParams.dropOffTime;
-    donationRequest.omitPoints = filteredEventParams.omitPoints;
+    const newDonationRequest = new DonationRequest();
+    newDonationRequest.dropOffDate = filteredEventParams.dropOffDate;
+    newDonationRequest.dropOffTime = filteredEventParams.dropOffTime;
+    newDonationRequest.omitPoints = filteredEventParams.omitPoints;
 
-    const donationEvent = await donationEventService.getDonationEventById(filteredEventParams.donationEventId);
-    if (donationEvent) donationRequest.donationEvent = donationEvent;
+    const donationEvent = await donationEventService.getDonationEventById(
+      filteredEventParams.donationEventId
+    );
+    if (donationEvent) newDonationRequest.donationEvent = donationEvent;
 
     const user = await userServices.getUserById(filteredEventParams.submittedBy);
-    if (user) donationRequest.user = user;
+    if (user) newDonationRequest.user = user;
 
-    const newDonationRequest =
-      await donationRequestService.createDonationRequest(donationRequest);
+    const donationRequest = await donationRequestService.createDonationRequest(
+      newDonationRequest
+    );
 
-    return generateResponse(res, 200, newDonationRequest);
+    if (donationRequest) {
+      for (const requestItem of filteredEventParams.donationRequestItems) {
+        const newDonationRequestItem = new DonationRequestItem();
+        newDonationRequestItem.quantity = requestItem.quantity;
+        newDonationRequestItem.donationRequest = donationRequest;
+        const donationEventItem =
+          await donationEventItemService.retrieveDonationEventItemById(
+            requestItem.donationEventItemId
+          );
+        if (donationEventItem)
+          newDonationRequestItem.donationEventItem = donationEventItem;
+
+        await donationRequestItemService.createDonationRequestItem(
+          newDonationRequestItem
+        );
+      }
+    }
+   
+    return generateResponse(res, 200, {
+      action: true,
+      message: "create_success",
+    });
   } catch (error) {
     return generateResponse(res, 500, "Something went wrong.");
   }
