@@ -89,7 +89,20 @@ export class DonationRequestRepository {
     return await AppDataSource.getRepository(DonationRequest).softDelete(id);
   }
 
-  // TODO: This was created during model creation. Feel free to expand upon it as needed
+  async updateDonationRequest(id: number, payload: Partial<DonationRequest>) {
+    await AppDataSource.getRepository(DonationRequest).update(id, payload);
+  }
+
+  async retrieveById(id: number) {
+    return await AppDataSource.getRepository(DonationRequest).findOne({
+      where: { id },
+      relations: [
+        'donationRequestItems',
+        'donationRequestItems.donationEventItem',
+      ],
+    });
+  }
+
   async retrieveDonationRequestByDate(date: Date) {
     const start = startOfDay(date);
     const end = endOfDay(date);
@@ -100,16 +113,16 @@ export class DonationRequestRepository {
       dropOffDate: true,
       status: true,
       user: { name: true },
+      donationEvent: {
+        id: true,
+        name: true,
+      },
       donationRequestItems: {
         id: true,
         quantity: true,
         donationEventItem: {
           id: true,
           pointsPerUnit: true,
-          donationEvent: {
-            id: true,
-            name: true,
-          },
           item: {
             name: true,
             unit: true,
@@ -128,11 +141,15 @@ export class DonationRequestRepository {
       },
       relations: [
         'user',
+        'donationEvent',
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
         'donationRequestItems.donationEventItem.item',
-        'donationRequestItems.donationEventItem.donationEvent',
       ],
     });
+  }
+
+  async completeDonationRequest(id: number) {
+    await AppDataSource.getRepository(DonationRequest).update({ id: id }, { status: Status.COMPLETED });
   }
 }

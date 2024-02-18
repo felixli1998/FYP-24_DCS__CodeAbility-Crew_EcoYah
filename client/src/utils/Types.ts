@@ -31,3 +31,30 @@ export type FormDataType = {
   donationEventItems: DonationEventItems[];
   createdBy: number;
 };
+
+export type DonationRequestType = {
+  id: number;
+  user: { name: string };
+  donationEvent: {
+    id: number;
+    name: string;
+  };
+  status: string;
+  dropOffDate: string;
+  dropOffTime: string;
+  donationRequestItems: DonationRequestItemsType[];
+};
+
+export type DonationRequestItemsType = {
+  id: number;
+  quantity: number;
+  donationEventItem: {
+    id: number;
+    item: {
+      id: number;
+      name: string;
+      unit: string;
+    };
+    pointsPerUnit: number;
+  };
+};
