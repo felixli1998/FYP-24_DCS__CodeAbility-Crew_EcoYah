@@ -13,13 +13,11 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import AddIcon from "@mui/icons-material/Add";
-import {
-  DONATION_EVENT_ROUTES,
-  EVENT_TYPE_ROUTES,
-} from "../../services/routes";
+import {DONATION_EVENT_ROUTES, EVENT_TYPE_ROUTES} from "../../services/routes";
+import {useNavigate} from "react-router-dom";
 
 type DonationEvent = {
   id: number;
@@ -38,6 +36,7 @@ type EventType = {
 };
 
 export default function DonationEventsAdmin() {
+  const navigate = useNavigate();
   const eventStatuses = ["All", "Active", "Inactive"];
   const [statusFilter, setStatusFilter] = useState("All");
   const [eventTypes, setEventTypes] = useState<EventType[]>([]);
@@ -70,11 +69,15 @@ export default function DonationEventsAdmin() {
       .catch((err) => console.log(err));
   }
 
+  const handleDonationEventClick = (donationEventId: number) => {
+    navigate(`/admin/donation-event/${donationEventId}`);
+  };
+
   useEffect(() => {
     axios
       .get(EVENT_TYPE_ROUTES.GET_ALL)
       .then((resp) => {
-        setEventTypes([{ id: 0, name: "All" }, ...resp.data.data.eventTypes]);
+        setEventTypes([{id: 0, name: "All"}, ...resp.data.data.eventTypes]);
       })
       .catch((err) => console.log(err));
     getData("All", 0, false);
@@ -88,13 +91,17 @@ export default function DonationEventsAdmin() {
         justifyContent="space-between"
         marginTop="2rem"
       >
-        <Typography variant="h5" fontWeight="bold" color="primary.main">
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          color="primary.main"
+        >
           Donation Events
         </Typography>
         <Button
           href="donation-event-form"
           variant="contained"
-          sx={{ height: "2.75rem" }}
+          sx={{height: "2.75rem"}}
         >
           <AddIcon />
           &nbsp; <Typography>Create</Typography>
@@ -116,11 +123,14 @@ export default function DonationEventsAdmin() {
               getData(e.target.value, typeFilter, false);
               setPage(1);
             }}
-            sx={{ height: "2.5rem", width: "20rem" }}
+            sx={{height: "2.5rem", width: "20rem"}}
             label="Status"
           >
             {eventStatuses.map((option, i) => (
-              <MenuItem key={i} value={option}>
+              <MenuItem
+                key={i}
+                value={option}
+              >
                 {option}
               </MenuItem>
             ))}
@@ -135,11 +145,14 @@ export default function DonationEventsAdmin() {
               getData(statusFilter, +e.target.value, false);
               setPage(1);
             }}
-            sx={{ height: "2.5rem", width: "20rem" }}
+            sx={{height: "2.5rem", width: "20rem"}}
             label="Event Type"
           >
             {eventTypes.map((option) => (
-              <MenuItem key={option.id} value={option.id}>
+              <MenuItem
+                key={option.id}
+                value={option.id}
+              >
                 {option.name}
               </MenuItem>
             ))}
@@ -147,13 +160,28 @@ export default function DonationEventsAdmin() {
         </FormControl>
       </Box>
 
-      <Grid padding="0 19rem" container marginTop="3rem">
+      <Grid
+        padding="0 19rem"
+        container
+        marginTop="3rem"
+      >
         {events.slice((page - 1) * 4, page * 4).map((event) => (
-          <Grid item xs={6} key={event.id} padding="1rem">
+          <Grid
+            item
+            xs={6}
+            key={event.id}
+            padding="1rem"
+          >
             <Card>
-              <CardMedia sx={{ height: "8rem" }} image={event.imageId} />
+              <CardMedia
+                sx={{height: "8rem"}}
+                image={event.imageId}
+              />
               <CardContent>
-                <Typography color="#C51818" fontWeight="bold">
+                <Typography
+                  color="#C51818"
+                  fontWeight="bold"
+                >
                   [
                   {Math.floor(
                     (+new Date(event.endDate) - +new Date()) /
@@ -163,13 +191,17 @@ export default function DonationEventsAdmin() {
                   {new Date(event.startDate).toLocaleDateString("en-GB")} -{" "}
                   {new Date(event.endDate).toLocaleDateString("en-GB")}
                 </Typography>
-                <Typography marginTop="0.5rem" fontWeight="bold">
+                <Typography
+                  marginTop="0.5rem"
+                  fontWeight="bold"
+                >
                   {event.name}
                 </Typography>
               </CardContent>
-              <CardActions sx={{ justifyContent: "flex-end" }}>
+              <CardActions sx={{justifyContent: "flex-end"}}>
                 <Button
-                  sx={{ textDecoration: "underline", fontWeight: "bold" }}
+                  onClick={() => handleDonationEventClick(event.id)}
+                  sx={{textDecoration: "underline", fontWeight: "bold"}}
                 >
                   View More
                 </Button>
@@ -180,7 +212,7 @@ export default function DonationEventsAdmin() {
       </Grid>
 
       <Pagination
-        sx={{ display: "flex", justifyContent: "center" }}
+        sx={{display: "flex", justifyContent: "center"}}
         count={Math.ceil(events.length / 4)}
         page={page}
         onChange={(e, v) => {
