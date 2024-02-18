@@ -15,6 +15,10 @@ export class DonationEventItemService {
     );
   }
 
+  async updateDonationEventItem(id: DonationEventItem['id'], payload: Partial<DonationEventItem>){
+    return this.donationItemRepository.updateDonationEventItem(id, payload)
+  }
+
   async retrieveDonationEventItemById(id: number) {
     return this.donationItemRepository.retrieveDonationEventItemById(id);
   }
