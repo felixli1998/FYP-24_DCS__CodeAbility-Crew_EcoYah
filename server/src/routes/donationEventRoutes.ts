@@ -22,6 +22,14 @@ const donationEventItemService = new DonationEventItemService(
   donationEventItemRepository
 );
 
+export type DonationEventUpdatePayload = {
+  name?: DonationEvent['name'];
+  imageId?: DonationEvent['imageId'];
+  startDate?: DonationEvent['startDate'];
+  endDate?: DonationEvent['endDate'];
+  isActive?: DonationEvent['isActive'];
+  donationEventItems?: Partial<DonationEventItem>[]
+}
 interface DonationEventFilterParams {
     startDate?: string;
     endDate?: string;
@@ -33,9 +41,9 @@ interface DonationEventFilterParams {
 
 router.get("/all", async (req, res) =>{
     // Check if req.query is empty
-    let pageNumber = parseInt(req.query['pageNumber'] as string); 
+    let pageNumber = parseInt(req.query['pageNumber'] as string);
     if (isNaN(pageNumber)) {
-        pageNumber = 1;
+        pageNumber = 2;
     }
 
     const queryKeys = Object.keys(req.query);
@@ -48,7 +56,7 @@ router.get("/all", async (req, res) =>{
 
     const filters:DonationEventFilterParams = {
         startDate: req.query['startDate'] as string,
-        endDate: req.query['endDate'] as string, 
+        endDate: req.query['endDate'] as string,
         createdBy: req.query['createdBy'] as string,
         eventType: req.query['eventType'] as string,
         name: req.query['name'] as string,
@@ -170,32 +178,19 @@ router.put(`/:id`, async (req, res) => {
   const id = req.params.id;
   if (!id) return generateResponse(res, 400, 'ID is required!');
 
-  const parsedId = parseInt(id);
-  // Retrieve donationEvent to ensure that it exists
-  const donationEvent = (await donationEventService.getDonationEventById(
-    parsedId
-  )) as DonationEvent;
-  // Handle if donationEvent is null
-  if (!donationEvent)
-    return generateResponse(res, 404, 'Donation Event not found!');
+  const { updateParams: payload } = req.body;
+  const allowedParams = ['name', 'imageId', 'startDate', 'endDate', 'isActive', 'donationEventItems']
+  const sanitisedPayload = strongParams(payload, allowedParams);
 
-  // Updating timestamp
-  const updateParams = req.body.updateParams;
-  console.log(updateParams);
-  // Apply partial updates
-  for (const key in updateParams) {
-    if (updateParams.hasOwnProperty(key)) {
-      (donationEvent as any)[key] = updateParams[key];
-    }
+  try {
+    const payload = await donationEventService.updateDonationEventV1(parseInt(id), sanitisedPayload as DonationEventUpdatePayload);
+
+    return generateResponse(res, 200, payload)
+  } catch (err) {
+    console.log(err)
+
+    return generateResponse(res, 500, 'Something went wrong!')
   }
-  console.log("HELLO", donationEvent);
-  // Updating donationEvent
-  const updateDonationEvent = Object.assign(donationEvent, updateParams);
-  console.log(updateDonationEvent)
-  const updatedDonationEvent = await donationEventService.updateDonationEvent(
-    updateDonationEvent
-  );
-  return generateResponse(res, 200, updatedDonationEvent);
 });
 
 export default router;

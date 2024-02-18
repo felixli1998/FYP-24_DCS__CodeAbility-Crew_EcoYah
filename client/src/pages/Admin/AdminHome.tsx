@@ -19,33 +19,6 @@ const Home: React.FC = () => {
 
   const handleDonationEventClick = (donationEventId: number) => {
     navigate(`/admin/donation-event/${donationEventId}`)
-    // console.log(donationEvent);
-    // let formData: any = {
-    //   id: donationEvent.id,
-    //   name: donationEvent.name,
-    //   imageId: donationEvent.imageId,
-    //   eventType: donationEvent.eventType,
-    //   startDate: donationEvent.startDate,
-    //   endDate: donationEvent.endDate,
-    //   isActive: donationEvent.isActive,
-    //   createdBy: donationEvent.createdBy,
-    // };
-
-    // formData.donationEventItems = donationEvent.donationEventItems.map(
-    //   (item: any) => ({
-    //     id: item.id,
-    //     name: item.item.name,
-    //     minQty: item.minQty,
-    //     targetQty: item.targetQty,
-    //     pointsPerUnit: item.pointsPerUnit,
-    //     currentQty: item.currentQty,
-    //     unit: item.item.unit,
-    //   })
-    // );
-
-    // formData.selectedItems = donationEvent.donationEventItems.map(
-    //   (item: any) => item.item
-    // );
   };
 
   return (

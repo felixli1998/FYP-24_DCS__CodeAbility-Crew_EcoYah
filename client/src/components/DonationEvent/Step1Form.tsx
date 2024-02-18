@@ -1,28 +1,18 @@
 // React Imports
-import { useState, useEffect, ChangeEvent } from 'react';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {ChangeEvent} from "react";
 
 // MUI Imports
-import { useTheme } from '@mui/system';
-import { Box, TextField, Button, Grid } from '@mui/material';
+import {useTheme} from "@mui/system";
+import {Box, TextField, Button, Grid} from "@mui/material";
 
 // Icons
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import AddIcon from '@mui/icons-material/Add';
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 // Components
-import StaffTypography from '../Typography/StaffTypography';
-import BoxButton from '../Button/BoxButton';
-import FormDialog from '../Dialog/FormDialog';
-import OutlinedTextField from '../TextFields/OutlinedTextField';
+import StaffTypography from "../Typography/StaffTypography";
 
 // Utils Imports
-import { createEventType, fetchEventTypes } from '../../services/eventTypesApi';
-import {
-  formatAndCapitalizeString,
-  isValueExistsInObjectArray,
-} from '../../utils/Common';
-import { EventType, FormDataType } from '../../utils/Types';
+import {FormDataType} from "../../utils/Types";
 
 type Step1FormProps = {
   formData: FormDataType;
@@ -31,8 +21,8 @@ type Step1FormProps = {
 };
 
 export default function Step1Form(props: Step1FormProps) {
-  const { formData, handleData, showMissingFields } = props;
-  const { imageId, name } = formData;
+  const {formData, handleData, showMissingFields} = props;
+  const {imageId, name} = formData;
   const theme = useTheme();
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -41,14 +31,14 @@ export default function Step1Form(props: Step1FormProps) {
       const reader = new FileReader();
       reader.onload = () => {
         const imageDataUrl = reader.result as string;
-        handleData('imageId', imageDataUrl);
+        handleData("imageId", imageDataUrl);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleTextChange = (event: ChangeEvent<HTMLInputElement>) => {
-    handleData('name', event.target.value);
+    handleData("name", event.target.value);
   };
 
   // === For Event Type View and Create ===
@@ -120,91 +110,94 @@ export default function Step1Form(props: Step1FormProps) {
   return (
     <>
       <StaffTypography
-        type='title'
+        type="title"
         size={1.5}
-        text='1. Upload an Image of the Donation Event'
+        text="1. Upload an Image of the Donation Event"
       />
       <Box
-        display='flex'
-        flexDirection='column'
-        justifyContent='center'
-        alignItems='center'
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
         sx={{
-          width: '100%',
-          [theme.breakpoints.up('sm')]: {
-            width: '40.25rem',
+          width: "100%",
+          [theme.breakpoints.up("sm")]: {
+            width: "40.25rem",
           },
-          height: '20.5rem',
-          padding: '4.5rem',
+          height: "20.5rem",
+          padding: "4.5rem",
           border: `1px dashed ${
-            showMissingFields && !imageId ? '#d32f2f' : '#5A5858'
+            showMissingFields && !imageId ? "#d32f2f" : "#5A5858"
           }`,
-          borderRadius: '4px',
+          borderRadius: "4px",
         }}
       >
         {imageId && (
           <img
             src={imageId}
-            alt='donationImage'
-            loading='lazy'
+            alt="donationImage"
+            loading="lazy"
             style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              objectFit: 'contain',
+              maxWidth: "100%",
+              maxHeight: "100%",
+              objectFit: "contain",
             }}
           />
         )}
         <Button
-          variant='outlined'
-          sx={{ borderColor: 'primary.dark', marginTop: 2 }}
-          startIcon={<CloudUploadIcon sx={{ color: 'primary.dark' }} />}
+          variant="outlined"
+          sx={{borderColor: "primary.dark", marginTop: 2}}
+          startIcon={<CloudUploadIcon sx={{color: "primary.dark"}} />}
         >
-          <label htmlFor='ImageInput' style={{ cursor: 'pointer' }}>
+          <label
+            htmlFor="ImageInput"
+            style={{cursor: "pointer"}}
+          >
             <StaffTypography
-              type='title'
+              type="title"
               size={1.5}
-              text='Upload File'
+              text="Upload File"
               customStyles={{
-                marginTop: '1rem',
+                marginTop: "1rem",
               }}
             />
           </label>
           <input
-            type='file'
-            id='ImageInput'
-            accept='image/*'
-            style={{ display: 'none' }}
+            type="file"
+            id="ImageInput"
+            accept="image/*"
+            style={{display: "none"}}
             onChange={handleImageUpload}
           />
         </Button>
       </Box>
       {showMissingFields && !imageId && (
         <StaffTypography
-          type='helperText'
+          type="helperText"
           size={1.5}
-          text='Please upload an image'
+          text="Please upload an image"
         />
       )}
       <StaffTypography
-        type='title'
+        type="title"
         size={1.5}
-        text='2. Enter the Name the Donation Event'
+        text="2. Enter the Name the Donation Event"
       />
       <TextField
-        label='Name'
-        type='text'
-        InputLabelProps={{ shrink: true }}
-        sx={{ width: 350 }}
+        label="Name"
+        type="text"
+        InputLabelProps={{shrink: true}}
+        sx={{width: 350}}
         value={name}
         onChange={handleTextChange}
-        error={showMissingFields && name === ''}
+        error={showMissingFields && name === ""}
         helperText={
           showMissingFields &&
-          name === '' && (
+          name === "" && (
             <StaffTypography
-              type='helperText'
+              type="helperText"
               size={1.5}
-              text='Please enter a name'
+              text="Please enter a name"
             />
           )
         }

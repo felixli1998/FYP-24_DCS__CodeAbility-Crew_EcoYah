@@ -1,11 +1,11 @@
 // React Imports
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import _ from 'lodash';
+import {useEffect, useState} from "react";
+import {useParams, useNavigate} from "react-router-dom";
+import {useQuery, useMutation} from "@tanstack/react-query";
+import _ from "lodash";
 
 // MUI Imports
-import StaffTypography from '../../components/Typography/StaffTypography';
+import StaffTypography from "../../components/Typography/StaffTypography";
 import {
   Box,
   Button,
@@ -18,39 +18,38 @@ import {
   StepLabel,
   Stack,
   Grid,
-} from '@mui/material';
+} from "@mui/material";
 
 // Utils Imports
-import DonationEventPreview from './DonationEventPreview';
+import DonationEventPreview from "../../components/DonationEvent/DonationEventPreview";
 import {
   getDonationEventById,
   updateDonationEventById,
-} from '../../services/donationEventApi';
+} from "../../services/donationEventApi";
 
 // Icons
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 // Components
-import Step1Form from '../../components/DonationEvent/Step1Form';
-import Step2Form from '../../components/DonationEvent/Step2Form';
-import Step3Form from '../../components/DonationEvent/Step3Form';
-import SimpleDialog from '../../components/Dialog/SimpleDialog';
+import Step1Form from "../../components/DonationEvent/Step1Form";
+import Step2Form from "../../components/DonationEvent/Step2Form";
+import Step3Form from "../../components/DonationEvent/Step3Form";
+import SimpleDialog from "../../components/Dialog/SimpleDialog";
 
 // Other Imports
-import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
+import dayjs from "dayjs";
 
 export default function DonationEvent() {
   const navigate = useNavigate();
-  const { donationEventId } = useParams();
+  const {donationEventId} = useParams();
   const [donationEvent, setDonationEventData] = useState<any>();
   const [editMode, setEditMode] = useState<Boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [showMissingFields, setShowMissingFields] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  const steps = ['Step 1', 'Step 2', 'Step 3', 'Preview'];
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const steps = ["Step 1", "Step 2", "Step 3", "Preview"];
   const [activeStep, setActiveStep] = useState(0);
 
   const {
@@ -58,7 +57,7 @@ export default function DonationEvent() {
     isLoading: donationEventIsLoading,
     refetch: donationEventRefetch,
   } = useQuery({
-    queryKey: ['donation-event-id', donationEventId],
+    queryKey: ["donation-event-id", donationEventId],
     queryFn: () => getDonationEventById(donationEventId as string),
   });
 
@@ -88,8 +87,8 @@ export default function DonationEvent() {
     }
   };
 
-  const { mutateAsync: updateDonationEventMutateAsync } = useMutation({
-    mutationKey: ['updateDonationEvent'],
+  const {mutateAsync: updateDonationEventMutateAsync} = useMutation({
+    mutationKey: ["updateDonationEvent"],
     // mutationFn: Performing the actual API call
     mutationFn: ({
       donationEventId,
@@ -108,8 +107,8 @@ export default function DonationEvent() {
       }
     },
     onError: (error: any) => {
-      console.error('Error creating donation event: ', error);
-      setErrorMessage('An error occurred while creating the donation event.');
+      console.error("Error creating donation event: ", error);
+      setErrorMessage("An error occurred while creating the donation event.");
     },
   });
 
@@ -126,9 +125,12 @@ export default function DonationEvent() {
         donationEventId: donationEvent.id,
         updateParams,
       });
+      if (response.data.action) {
+        window.location.reload();
+      }
     } catch (error) {
-      console.error('Error updating donation event');
-      setErrorMessage('Error updating donation event');
+      console.error("Error updating donation event");
+      setErrorMessage("Error updating donation event");
     }
   };
 
@@ -146,10 +148,10 @@ export default function DonationEvent() {
     try {
       const response = await updateDonationEventMutateAsync({
         donationEventId: donationEvent.id,
-        updateParams: { isActive: isActive },
+        updateParams: {isActive: isActive},
       });
     } catch (error) {
-      console.error('Error updating donation event');
+      console.error("Error updating donation event");
     }
   };
   // === For Donation Event Edit Dialog Related === //
@@ -158,13 +160,13 @@ export default function DonationEvent() {
   const validateStepForm = async () => {
     switch (activeStep) {
       case 0:
-        return donationEvent['name'] && donationEvent['imageId'];
+        return donationEvent["name"] && donationEvent["imageId"];
       case 1:
-        return donationEvent['donationEventItems'].length > 0;
+        return donationEvent["donationEventItems"].length > 0;
       case 2:
         return (
-          dayjs(donationEvent['startDate']).isValid() &&
-          dayjs(donationEvent['endDate']).isValid()
+          dayjs(donationEvent["startDate"]).isValid() &&
+          dayjs(donationEvent["endDate"]).isValid()
         );
       default:
         return false;
@@ -207,16 +209,24 @@ export default function DonationEvent() {
         handleData={handleData}
       />
     ),
-    2: <Step3Form formData={donationEvent} handleData={handleData} />,
+    2: (
+      <Step3Form
+        formData={donationEvent}
+        handleData={handleData}
+      />
+    ),
     3: (
       <DonationEventPreview
         headerBar={
-          <Box display='flex' justifyContent={'center'}>
+          <Box
+            display="flex"
+            justifyContent={"center"}
+          >
             <StaffTypography
-              type='title'
+              type="title"
               size={2.125}
               text={`Preview the Donation Event`}
-              customStyles={{ textAlign: 'center' }}
+              customStyles={{textAlign: "center"}}
             />
           </Box>
         }
@@ -236,21 +246,24 @@ export default function DonationEvent() {
       {donationEvent && !editMode && (
         <DonationEventPreview
           headerBar={
-            <Box display='flex' justifyContent={'space-between'}>
+            <Box
+              display="flex"
+              justifyContent={"space-between"}
+            >
               <StaffTypography
-                type='title'
+                type="title"
                 size={2.125}
                 text={`Donation Event`}
-                customStyles={{ textAlign: 'center' }}
+                customStyles={{textAlign: "center"}}
               />
               <Button
-                variant='contained'
+                variant="contained"
                 sx={{
-                  fontSize: '1.25rem',
-                  letterSpacing: '0.15rem',
-                  width: '9.375rem',
-                  height: '3.75rem',
-                  backgroundColor: 'primary.dark',
+                  fontSize: "1.25rem",
+                  letterSpacing: "0.15rem",
+                  width: "9.375rem",
+                  height: "3.75rem",
+                  backgroundColor: "primary.dark",
                 }}
                 onClick={() => handleEdit()}
               >
@@ -265,7 +278,7 @@ export default function DonationEvent() {
       <SimpleDialog
         open={openDialog}
         onClose={handleDialogClose}
-        title={'Edit Donation Event'}
+        title={"Edit Donation Event"}
         children={
           <FormControlLabel
             control={
@@ -273,59 +286,62 @@ export default function DonationEvent() {
                 checked={isActive}
                 onClick={() => setIsActive(!isActive)}
                 sx={{
-                  width: '9rem',
-                  height: '5.25rem',
-                  '.MuiSwitch-thumb': {
-                    width: '4.4rem',
-                    height: '4.1rem',
-                    marginLeft: isActive ? '2rem' : null,
+                  width: "9rem",
+                  height: "5.25rem",
+                  ".MuiSwitch-thumb": {
+                    width: "4.4rem",
+                    height: "4.1rem",
+                    marginLeft: isActive ? "2rem" : null,
                   },
                 }}
               />
             }
             label={
               <Typography
-                variant='h5'
+                variant="h5"
                 gutterBottom
                 sx={{
-                  color: isActive ? 'primary.dark' : 'secondary.dark',
-                  letterSpacing: '0.18rem',
-                  marginLeft: '0.5rem',
+                  color: isActive ? "primary.dark" : "secondary.dark",
+                  letterSpacing: "0.18rem",
+                  marginLeft: "0.5rem",
                 }}
               >
-                {isActive ? 'Active' : 'Inactive'}
+                {isActive ? "Active" : "Inactive"}
               </Typography>
             }
           />
         }
-        leftButtonLabel={'Cancel'}
-        rightButtonLabel={'Save'}
+        leftButtonLabel={"Cancel"}
+        rightButtonLabel={"Save"}
         updateDonationIsActive={updateDonationIsActive}
       />
       {/* Preview and Edit isActive (only) */}
       {/* Full Edit Mode */}
       {donationEvent && editMode && (
         <>
-          <Box sx={{ m: 5 }}>
-            <Stepper activeStep={activeStep} alternativeLabel>
+          <Box sx={{m: 5}}>
+            <Stepper
+              activeStep={activeStep}
+              alternativeLabel
+            >
               {steps.map((label, i) => (
                 <Step key={label}>
                   <StepLabel
                     sx={{
-                      '.MuiSvgIcon-root': {
-                        width: '3.44rem',
-                        height: '3.44rem',
-                        borderRadius: '50rem',
+                      ".MuiSvgIcon-root": {
+                        width: "3.44rem",
+                        height: "3.44rem",
+                        borderRadius: "50rem",
                       },
-                      '.MuiStepIcon-text': { fontSize: '1rem' },
+                      ".MuiStepIcon-text": {fontSize: "1rem"},
                     }}
                   >
                     <StaffTypography
-                      type='title'
+                      type="title"
                       size={1.5}
                       text={label}
                       customStyles={{
-                        color: activeStep >= i ? 'primary.main' : '',
+                        color: activeStep >= i ? "primary.main" : "",
                       }}
                     />
                   </StepLabel>
@@ -333,41 +349,55 @@ export default function DonationEvent() {
               ))}
             </Stepper>
           </Box>
-          <Grid container justifyContent='center' sx={{ p: 2 }}>
-            <Grid item xs={12} md={8} lg={8} container justifyContent='center'>
+          <Grid
+            container
+            justifyContent="center"
+            sx={{p: 2}}
+          >
+            <Grid
+              item
+              xs={12}
+              md={8}
+              lg={8}
+              container
+              justifyContent="center"
+            >
               <Stack spacing={5}>
                 {errorMessage && (
-                  <Alert severity='error'>
+                  <Alert severity="error">
                     The request encountered an issue. Please refresh and try
                     again!
                   </Alert>
                 )}
                 {form[activeStep]}
-                <Box display='flex' justifyContent='space-between'>
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                >
                   <Button
-                    variant='outlined'
+                    variant="outlined"
                     sx={{
-                      fontSize: '1.25rem',
-                      letterSpacing: '0.15rem',
-                      width: '9.375rem',
-                      height: '3.75rem',
-                      borderColor: 'primary.dark',
-                      color: 'primary.dark',
+                      fontSize: "1.25rem",
+                      letterSpacing: "0.15rem",
+                      width: "9.375rem",
+                      height: "3.75rem",
+                      borderColor: "primary.dark",
+                      color: "primary.dark",
                     }}
                     startIcon={activeStep !== 0 && <ArrowBackIosIcon />}
                     onClick={handleBack}
                   >
-                    {activeStep === 0 ? 'CANCEL' : 'BACK'}
+                    {activeStep === 0 ? "CANCEL" : "BACK"}
                   </Button>
                   {activeStep < 3 ? (
                     <Button
-                      variant='contained'
+                      variant="contained"
                       sx={{
-                        fontSize: '1.25rem',
-                        letterSpacing: '0.15rem',
-                        width: '9.375rem',
-                        height: '3.75rem',
-                        backgroundColor: 'primary.dark',
+                        fontSize: "1.25rem",
+                        letterSpacing: "0.15rem",
+                        width: "9.375rem",
+                        height: "3.75rem",
+                        backgroundColor: "primary.dark",
                       }}
                       endIcon={<ArrowForwardIosIcon />}
                       onClick={handleNext}
@@ -376,13 +406,13 @@ export default function DonationEvent() {
                     </Button>
                   ) : (
                     <Button
-                      variant='contained'
+                      variant="contained"
                       sx={{
-                        fontSize: '1.25rem',
-                        letterSpacing: '0.15rem',
-                        width: '9.375rem',
-                        height: '3.75rem',
-                        backgroundColor: 'primary.dark',
+                        fontSize: "1.25rem",
+                        letterSpacing: "0.15rem",
+                        width: "9.375rem",
+                        height: "3.75rem",
+                        backgroundColor: "primary.dark",
                       }}
                       endIcon={<ArrowForwardIosIcon />}
                       onClick={() => updateDonationEdit()}
