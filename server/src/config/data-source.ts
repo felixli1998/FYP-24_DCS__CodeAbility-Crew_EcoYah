@@ -11,6 +11,7 @@ import { DonationRequest } from '../entities/DonationRequest';
 
 // External imports
 import dotenv from 'dotenv';
+import { DonationRequestItem } from '../entities/DonationRequestItem';
 
 dotenv.config();
 const DATABASE_USERNAME = process.env.DATABASE_USERNAME || 'postgres';
@@ -33,9 +34,11 @@ export const AppDataSource = new DataSource({
     Item,
     DonationEventItem,
     DonationRequest,
+    DonationRequestItem,
   ],
   synchronize: true,
   logging: true,
   subscribers: [],
   migrations: [],
+  cache: true,
 });

@@ -12,6 +12,7 @@ import {
 import { Item } from './Item';
 import { DonationEvent } from './DonationEvent';
 import { DonationRequest } from './DonationRequest';
+import { DonationRequestItem } from './DonationRequestItem';
 
 @Entity()
 export class DonationEventItem {
@@ -30,6 +31,12 @@ export class DonationEventItem {
     (donationEvent) => donationEvent.donationEventItems
   )
   donationEvent: DonationEvent;
+
+  @OneToMany(
+    () => DonationRequestItem,
+    (donationRequestItem) => donationRequestItem.donationEventItem
+  )
+  donationRequestItems: DonationRequestItem[];
 
   @Column({
     nullable: false,
@@ -56,12 +63,6 @@ export class DonationEventItem {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @OneToMany(
-    () => DonationRequest,
-    (donationRequest) => donationRequest.donationEventItem
-  )
-  donationRequests: DonationRequest[];
 
   // Validates before inserting the data into the database
   // NOTE: Use try catch to handle the error graciously inside your service / repository

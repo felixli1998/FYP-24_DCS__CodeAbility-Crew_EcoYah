@@ -7,9 +7,11 @@ import {
   DeleteDateColumn,
   ManyToOne,
   Index,
+  OneToMany,
 } from 'typeorm';
-import { DonationEventItem } from './DonationEventItem';
 import { User } from './User';
+import { DonationRequestItem } from './DonationRequestItem';
+import { DonationEvent } from './DonationEvent';
 
 export enum Status {
   SUBMITTED = 'submitted',
@@ -21,20 +23,19 @@ export class DonationRequest {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(
-    () => DonationEventItem,
-    (donationEventItem) => donationEventItem.donationRequests
-  )
-  donationEventItem: DonationEventItem;
-
   @Index() // To facilitate for the use case on the occasional lookup of the user's donation requests
-  @ManyToOne(() => User, (user) => user.donationRequests)
+  @ManyToOne(() => User, (user) => user.donationRequests, { nullable: false })
   user: User;
 
-  @Column({
-    nullable: false,
-  })
-  quantity: number;
+  @OneToMany(
+    () => DonationRequestItem,
+    (DonationRequestItem) => DonationRequestItem.donationRequest,
+    { cascade: ['update', 'insert'], nullable: false },
+  )
+  donationRequestItems: DonationRequestItem[];
+
+  @ManyToOne(() => DonationEvent, (donationEvent) => donationEvent.donationRequests, { nullable: false })
+  donationEvent: DonationEvent;
 
   @Column({
     comment: 'If the donor wants to omit the points for this donation request.',
@@ -53,11 +54,13 @@ export class DonationRequest {
   @Index() // To facilitate for the use case on the occasional lookup of the drop off date
   @Column({
     nullable: false,
+    comment: 'The date when the donor wants to drop off the donation items.',
   })
   dropOffDate: Date;
 
   @Column({
     nullable: false,
+    comment: 'The time when the donor wants to drop off the donation items.',
   })
   dropOffTime: string;
 
@@ -67,7 +70,10 @@ export class DonationRequest {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // To support soft deletee
-  @DeleteDateColumn()
+  // To support soft delete
+  @DeleteDateColumn({
+    comment:
+      'The date at which the donor wish to terminate the donation request.',
+  })
   deletedAt: Date;
 }
