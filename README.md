@@ -23,7 +23,8 @@ We are using PostGresSQL for this. Ensure you have PostGresSQL installed and you
 ## Server
 
 > Before running the server, ensure that you have a `.env` file under the `server` folder with the `PORT=8000`.
-Ideally, your .env should be of this following format
+Ideally, your `.env` should be of this following format.
+Created an `.env.production` file too if you are going to be building this. The URL should be "https://<*.com>" without trailing back slashes.
 ```
 PORT=XXXX
 DATABASE_USER=xxxx

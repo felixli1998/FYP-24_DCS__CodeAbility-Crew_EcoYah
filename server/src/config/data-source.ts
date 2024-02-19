@@ -14,7 +14,7 @@ import dotenv from 'dotenv';
 import { DonationRequestItem } from '../entities/DonationRequestItem';
 
 dotenv.config();
-const DATABASE_USERNAME = process.env.DATABASE_USERNAME || 'postgres';
+const DATABASE_USER = process.env.DATABASE_USERNAME || 'postgres';
 const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || '';
 const SnakeNamingStrategy =
   require('typeorm-naming-strategies').SnakeNamingStrategy;
@@ -24,7 +24,7 @@ export const AppDataSource = new DataSource({
   host: 'localhost',
   port: 5432,
   namingStrategy: new SnakeNamingStrategy(),
-  username: DATABASE_USERNAME,
+  username: DATABASE_USER,
   password: DATABASE_PASSWORD,
   database: 'ecoyahdb',
   entities: [
