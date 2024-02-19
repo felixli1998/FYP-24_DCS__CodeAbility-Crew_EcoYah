@@ -6,7 +6,20 @@ import Typography from "@mui/material/Typography";
 import {Chip} from "@mui/material";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 
-export default function ContentCard() {
+type ContentCardProps = {
+  contentCardData: {
+    image: string;
+    title: string;
+    chipLabel: string;
+    reward: string;
+    location: string;
+    dropOffDateTime: string;
+  }
+};
+
+export default function ContentCard(props: ContentCardProps) {
+  const { contentCardData } = props
+  const { image, title, chipLabel, reward, location, dropOffDateTime} = contentCardData
   return (
     <Card
       variant="outlined"
@@ -14,10 +27,10 @@ export default function ContentCard() {
     >
       <CardMedia
         component="img"
-        image="https://picsum.photos/400/600"
+        image={image}
         height="120"
         sx={{objectFit: "cover"}}
-        alt="Live from space album cover"
+        alt="Not available"
       />
       <CardContent
         sx={{
@@ -40,10 +53,10 @@ export default function ContentCard() {
             variant="body2"
             fontWeight={700}
           >
-            Live From Space
+            {title}
           </Typography>
           <Chip
-            label="1 day left"
+            label={chipLabel}
             color="primary"
             sx={{backgroundColor: "#d4edda", color: "#155724", borderRadius: 1}}
             size="small"
@@ -60,7 +73,7 @@ export default function ContentCard() {
             marginTop: 0.5,
           }}
         >
-          S$ 3
+          S$ {reward}
         </Typography>
         <Box sx={{marginTop: "auto"}}>
           <Typography
@@ -74,7 +87,7 @@ export default function ContentCard() {
               fontSize="small"
               sx={{width: "1rem", marginRight: "0.2rem"}}
             ></LocationOnRoundedIcon>
-            Kunyah Cafe 5th Feb 2024, 10:00 AM
+            {`${location} ${dropOffDateTime}`}
           </Typography>
         </Box>
       </CardContent>

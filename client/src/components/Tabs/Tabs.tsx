@@ -3,30 +3,35 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 
-export default function ColorTabs() {
-  const [value, setValue] = React.useState("one");
+type TabsProp = {
+  tabs: {label: string; value: string}[];
+  selectedTab: string;
+  toggleTab: (tabValue: string) => void;
+};
+
+export default function ColorTabs(props: TabsProp) {
+  const {tabs, selectedTab, toggleTab} = props;
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
+    toggleTab(newValue);
   };
 
   return (
     <Box sx={{width: "100%"}}>
       <Tabs
-        value={value}
+        value={selectedTab}
         onChange={handleChange}
         textColor="primary"
         indicatorColor="primary"
         variant="fullWidth"
       >
-        <Tab
-          value="one"
-          label="Item One"
-        />
-        <Tab
-          value="two"
-          label="Item Two"
-        />
+        {tabs.map((tab: any) => (
+          <Tab
+            key={tab.value}
+            value={tab.value}
+            label={tab.label}
+          />
+        ))}
       </Tabs>
     </Box>
   );
