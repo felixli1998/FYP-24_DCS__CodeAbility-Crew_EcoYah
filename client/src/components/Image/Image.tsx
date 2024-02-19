@@ -22,7 +22,7 @@ const VisuallyHiddenInput = styled('input')({
 interface ImageProps {
   imageId: string ;
   type: "square" | "circle" | "rectangle";
-  folderPrefix: string;
+  folderPrefix: string ;
   editable?: boolean | false;
   width?: string | number;
   height?: string | number;
@@ -151,7 +151,6 @@ export default function Image(props: ImageProps): JSX.Element {
               Upload image
               <VisuallyHiddenInput type="file" onChange={handleFileChange} />
             </Button>
-           
             <Button variant="contained" color="primary" onClick={updateImage}>Update Image</Button>
           </Box>
         </>

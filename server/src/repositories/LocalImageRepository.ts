@@ -6,7 +6,6 @@ import path from 'path';
 const readFileAsync = promisify(fs.readFile);
 const writeFileAsync = promisify(fs.writeFile);
 const unlinkAsync = promisify(fs.unlink);
-const mkdirAsync = promisify(fs.mkdir);
 const renameAsync = promisify(fs.rename);
 
 export default class LocalImageRepository implements ImageRepositoryInterface {
