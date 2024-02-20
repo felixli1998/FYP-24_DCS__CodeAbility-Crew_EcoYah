@@ -1,25 +1,13 @@
-import { useState, useEffect } from 'react';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { styled } from "@mui/material/styles";
-
 import {
     Button,
-    Box,
-    Container,
-    Typography,
-    Avatar,
-    ListItemAvatar,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemText,
-    IconButton,
     Card,
-    CardActions,
     CardContent,
     CardMedia,
-    Grid
-  } from '@mui/material';
+    Grid,
+    Typography
+} from '@mui/material';
 
 type DonationEventCardProps = {
     name: string;
@@ -27,6 +15,7 @@ type DonationEventCardProps = {
     imgSrc: string;
     numJoined: number;
     numHoursLeft: string;
+    handleDonateClick: () => void;
 } 
 
 const breakpointSize = "sm";
@@ -58,7 +47,12 @@ export default function DonationEventCard(props: DonationEventCardProps) {
                     </Grid>
                     <Grid item xs={4} container justifyContent='flex-end'>
                         {/* <CardActions> */}
-                            <Button variant='contained' size='medium'>Donate</Button>
+                            <Button 
+                                variant='contained'
+                                size='medium'
+                                onClick={() => props.handleDonateClick()}>
+                                    Donate
+                            </Button>
                         {/* </CardActions> */}
                     </Grid>
                 </Grid>

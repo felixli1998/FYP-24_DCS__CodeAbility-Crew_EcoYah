@@ -18,6 +18,15 @@ type ActionReducerT = {
   admin: boolean;
 };
 
+// TODO: Let's refactor this subsequently using useContext
+export const isAuthenticated = () => {
+  const email = localStorage.getItem('ecoyah-email');
+
+  if (email) return true;
+
+  return false;
+};
+
 function ResponsiveAppBar() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -116,13 +125,13 @@ function ResponsiveAppBar() {
   };
 
   // TODO: Let's refactor this subsequently using useContext
-  const isAuthenticated = () => {
-    const email = localStorage.getItem('ecoyah-email');
+  // const isAuthenticated = () => {
+  //   const email = localStorage.getItem('ecoyah-email');
 
-    if (email) return true;
+  //   if (email) return true;
 
-    return false;
-  };
+  //   return false;
+  // };
 
   const navActionLogicMap = () => {
     const authenticated = isAuthenticated();

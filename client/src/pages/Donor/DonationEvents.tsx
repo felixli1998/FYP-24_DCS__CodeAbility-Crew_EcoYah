@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from 'react-router-dom';
+import { isAuthenticated } from "../../components/AppBar";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
 import { fetchActiveDonationEvents } from '../../services/donationEventApi';
 import { fetchEventTypes } from '../../services/eventTypesApi';
@@ -138,6 +140,19 @@ export default function DonationEvents() {
             return Math.floor(timeLeftInHours / 24) + ' Days';
         }
     }  
+
+    const navigate = useNavigate();
+    const handleDonateClick = (donationEvent: eventType) => {
+        // Check if user is authenticated, if not, push to Sign In
+        console.log(isAuthenticated());
+        if(!isAuthenticated()){
+            navigate('/sign-in');
+        } else {
+            // Redirect to donation request form page
+            console.log(donationEvent);
+        }
+
+    };
     
     useEffect(() => {
         const fetchData = async () => {
@@ -208,15 +223,24 @@ export default function DonationEvents() {
                       onChange={(e) => setSearch(e.target.value)}
                 />
 
-                <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
                 
-                <DonationEventCard
-                    name={eventOfTheWeek?.name || 'No Donation Event of The Week'}
-                    description={`Take part in this donation by donating ${eventOfTheWeek?.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
-                    imgSrc={eventOfTheWeek?.imageId || 'https://picsum.photos/200/300'}
-                    numJoined={eventOfTheWeek?.numDonors || 0}
-                    numHoursLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
-                />
+                {
+                    eventOfTheWeek ? 
+                    <>
+                        <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
+                        
+                        <DonationEventCard
+                            name={eventOfTheWeek?.name || 'No Donation Event of The Week'}
+                            description={`Take part in this donation by donating ${eventOfTheWeek?.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                            imgSrc={eventOfTheWeek?.imageId || 'https://picsum.photos/200/300'}
+                            numJoined={eventOfTheWeek?.numDonors || 0}
+                            numHoursLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
+                            handleDonateClick={() => handleDonateClick(eventOfTheWeek)}
+                        />
+                    </>
+
+                    : <></>
+                }
                 
                 <Typography variant='h6' sx={{fontWeight: 'bold', marginY: 2}}>Donation Categories</Typography>
 
@@ -242,6 +266,7 @@ export default function DonationEvents() {
                                 imgSrc={event.imageId}
                                 numJoined={event.numDonors}
                                 numHoursLeft={event.timeLeft}
+                                handleDonateClick={() => handleDonateClick(event)}
                             />
                         </Grid>
                     ))}
