@@ -95,8 +95,6 @@ export default function DonationEvents() {
     }
 
     const handleFilterClick = (eventTypeId: number) => {
-        console.log(events)
-        console.log(eventTypeId);
         if(filters.includes(eventTypeId)){
             setFilters(filters.filter(filter => filter !== eventTypeId));
         } else {
@@ -111,8 +109,6 @@ export default function DonationEvents() {
 
         return events.filter((event: eventType) => {
             return event.donationEventItems.some((eachItem: donationEventItemsType) => {
-                console.log(eachItem);
-                console.log(eachItem.item.eventType.id);
                 return filters.includes(eachItem.item.eventType.id);
             });
         });
@@ -123,7 +119,7 @@ export default function DonationEvents() {
         if(!search || search.trim() === '') return filteredEvents;
 
         return filteredEvents.filter((event: eventType) => {
-            // Return events where search is in event name or items names
+            // Return events where searched text is in event name or items names
             return event.name.toLowerCase().includes(search.toLowerCase()) || event.donationEventItems.some((eachItem: donationEventItemsType) => {
                 return eachItem.item.name.toLowerCase().includes(search.toLowerCase());
             })
@@ -144,21 +140,13 @@ export default function DonationEvents() {
     }  
     
     useEffect(() => {
-        // console.log(calculateTimeLeft('2024-02-24 11:59:59 PM'))
-
-        // const removeEventOfWeekFromEvents = async() => {
-
-        // }
-        
         const fetchData = async () => {
             try {
                 const updatedEvents: eventType[] = [];
                 const res = await getAllEvents();
 
                 var maxNumDonors = 0;
-                var maxNumDonorsIndex = 0;
                 const currDay = new Date().getDay(); // ** Sunday - Saturday: 0 - 6 **
-                // console.log("currDay: "+ currDay)
                 res.forEach(async (eachEvent: eventType, index: number) => {
                     const donationEventItems = await getDonationEventItems(eachEvent.id);
 
@@ -166,22 +154,11 @@ export default function DonationEvents() {
                     const timeLeft = calculateTimeLeft(eachEvent.endDate.split('T')[0] + ' 11:59:59 PM');
 
                     const numDonors = await getDonationReqCount(eachEvent.id);
-                    // console.log(eachEvent.id + " numDonors: " + numDonors);
-                    // console.log("timeLeft: " + timeLeft);
-                    // console.log("day of endDate: " + new Date(eachEvent.endDate).getDay());
-
                     const updatedEvent = { ...eachEvent, donationEventItems, timeLeft, numDonors};
                     updatedEvents.push(updatedEvent);
                     
-                    // console.log("maxNumDonors: " + maxNumDonors)
-                    // console.log(numDonors > maxNumDonors)
-                    // console.log(timeLeft.includes('Hours'))
-                    // console.log(parseInt(timeLeft.split(' ')[0]) < 7)
-                    // console.log(new Date(eachEvent.endDate).getDay() >= currDay)
                     if(numDonors > maxNumDonors && (timeLeft.includes('Hours') || parseInt(timeLeft.split(' ')[0]) < 7) && new Date(eachEvent.endDate).getDay() >= currDay){
                         maxNumDonors = numDonors;
-                        maxNumDonorsIndex = index;
-                        // console.log("maxNumDonorsIndex: " + maxNumDonorsIndex)
                         setEventOfTheWeek(updatedEvent);
                     }
                     
@@ -249,7 +226,8 @@ export default function DonationEvents() {
                             key={eventType.id}
                             label={eventType.name} 
                             sx={{marginRight: 1, marginBottom: 1}}
-                            variant="outlined"
+                            color="success"
+                            variant={filters.includes(eventType.id) ? "filled" : "outlined"}
                             onClick={() => handleFilterClick(eventType.id)}
                         />
                     ))}
