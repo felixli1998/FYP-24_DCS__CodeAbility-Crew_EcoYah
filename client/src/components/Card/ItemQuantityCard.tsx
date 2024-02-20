@@ -18,12 +18,12 @@ import AddIcon from '@mui/icons-material/Add';
 type ItemQuantityCardType = {
   label: Record<string, string | number>[];
   onItemQuantityChange: (
-    itemQuantity: Record<string, Record<string, number | string>>
+    itemQuantity: Record<string, Record<string, string | number>>
   ) => void;
 };
 
 type DonationRequestItemType = {
-  [item: string]: {
+  [id: number]: {
     quantity: number;
     points: number;
     error: string;
@@ -38,45 +38,45 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
   useEffect(() => {
     const initialDonationRequestItems: DonationRequestItemType = {};
     props.label.forEach((eachLabel: Record<string, string | number>) => {
-      initialDonationRequestItems[eachLabel.item] = {
+      initialDonationRequestItems[eachLabel.id as number] = {
         quantity: eachLabel.minQty as number,
         points:
           (eachLabel.minQty as number) * (eachLabel.pointsPerUnit as number),
-        error: '',
+        error: "",
       };
     });
     setDonationRequestItems(initialDonationRequestItems);
   }, [props.label]);
 
-  const handleDeduction = (name: string, pointsPerUnit: number): void => {
-    const foundItem = props.label.find((item) => item['item'] === name);
-    if (foundItem && foundItem.minQty === donationRequestItems[name].quantity) {
+  const handleDeduction = (id: number, pointsPerUnit: number): void => {
+    const foundItem = props.label.find((item) => item["id"] === id);
+    if (foundItem && foundItem.minQty === donationRequestItems[id].quantity) {
       setDonationRequestItems((prevItems) => ({
         ...prevItems,
-        [name]: {
-          ...prevItems[name],
-          error: 'It has reached the minimum quantity',
+        [id]: {
+          ...prevItems[id],
+          error: "It has reached the minimum quantity",
         },
       }));
     } else {
       setDonationRequestItems((prevItems) => ({
         ...prevItems,
-        [name]: {
-          quantity: prevItems[name].quantity - 1,
-          points: (prevItems[name].quantity - 1) * pointsPerUnit,
-          error: '',
+        [id]: {
+          quantity: prevItems[id].quantity - 1,
+          points: (prevItems[id].quantity - 1) * pointsPerUnit,
+          error: "",
         },
       }));
     }
   };
 
-  const handleAddition = (name: string, pointsPerUnit: number): void => {
+  const handleAddition = (id: number, pointsPerUnit: number): void => {
     setDonationRequestItems((prevItems) => ({
       ...prevItems,
-      [name]: {
-        quantity: prevItems[name].quantity + 1,
-        points: (prevItems[name].quantity + 1) * pointsPerUnit,
-        error: '',
+      [id]: {
+        quantity: prevItems[id].quantity + 1,
+        points: (prevItems[id].quantity + 1) * pointsPerUnit,
+        error: "",
       },
     }));
   };
@@ -93,78 +93,88 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
         index: number
       ) {
         return (
-          <FormControl error={donationRequestItems[eachLabel.item] && donationRequestItems[eachLabel.item].error !== ''} key={index}>
+          <FormControl
+            error={
+              donationRequestItems[eachLabel.id as number] &&
+              donationRequestItems[eachLabel.id as number].error !== ""
+            }
+            key={index}
+          >
             <Card
               sx={{
-                marginTop: '1rem',
-                border: '1px solid #D4D4D4',
-                boxShadow: 'none',
+                marginTop: "1rem",
+                border: "1px solid #D4D4D4",
+                boxShadow: "none",
               }}
             >
               <CardContent>
-                <Typography variant='h5' component='div'>
+                <Typography variant="h5" component="div">
                   {eachLabel.item}
                 </Typography>
                 <Typography
-                  variant='subtitle1'
-                  component='div'
-                  color='secondary.light'
+                  variant="subtitle1"
+                  component="div"
+                  color="secondary.light"
                 >
-                  Earn {eachLabel.pointsPerUnit} points per {eachLabel.unit}{' '}
+                  Earn {eachLabel.pointsPerUnit} points per {eachLabel.unit}{" "}
                   donated
                 </Typography>
                 <Typography
-                  variant='subtitle1'
-                  component='div'
-                  color='#EE8F0F'
-                  sx={{ display: 'flex', alignItems: 'center' }}
+                  variant="subtitle1"
+                  component="div"
+                  color="#EE8F0F"
+                  sx={{ display: "flex", alignItems: "center" }}
                 >
                   <PaidOutlinedIcon
-                    sx={{ color: '#EE8F0F', marginRight: '0.5rem' }}
-                  />{' '}
-                  {donationRequestItems[eachLabel.item]
-                    ? donationRequestItems[eachLabel.item].points
+                    sx={{ color: "#EE8F0F", marginRight: "0.5rem" }}
+                  />{" "}
+                  {donationRequestItems[eachLabel.id as number]
+                    ? donationRequestItems[eachLabel.id as number].points
                     : (eachLabel.minQty as number) *
                       (eachLabel.pointsPerUnit as number)}
                 </Typography>
               </CardContent>
               <CardActions
                 sx={{
-                  width: '8rem',
-                  border: '1px solid #D4D4D4',
-                  borderRadius: '2rem',
-                  justifyContent: 'center',
-                  margin: '0rem 1rem 1rem auto',
+                  width: "8rem",
+                  border: "1px solid #D4D4D4",
+                  borderRadius: "2rem",
+                  justifyContent: "center",
+                  margin: "0rem 1rem 1rem auto",
                 }}
               >
                 <IconButton
                   onClick={() =>
                     handleDeduction(
-                      eachLabel.item as string,
+                      eachLabel.id as number,
                       eachLabel.pointsPerUnit as number
                     )
                   }
                 >
-                  <RemoveIcon sx={{ color: 'primary.main' }} />
+                  <RemoveIcon sx={{ color: "primary.main" }} />
                 </IconButton>
-                <Typography variant='subtitle1' component='div'>
-                  {donationRequestItems[eachLabel.item]
-                    ? donationRequestItems[eachLabel.item].quantity
+                <Typography variant="subtitle1" component="div">
+                  {donationRequestItems[eachLabel.id as number]
+                    ? donationRequestItems[eachLabel.id as number].quantity
                     : eachLabel.minQty}
                 </Typography>
                 <IconButton
                   onClick={() =>
                     handleAddition(
-                      eachLabel.item as string,
+                      eachLabel.id as number,
                       eachLabel.pointsPerUnit as number
                     )
                   }
                 >
-                  <AddIcon sx={{ color: 'primary.main' }} />
+                  <AddIcon sx={{ color: "primary.main" }} />
                 </IconButton>
               </CardActions>
             </Card>
-            <FormHelperText>{donationRequestItems[eachLabel.item] ? donationRequestItems[eachLabel.item].error : ''}</FormHelperText>
+            <FormHelperText>
+              {donationRequestItems[eachLabel.id as number]
+                ? donationRequestItems[eachLabel.id as number].error
+                : ""}
+            </FormHelperText>
           </FormControl>
         );
       })}

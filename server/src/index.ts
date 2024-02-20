@@ -18,6 +18,7 @@ import donationEventRoutes from './routes/donationEventRoutes';
 import itemRoutes from './routes/itemRoutes';
 import eventRoutes from './routes/eventTypeRoutes';
 import donationRequestRoutes from './routes/donationRequestRoutes';
+import donationRequestItemRoutes from './routes/donationRequestItemRoutes';
 import donationEventItemRoutes from './routes/donationEventItemRoutes';
 
 dotenv.config();
