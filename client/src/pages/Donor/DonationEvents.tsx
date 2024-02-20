@@ -19,7 +19,8 @@ import {
 type itemType = {
     id: number,
     name: string,
-    unit: string
+    unit: string,
+    eventType: {id: number}
 }
 
 type donationEventItemsType = {
@@ -50,6 +51,8 @@ export default function DonationEvents() {
     const [errorFetchingEvents, setErrorFetchingEvents] = useState(false);
 
     const [eventTypes, setEventTypes] = useState([]);
+    const [filters, setFilters] = useState<number[]>([]);
+    // const [filteredEvents, setFilteredEvents] = useState<eventType[]>([]);
 
     const getAllEvents = async () => {
         try {
@@ -91,16 +94,41 @@ export default function DonationEvents() {
         }
     }
 
-    const searchEvents = useMemo(() => {
-        if(!search || search.trim() === '') return events;
+    const handleFilterClick = (eventTypeId: number) => {
+        console.log(events)
+        console.log(eventTypeId);
+        if(filters.includes(eventTypeId)){
+            setFilters(filters.filter(filter => filter !== eventTypeId));
+        } else {
+            setFilters([...filters, eventTypeId]);
+        }
+          
+    };
+
+    const filteredEvents = useMemo(() => {
+        if(filters.length === 0) return events;
+        console.log("filters:" + filters)
 
         return events.filter((event: eventType) => {
+            return event.donationEventItems.some((eachItem: donationEventItemsType) => {
+                console.log(eachItem);
+                console.log(eachItem.item.eventType.id);
+                return filters.includes(eachItem.item.eventType.id);
+            });
+        });
+    }, [filters, events]);
+
+
+    const searchEvents = useMemo(() => {
+        if(!search || search.trim() === '') return filteredEvents;
+
+        return filteredEvents.filter((event: eventType) => {
             // Return events where search is in event name or items names
             return event.name.toLowerCase().includes(search.toLowerCase()) || event.donationEventItems.some((eachItem: donationEventItemsType) => {
                 return eachItem.item.name.toLowerCase().includes(search.toLowerCase());
             })
         })
-    }, [search, events]);
+    }, [search, filteredEvents]);
 
     const calculateTimeLeft = (endDate: string) => {
         const endDateInMs = new Date(endDate).getTime();
@@ -113,10 +141,10 @@ export default function DonationEvents() {
         } else {
             return Math.floor(timeLeftInHours / 24) + ' Days';
         }
-    }
-
+    }  
+    
     useEffect(() => {
-        console.log(calculateTimeLeft('2024-02-24 11:59:59 PM'))
+        // console.log(calculateTimeLeft('2024-02-24 11:59:59 PM'))
 
         // const removeEventOfWeekFromEvents = async() => {
 
@@ -130,7 +158,7 @@ export default function DonationEvents() {
                 var maxNumDonors = 0;
                 var maxNumDonorsIndex = 0;
                 const currDay = new Date().getDay(); // ** Sunday - Saturday: 0 - 6 **
-                console.log("currDay: "+ currDay)
+                // console.log("currDay: "+ currDay)
                 res.forEach(async (eachEvent: eventType, index: number) => {
                     const donationEventItems = await getDonationEventItems(eachEvent.id);
 
@@ -220,7 +248,10 @@ export default function DonationEvents() {
                         <Chip 
                             key={eventType.id}
                             label={eventType.name} 
-                            sx={{marginRight: 1, marginBottom: 1}}/>
+                            sx={{marginRight: 1, marginBottom: 1}}
+                            variant="outlined"
+                            onClick={() => handleFilterClick(eventType.id)}
+                        />
                     ))}
                 </Box>
 

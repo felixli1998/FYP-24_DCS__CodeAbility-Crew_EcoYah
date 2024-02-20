@@ -23,8 +23,9 @@ export class DonationEventItemRepository {
 
     return await AppDataSource.getRepository(DonationEventItem)
     .createQueryBuilder('dei')
-    .select(['dei.id', 'dei.minQty', 'dei.pointsPerUnit', 'item.id', 'item.name', 'item.unit'])
+    .select(['dei.id', 'dei.minQty', 'dei.pointsPerUnit', 'item.id', 'item.name', 'item.unit', 'eventType.id'])
     .leftJoin('dei.item', 'item')
+    .leftJoin('item.eventType', 'eventType')
     .where('dei.donationEvent.id = :donationEventId', { donationEventId })
     .getMany();
   }
