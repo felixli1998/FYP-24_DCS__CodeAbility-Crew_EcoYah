@@ -24,7 +24,7 @@ export const AppDataSource = new DataSource({
   host: 'localhost',
   port: 5432,
   namingStrategy: new SnakeNamingStrategy(),
-  username: DATABASE_USERNAME,
+  username: DATABASE_USER,
   password: DATABASE_PASSWORD,
   database: 'ecoyahdb',
   entities: [
