@@ -18,7 +18,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import _ from 'lodash';
 import { DONATION_REQUEST_ROUTES } from "../../services/routes";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import {dataToDonationRequestFormType} from './DonationEvents';
 
 type DonationRequestType = {
   donationEventId: number;
@@ -30,6 +31,11 @@ type DonationRequestType = {
 };
 
 export default function DonationRequestForm() {
+  const queryParams = new URLSearchParams(useLocation().search);
+  const data: dataToDonationRequestFormType | null = queryParams.get('data') ? JSON.parse(queryParams.get('data')!) : null;
+  console.log("***** IN DONATION REQUEST FORM *****")
+  console.log(data);
+
   const navigate = useNavigate();
   const [donationRequest, setDonationRequest] = useState<DonationRequestType>({
     donationEventId: 1, // Hardcode for now

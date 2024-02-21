@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { isAuthenticated } from "../../components/AppBar";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
 import { fetchActiveDonationEvents } from '../../services/donationEventApi';
@@ -44,6 +44,16 @@ type eventType = {
     name: string,
     createdAt: string,
     updatedAt: string
+}
+
+export type dataToDonationRequestFormType ={
+    id: number,
+    donationEventItems: donationEventItemsType[],
+    startDate: string,
+    endDate: string,
+    timeLeft: string,
+    imageId: string,
+    name: string,
 }
 
 export default function DonationEvents() {
@@ -150,6 +160,17 @@ export default function DonationEvents() {
         } else {
             // Redirect to donation request form page
             console.log(donationEvent);
+
+            const dataToDonationRequestForm: dataToDonationRequestFormType = {
+                id: donationEvent.id,
+                donationEventItems: donationEvent.donationEventItems,
+                startDate: donationEvent.startDate,
+                endDate: donationEvent.endDate,
+                timeLeft: donationEvent.timeLeft,
+                imageId: donationEvent.imageId,
+                name: donationEvent.name
+            }
+            navigate(`/donation-request-form?data=${encodeURIComponent(JSON.stringify(dataToDonationRequestForm))}`);
         }
 
     };
