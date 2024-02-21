@@ -21,8 +21,10 @@ export class DonationRequestRepository {
       dropOffDate: true,
       dropOffTime: true,
       donationRequestItems: {
+        id:true,
         quantity: true,
         donationEventItem: {
+          id: true,
           pointsPerUnit: true,
           donationEvent: {
             imageId: true
