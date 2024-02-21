@@ -18,7 +18,7 @@ export class DonationEventItemRepository {
     });
   }
 
-  // Retrieves all donationEventItems by donationEventId with itemName and Unit
+  // Retrieves all donationEventItems by donationEventId with itemName, unit, and eventTypeId
   async getDonationEventItembyDonationEventId(donationEventId: number) {
 
     return await AppDataSource.getRepository(DonationEventItem)
@@ -27,6 +27,7 @@ export class DonationEventItemRepository {
     .leftJoin('dei.item', 'item')
     .leftJoin('item.eventType', 'eventType')
     .where('dei.donationEvent.id = :donationEventId', { donationEventId })
+    .cache("donation-event-items", 60000)
     .getMany();
   }
 }
