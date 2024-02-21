@@ -142,7 +142,7 @@ export default function SignIn() {
               {profiles.map((eachProfile) => (
                 <Grid
                   item
-                  md={4}
+                  md={3}
                   display='flex'
                   justifyContent='center'
                   alignItems='center'

@@ -11,8 +11,8 @@ type UserSeedDataT = {
 
 export const ADMIN_SEED_DATA: UserSeedDataT[] = [
   {
-    name: 'Michael Jackson',
-    email: 'michaeljackson1@gmail.com',
+    name: 'Lay Hoon',
+    email: 'layhoon@test.com',
     passwordInput: '1234',
     contactNum: '+6512345678',
     imageURL: 'https://picsum.photos/200/300',
