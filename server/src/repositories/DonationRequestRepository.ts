@@ -5,8 +5,97 @@ import { startOfDay, endOfDay } from 'date-fns';
 import { DonationRequest, Status } from '../entities/DonationRequest';
 import { AppDataSource } from '../config/data-source';
 import { Between } from 'typeorm';
+import IPagination from '../common/IPagination';
 
 export class DonationRequestRepository {
+  static PAGE_SIZE: number = 25;
+
+  async getActiveDonationRequestFromUser(
+    user_id: number,
+    page: number = 1
+  ): Promise<{ data: DonationRequest[]; pagination: IPagination }> {
+    const offset = (page - 1) * DonationRequestRepository.PAGE_SIZE;
+    const selectOptions = {
+      id: true,
+      omitPoints: true,
+      dropOffDate: true,
+      dropOffTime: true,
+      donationRequestItems: {
+        id:true,
+        quantity: true,
+        donationEventItem: {
+          id: true,
+          pointsPerUnit: true,
+          donationEvent: {
+            imageId: true
+          },
+        }
+      }
+    }
+    const [data, totalCount] = await AppDataSource.getRepository(
+      DonationRequest
+    ).findAndCount({
+      select: selectOptions,
+      where: {
+        user: { id: user_id },
+        status: Status.SUBMITTED
+      },
+      relations: [
+        'donationRequestItems',
+        'donationRequestItems.donationEventItem',
+        'donationRequestItems.donationEventItem.donationEvent',
+      ],
+      order: {
+        dropOffDate: 'DESC',
+        dropOffTime: 'DESC',
+      },
+      skip: offset,
+      take: DonationRequestRepository.PAGE_SIZE,
+    });
+    const totalPages = Math.ceil(
+      totalCount / DonationRequestRepository.PAGE_SIZE
+    );
+    const pagination: IPagination = {
+      pageNumber: page,
+      hasNext: page < totalPages,
+    };
+    return { data, pagination };
+  }
+
+  async getCompletedDonationRequestFromUser(
+    user_id: number,
+    page: number = 1
+  ): Promise<{ data: DonationRequest[]; pagination: IPagination }> {
+    const offset = (page - 1) * DonationRequestRepository.PAGE_SIZE;
+    const [data, totalCount] = await AppDataSource.getRepository(
+      DonationRequest
+    ).findAndCount({
+      where: {
+        user: { id: user_id },
+        status: Status.COMPLETED
+      },
+      relations: [
+        'donationRequestItems',
+        'donationRequestItems.donationEventItem',
+        'donationRequestItems.donationEventItem.donationEvent',
+      ],
+      order: {
+        dropOffDate: 'DESC',
+        dropOffTime: 'DESC',
+      },
+      skip: offset,
+      take: DonationRequestRepository.PAGE_SIZE,
+    });
+    const totalPages = Math.ceil(
+      totalCount / DonationRequestRepository.PAGE_SIZE
+    );
+    const pagination: IPagination = {
+      pageNumber: page,
+      hasNext: page < totalPages,
+    };
+    return { data, pagination };
+  }
+
   // TODO: This was created during model creation. Feel free to expand upon it as needed
   async createDonationRequest(donationRequest: DonationRequest) {
     return await AppDataSource.getRepository(DonationRequest).save(
