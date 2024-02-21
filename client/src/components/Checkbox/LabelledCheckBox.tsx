@@ -9,6 +9,8 @@ import {
 
 type LabelledCheckBoxType = {
   label: LabelType[];
+  disableCheckbox: boolean;
+  externalCheckbox: boolean;
   onCheckBoxChange: (checkedState: Record<string, boolean>) => void;
   validateForm?: boolean; // to account for scenarios where it's optional to select an option
 };
@@ -16,6 +18,7 @@ type LabelledCheckBoxType = {
 type LabelType = {
   id: string | number,
   name: string
+  value: boolean
 }
 
 export default function LabelledCheckBox(props: LabelledCheckBoxType) {
@@ -23,7 +26,7 @@ export default function LabelledCheckBox(props: LabelledCheckBoxType) {
   const [checked, setChecked] = useState(() => {
     const initialCheckedState: Record<string, boolean> = {};
     props.label.forEach((key: LabelType) => {
-      initialCheckedState[key.id] = false;
+      initialCheckedState[key.id] = key.value;
     });
     return initialCheckedState;  
   });
@@ -51,12 +54,13 @@ export default function LabelledCheckBox(props: LabelledCheckBoxType) {
           return (
             <FormControlLabel
               key={index}
+              disabled={props.disableCheckbox}
               control={
                 <Checkbox
                   size='medium'
                   name={eachLabel.name}
                   value={eachLabel.id}
-                  checked={checked[eachLabel.id]}
+                  checked={ props.externalCheckbox ? eachLabel.value : checked[eachLabel.id] }
                   onChange={handleChange}
                 />
               }

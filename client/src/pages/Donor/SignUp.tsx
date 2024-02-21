@@ -14,127 +14,132 @@ import {
 // Components
 import EcoYahLogo from '../../components/Card/EcoYahLogo';
 import AuthTextFields from "../../components/TextFields/AuthTextFields";
-import Checkboxes from '../../components/Checkbox/FormCheckBox';
-import BasicButton from '../../components/Button/BasicButton';
-import SuccessCard from '../../components/Card/SuccessCard';
+import LabelledCheckBox from "../../components/Checkbox/LabelledCheckBox";
+import BasicButton from "../../components/Button/BasicButton";
+import SuccessCard from "../../components/Card/SuccessCard";
 
 // Other Imports
-import { Link as ReactRouterLink } from 'react-router-dom';
-import { USER_ROUTES } from '../../services/routes';
-import axios from 'axios';
+import { validatePassword } from "../../utils/Common";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { USER_ROUTES } from "../../services/routes";
+import axios from "axios";
 
 type signUpDataType = {
   email: string;
   name: string;
-  number: number;
+  "contact number": number;
   password: string;
-  confirm_password: string;
+  "confirm password": string;
 };
 
 type CheckboxType = {
-  id: number, 
-  label: string, 
-  value: boolean
-}
+  id: string | number;
+  name: string;
+  value: boolean;
+};
 
 export default function SignUp() {
-
-  const passwordCriteria: CheckboxType[] = [
-    { id: 0, label: 'At least 12 characters', value: false },
-    { id: 1, label: '1 uppercase letter', value: false },
-    { id: 2, label: '1 lowercase letter', value: false },
-    { id: 3, label: '1 number', value: false },
-    { id: 4, label: '1 symbol', value: false }
-  ];
+  const [passwordCriteria, setPasswordCriteria] = useState<CheckboxType[]>([
+    { id: 0, name: "At least 12 characters", value: false },
+    { id: 1, name: "1 uppercase letter", value: false },
+    { id: 2, name: "1 lowercase letter", value: false },
+    { id: 3, name: "1 number", value: false },
+    { id: 4, name: "1 symbol", value: false },
+  ]);
   const signUpCriteria: CheckboxType[] = [
-    { id: 0, label: 'By signing up, you agree to the Terms of Service and Privacy Policy.', value: false }
+    {
+      id: "sign_up_check",
+      name: "By signing up, you agree to the Terms of Service and Privacy Policy.",
+      value: false,
+    },
   ];
 
-  const [step, setStep] = useState(1);
-  const [validateForm, setValidateForm] = useState(false);
-  const [dupEmail, setDupEmail] = useState<string>("");
-  const [emailExists, setEmailExists] = useState(false);
-  const [passwordText, setPasswordText] = useState('');
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [isPasswordSame, setIsPasswordSame] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const [signUpError, setSignUpError] = useState<boolean>(false);
+  const [step, setStep] = useState<number>(1); // 1: sign up page, 2: success page
+  const [validateForm, setValidateForm] = useState<boolean>(false);
+  const [emailExists, setEmailExists] = useState<boolean>(false);
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
+  const [isPasswordSame, setIsPasswordSame] = useState<boolean>(false);
+  const [isSignUpChecked, setIsSignUpChecked] = useState<boolean>(false);
   const [signUpData, setSignUpData] = useState<signUpDataType>({
     email: "",
     name: "",
-    number: 0,
+    "contact number": 0,
     password: "",
-    confirm_password: "",
+    "confirm password": "",
   });
+  const [signUpError, setSignUpError] = useState<boolean>(false);
 
-  const handlePwdCriteria = (status: boolean) => {
-    setIsPasswordValid(status);
-  };
-
-  const handleSignUpCriteria = (status: boolean) => {
-    setIsChecked(status);
-  };
-
-  const handleButtonChange = async (status: boolean) => {
-    setValidateForm(status);
-
-    // if (isPasswordValid && isPasswordSame && isChecked) {
-    //   try {
-    //     const res = await makeHttpRequest('POST', USER_ROUTES.CREATE_USER, {
-    //       email: signUpData['email'],
-    //       name: signUpData['name'],
-    //       contactNum: signUpData['number'],
-    //       passwordDigest: signUpData['password'],
-    //     });
-    //     localStorage.setItem('ecoyah-email', signUpData['email']);
-    //     setStep(2);
-    //   } catch (error) {
-    //     if (axios.isAxiosError(error)) {
-    //       // Handle Axios errors
-    //       const statusCode = error.response?.status;
-    //       if (statusCode === 409) {
-    //         setEmailExists(true);
-    //         setDupEmail(setSignUpData['email']);
-    //       } else if (statusCode === 400) {
-    //         setSignUpError(true);
-    //       }
-    //       console.log('Error status code:', statusCode);
-    //     } else {
-    //       // Handle non-Axios errors
-    //       console.log('Non-Axios error occurred:', error);
-    //     }
-    //   }
-    // }
+  const handleCheckBoxChange = (
+    updatedCheckedState: Record<string, boolean>
+  ) => {
+    if ("sign_up_check" in updatedCheckedState) {
+      setIsSignUpChecked(updatedCheckedState["sign_up_check"]);
+    }
   };
 
   const handleData = (type: string, data: string) => {
     setSignUpData((prevData) => ({ ...prevData, [type]: data }));
 
+    // update Checkbox state
     if (type === "password") {
-      setPasswordText(data);
+      setPasswordCriteria((prevData) =>
+        prevData.map((criteria, i) => ({
+          ...criteria,
+          value: validatePassword(i, data),
+        }))
+      );
+    }
+  };
+
+  const handleButtonChange = async (status: boolean) => {
+    setValidateForm(status);
+
+    const isSignUpDataValid = Object.values(signUpData).every(
+      (value) => value !== "" && value !== 0
+    );
+
+    if (isSignUpDataValid && isSignUpChecked) {
+      axios
+        .post(USER_ROUTES.CREATE_USER, {
+          email: signUpData["email"],
+          name: signUpData["name"],
+          contactNum: signUpData["contact number"],
+          password: signUpData["password"],
+        })
+        .then((resp) => {
+          if (resp.data.status === 201) setStep(2);
+        })
+        .catch((err) => {
+          const statusCode = err.response?.status;
+          if (statusCode === 409) {
+            setEmailExists(true);
+          } else if (statusCode === 400) {
+            setSignUpError(true);
+          }
+      });
     }
   };
 
   useEffect(() => {
-    if (
-      signUpData["confirm_password"] &&
-      passwordText === signUpData["confirm_password"]
-    ) {
-      setIsPasswordSame(true);
-    } else {
-      setIsPasswordSame(false);
-    }
+    // check if all password criteria are true
+    const allCriteriaValid = passwordCriteria.every(
+      (criteria) => criteria.value
+    );
+    setIsPasswordValid(allCriteriaValid);
 
-    if (validateForm && dupEmail === signUpData["email"]) {
-      setEmailExists(true);
-    } else {
-      setEmailExists(false);
+    // check if password and confirm password are the same
+    if (signUpData["password"] && signUpData["confirm password"]) {
+      if (signUpData["password"] === signUpData["confirm password"]) {
+        setIsPasswordSame(true);
+      } else {
+        setIsPasswordSame(false);
+      }
     }
-  }, [signUpData, passwordText]);
+  }, [passwordCriteria, signUpData]);
 
   return (
     <>
-      <EcoYahLogo/>
+      <EcoYahLogo />
       <Box
         component="form"
         display="flex"
@@ -166,6 +171,7 @@ export default function SignUp() {
               form="Sign Up"
               validateForm={validateForm}
               data={handleData}
+              error={emailExists}
             ></AuthTextFields>
             <AuthTextFields
               label="Name"
@@ -184,6 +190,7 @@ export default function SignUp() {
               form="Sign Up"
               validateForm={validateForm}
               data={handleData}
+              error={isPasswordValid}
             ></AuthTextFields>
             <Box
               sx={{
@@ -196,26 +203,27 @@ export default function SignUp() {
               <Typography variant="body2" gutterBottom>
                 <b>Your password must contain:</b>
               </Typography>
-              {/* <Checkboxes
-                type="password"
+              <LabelledCheckBox
                 label={passwordCriteria}
-                text={passwordText}
-                isChecked={handlePwdCriteria}
-              ></Checkboxes> */}
+                disableCheckbox={true}
+                externalCheckbox={true}
+                onCheckBoxChange={handleCheckBoxChange}
+              ></LabelledCheckBox>
             </Box>
             <AuthTextFields
               label="Confirm Password"
               form="Sign Up"
               validateForm={validateForm}
               data={handleData}
+              error={isPasswordSame}
             ></AuthTextFields>
-            {/* <Checkboxes
+            <LabelledCheckBox
               label={signUpCriteria}
-              type="sign up"
-              text="none"
-              isChecked={handleSignUpCriteria}
-            ></Checkboxes> */}
-            {validateForm && !isChecked && (
+              disableCheckbox={false}
+              externalCheckbox={false}
+              onCheckBoxChange={handleCheckBoxChange}
+            ></LabelledCheckBox>
+            {validateForm && !isSignUpChecked && (
               <FormHelperText error>
                 Please indicate that you have read
               </FormHelperText>

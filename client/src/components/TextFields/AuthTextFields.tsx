@@ -1,5 +1,5 @@
 // React Imports
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, MouseEvent, ChangeEvent } from "react";
 
 // MUI Imports
 import { Box, TextField, InputAdornment, IconButton } from "@mui/material";
@@ -22,7 +22,7 @@ type AuthTextFieldsType = {
   form: string;
   validateForm: boolean;
   data: (key: string, value: string) => void;
-  error?: string;
+  error?: boolean;
 };
 
 export default function AuthTextFields(props: AuthTextFieldsType) {
@@ -57,7 +57,7 @@ export default function AuthTextFields(props: AuthTextFieldsType) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
   };
@@ -65,53 +65,28 @@ export default function AuthTextFields(props: AuthTextFieldsType) {
   const [value, setValue] = useState<string>("");
   const [code, setCode] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
-  const [phoneError, setPhoneError] = useState(false);
+  const [phoneError, setPhoneError] = useState<boolean>(true);
+
+  const handleCodeChange = (key: string, value: string) => {
+    if (key === "code") setCode(value);
+    if (key === "phone") setPhone(value);
+  }
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
-    handleDataChange();
-  };
-
-  const handleCodeChange = (key: string, value: string) => {
-    setCode(key === "code" ? value : '');
-    setPhone(key === "phone" ? value : '');
-  }
-
-  const handleDataChange = () => {
-    if (props.label === "number") {
-      const isValidPhone = isValidPhoneNumber(value, code as CountryCode);
-      if (isValidPhone) {
-        props.data(props.label, "+" + phone + value);
-        if (phoneError) {
-          setPhoneError(false);
-        }
-      } else {
-        if (!phoneError) {
-          setPhoneError(true);
-        }
-      }
-    } else {
-      props.data(props.label, value);
-    }
   };
 
   const displayError = () => {
-    if (
-      (props.validateForm && value === "") ||
-      (props.form === "sign up" && props.label === "Email" && props.error) ||
-      (props.form === "sign in" && props.label === "Email" && !props.error) ||
-      (props.label.includes("Password") &&
-        props.validateForm &&
-        !props.error) ||
-      (props.validateForm && phoneError)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    const hasEmptyValue = props.validateForm && value === "";
+    const isEmailError = (props.form === "Sign Up" && props.label === "Email" && props.error) ||
+      (props.form === "Sign In" && props.label === "Email" && !props.error);
+    const isPhoneError = props.validateForm && props.label === "Contact Number" && phoneError;
+    const isPasswordError = (props.label.includes("Password") && props.validateForm && !props.error);
+  
+    return hasEmptyValue || isEmailError || isPhoneError || isPasswordError ;
   };
 
-  const displayErrorMsg = () => {
+  const displayErrorMessage = () => {
     if (props.validateForm && value === "") {
       return helperText[props.label];
     }
@@ -120,6 +95,9 @@ export default function AuthTextFields(props: AuthTextFieldsType) {
     }
     if (props.form === "Sign In" && props.label === "Email" && !props.error) {
       return "This email does not match any registered accounts";
+    }
+    if (props.validateForm && props.label === "Contact Number" && phoneError) {
+      return "Please enter a valid contact number";
     }
     if (
       props.form === "Sign Up" &&
@@ -140,14 +118,21 @@ export default function AuthTextFields(props: AuthTextFieldsType) {
     if (props.validateForm && props.label === "Confirm Password" && !props.error) {
       return "Please enter the same password";
     }
-    if (props.validateForm && phoneError) {
-      return "Please enter a valid contact number";
-    }
   };
 
   useEffect(() => {
-    handleDataChange();
-  }, [phoneError, value]);
+    if (props.label === "Contact Number") {
+      const isValidPhone = isValidPhoneNumber(value, code as CountryCode);
+      if (isValidPhone) {
+        props.data(props.label.toLowerCase(), "+" + phone + value);
+        setPhoneError(false);
+      } else {
+        setPhoneError(true);
+      }
+    } else {
+      props.data(props.label.toLowerCase(), value);
+    }
+  }, [code, phone, value]);
 
   return (
     <Box sx={{ display: "flex", alignItems: "flex-end" }}>
@@ -182,8 +167,8 @@ export default function AuthTextFields(props: AuthTextFieldsType) {
         }
         value={value}
         onChange={handleInputChange}
-        error={displayError()}
-        helperText={displayErrorMsg()}
+        error={displayError() as boolean}
+        helperText={displayErrorMessage()}
       />
     </Box>
   );

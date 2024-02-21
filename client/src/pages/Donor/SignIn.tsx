@@ -148,7 +148,7 @@ export default function SignIn() {
               Welcome Back!
             </Typography>
             <hr></hr>
-            <TextFields
+            {/* <TextFields
               label='Email'
               type='email'
               form='sign in'
@@ -165,7 +165,7 @@ export default function SignIn() {
               data={handleData}
               error={isPasswordCorrect}
               current={currPassword}
-            ></TextFields>
+            ></TextFields> */}
             <Button
               disableRipple
               color='secondary'

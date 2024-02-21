@@ -1,6 +1,20 @@
 // === Common reusable functions ===
 import _ from "lodash";
 
+// ==== Password Related ====
+export const validatePassword = (id: number, passwordText: string) => {
+  const symbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+  const checkPassword: { [key:number]: boolean } = {
+    0: passwordText.length >= 12,
+    1: /[A-Z]/.test(passwordText),
+    2: /[a-z]/.test(passwordText),
+    3: /\d/.test(passwordText),
+    4: symbol.test(passwordText),
+  };
+
+  return checkPassword[id];
+}
+
 // === Sanitisation Related ===
 // Remove Leading & Trailing Spaces, Capitalise word's first letter, and 1 space between words
 export const formatAndCapitalizeString = (stringVariable: string) => {
