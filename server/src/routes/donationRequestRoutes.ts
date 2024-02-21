@@ -48,12 +48,12 @@ const donationRequestItemService = new DonationRequestItemService(
   donationRequestItemRepository
 );
 
-router.get('/active-donation-requests/:id', async (req, res) => {
+router.get('/active-donation-requests', async (req, res) => {
   try {
+    const userId: number = parseInt(req.query.userId as string, 10);
     // TODO: Ensure that the person requesting the donation request is the same as the user_id
-    const parsedId = parseInt(req.params.id);
-    if (isNaN(parsedId)) return generateResponse(res, 400, 'ID should be a number');
-    const { data, pagination } = await donationRequestService.getActiveDonationRequestFromUser(parsedId);
+    if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
+    const { data, pagination } = await donationRequestService.getActiveDonationRequestFromUser(userId);
     return generateResponse(res, 200, data, pagination);
     }catch (error) {
       console.log(res)
@@ -61,12 +61,12 @@ router.get('/active-donation-requests/:id', async (req, res) => {
     }
 });
 
-router.get('/completed-donation-requests/:id', async (req, res) => {
+router.get('/completed-donation-requests', async (req, res) => {
   try {
+    const userId: number = parseInt(req.query.userId as string, 10);
     // TODO: Ensure that the person requesting the donation request is the same as the user_id
-    const parsedId = parseInt(req.params.id);
-    if (isNaN(parsedId)) return generateResponse(res, 400, 'ID should be a number');
-    const { data, pagination } = await donationRequestService.getCompletedDonationRequestFromUser(parsedId);
+    if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
+    const { data, pagination } = await donationRequestService.getCompletedDonationRequestFromUser(userId);
     return generateResponse(res, 200, data, pagination);
     }catch (error) {
       return generateResponse(res, 500, 'Something went wrong.');
