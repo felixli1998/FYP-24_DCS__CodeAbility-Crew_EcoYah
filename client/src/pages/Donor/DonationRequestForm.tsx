@@ -65,17 +65,12 @@ export default function DonationRequestForm() {
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
   ) => {
+    console.log(updatedCheckedState);
     if ("omitPoints" in updatedCheckedState) {
-      if (!updatedCheckedState["omitPoints"])
-        setDonationRequest((prevData) => ({
-          ...prevData,
-          omitPoints: true,
-        }));
-      else
-        setDonationRequest((prevData) => ({
-          ...prevData,
-          omitPoints: false,
-        }));
+      setDonationRequest((prevData) => ({
+        ...prevData,
+        omitPoints: !prevData.omitPoints,
+      }));
     } else {
       _.mapValues(updatedCheckedState, function (value, key) {
         if (value) {
@@ -159,9 +154,9 @@ export default function DonationRequestForm() {
         </Typography>
         <LabelledCheckBox
           label={[
-            { id: 1, name: "Broccoli" },
-            { id: 2, name: "Cabbage" },
-            { id: 3, name: "Eggplants" },
+            { id: 1, name: "Broccoli", value: true },
+            { id: 2, name: "Cabbage", value: false },
+            { id: 3, name: "Eggplants", value: false },
           ]}
           onCheckBoxChange={handleCheckBoxChange}
           validateForm={validateForm}
@@ -198,6 +193,7 @@ export default function DonationRequestForm() {
             {
               id: "omitPoints",
               name: "Receive Points Upon A Successful Donation",
+              value: false
             },
           ]}
           onCheckBoxChange={handleCheckBoxChange}

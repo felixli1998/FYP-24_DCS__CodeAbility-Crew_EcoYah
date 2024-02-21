@@ -15,7 +15,8 @@ type LabelledCheckBoxType = {
 
 type LabelType = {
   id: string | number,
-  name: string
+  name: string, 
+  value: boolean
 }
 
 export default function LabelledCheckBox(props: LabelledCheckBoxType) {
@@ -23,7 +24,7 @@ export default function LabelledCheckBox(props: LabelledCheckBoxType) {
   const [checked, setChecked] = useState(() => {
     const initialCheckedState: Record<string, boolean> = {};
     props.label.forEach((key: LabelType) => {
-      initialCheckedState[key.id] = false;
+      initialCheckedState[key.id] = key.value;
     });
     return initialCheckedState;  
   });
