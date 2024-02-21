@@ -2,7 +2,7 @@ import { DonationEvent } from "../src/entities/DonationEvent";
 import { EventType } from "../src/entities/EventType";
 import { Item } from "../src/entities/Item";
 import { User } from "../src/entities/User";
-import { USER_SEED_DATA } from "./data";
+import { ADMIN_SEED_DATA } from "./data";
 import { v4 as uuidv4 } from 'uuid';
 
 const GENERIC_WORDS = ['Community', 'Unity', 'Harmony', 'Hope', 'Dream', 'Impact', 'Inspire', 'Change', 'Together', 'Empower'];
