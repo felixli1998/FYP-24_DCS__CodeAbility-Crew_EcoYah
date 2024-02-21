@@ -26,8 +26,7 @@ router.get("/allAdmins", async (req, res) => {
 
 });
 
-router.post('/', async (req, res) => {
-  // Create user
+router.post('/create', async (req, res) => {
   try {
     // Hash password
     req.body.passwordDigest = hashSync(req.body.passwordDigest, 10);

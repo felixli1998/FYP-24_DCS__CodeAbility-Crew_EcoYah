@@ -1,5 +1,7 @@
+// React Imports
 import { useState, useEffect } from 'react';
-import '../../styles/App.css';
+
+// MUI Imports
 import {
   Box,
   Alert,
@@ -8,38 +10,62 @@ import {
   FormHelperText,
   Link,
 } from '@mui/material';
-import logo from '../../assets/EcoYah.png';
-import TextFields from '../../components/TextFields/FormTextFields';
+
+// Components
+import EcoYahLogo from '../../components/Card/EcoYahLogo';
+import AuthTextFields from "../../components/TextFields/AuthTextFields";
 import Checkboxes from '../../components/Checkbox/FormCheckBox';
 import BasicButton from '../../components/Button/BasicButton';
 import SuccessCard from '../../components/Card/SuccessCard';
+
+// Other Imports
 import { Link as ReactRouterLink } from 'react-router-dom';
-import { makeHttpRequest } from '../../utils/Utility';
-import axios from 'axios';
 import { USER_ROUTES } from '../../services/routes';
+import axios from 'axios';
+
+type signUpDataType = {
+  email: string;
+  name: string;
+  number: number;
+  password: string;
+  confirm_password: string;
+};
+
+type CheckboxType = {
+  id: number, 
+  label: string, 
+  value: boolean
+}
 
 export default function SignUp() {
-  const passwordCriteria: string[] = [
-    'At least 12 characters',
-    '1 uppercase letter',
-    '1 lowercase letter',
-    '1 number',
-    '1 symbol',
+
+  const passwordCriteria: CheckboxType[] = [
+    { id: 0, label: 'At least 12 characters', value: false },
+    { id: 1, label: '1 uppercase letter', value: false },
+    { id: 2, label: '1 lowercase letter', value: false },
+    { id: 3, label: '1 number', value: false },
+    { id: 4, label: '1 symbol', value: false }
   ];
-  const signUpCriteria: string[] = [
-    'By signing up, you agree to the Terms of Service and Privacy Policy.',
+  const signUpCriteria: CheckboxType[] = [
+    { id: 0, label: 'By signing up, you agree to the Terms of Service and Privacy Policy.', value: false }
   ];
 
   const [step, setStep] = useState(1);
   const [validateForm, setValidateForm] = useState(false);
-  const [dupEmail, setDupEmail] = useState('');
+  const [dupEmail, setDupEmail] = useState<string>("");
   const [emailExists, setEmailExists] = useState(false);
   const [passwordText, setPasswordText] = useState('');
   const [isPasswordValid, setIsPasswordValid] = useState(false);
   const [isPasswordSame, setIsPasswordSame] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [signUpError, setSignUpError] = useState(false);
-  const [formData, setFormData] = useState<{ [key: string]: string }>({});
+  const [signUpError, setSignUpError] = useState<boolean>(false);
+  const [signUpData, setSignUpData] = useState<signUpDataType>({
+    email: "",
+    name: "",
+    number: 0,
+    password: "",
+    confirm_password: "",
+  });
 
   const handlePwdCriteria = (status: boolean) => {
     setIsPasswordValid(status);
@@ -52,198 +78,175 @@ export default function SignUp() {
   const handleButtonChange = async (status: boolean) => {
     setValidateForm(status);
 
-    if (isPasswordValid && isPasswordSame && isChecked) {
-      // POST user to database
-      try {
-        const res = await makeHttpRequest('POST', USER_ROUTES.CREATE_USER, {
-          email: formData['email'],
-          name: formData['name'],
-          contactNum: formData['number'],
-          passwordDigest: formData['password'],
-        });
-        localStorage.setItem('ecoyah-email', formData['email']);
-        setStep(2);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          // Handle Axios errors
-          const statusCode = error.response?.status;
-          if (statusCode === 409) {
-            setEmailExists(true);
-            setDupEmail(formData['email']);
-          } else if (statusCode === 400) {
-            setSignUpError(true);
-          }
-          console.log('Error status code:', statusCode);
-        } else {
-          // Handle non-Axios errors
-          console.log('Non-Axios error occurred:', error);
-        }
-      }
-    }
+    // if (isPasswordValid && isPasswordSame && isChecked) {
+    //   try {
+    //     const res = await makeHttpRequest('POST', USER_ROUTES.CREATE_USER, {
+    //       email: signUpData['email'],
+    //       name: signUpData['name'],
+    //       contactNum: signUpData['number'],
+    //       passwordDigest: signUpData['password'],
+    //     });
+    //     localStorage.setItem('ecoyah-email', signUpData['email']);
+    //     setStep(2);
+    //   } catch (error) {
+    //     if (axios.isAxiosError(error)) {
+    //       // Handle Axios errors
+    //       const statusCode = error.response?.status;
+    //       if (statusCode === 409) {
+    //         setEmailExists(true);
+    //         setDupEmail(setSignUpData['email']);
+    //       } else if (statusCode === 400) {
+    //         setSignUpError(true);
+    //       }
+    //       console.log('Error status code:', statusCode);
+    //     } else {
+    //       // Handle non-Axios errors
+    //       console.log('Non-Axios error occurred:', error);
+    //     }
+    //   }
+    // }
   };
 
   const handleData = (type: string, data: string) => {
-    setFormData((prevData) => ({ ...prevData, [type]: data }));
+    setSignUpData((prevData) => ({ ...prevData, [type]: data }));
 
-    if (type === 'password') {
+    if (type === "password") {
       setPasswordText(data);
     }
   };
 
   useEffect(() => {
     if (
-      formData['confirm password'] &&
-      passwordText === formData['confirm password']
+      signUpData["confirm_password"] &&
+      passwordText === signUpData["confirm_password"]
     ) {
       setIsPasswordSame(true);
     } else {
       setIsPasswordSame(false);
     }
 
-    if (validateForm && dupEmail === formData['email']) {
+    if (validateForm && dupEmail === signUpData["email"]) {
       setEmailExists(true);
     } else {
       setEmailExists(false);
     }
-  }, [formData, passwordText]);
+  }, [signUpData, passwordText]);
 
   return (
     <>
+      <EcoYahLogo/>
       <Box
-        component='img'
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-        sx={{
-          position: 'relative',
-          m: 'auto',
-          marginTop: 3,
-          width: '10rem',
-          height: '10rem',
-          borderRadius: '50%',
-          boxShadow:
-            '0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset',
-        }}
-        alt='EcoYah'
-        src={logo}
-      ></Box>
-      <Box
-        component='form'
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
+        component="form"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
         sx={{
           width: 420,
-          m: 'auto',
-          '& > :not(style)': { m: 2, p: 2 },
+          m: "auto",
+          "& > :not(style)": { m: 2, p: 2 },
           boxShadow: 5,
           borderRadius: 2,
         }}
         noValidate
-        autoComplete='off'
+        autoComplete="off"
       >
         {step === 1 ? (
           <Stack spacing={3}>
             {signUpError && (
-              <Alert severity='error'>
+              <Alert severity="error">
                 The request encountered an issue. Please refresh and try again!
               </Alert>
             )}
-            <Typography variant='h5' align='center' gutterBottom>
+            <Typography variant="h5" align="center" gutterBottom>
               Let's Get Started!
             </Typography>
             <hr></hr>
-            <TextFields
-              label='Email'
-              type='email'
-              form='sign up'
-              validate={validateForm}
+            <AuthTextFields
+              label="Email"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
-              error={emailExists}
-            ></TextFields>
-            <TextFields
-              label='Name'
-              type='name'
-              validate={validateForm}
+            ></AuthTextFields>
+            <AuthTextFields
+              label="Name"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
-            ></TextFields>
-            <TextFields
-              label='Contact Number'
-              type='number'
-              validate={validateForm}
+            ></AuthTextFields>
+            <AuthTextFields
+              label="Contact Number"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
-            ></TextFields>
-            <TextFields
-              label='Password'
-              type='password'
-              form='sign up'
-              validate={validateForm}
+            ></AuthTextFields>
+            <AuthTextFields
+              label="Password"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
-              error={isPasswordValid}
-            ></TextFields>
+            ></AuthTextFields>
             <Box
               sx={{
-                backgroundColor: 'rgba(7, 83, 142, 0.25)',
+                backgroundColor: "rgba(7, 83, 142, 0.25)",
                 padding: 2,
                 borderRadius: 2,
                 width: 330,
               }}
             >
-              <Typography variant='body2' gutterBottom>
+              <Typography variant="body2" gutterBottom>
                 <b>Your password must contain:</b>
               </Typography>
-              <Checkboxes
-                type='password'
+              {/* <Checkboxes
+                type="password"
                 label={passwordCriteria}
                 text={passwordText}
                 isChecked={handlePwdCriteria}
-              ></Checkboxes>
+              ></Checkboxes> */}
             </Box>
-            <TextFields
-              label='Confirm Password'
-              type='confirm password'
-              validate={validateForm}
+            <AuthTextFields
+              label="Confirm Password"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
-              error={isPasswordSame}
-            ></TextFields>
-            <Checkboxes
+            ></AuthTextFields>
+            {/* <Checkboxes
               label={signUpCriteria}
-              type='sign up'
-              text='none'
+              type="sign up"
+              text="none"
               isChecked={handleSignUpCriteria}
-            ></Checkboxes>
+            ></Checkboxes> */}
             {validateForm && !isChecked && (
               <FormHelperText error>
                 Please indicate that you have read
               </FormHelperText>
             )}
             <BasicButton
-              label='Sign Up'
-              variant='contained'
+              label="Sign Up"
+              variant="contained"
               onButtonChange={handleButtonChange}
             />
           </Stack>
         ) : (
-          <SuccessCard type='sign up' />
+          <SuccessCard type="sign up" />
         )}
       </Box>
       {step === 1 ? (
-        <Typography sx={{ m: 2 }} align='center' variant='body2' gutterBottom>
+        <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>
           Already Have An Account?&nbsp;
           <b>
             <Link
-              color='primary.light'
+              color="primary.light"
               component={ReactRouterLink}
-              to='/sign-in'
+              to="/sign-in"
             >
               Sign In
             </Link>
           </b>
         </Typography>
       ) : (
-        <Typography sx={{ m: 2 }} align='center' variant='body2' gutterBottom>
+        <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>
           <b>
-            <Link color='primary.light' component={ReactRouterLink} to='/'>
+            <Link color="primary.light" component={ReactRouterLink} to="/">
               Go to Home
             </Link>
           </b>

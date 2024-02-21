@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Stack, Typography, Box, IconButton } from '@mui/material';
-import TextFields from '../TextFields/FormTextFields';
+import TextFields from "../TextFields/AuthTextFields";
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 export default function EmailCard() {
@@ -22,7 +22,7 @@ export default function EmailCard() {
       <Typography variant='h5' align='center' gutterBottom>
         Email Verification
       </Typography>
-      <Typography
+      {/* <Typography
         variant='subtitle1'
         color='secondary.light'
         align='center'
@@ -52,7 +52,7 @@ export default function EmailCard() {
         >
           <ChevronRightIcon sx={{ color: 'white' }} />
         </IconButton>
-      </Box>
+      </Box> */}
     </Stack>
   );
 }

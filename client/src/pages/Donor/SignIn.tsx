@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import '../../styles/App.css';
 import { Box, Alert, Stack, Button, Typography, Link } from '@mui/material';
 import logo from '../../assets/EcoYah.png';
-import TextFields from '../../components/TextFields/FormTextFields';
+import TextFields from "../../components/TextFields/AuthTextFields";
 import Checkboxes from '../../components/Checkbox/FormCheckBox';
 import BasicButton from '../../components/Button/BasicButton';
 import EmailCard from '../../components/Card/EmailCard';
