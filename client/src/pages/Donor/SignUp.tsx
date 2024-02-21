@@ -23,6 +23,7 @@ import { validatePassword } from "../../utils/Common";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { USER_ROUTES } from "../../services/routes";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 type signUpDataType = {
   email: string;
@@ -108,9 +109,15 @@ export default function SignUp() {
           password: signUpData["password"],
         })
         .then((resp) => {
-          if (resp.data.status === 201) setStep(2);
+          console.log(resp)
+          if (resp.data.status === 201) {
+            const token = resp.data.data.token;
+            Cookies.set('token', token, { httpOnly: true });
+            setStep(2);
+          } 
         })
-        .catch((err) => {
+        .catch((err) => { 
+          console.log(err)
           const statusCode = err.response?.status;
           if (statusCode === 409) {
             setCurrEmail(signUpData["email"]);

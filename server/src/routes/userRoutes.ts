@@ -2,6 +2,7 @@
 import express from "express";
 import { QueryFailedError } from "typeorm";
 import { hashSync } from "bcrypt";
+import jwt from 'jsonwebtoken';
 
 // Internal Imports
 import { generateResponse, strongParams } from "../common/methods";
@@ -14,6 +15,21 @@ const userService = new UserService(userRepository);
 
 const router = express.Router();
 
+const secretKey: string = process.env.JWT_SECRET_KEY || '';
+
+// Get all users that are admin and staff
+router.get("/allAdmins", async (req, res) => {
+  try {
+    const adminUsers = await userService.getAllAdminUsers();
+    return generateResponse(res, 200, { action: true, message: adminUsers });
+  } catch (error) {
+    return generateResponse(res, 500, {
+      action: false,
+      message: "Internal Server Error. Please refresh and try again.",
+    });
+  }
+});
+
 // Get user by email
 router.get("/:email", async (req, res) => {
   try {
@@ -22,7 +38,7 @@ router.get("/:email", async (req, res) => {
     const user = await userService.getUserByEmail(email);
 
     if (user === null) {
-      generateResponse(res, 200, {
+      return generateResponse(res, 200, {
         action: false,
         message: "User not found",
         data: null,
@@ -35,30 +51,17 @@ router.get("/:email", async (req, res) => {
         imageId: user.imageId,
         role: user.role,
       };
-      generateResponse(res, 200, {
+      return generateResponse(res, 200, {
         action: true,
         message: "User found",
         data: payload,
       });
     }
   } catch (error) {
-    generateResponse(res, 500, {
-      action: false,
-      message: "Internal Server Error. Please refresh and try again.",
-      data: null,
-    });
-  }
-});
-
-// Get all users that are admin and staff
-router.get("/allAdmins", async (req, res) => {
-  try {
-    const adminUsers = await userService.getAllAdminUsers();
-    return generateResponse(res, 200, { action: true, message: adminUsers });
-  } catch (error) {
     return generateResponse(res, 500, {
       action: false,
       message: "Internal Server Error. Please refresh and try again.",
+      data: null,
     });
   }
 });
@@ -78,9 +81,12 @@ router.post("/create", async (req, res) => {
 
   try {
     const user = await userService.createUser(newUser);
+    const accessToken = jwt.sign({ email: newUser.email }, secretKey, { expiresIn: '1h' });
+    res.cookie('token', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
     return generateResponse(res, 201, {
       action: true,
       message: "User created successfully.",
+      token: accessToken
     });
   } catch (error) {
     if (

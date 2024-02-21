@@ -13,6 +13,7 @@ import BasicButton from "../../components/Button/BasicButton";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { GENERAL_ROUTES } from "../../services/routes";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 type signInDataType = {
   email: string;
@@ -40,6 +41,8 @@ export default function SignIn() {
         .post(GENERAL_ROUTES.LOGIN, signInData)
         .then((resp) => {
           if (resp.data.data.action) {
+            const token = resp.data.data.token;
+            Cookies.set('token', token, { httpOnly: true });
             navigate("/");
           } else {
             if (resp.data.data.message === 'wrong_email') {
