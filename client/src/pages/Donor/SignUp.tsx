@@ -56,6 +56,7 @@ export default function SignUp() {
 
   const [step, setStep] = useState<number>(1); // 1: sign up page, 2: success page
   const [validateForm, setValidateForm] = useState<boolean>(false);
+  const [currEmail, setCurrEmail] = useState<string>('');
   const [emailExists, setEmailExists] = useState<boolean>(false);
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
   const [isPasswordSame, setIsPasswordSame] = useState<boolean>(false);
@@ -77,11 +78,11 @@ export default function SignUp() {
     }
   };
 
-  const handleData = (type: string, data: string) => {
-    setSignUpData((prevData) => ({ ...prevData, [type]: data }));
+  const handleData = (label: string, data: string) => {
+    setSignUpData((prevData) => ({ ...prevData, [label]: data }));
 
     // update Checkbox state
-    if (type === "password") {
+    if (label === "password") {
       setPasswordCriteria((prevData) =>
         prevData.map((criteria, i) => ({
           ...criteria,
@@ -91,7 +92,7 @@ export default function SignUp() {
     }
   };
 
-  const handleButtonChange = async (status: boolean) => {
+  const handleButtonChange = (status: boolean) => {
     setValidateForm(status);
 
     const isSignUpDataValid = Object.values(signUpData).every(
@@ -112,8 +113,9 @@ export default function SignUp() {
         .catch((err) => {
           const statusCode = err.response?.status;
           if (statusCode === 409) {
+            setCurrEmail(signUpData["email"]);
             setEmailExists(true);
-          } else if (statusCode === 400) {
+          } else {
             setSignUpError(true);
           }
       });
@@ -135,6 +137,13 @@ export default function SignUp() {
         setIsPasswordSame(false);
       }
     }
+
+    // reactively check if the updated email exists
+    if (validateForm && currEmail === signUpData['email']) {
+      setEmailExists(true);
+    } else {
+      setEmailExists(false);
+    } 
   }, [passwordCriteria, signUpData]);
 
   return (
