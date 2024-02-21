@@ -48,72 +48,36 @@ const donationRequestItemService = new DonationRequestItemService(
   donationRequestItemRepository
 );
 
-// User Service
-const userRepository = new UserRepository();
-const userServices = new UserService(userRepository);
-
-// Donation Event Service
-const donationEventRepository = new DonationEventRepository();
-const donationEventService = new DonationEventService(
-  donationEventRepository
-);
-
-// Donation Event Item Service
-const donationEventItemRepository = new DonationEventItemRepository();
-const donationEventItemService = new DonationEventItemService(
-  donationEventItemRepository
-);
-
-router.post('/create', async (req, res) => {
-  // sanitize inputs
-  const params = req.body; 
-  const allowedEventParams = ['donationEventId', 'dropOffDate', 'dropOffTime', 'omitPoints', 'submittedBy', 'donationRequestItems'];
-  const filteredEventParams = strongParams(params, allowedEventParams);
-
+router.get('/active-donation-requests', async (req, res) => {
   try {
-    const newDonationRequest = new DonationRequest();
-    newDonationRequest.dropOffDate = filteredEventParams.dropOffDate;
-    newDonationRequest.dropOffTime = filteredEventParams.dropOffTime;
-    newDonationRequest.omitPoints = filteredEventParams.omitPoints;
-
-    const donationEvent = await donationEventService.getDonationEventById(
-      filteredEventParams.donationEventId
-    );
-    if (donationEvent) newDonationRequest.donationEvent = donationEvent;
-
-    const user = await userServices.getUserById(filteredEventParams.submittedBy);
-    if (user) newDonationRequest.user = user;
-
-    const donationRequest = await donationRequestService.createDonationRequest(
-      newDonationRequest
-    );
-
-    if (donationRequest) {
-      for (const requestItem of filteredEventParams.donationRequestItems) {
-        const newDonationRequestItem = new DonationRequestItem();
-        newDonationRequestItem.quantity = requestItem.quantity;
-        newDonationRequestItem.donationRequest = donationRequest;
-        const donationEventItem =
-          await donationEventItemService.retrieveDonationEventItemById(
-            requestItem.donationEventItemId
-          );
-        if (donationEventItem)
-          newDonationRequestItem.donationEventItem = donationEventItem;
-
-        await donationRequestItemService.createDonationRequestItem(
-          newDonationRequestItem
-        );
-      }
+    const userId: number = parseInt(req.query.userId as string, 10);
+    // TODO: Ensure that the person requesting the donation request is the same as the user_id
+    if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
+    const { data, pagination } = await donationRequestService.getActiveDonationRequestFromUser(userId);
+    return generateResponse(res, 200, data, pagination);
+    }catch (error) {
+      console.log(res)
+      return generateResponse(res, 500, 'Something went wrong.');
     }
-   
-    return generateResponse(res, 200, {
-      action: true,
-      message: "create_success",
-    });
-  } catch (error) {
-    return generateResponse(res, 500, "Something went wrong.");
-  }
 });
+
+router.get('/completed-donation-requests', async (req, res) => {
+  try {
+    const userId: number = parseInt(req.query.userId as string, 10);
+    // TODO: Ensure that the person requesting the donation request is the same as the user_id
+    if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
+    const { data, pagination } = await donationRequestService.getCompletedDonationRequestFromUser(userId);
+    return generateResponse(res, 200, data, pagination);
+    }catch (error) {
+      return generateResponse(res, 500, 'Something went wrong.');
+    }
+});
+
+router.post("/", async(req, res) => {
+  // Assume that the request body contains an object of the fom
+  // { request: {requestDetails}, eventId: 1, userId:1  }
+  return generateResponse(res, 200, "Not implemented");
+})
 
 // TODO: Created during model creation. Feel free to delete or expand as needed
 router.post('/test/cancel', async (req, res) => {
