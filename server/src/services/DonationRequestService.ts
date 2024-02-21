@@ -32,6 +32,13 @@ export class DonationRequestService {
     );
   }
 
+  async createDonationRequest(donationRequest: DonationRequest) {
+    return await this.donationRequestRepository.createDonationRequest(
+      donationRequest
+    );
+  }
+
+  // TODO: @felixli1998 please review this code and check if this is intended
   async updateDonationRequest(donationRequest: DonationRequest) {
     return await this.donationRequestRepository.createDonationRequest(
       donationRequest

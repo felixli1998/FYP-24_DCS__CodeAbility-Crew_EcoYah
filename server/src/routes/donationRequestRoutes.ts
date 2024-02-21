@@ -2,28 +2,35 @@
 import express from 'express';
 
 // Internal Imports
+import { generateResponse, strongParams } from "../common/methods";
+
+import { DonationRequest } from "../entities/DonationRequest";
+import { DonationRequestService } from "../services/DonationRequestService";
 import { DonationRequestRepository } from '../repositories/DonationRequestRepository';
-import { DonationRequestService } from '../services/DonationRequestService';
-import { DonationRequest } from '../entities/DonationRequest';
-import { UserRepository } from '../repositories/UserRepository';
-import { UserService } from '../services/UserService';
-import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
-import { generateResponse, strongParams } from '../common/methods';
-import { DonationRequestItem } from '../entities/DonationRequestItem';
-import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
-import { DonationRequestItemService } from '../services/DonationRequestItemService';
-import { DonationEventItemService } from '../services/DonationEventItemService';
+
+import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { DonationRequestItemService } from "../services/DonationRequestItemService";
+import { DonationRequestItemRepository } from "../repositories/DonationRequestItemRepository";
+
+import { UserService } from "../services/UserService";
+import { UserRepository } from "../repositories/UserRepository";
+
+import { DonationEventService } from "../services/DonationEventService";
+import { DonationEventRepository } from "../repositories/DonationEventRepository";
+
+import { DonationEventItemService } from "../services/DonationEventItemService";
+import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
 
 export type RequestItemsPayloadT = {
-  id: DonationRequestItem['id'];
-  quantity: DonationRequestItem['quantity']
-}
+  id: DonationRequestItem["id"];
+  quantity: DonationRequestItem["quantity"];
+};
 
 export type DonationRequestUpdatePayload = {
-  id: DonationRequest['id'];
-  dropOffDate?: DonationRequest['dropOffDate'];
-  dropOffTime?: DonationRequest['dropOffTime'];
-  omitPoints?: DonationRequest['omitPoints'];
+  id: DonationRequest["id"];
+  dropOffDate?: DonationRequest["dropOffDate"];
+  dropOffTime?: DonationRequest["dropOffTime"];
+  omitPoints?: DonationRequest["omitPoints"];
   requestItems?: RequestItemsPayloadT[];
 };
 
@@ -34,20 +41,27 @@ const donationRequestRepository = new DonationRequestRepository();
 const donationRequestService = new DonationRequestService(
   donationRequestRepository
 );
-// User Service
-const userRepository = new UserRepository();
-const userServices = new UserService(userRepository);
-
-// Donation Event Item Service
-const donationEventItemRepository = new DonationEventItemRepository();
-const donationEventItemService = new DonationEventItemService(
-  donationEventItemRepository
-);
 
 // Donation Request Item Service
 const donationRequestItemRepository = new DonationRequestItemRepository();
 const donationRequestItemService = new DonationRequestItemService(
   donationRequestItemRepository
+);
+
+// User Service
+const userRepository = new UserRepository();
+const userServices = new UserService(userRepository);
+
+// Donation Event Service
+const donationEventRepository = new DonationEventRepository();
+const donationEventService = new DonationEventService(
+  donationEventRepository
+);
+
+// Donation Event Item Service
+const donationEventItemRepository = new DonationEventItemRepository();
+const donationEventItemService = new DonationEventItemService(
+  donationEventItemRepository
 );
 
 router.get('/active-donation-requests/:id', async (req, res) => {
@@ -75,59 +89,54 @@ router.get('/completed-donation-requests/:id', async (req, res) => {
     }
 });
 
-router.post("/", async(req, res) => {
-  // Assume that the request body contains an object of the fom
-  // { request: {requestDetails}, eventId: 1, userId:1  }
-  return generateResponse(res, 200, "Not implemented");
-})
+router.post('/create', async (req, res) => {
+  // sanitize inputs
+  const params = req.body; 
+  const allowedEventParams = ['donationEventId', 'dropOffDate', 'dropOffTime', 'omitPoints', 'submittedBy', 'donationRequestItems'];
+  const filteredEventParams = strongParams(params, allowedEventParams);
 
-// TODO: This was created during model creation. Feel free to delete or expand it as needed
-router.post('/test/create', async (req, res) => {
   try {
-    const donationRequest = new DonationRequest();
-    donationRequest.omitPoints = false;
-    donationRequest.dropOffDate = new Date();
-    donationRequest.dropOffTime = '12:00';
+    const newDonationRequest = new DonationRequest();
+    newDonationRequest.dropOffDate = filteredEventParams.dropOffDate;
+    newDonationRequest.dropOffTime = filteredEventParams.dropOffTime;
+    newDonationRequest.omitPoints = filteredEventParams.omitPoints;
 
-    const donationEventItem1 =
-      await donationEventItemService.retrieveDonationEventItemById(1);
-    const donationEventItem2 =
-      await donationEventItemService.retrieveDonationEventItemById(2);
+    const donationEvent = await donationEventService.getDonationEventById(
+      filteredEventParams.donationEventId
+    );
+    if (donationEvent) newDonationRequest.donationEvent = donationEvent;
 
-    const donationRequestItem1 = new DonationRequestItem();
-    const donationRequestItem2 = new DonationRequestItem();
-    donationRequestItem1.quantity = 5;
-    donationRequestItem2.quantity = 2;
+    const user = await userServices.getUserById(filteredEventParams.submittedBy);
+    if (user) newDonationRequest.user = user;
 
-    if (donationEventItem1 && donationEventItem2) {
-      donationRequestItem1.donationEventItem = donationEventItem1;
-      donationRequestItem2.donationEventItem = donationEventItem2;
+    const donationRequest = await donationRequestService.updateDonationRequest(
+      newDonationRequest
+    );
+
+    if (donationRequest) {
+      for (const requestItem of filteredEventParams.donationRequestItems) {
+        const newDonationRequestItem = new DonationRequestItem();
+        newDonationRequestItem.quantity = requestItem.quantity;
+        newDonationRequestItem.donationRequest = donationRequest;
+        const donationEventItem =
+          await donationEventItemService.retrieveDonationEventItemById(
+            requestItem.donationEventItemId
+          );
+        if (donationEventItem)
+          newDonationRequestItem.donationEventItem = donationEventItem;
+
+        await donationRequestItemService.createDonationRequestItem(
+          newDonationRequestItem
+        );
+      }
     }
-
-    // Create donation request item
-    await Promise.all([
-      donationRequestItemService.createDonationRequestItem(
-        donationRequestItem1
-      ),
-      donationRequestItemService.createDonationRequestItem(
-        donationRequestItem2
-      ),
-    ]);
-
-    const user = await userServices.getUserById(1);
-    if (user) donationRequest.user = user;
-
-    donationRequest.donationRequestItems = [
-      donationRequestItem1,
-      donationRequestItem2,
-    ];
-
-    const newDonationRequest =
-      await donationRequestService.createDonationRequest(donationRequest);
-
-    return generateResponse(res, 200, newDonationRequest);
+   
+    return generateResponse(res, 200, {
+      action: true,
+      message: "create_success",
+    });
   } catch (error) {
-    console.error(error);
+    return generateResponse(res, 500, "Something went wrong.");
   }
 });
 
@@ -213,7 +222,7 @@ router.put('/complete', async (req, res) => {
     const payload = await donationRequestService.completeDonationRequest(id);
 
     return generateResponse(res, 200, 'Updated successfully!');
-  } catch (err) {
+  } catch (error) {
     return generateResponse(res, 500, 'Something went wrong');
   }
 });
