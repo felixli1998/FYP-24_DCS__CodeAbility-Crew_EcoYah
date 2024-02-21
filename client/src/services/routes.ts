@@ -19,6 +19,13 @@ export const IMAGE_ROUTES = {
   RETRIEVE_BY_FILE_PATH: `${BASE_URL}/images/:filePath`,
 }
 
+// Donation Request Routes //
+export const DONATION_REQUEST_ROUTES = {
+  RETRIEVE_ACTIVE_BY_DATE: `${BASE_URL}/donation-requests/retrieve-active-by-date`,
+  UPDATE_STATUS: `${BASE_URL}/donation-requests/complete`,
+  CREATE: `${BASE_URL}/donation-requests/create`,
+};
+
 // Donation Event-related routes //
 export const DONATION_EVENT_ROUTES = {
   GET_ALL: `${BASE_URL}/donation-events/all`,

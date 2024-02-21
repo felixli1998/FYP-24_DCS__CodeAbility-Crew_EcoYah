@@ -1,8 +1,12 @@
 // Internal imports
 import { EVENT_TYPE_SEED_DATA, ITEM_SEED_DATA } from './data';
 // Users
+import { User } from '../src/entities/User';
 import { UserRepository } from '../src/repositories/UserRepository';
 import { UserService } from '../src/services/UserService';
+import {ADMIN_SEED_DATA} from './data';
+import { hashSync } from "bcrypt";
+
 // Event Types
 import { EventTypeRepository } from '../src/repositories/EventTypeRepository';
 import { EventTypeService } from '../src/services/EventTypeService';
@@ -63,6 +67,7 @@ const donationRequestItemService = new DonationRequestItemService(
 
 let USER_OBJECTS: any = {};
 let EVENT_TYPE_OBJECTS: any = {};
+let DONATION_EVENT_OBJECTS: any = {};
 let ITEM_OBJECTS: any = {};
 let DONATION_EVENT_ITEMS: any = {};
 
@@ -82,6 +87,18 @@ const generateSeedData = async () => {
     const createdUser = await userService.createUser(user);
 
     USER_OBJECTS[user.name] = createdUser;
+  }
+
+  console.log("=== Generating user admins seed data ... ===");
+  for(const eachAdmin of ADMIN_SEED_DATA){
+    const newAdmin = new User();
+    newAdmin.name = eachAdmin.name;
+    newAdmin.email = eachAdmin.email;
+    newAdmin.passwordDigest = hashSync(eachAdmin.passwordInput, 10);
+    newAdmin.contactNum = eachAdmin.contactNum;
+    newAdmin.imageId = eachAdmin.imageURL;
+    newAdmin.role = eachAdmin.role;
+    await userService.createUser(newAdmin);
   }
 
   console.log('=== Generating event type seed data ... ===');
@@ -117,12 +134,12 @@ const generateSeedData = async () => {
   );
   for (let i = 0; i < NO_OF_DONATION_EVENT_TO_CREATE; i++) {
     const event = eventGenerator.next().value;
-    await donationEventService.createDonationEvent(event);
+    const createdDonationEvent = await donationEventService.createDonationEvent(event);
+    DONATION_EVENT_OBJECTS[createdDonationEvent.id] = createdDonationEvent;
     // Adding in items
     const donationItemGenerator = DonationItemGenerator(event, ITEM_OBJECTS);
     for (let j = 0; j < NO_OF_ITEM_PER_EVENT; j++) {
       const donationItem = donationItemGenerator.next().value;
-      console.log('DonationItem is ' + donationItem);
       const createdDonationEventItem =
         await donationEventItemService.createDonationEventItem(donationItem);
 
@@ -136,7 +153,8 @@ const generateSeedData = async () => {
   for (let i = 0; i < NO_OF_DONATION_REQUEST_TO_CREATE; i++) {
     const generatorResult = DonationRequestGenerator(
       USER_OBJECTS,
-      DONATION_EVENT_ITEMS
+      DONATION_EVENT_ITEMS,
+      DONATION_EVENT_OBJECTS,
     );
     const { donationRequest, donationRequestItems } =
       generatorResult.next().value;
