@@ -30,6 +30,13 @@ export class DonationRequestService {
     );
   }
 
+
+  async createDonationRequest(donationRequest: DonationRequest) {
+    return await this.donationRequestRepository.createDonationRequest(
+      donationRequest
+    );
+  }
+
   async updateDonationRequest(donationRequest: DonationRequest) {
     return await this.donationRequestRepository.createDonationRequest(
       donationRequest
