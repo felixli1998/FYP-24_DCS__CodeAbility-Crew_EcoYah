@@ -52,7 +52,6 @@ function ResponsiveAppBar() {
           NavigationList.HOME,
           NavigationList.DONATION_EVENT_FORM,
           NavigationList.DONATION_EVENT_OVERVIEW,
-          NavigationList.REWARD,
           NavigationList.DONATION_REQUEST
         ];
         return NavList.map((navItem) => generateNavItem(navItem, true));
@@ -60,9 +59,9 @@ function ResponsiveAppBar() {
         // Donor + Authenticated //
         const NavList = [
           NavigationList.HOME,
-          NavigationList.REWARD,
           NavigationList.PROFILE,
-          NavigationList.CONTACT_US,
+          // NavigationList.CONTACT_US, // not ready yet
+          NavigationList.DONATION_REQUEST
         ];
         return NavList.map((navItem) => generateNavItem(navItem, false));
       }
