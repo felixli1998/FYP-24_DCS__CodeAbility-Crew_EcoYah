@@ -176,26 +176,27 @@ export default function DonationEvents() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const updatedEvents: eventType[] = [];
                 const res = await getAllEvents();
 
-                var maxNumDonors = 0;
-                const currDay = new Date().getDay(); // ** Sunday - Saturday: 0 - 6 **
-                res.forEach(async (eachEvent: eventType, index: number) => {
+                const updatedEventsPromises = res.map(async (eachEvent: eventType, index: number) => {
                     const donationEventItems = await getDonationEventItems(eachEvent.id);
-
                     // Used split('T')[0] as a workaround instead of extracting only Date() from database as I do not want to change the API written
                     const timeLeft = calculateTimeLeft(eachEvent.endDate.split('T')[0] + ' 11:59:59 PM');
-
                     const numDonors = await getDonationReqCount(eachEvent.id);
-                    const updatedEvent = { ...eachEvent, donationEventItems, timeLeft, numDonors};
-                    
-                    if(numDonors > maxNumDonors && (timeLeft.includes('Hours') || parseInt(timeLeft.split(' ')[0]) < 7) && new Date(eachEvent.endDate).getDay() >= currDay){
-                        maxNumDonors = numDonors;
+                    return { ...eachEvent, donationEventItems, timeLeft, numDonors};
+                });
+                const updatedEvents = await Promise.all(updatedEventsPromises);
+                console.log(updatedEvents.length);
+                
+                var maxNumDonors = 0;
+                const currDay = new Date().getDay(); // ** Sunday - Saturday: 0 - 6 **
+                updatedEvents.forEach((updatedEvent: eventType) => {
+                    if(updatedEvent.numDonors > maxNumDonors && (updatedEvent.timeLeft.includes('Hours') || parseInt(updatedEvent.timeLeft.split(' ')[0]) < 7) && new Date(updatedEvent.endDate).getDay() >= currDay){
+                        maxNumDonors = updatedEvent.numDonors;
                         setEventOfTheWeek(updatedEvent);
                     }
-                    updatedEvents.push(updatedEvent);
                 });
+    
                 setEvents(updatedEvents);
             } catch (error) {
                 console.error('Error:', error);
