@@ -1,5 +1,6 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { styled } from "@mui/material/styles";
+import Image from '../Image/Image';
 import {
     Button,
     Card,
@@ -29,13 +30,23 @@ const StyledCard = styled(Card)(({ theme }) => ({
 export default function DonationEventCard(props: DonationEventCardProps) {
     return (
         <StyledCard sx={{ borderRadius: "25px"}} elevation={2}>
-            <CardMedia
+            {/* <CardMedia
                 component="img" 
                 image={props.imgSrc}
                 height="200px"
                 title={props.name}
                 sx={{padding: 2, borderRadius: '25px'}}
-            />
+            /> */}
+            <CardMedia
+                sx={{paddingX: 2}}>
+                <Image
+                    imageId={props.imgSrc}
+                    type='rectangle'
+                    width='100%'
+                    height='100%'
+                    folderPrefix='events'
+                />
+            </CardMedia>
             <CardContent>
                 <Grid container alignItems='center'>
                     <Grid item xs={8}>
