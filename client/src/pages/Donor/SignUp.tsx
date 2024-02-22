@@ -1,5 +1,7 @@
+// React Imports
 import { useState, useEffect } from 'react';
-import '../../styles/App.css';
+
+// MUI Imports
 import {
   Box,
   Alert,
@@ -8,242 +10,267 @@ import {
   FormHelperText,
   Link,
 } from '@mui/material';
-import logo from '../../assets/EcoYah.png';
-import TextFields from '../../components/TextFields/FormTextFields';
-import Checkboxes from '../../components/Checkbox/FormCheckBox';
-import BasicButton from '../../components/Button/BasicButton';
-import SuccessCard from '../../components/Card/SuccessCard';
-import { Link as ReactRouterLink } from 'react-router-dom';
-import { makeHttpRequest } from '../../utils/Utility';
-import axios from 'axios';
-import { USER_ROUTES } from '../../services/routes';
+
+// Components
+import EcoYahLogo from '../../components/Card/EcoYahLogo';
+import AuthTextFields from "../../components/TextFields/AuthTextFields";
+import LabelledCheckBox from "../../components/Checkbox/LabelledCheckBox";
+import BasicButton from "../../components/Button/BasicButton";
+import SuccessCard from "../../components/Card/SuccessCard";
+
+// Other Imports
+import { validatePassword } from "../../utils/Common";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { USER_ROUTES } from "../../services/routes";
+import axios from "axios";
+import Cookies from 'js-cookie';
+
+type signUpDataType = {
+  email: string;
+  name: string;
+  "contact number": number;
+  password: string;
+  "confirm password": string;
+};
+
+type CheckboxType = {
+  id: string | number;
+  name: string;
+  value: boolean;
+};
 
 export default function SignUp() {
-  const passwordCriteria: string[] = [
-    'At least 12 characters',
-    '1 uppercase letter',
-    '1 lowercase letter',
-    '1 number',
-    '1 symbol',
+  const [passwordCriteria, setPasswordCriteria] = useState<CheckboxType[]>([
+    { id: 0, name: "At least 12 characters", value: false },
+    { id: 1, name: "1 uppercase letter", value: false },
+    { id: 2, name: "1 lowercase letter", value: false },
+    { id: 3, name: "1 number", value: false },
+    { id: 4, name: "1 symbol", value: false },
+  ]);
+  const signUpCriteria: CheckboxType[] = [
+    {
+      id: "sign_up_check",
+      name: "By signing up, you agree to the Terms of Service and Privacy Policy.",
+      value: false,
+    },
   ];
-  const signUpCriteria: string[] = [
-    'By signing up, you agree to the Terms of Service and Privacy Policy.',
-  ];
 
-  const [step, setStep] = useState(1);
-  const [validateForm, setValidateForm] = useState(false);
-  const [dupEmail, setDupEmail] = useState('');
-  const [emailExists, setEmailExists] = useState(false);
-  const [passwordText, setPasswordText] = useState('');
-  const [isPasswordValid, setIsPasswordValid] = useState(false);
-  const [isPasswordSame, setIsPasswordSame] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-  const [signUpError, setSignUpError] = useState(false);
-  const [formData, setFormData] = useState<{ [key: string]: string }>({});
+  const [step, setStep] = useState<number>(1); // 1: sign up page, 2: success page
+  const [validateForm, setValidateForm] = useState<boolean>(false);
+  const [currEmail, setCurrEmail] = useState<string>('');
+  const [emailExists, setEmailExists] = useState<boolean>(false);
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false);
+  const [isPasswordSame, setIsPasswordSame] = useState<boolean>(false);
+  const [isSignUpChecked, setIsSignUpChecked] = useState<boolean>(false);
+  const [signUpData, setSignUpData] = useState<signUpDataType>({
+    email: "",
+    name: "",
+    "contact number": 0,
+    password: "",
+    "confirm password": "",
+  });
+  const [signUpError, setSignUpError] = useState<boolean>(false);
 
-  const handlePwdCriteria = (status: boolean) => {
-    setIsPasswordValid(status);
-  };
-
-  const handleSignUpCriteria = (status: boolean) => {
-    setIsChecked(status);
-  };
-
-  const handleButtonChange = async (status: boolean) => {
-    setValidateForm(status);
-
-    if (isPasswordValid && isPasswordSame && isChecked) {
-      // POST user to database
-      try {
-        const res = await makeHttpRequest('POST', USER_ROUTES.CREATE_USER, {
-          email: formData['email'],
-          name: formData['name'],
-          contactNum: formData['number'],
-          passwordDigest: formData['password'],
-        });
-        localStorage.setItem('ecoyah-email', formData['email']);
-        setStep(2);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          // Handle Axios errors
-          const statusCode = error.response?.status;
-          if (statusCode === 409) {
-            setEmailExists(true);
-            setDupEmail(formData['email']);
-          } else if (statusCode === 400) {
-            setSignUpError(true);
-          }
-          console.log('Error status code:', statusCode);
-        } else {
-          // Handle non-Axios errors
-          console.log('Non-Axios error occurred:', error);
-        }
-      }
+  const handleCheckBoxChange = (
+    updatedCheckedState: Record<string, boolean>
+  ) => {
+    if ("sign_up_check" in updatedCheckedState) {
+      setIsSignUpChecked(updatedCheckedState["sign_up_check"]);
     }
   };
 
-  const handleData = (type: string, data: string) => {
-    setFormData((prevData) => ({ ...prevData, [type]: data }));
+  const handleData = (label: string, data: string) => {
+    setSignUpData((prevData) => ({ ...prevData, [label]: data }));
 
-    if (type === 'password') {
-      setPasswordText(data);
+    // update Checkbox state
+    if (label === "password") {
+      setPasswordCriteria((prevData) =>
+        prevData.map((criteria, i) => ({
+          ...criteria,
+          value: validatePassword(i, data),
+        }))
+      );
+    }
+  };
+
+  const handleButtonChange = (status: boolean) => {
+    setValidateForm(status);
+
+    const isSignUpDataValid = Object.values(signUpData).every(
+      (value) => value !== "" && value !== 0
+    );
+
+    if (isSignUpDataValid && isSignUpChecked) {
+      axios
+        .post(USER_ROUTES.CREATE_USER, {
+          email: signUpData["email"],
+          name: signUpData["name"],
+          contactNum: signUpData["contact number"],
+          password: signUpData["password"],
+        })
+        .then((resp) => {
+          console.log(resp)
+          if (resp.data.status === 201) {
+            const token = resp.data.data.token;
+            Cookies.set('token', token, { secure: true });
+            setStep(2);
+          }
+        })
+        .catch((err) => { 
+          console.log(err)
+          const statusCode = err.response?.status;
+          if (statusCode === 409) {
+            setCurrEmail(signUpData["email"]);
+            setEmailExists(true);
+          } else {
+            setSignUpError(true);
+          }
+      });
     }
   };
 
   useEffect(() => {
-    if (
-      formData['confirm password'] &&
-      passwordText === formData['confirm password']
-    ) {
-      setIsPasswordSame(true);
-    } else {
-      setIsPasswordSame(false);
+    // check if all password criteria are true
+    const allCriteriaValid = passwordCriteria.every(
+      (criteria) => criteria.value
+    );
+    setIsPasswordValid(allCriteriaValid);
+
+    // check if password and confirm password are the same
+    if (signUpData["password"] && signUpData["confirm password"]) {
+      if (signUpData["password"] === signUpData["confirm password"]) {
+        setIsPasswordSame(true);
+      } else {
+        setIsPasswordSame(false);
+      }
     }
 
-    if (validateForm && dupEmail === formData['email']) {
+    // reactively check if the updated email exists
+    if (validateForm && currEmail === signUpData['email']) {
       setEmailExists(true);
     } else {
       setEmailExists(false);
-    }
-  }, [formData, passwordText]);
+    } 
+  }, [passwordCriteria, signUpData]);
 
   return (
     <>
+      <EcoYahLogo />
       <Box
-        component='img'
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-        sx={{
-          position: 'relative',
-          m: 'auto',
-          marginTop: 3,
-          width: '10rem',
-          height: '10rem',
-          borderRadius: '50%',
-          boxShadow:
-            '0px 10px 10px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset',
-        }}
-        alt='EcoYah'
-        src={logo}
-      ></Box>
-      <Box
-        component='form'
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
+        component="form"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
         sx={{
           width: 420,
-          m: 'auto',
-          '& > :not(style)': { m: 2, p: 2 },
+          m: "auto",
+          "& > :not(style)": { m: 2, p: 2 },
           boxShadow: 5,
           borderRadius: 2,
         }}
         noValidate
-        autoComplete='off'
+        autoComplete="off"
       >
         {step === 1 ? (
           <Stack spacing={3}>
             {signUpError && (
-              <Alert severity='error'>
+              <Alert severity="error">
                 The request encountered an issue. Please refresh and try again!
               </Alert>
             )}
-            <Typography variant='h5' align='center' gutterBottom>
+            <Typography variant="h5" align="center" gutterBottom>
               Let's Get Started!
             </Typography>
             <hr></hr>
-            <TextFields
-              label='Email'
-              type='email'
-              form='sign up'
-              validate={validateForm}
+            <AuthTextFields
+              label="Email"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
               error={emailExists}
-            ></TextFields>
-            <TextFields
-              label='Name'
-              type='name'
-              validate={validateForm}
+            ></AuthTextFields>
+            <AuthTextFields
+              label="Name"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
-            ></TextFields>
-            <TextFields
-              label='Contact Number'
-              type='number'
-              validate={validateForm}
+            ></AuthTextFields>
+            <AuthTextFields
+              label="Contact Number"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
-            ></TextFields>
-            <TextFields
-              label='Password'
-              type='password'
-              form='sign up'
-              validate={validateForm}
+            ></AuthTextFields>
+            <AuthTextFields
+              label="Password"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
               error={isPasswordValid}
-            ></TextFields>
+            ></AuthTextFields>
             <Box
               sx={{
-                backgroundColor: 'rgba(7, 83, 142, 0.25)',
+                backgroundColor: "rgba(7, 83, 142, 0.25)",
                 padding: 2,
                 borderRadius: 2,
                 width: 330,
               }}
             >
-              <Typography variant='body2' gutterBottom>
+              <Typography variant="body2" gutterBottom>
                 <b>Your password must contain:</b>
               </Typography>
-              <Checkboxes
-                type='password'
+              <LabelledCheckBox
                 label={passwordCriteria}
-                text={passwordText}
-                isChecked={handlePwdCriteria}
-              ></Checkboxes>
+                disableCheckbox={true}
+                externalCheckbox={true}
+                onCheckBoxChange={handleCheckBoxChange}
+              ></LabelledCheckBox>
             </Box>
-            <TextFields
-              label='Confirm Password'
-              type='confirm password'
-              validate={validateForm}
+            <AuthTextFields
+              label="Confirm Password"
+              form="Sign Up"
+              validateForm={validateForm}
               data={handleData}
               error={isPasswordSame}
-            ></TextFields>
-            <Checkboxes
+            ></AuthTextFields>
+            <LabelledCheckBox
               label={signUpCriteria}
-              type='sign up'
-              text='none'
-              isChecked={handleSignUpCriteria}
-            ></Checkboxes>
-            {validateForm && !isChecked && (
+              disableCheckbox={false}
+              externalCheckbox={false}
+              onCheckBoxChange={handleCheckBoxChange}
+            ></LabelledCheckBox>
+            {validateForm && !isSignUpChecked && (
               <FormHelperText error>
                 Please indicate that you have read
               </FormHelperText>
             )}
             <BasicButton
-              label='Sign Up'
-              variant='contained'
+              label="Sign Up"
+              variant="contained"
               onButtonChange={handleButtonChange}
             />
           </Stack>
         ) : (
-          <SuccessCard type='sign up' />
+          <SuccessCard type="sign up" />
         )}
       </Box>
       {step === 1 ? (
-        <Typography sx={{ m: 2 }} align='center' variant='body2' gutterBottom>
+        <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>
           Already Have An Account?&nbsp;
           <b>
             <Link
-              color='primary.light'
+              color="primary.light"
               component={ReactRouterLink}
-              to='/sign-in'
+              to="/sign-in"
             >
               Sign In
             </Link>
           </b>
         </Typography>
       ) : (
-        <Typography sx={{ m: 2 }} align='center' variant='body2' gutterBottom>
+        <Typography sx={{ m: 2 }} align="center" variant="body2" gutterBottom>
           <b>
-            <Link color='primary.light' component={ReactRouterLink} to='/'>
+            <Link color="primary.light" component={ReactRouterLink} to="/">
               Go to Home
             </Link>
           </b>

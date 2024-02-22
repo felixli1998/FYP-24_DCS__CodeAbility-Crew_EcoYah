@@ -1,5 +1,4 @@
-import "./styles/App.css";
-import AppBar from "./components/AppBar";
+import AppBar from "./components/NavBar/AppBar";
 import {ThemeProvider} from "@emotion/react";
 import {theme} from "./styles/Palette";
 import {Outlet} from "react-router-dom";
@@ -11,10 +10,10 @@ const App: React.FC = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <AppBar />
-          <Outlet />
-        </ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <AppBar />
+            <Outlet />
+          </ThemeProvider>
       </QueryClientProvider>
     </>
   );

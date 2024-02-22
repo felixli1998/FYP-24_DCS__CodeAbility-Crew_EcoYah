@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import '../../styles/App.css';
+
 import {
   Box,
   Container,
@@ -32,6 +32,8 @@ import PaidOutlinedIcon from '@mui/icons-material/Paid';
 import { makeHttpRequest } from '../../utils/Utility';
 import { USER_ROUTES } from '../../services/routes';
 import { capitalize } from 'lodash';
+import Cookies from 'js-cookie';
+import { decodeToken } from "../../utils/Common";
 
 const navigationItems = [
   {
@@ -229,7 +231,16 @@ const Others = () => {
 };
 
 export default function Profile() {
-  const email = localStorage.getItem('ecoyah-email') || '';
+  const email = () => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken = decodeToken(token);
+      if (decodedToken) {
+        return decodedToken.email;
+      }
+    }
+    return '';
+  };
 
   const [userInfo, setUserInfo] = useState({
     name: '',

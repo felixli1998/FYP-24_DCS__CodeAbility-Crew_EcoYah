@@ -159,10 +159,12 @@ export default function DonationRequestForm() {
         </Typography>
         <LabelledCheckBox
           label={[
-            { id: 1, name: "Broccoli" },
-            { id: 2, name: "Cabbage" },
-            { id: 3, name: "Eggplants" },
+            { id: 1, name: "Broccoli", value: false },
+            { id: 2, name: "Cabbage", value: false  },
+            { id: 3, name: "Eggplants", value: false },
           ]}
+          disableCheckbox={false}
+          externalCheckbox={false}
           onCheckBoxChange={handleCheckBoxChange}
           validateForm={validateForm}
         />
@@ -198,8 +200,11 @@ export default function DonationRequestForm() {
             {
               id: "omitPoints",
               name: "Receive Points Upon A Successful Donation",
+              value: false 
             },
           ]}
+          disableCheckbox={false}
+          externalCheckbox={false}
           onCheckBoxChange={handleCheckBoxChange}
         />
         <BasicButton

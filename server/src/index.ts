@@ -2,6 +2,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 // Internal Imports
 import generateSeedData from '../seeds/seed';
@@ -25,6 +26,7 @@ dotenv.config();
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(cors());
+app.use(cookieParser());
 
 const port = process.env.PORT;
 

@@ -1,5 +1,4 @@
 import { useEffect, useReducer } from 'react';
-import '../../styles/App.css';
 import { ThemeProvider } from '@mui/material';
 import { theme } from '../../styles/Palette';
 import profilePic from '../../assets/ProfilePicture.png';
@@ -15,6 +14,8 @@ import { useFeedbackNotification } from '../../components/useFeedbackNotificatio
 import { makeHttpRequest } from '../../utils/Utility';
 import { USER_ROUTES } from '../../services/routes';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { decodeToken } from "../../utils/Common";
 
 type ErrorActionT = {
   type: 'requiredField' | 'invalidContact' | 'reset' | 'resetAll';
@@ -40,7 +41,16 @@ type UserStateT = {
 };
 
 export default function EditProfile() {
-  const email = localStorage.getItem('ecoyah-email') || '';
+  const email = () => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken = decodeToken(token);
+      if (decodedToken) {
+        return decodedToken.email;
+      }
+    }
+    return '';
+  };
   const { displayNotification, FeedbackNotification } =
     useFeedbackNotification();
   const navigate = useNavigate();
@@ -148,7 +158,7 @@ export default function EditProfile() {
 
   useEffect(() => {
     retrieveProfileInfo();
-  }, [email]);
+  }, []);
 
   // Function to validate changes are valid
   const validateChanges = () => {
