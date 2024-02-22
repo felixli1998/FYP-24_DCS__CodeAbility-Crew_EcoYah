@@ -16,7 +16,7 @@ type DonationEventCardProps = {
     description: string;
     imgSrc: string;
     numJoined: number;
-    numHoursLeft: string;
+    timeLeft: string;
     handleDonateClick: () => void;
 } 
 
@@ -31,18 +31,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
 export default function DonationEventCard(props: DonationEventCardProps) {
     return (
         <StyledCard sx={{ borderRadius: "25px"}} elevation={2}>
-            {/* <CardMedia
-                component="img" 
-                image={props.imgSrc}
-                height="200px"
-                title={props.name}
-                sx={{padding: 2, borderRadius: '25px'}}
-            /> */}
             <CardMedia
                 sx={{paddingX: 2, paddingTop: 2, marginBottom: 0}}>
                 <Image
-                    // imageId={props.imgSrc}
-                    imageId='placeholder'
+                    imageId={props.imgSrc}
                     type='rectangle'
                     width='100%'
                     height='100%'
@@ -75,7 +67,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
                     <Grid item xs={5} container justifyContent='flex-end' alignItems='center'>
                         <AccessTimeIcon sx={{ color: 'text.secondary', marginRight: 1}}/>
                         <Typography color='text.secondary'>
-                           {props.numHoursLeft} Left
+                           {props.timeLeft}
                         </Typography>
                     </Grid>
                 </Grid>

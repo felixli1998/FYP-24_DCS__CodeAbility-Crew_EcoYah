@@ -98,12 +98,12 @@ export const ITEM_SEED_DATA = [
   {
     name: "Children's Clothing",
     unit: "unit",
-    eventType: "Clothing Donation"
+    eventType: "Clothing Waste"
   },
   {
     name: "Young Adult Clothing",
     unit: "unit",
-    eventType: "Clothing Donation"
+    eventType: "Clothing Waste"
   },
 ]
 

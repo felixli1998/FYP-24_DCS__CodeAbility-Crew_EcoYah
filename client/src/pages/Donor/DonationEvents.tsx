@@ -143,12 +143,19 @@ export default function DonationEvents() {
         const currentDateInSGT = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
         const currentDateInMs = new Date(currentDateInSGT).getTime();
         const timeLeftInHours = Math.floor((endDateInMs - currentDateInMs) / (1000 * 60 * 60));
+
+        var toReturn: string = ''
         
-        if(timeLeftInHours < 24){
-            return timeLeftInHours + ' Hours';
+        if(timeLeftInHours < 0){
+            toReturn = 'Event Expired';
+        } else if(timeLeftInHours < 24) {
+            toReturn = timeLeftInHours + ' Hours Left';
         } else {
-            return Math.floor(timeLeftInHours / 24) + ' Days';
+            const numDaysLeft = Math.floor(timeLeftInHours / 24);
+            toReturn = numDaysLeft + ` Day${numDaysLeft > 1 ? 's' : ''} Left`;
         }
+
+        return toReturn;
     }  
 
     const navigate = useNavigate();
@@ -243,7 +250,7 @@ export default function DonationEvents() {
                         onChange={(e) => setSearch(e.target.value)}
                     />
                     
-                    {eventOfTheWeek ? 
+                    {eventOfTheWeek && 
                         <>
                             <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
                             
@@ -252,12 +259,10 @@ export default function DonationEvents() {
                                 description={`Take part in this donation by donating ${eventOfTheWeek?.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
                                 imgSrc={eventOfTheWeek?.imageId || 'https://picsum.photos/200/300'}
                                 numJoined={eventOfTheWeek?.numDonors || 0}
-                                numHoursLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
+                                timeLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
                                 handleDonateClick={() => handleDonateClick(eventOfTheWeek)}
                             />
                         </>
-
-                        : <></>
                     }
 
                     {errorFetchingEventTypes ?
@@ -289,7 +294,7 @@ export default function DonationEvents() {
                                     description={`Take part in this donation by donating ${event.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
                                     imgSrc={event.imageId}
                                     numJoined={event.numDonors}
-                                    numHoursLeft={event.timeLeft}
+                                    timeLeft={event.timeLeft}
                                     handleDonateClick={() => handleDonateClick(event)}
                                 />
                             </Grid>
