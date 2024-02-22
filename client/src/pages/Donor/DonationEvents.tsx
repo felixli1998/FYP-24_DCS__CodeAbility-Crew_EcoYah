@@ -25,7 +25,7 @@ type itemType = {
     eventType: {id: number}
 }
 
-type donationEventItemsType = {
+export type donationEventItemsType = {
     id: number,
     item: itemType,
     minQty: number,
@@ -51,7 +51,6 @@ export type dataToDonationRequestFormType ={
     donationEventItems: donationEventItemsType[],
     startDate: string,
     endDate: string,
-    timeLeft: string,
     imageId: string,
     name: string,
 }
@@ -170,11 +169,10 @@ export default function DonationEvents() {
                 donationEventItems: donationEvent.donationEventItems,
                 startDate: donationEvent.startDate,
                 endDate: donationEvent.endDate,
-                timeLeft: donationEvent.timeLeft,
                 imageId: donationEvent.imageId,
                 name: donationEvent.name
             }
-            navigate(`/donation-request-form?data=${encodeURIComponent(JSON.stringify(dataToDonationRequestForm))}`);
+            navigate('/donation-request-form', { state: { action: 'create', form: dataToDonationRequestForm }});
         }
 
     };

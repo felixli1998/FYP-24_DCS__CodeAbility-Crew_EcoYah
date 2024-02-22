@@ -124,6 +124,7 @@ export const DonationRequest = () => {
                   donationRequest.dropOffDate
                 ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
               }}
+              originalData={donationRequest}
             />
           ))}
       </Stack>

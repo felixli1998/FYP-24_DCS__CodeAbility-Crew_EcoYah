@@ -1,25 +1,24 @@
 // React Imports
-import { useState } from 'react';
+import { useState, useEffect } from "react";
 
 // MUI Imports
 import { Box, Stack, Typography, Alert } from "@mui/material";
 
 // Components
-import ImageCoverCard from '../../components/Card/ImageCoverCard';
-import LabelledCheckBox from '../../components/Checkbox/LabelledCheckBox';
-import ItemQuantityCard from '../../components/Card/ItemQuantityCard';
-import BasicButton from '../../components/Button/BasicButton';
-import DateTimePicker from '../../components/DateTimePicker/DateTimePicker';
-import InfoToolTip from '../../components/ToolTip/InfoToolTip';
+import ImageCoverCard from "../../components/Card/ImageCoverCard";
+import LabelledCheckBox from "../../components/Checkbox/LabelledCheckBox";
+import ItemQuantityCard from "../../components/Card/ItemQuantityCard";
+import BasicButton from "../../components/Button/BasicButton";
+import DateTimePicker from "../../components/DateTimePicker/DateTimePicker";
+import InfoToolTip from "../../components/ToolTip/InfoToolTip";
 
 // Other Imports
-import DonationRequestPlaceholder from '../../assets/DonationRequestPlaceholder.png';
-import dayjs, { Dayjs } from 'dayjs';
-import _ from 'lodash';
+import dayjs, { Dayjs } from "dayjs";
+import _ from "lodash";
 import { DONATION_REQUEST_ROUTES } from "../../services/routes";
 import axios from "axios";
-import { useNavigate, useLocation } from 'react-router-dom';
-import {dataToDonationRequestFormType} from './DonationEvents';
+import { useLocation, useNavigate } from "react-router-dom";
+import { dataToDonationRequestFormType, donationEventItemsType } from "./DonationEvents";
 
 type DonationRequestType = {
   donationEventId: number;
@@ -30,42 +29,43 @@ type DonationRequestType = {
   donationRequestItems: Record<string, number>[];
 };
 
-export default function DonationRequestForm() {
-  const queryParams = new URLSearchParams(useLocation().search);
-  const data: dataToDonationRequestFormType | null = queryParams.get('data') ? JSON.parse(queryParams.get('data')!) : null;
-  console.log(data);
+type CheckBoxItemsType = {
+  id: number;
+  name: string;
+  value: boolean;
+};
 
+export default function DonationRequestForm() {
+  const location = useLocation();
   const navigate = useNavigate();
+  const [action, setAction] = useState<string>('submit'); // create == submit
+  const [donationEventInfo, setDonationEventInfo] =
+    useState<dataToDonationRequestFormType | null>(null);
   const [donationRequest, setDonationRequest] = useState<DonationRequestType>({
-    donationEventId: 1, // Hardcode for now
+    donationEventId: 0, 
     dropOffDate: new Date(),
     dropOffTime: "",
     omitPoints: false,
     submittedBy: 1, // Hardcode for now
     donationRequestItems: [],
   });
-  const [error, setError] = useState<boolean>(false);
-  const itemsInfo: Record<string, string | number>[] = [
-    { id: 1, item: "Broccoli", unit: "kilogram", minQty: 1, pointsPerUnit: 20 },
-    {
-      id: 2,
-      item: "Cabbage",
-      unit: "kilogram",
-      minQty: 2,
-      pointsPerUnit: 40,
-    },
-    {
-      id: 3,
-      item: "Eggplants",
-      unit: "kilogram",
-      minQty: 1,
-      pointsPerUnit: 25,
-    },
-  ]; // Hardcode for now
-  const [selectedItems, setSelectedItems] = useState<
-    Record<string, string | number>[]
-  >([]);
+  const [itemsInfo, setItemsInfo] = useState<donationEventItemsType[] | []>([]);
+  const [checkBoxItems, setCheckBoxItems] = useState<CheckBoxItemsType[] | []>([]);
+  const [selectedItems, setSelectedItems] = useState<Record<string, string | number>[] | []>([]);
   const [validateForm, setValidateForm] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+
+  const handleCheckBoxItems = (donationEventItems: donationEventItemsType[]) => {
+    const updatedCheckBoxItems: CheckBoxItemsType[] = [];
+    donationEventItems.forEach(donationEventItem => {
+      updatedCheckBoxItems.push({
+        id: donationEventItem.id,
+        name: donationEventItem.item.name,
+        value: false
+      });
+    });
+    setCheckBoxItems(updatedCheckBoxItems);
+  }
 
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
@@ -88,10 +88,17 @@ export default function DonationRequestForm() {
             const foundItem = itemsInfo.find(
               (item) => item["id"] === Number(key)
             );
-            setSelectedItems((prevSelectedItems) => [
-              ...prevSelectedItems,
-              { ...foundItem },
-            ]);
+            if (foundItem) {
+              setSelectedItems((prevSelectedItems) => [
+                ...prevSelectedItems,
+                { id: foundItem.id, 
+                  item: foundItem.item.name,
+                  unit: foundItem.item.unit,
+                  minQty: foundItem.minQty,
+                  pointsPerUnit: foundItem.pointsPerUnit
+                },
+              ]);
+            }
           }
         } else {
           // If value is false, remove from selectedItems if present
@@ -133,6 +140,7 @@ export default function DonationRequestForm() {
 
   const handleButtonChange = (status: boolean) => {
     setValidateForm(true);
+    console.log(donationRequest);
     if (
       donationRequest.donationEventId !== 0 &&
       donationRequest.submittedBy !== 0 &&
@@ -142,27 +150,46 @@ export default function DonationRequestForm() {
       axios
         .post(DONATION_REQUEST_ROUTES.CREATE, donationRequest)
         .then((resp) => {
-          if (resp.data.status === 200) navigate("/home");
+          if (resp.data.status === 200) navigate("/");
         })
         .catch((err) => {
+          console.log(err)
           setError(true);
         });
     }
   };
 
-  return (
+  useEffect(() => {
+    console.log(location.state);
+    // should not be able to access this page through the url
+    if (location.state === null) {
+      navigate("/");
+    } else {
+      if (location.state.action === 'edit') setAction('edit');
+      setDonationEventInfo(location.state.form);
+      setDonationRequest(prevDonationRequest => ({
+        ...prevDonationRequest,
+        donationEventId: location.state.form.id,
+      }));
+      setItemsInfo(location.state.form.donationEventItems);
+      handleCheckBoxItems(location.state.form.donationEventItems);
+    }
+  }, []);
+
+  return donationEventInfo ? (
     <>
-      <ImageCoverCard image={DonationRequestPlaceholder} name={"Food Rescue"} />
+      <ImageCoverCard
+        image={donationEventInfo.imageId}
+        name={donationEventInfo.name}
+        startDate={donationEventInfo.startDate}
+        endDate={donationEventInfo.endDate}
+      />
       <Stack spacing={3} sx={{ maxWidth: "30rem", margin: "2rem 1.5rem" }}>
         <Typography variant="h5" gutterBottom>
           1. Choose the items to donate:
         </Typography>
         <LabelledCheckBox
-          label={[
-            { id: 1, name: "Broccoli", value: true },
-            { id: 2, name: "Cabbage", value: false },
-            { id: 3, name: "Eggplants", value: false },
-          ]}
+          label={checkBoxItems}
           onCheckBoxChange={handleCheckBoxChange}
           validateForm={validateForm}
         />
@@ -198,15 +225,20 @@ export default function DonationRequestForm() {
             {
               id: "omitPoints",
               name: "Receive Points Upon A Successful Donation",
-              value: false
+              value: false,
             },
           ]}
           onCheckBoxChange={handleCheckBoxChange}
         />
         <BasicButton
-          label="Submit Donation"
+          label={`${action} Donation`}
           variant="contained"
           onButtonChange={handleButtonChange}
+        />
+        <BasicButton
+          label="Cancel"
+          variant="outlined"
+          onButtonChange={(status: boolean) => navigate("/")}
         />
         {error && (
           <Alert severity="error">
@@ -216,5 +248,5 @@ export default function DonationRequestForm() {
         )}
       </Stack>
     </>
-  );
+  ) : null;
 }

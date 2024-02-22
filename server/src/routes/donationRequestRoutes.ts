@@ -48,6 +48,22 @@ const donationRequestItemService = new DonationRequestItemService(
   donationRequestItemRepository
 );
 
+// User Service
+const userRepository = new UserRepository();
+const userServices = new UserService(userRepository);
+
+// Donation Event Service
+const donationEventRepository = new DonationEventRepository();
+const donationEventService = new DonationEventService(
+  donationEventRepository
+);
+
+// Donation Event Item Service
+const donationEventItemRepository = new DonationEventItemRepository();
+const donationEventItemService = new DonationEventItemService(
+  donationEventItemRepository
+);
+
 router.get('/active-donation-requests', async (req, res) => {
   try {
     const params = req.query;
@@ -126,6 +142,57 @@ router.get('/retrieve-active-by-date', async (req, res) => {
     return generateResponse(res, 200, result);
   } catch (error) {
     return generateResponse(res, 500, 'Something went wrong.');
+  }
+});
+
+router.post('/create', async (req, res) => {
+  // sanitize inputs
+  const params = req.body; 
+  const allowedEventParams = ['donationEventId', 'dropOffDate', 'dropOffTime', 'omitPoints', 'submittedBy', 'donationRequestItems'];
+  const filteredEventParams = strongParams(params, allowedEventParams);
+
+  try {
+    const newDonationRequest = new DonationRequest();
+    newDonationRequest.dropOffDate = filteredEventParams.dropOffDate;
+    newDonationRequest.dropOffTime = filteredEventParams.dropOffTime;
+    newDonationRequest.omitPoints = filteredEventParams.omitPoints;
+
+    const donationEvent = await donationEventService.getDonationEventById(
+      filteredEventParams.donationEventId
+    );
+    if (donationEvent) newDonationRequest.donationEvent = donationEvent;
+
+    const user = await userServices.getUserById(filteredEventParams.submittedBy);
+    if (user) newDonationRequest.user = user;
+
+    const donationRequest = await donationRequestService.createDonationRequest(
+      newDonationRequest
+    );
+
+    if (donationRequest) {
+      for (const requestItem of filteredEventParams.donationRequestItems) {
+        const newDonationRequestItem = new DonationRequestItem();
+        newDonationRequestItem.quantity = requestItem.quantity;
+        newDonationRequestItem.donationRequest = donationRequest;
+        const donationEventItem =
+          await donationEventItemService.retrieveDonationEventItemById(
+            requestItem.donationEventItemId
+          );
+        if (donationEventItem)
+          newDonationRequestItem.donationEventItem = donationEventItem;
+
+        await donationRequestItemService.createDonationRequestItem(
+          newDonationRequestItem
+        );
+      }
+    }
+   
+    return generateResponse(res, 200, {
+      action: true,
+      message: "create_success",
+    });
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong.");
   }
 });
 
