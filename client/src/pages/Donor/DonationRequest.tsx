@@ -60,11 +60,9 @@ export const DonationRequest = () => {
       queryFn: async () => {
         if (user) {
           if (selectedTab === "active") {
-            // return getActiveDonationRequests(user.id);
-            return getActiveDonationRequests(19);
+            return getActiveDonationRequests(user.id);
           } else {
-            // return getCompletedDonationRequests(user.id);
-            return getCompletedDonationRequests(19);
+            return getCompletedDonationRequests(user.id);
           }
         }
       },
@@ -107,8 +105,7 @@ export const DonationRequest = () => {
             <ContentCard
               key={key}
               contentCardData={{
-                image: "https://picsum.photos/200/300",
-                // image: donationRequest.donationEvent.imageId,
+                image: donationRequest.donationEvent.imageId,
                 title: donationRequest.donationEvent.name,
                 chipLabel:
                   getDayLeft(donationRequest.donationEvent.endDate) === 0
