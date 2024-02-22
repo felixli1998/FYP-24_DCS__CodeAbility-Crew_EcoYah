@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from "../../components/AppBar";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
 import { fetchActiveDonationEvents } from '../../services/donationEventApi';
@@ -221,7 +221,7 @@ export default function DonationEvents() {
 
     return (
         
-        <Container sx={{marginTop: 3, marginX: 3}}>
+        <Container sx={{marginTop: 3, marginX: 'auto'}}>
             {errorFetchingEvents ? 
                 <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 3}}>Error fetching events, please try again later, sorry for the inconvenience!</Typography> 
                     : 
