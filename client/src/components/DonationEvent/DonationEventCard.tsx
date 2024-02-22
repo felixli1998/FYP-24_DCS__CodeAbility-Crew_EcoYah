@@ -38,7 +38,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
                 sx={{padding: 2, borderRadius: '25px'}}
             /> */}
             <CardMedia
-                sx={{paddingX: 2}}>
+                sx={{paddingX: 2, paddingTop: 2, marginBottom: 0}}>
                 <Image
                     imageId={props.imgSrc}
                     type='rectangle'

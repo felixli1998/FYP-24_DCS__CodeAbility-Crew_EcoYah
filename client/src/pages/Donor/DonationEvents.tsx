@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from "../../components/AppBar";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
 import { fetchActiveDonationEvents } from '../../services/donationEventApi';
@@ -61,10 +61,10 @@ export default function DonationEvents() {
     const [events, setEvents] = useState<eventType[]>([]);
     const [eventOfTheWeek, setEventOfTheWeek] = useState<eventType>();
     const [errorFetchingEvents, setErrorFetchingEvents] = useState(false);
-
+    
     const [eventTypes, setEventTypes] = useState([]);
+    const [errorFetchingEventTypes, setErrorFetchingEventTypes] = useState(false);
     const [filters, setFilters] = useState<number[]>([]);
-    // const [filteredEvents, setFilteredEvents] = useState<eventType[]>([]);
 
     const getAllEvents = async () => {
         try {
@@ -82,8 +82,7 @@ export default function DonationEvents() {
             return response.data.eventTypes;
         } catch (error) {
             console.error('Error:', error);
-            // TODO: Will add error handling
-            // throw error;
+            throw error;
         }
     }
 
@@ -93,8 +92,7 @@ export default function DonationEvents() {
             return res.data.donationEventItems;
         } catch (error) {
             console.error('Error:', error);
-            // TODO: Will add error handling
-            // throw error;
+            throw error;
         }
     }
 
@@ -104,8 +102,7 @@ export default function DonationEvents() {
             return res.data;
         } catch (error) {
             console.error('Error:', error);
-            // TODO: Will add error handling
-            // throw error;
+            throw error;
         }
     }
 
@@ -212,8 +209,7 @@ export default function DonationEvents() {
                 setEventTypes(res);
             } catch (error) {
                 console.error('Error:', error);
-                // TODO: Will add error handling
-                // throw error;
+                setErrorFetchingEventTypes(true);
             }
         }
         fetchEventTypesData();
@@ -244,8 +240,7 @@ export default function DonationEvents() {
                 />
 
                 
-                {
-                    eventOfTheWeek ? 
+                {eventOfTheWeek ? 
                     <>
                         <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
                         
@@ -261,21 +256,28 @@ export default function DonationEvents() {
 
                     : <></>
                 }
-                
-                <Typography variant='h6' sx={{fontWeight: 'bold', marginY: 2}}>Donation Categories</Typography>
 
-                <Box sx={{marginBottom: 2}}>
-                    {eventTypes.map((eventType: any) => (
-                        <Chip 
-                            key={eventType.id}
-                            label={eventType.name} 
-                            sx={{marginRight: 1, marginBottom: 1}}
-                            color="success"
-                            variant={filters.includes(eventType.id) ? "filled" : "outlined"}
-                            onClick={() => handleFilterClick(eventType.id)}
-                        />
-                    ))}
-                </Box>
+                {errorFetchingEventTypes ?
+                    <Typography variant='h6' sx={{fontWeight: 'bold', marginY: 2}}>Donation Events</Typography>
+                    : 
+                    <>
+                        <Typography variant='h6' sx={{fontWeight: 'bold', marginY: 2}}>Donation Categories</Typography>
+
+                        <Box sx={{marginBottom: 2}}>
+                            {eventTypes.map((eventType: any) => (
+                                <Chip 
+                                    key={eventType.id}
+                                    label={eventType.name} 
+                                    sx={{marginRight: 1, marginBottom: 1}}
+                                    color="success"
+                                    variant={filters.includes(eventType.id) ? "filled" : "outlined"}
+                                    onClick={() => handleFilterClick(eventType.id)}
+                                />
+                            ))}
+                        </Box>
+                    </>
+                }
+                
 
                 <Grid container spacing={3}>
                     {searchEvents.map((event: eventType) => (
