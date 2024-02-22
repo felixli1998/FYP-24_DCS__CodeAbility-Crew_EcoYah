@@ -68,8 +68,6 @@ export class User {
   })
   status: string;
 
-  @OneToOne(() => UserPoints, (userPoints) => userPoints.user)
-  userPoints: UserPoints;
 
   @OneToMany(() => DonationEvent, (donationEvent) => donationEvent.createdBy)
   donationEvents: DonationEvent[];
@@ -82,4 +80,7 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => UserPoints, (userPoints) => userPoints.user, { cascade: ['insert'] })
+  userPoints: UserPoints;
 }

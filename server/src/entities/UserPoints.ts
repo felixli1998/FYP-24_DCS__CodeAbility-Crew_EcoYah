@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  BeforeInsert,
 } from 'typeorm';
 import { User } from './User';
 
@@ -22,7 +23,7 @@ export class UserPoints {
   })
   points: number;
 
-  @OneToOne(() => User, (user) => user.userPoints)
+  @OneToOne(() => User, (user) => user.userPoints, { cascade: ['insert'] })
   @JoinColumn()
   user: User;
 

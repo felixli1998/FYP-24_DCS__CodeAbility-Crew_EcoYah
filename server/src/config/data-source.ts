@@ -40,7 +40,7 @@ export const AppDataSource = new DataSource({
   ],
   synchronize: true,
   logging: true,
-  subscribers: [],
+  subscribers: ['src/subscriber/*.ts'],
   migrations: [],
   cache: true,
 });
