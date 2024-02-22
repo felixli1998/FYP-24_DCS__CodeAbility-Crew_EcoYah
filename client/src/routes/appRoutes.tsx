@@ -76,8 +76,8 @@ export const APP_ROUTES: AppRoutesT[] = [
     isAdmin: false,
   },
   {
-    path: "sign-in",
-    description: "Sign in page for the admin",
+    path: 'sign-in',
+    description: 'Sign in page for the admin',
     element: <AdminSignIn />,
     isAdmin: true,
   },

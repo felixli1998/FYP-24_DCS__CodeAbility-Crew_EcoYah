@@ -83,18 +83,26 @@ export class DonationEventRepository {
         }
 
         if (filters.eventType) {
+            console.log("^^^^^ IN FILTERS.EVENTTYPE IF ^^^^^^")
+
             queryBuilder
             .andWhere("donationEvent.eventType = :eventTypeId", { eventTypeId: filters.eventType })
             .orderBy("donationEvent.createdAt", "ASC");
         }
 
         if (filters.isActive){
+            console.log("^^^^^ IN FILTERS.isActive IF ^^^^^^")
+
             queryBuilder.andWhere("donationEvent.isActive = :isActive", { isActive: filters.isActive });
         }
         
         if (filters.name) {
             queryBuilder.andWhere("donationEvent.name ILIKE :name", { name: `%${filters.name}%` });
         }
+        
+        // Number of Donors/Donation Requests
+
+
         // Pagination
         const totalCount = await queryBuilder.getCount();
         const totalPages = Math.ceil(totalCount / DonationEventRepository.PAGE_SIZE);

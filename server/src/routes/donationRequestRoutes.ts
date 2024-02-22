@@ -171,4 +171,23 @@ router.put('/complete', async (req, res) => {
   }
 });
 
+router.get('/retrieve-donation-request-count-by-event-id', async (req, res) => {
+  const params = req.query;
+  const filteredParams = strongParams(params, ['donationEventId']);
+  const { donationEventId } = filteredParams;
+
+  console.log("----------------donationEventId: ", donationEventId)
+  console.log(typeof donationEventId)
+
+  if(donationEventId === undefined || donationEventId === null || donationEventId === "") {
+    return generateResponse(res, 400, 'Donation Event ID is required.');
+  }
+  try {
+    const result = await donationRequestService.retrieveDonationRequestCountByEventId(parseInt(donationEventId));
+    return generateResponse(res, 200, result);
+  } catch (error) {
+    return generateResponse(res, 500, 'Something went wrong.');
+  }
+});
+
 export default router;
