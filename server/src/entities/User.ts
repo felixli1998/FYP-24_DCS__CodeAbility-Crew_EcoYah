@@ -5,9 +5,11 @@ import {
   UpdateDateColumn,
   PrimaryGeneratedColumn,
   OneToMany,
+  OneToOne,
 } from 'typeorm';
 import { DonationEvent } from './DonationEvent';
 import { DonationRequest } from './DonationRequest';
+import { UserPoints } from './UserPoints';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -65,6 +67,9 @@ export class User {
     comment: 'Consist of the user status: active, terminated',
   })
   status: string;
+
+  @OneToOne(() => UserPoints, (userPoints) => userPoints.user)
+  userPoints: UserPoints;
 
   @OneToMany(() => DonationEvent, (donationEvent) => donationEvent.createdBy)
   donationEvents: DonationEvent[];
