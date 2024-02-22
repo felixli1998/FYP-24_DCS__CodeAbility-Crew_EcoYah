@@ -20,12 +20,8 @@ type DonationEventCardProps = {
 
 const breakpointSize = "sm";
 const StyledCard = styled(Card)(({ theme }) => ({
-    // maxWidth: '100%', // Initially set to take up full width
-    width: '95%', // Initially set to auto width
-    // margin: '8px', // Add some margin for spacing between cards
-    // Define media query for larger screens
+    width: '95%',
     [theme.breakpoints.up(breakpointSize)]: {
-    //   maxWidth: '400px', // Set fixed width for larger screens
       width: '400px', // Set fixed width for larger screens
     },
   }));
@@ -46,14 +42,12 @@ export default function DonationEventCard(props: DonationEventCardProps) {
                         <Typography variant='h6' sx={{fontWeight: 'bold'}}>{props.name}</Typography>
                     </Grid>
                     <Grid item xs={4} container justifyContent='flex-end'>
-                        {/* <CardActions> */}
                             <Button 
                                 variant='contained'
                                 size='medium'
                                 onClick={() => props.handleDonateClick()}>
                                     Donate
                             </Button>
-                        {/* </CardActions> */}
                     </Grid>
                 </Grid>
                 
