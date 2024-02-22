@@ -83,6 +83,8 @@ export class DonationEventRepository {
         }
 
         if (filters.eventType) {
+            console.log("^^^^^ IN FILTERS.EVENTTYPE IF ^^^^^^")
+
             queryBuilder
             .andWhere("donationEvent.eventType = :eventTypeId", { eventTypeId: filters.eventType })
             .orderBy("donationEvent.createdAt", "ASC");
@@ -90,12 +92,20 @@ export class DonationEventRepository {
 
         if (filters.isActive){
             const currentDate = new Date().toISOString();
-            queryBuilder.andWhere("donationEvent.isActive = :isActive AND :currentDate BETWEEN donationEvent.startDate AND donationEvent.endDate", { isActive: filters.isActive, currentDate: currentDate });
+            queryBuilder.andWhere(
+                    "donationEvent.isActive = :isActive AND \
+                    :currentDate BETWEEN donationEvent.startDate AND donationEvent.endDate", 
+                    { isActive: filters.isActive, currentDate: currentDate }
+                );
         }
         
         if (filters.name) {
             queryBuilder.andWhere("donationEvent.name ILIKE :name", { name: `%${filters.name}%` });
         }
+        
+        // Number of Donors/Donation Requests
+
+
         // Pagination
         const totalCount = await queryBuilder.getCount();
         const totalPages = Math.ceil(totalCount / DonationEventRepository.PAGE_SIZE);
