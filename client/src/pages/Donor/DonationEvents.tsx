@@ -58,13 +58,15 @@ export type dataToDonationRequestFormType ={
 
 export default function DonationEvents() {
     const [search, setSearch] = useState('');
-    const [events, setEvents] = useState<eventType[]>([]);
     const [eventOfTheWeek, setEventOfTheWeek] = useState<eventType>();
+    
+    const [events, setEvents] = useState<eventType[]>([]);
     const [errorFetchingEvents, setErrorFetchingEvents] = useState(false);
+    const [fetchingEventsIsLoading, setFetchingEventsIsLoading] = useState(true);
 
     const [eventTypes, setEventTypes] = useState([]);
+    const [errorFetchingEventTypes, setErrorFetchingEventTypes] = useState(false);
     const [filters, setFilters] = useState<number[]>([]);
-    // const [filteredEvents, setFilteredEvents] = useState<eventType[]>([]);
 
     const getAllEvents = async () => {
         try {
@@ -82,8 +84,7 @@ export default function DonationEvents() {
             return response.data.eventTypes;
         } catch (error) {
             console.error('Error:', error);
-            // TODO: Will add error handling
-            // throw error;
+            throw error;
         }
     }
 
@@ -93,8 +94,7 @@ export default function DonationEvents() {
             return res.data.donationEventItems;
         } catch (error) {
             console.error('Error:', error);
-            // TODO: Will add error handling
-            // throw error;
+            throw error;
         }
     }
 
@@ -104,8 +104,7 @@ export default function DonationEvents() {
             return res.data;
         } catch (error) {
             console.error('Error:', error);
-            // TODO: Will add error handling
-            // throw error;
+            throw error;
         }
     }
 
@@ -144,12 +143,19 @@ export default function DonationEvents() {
         const currentDateInSGT = new Date().toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
         const currentDateInMs = new Date(currentDateInSGT).getTime();
         const timeLeftInHours = Math.floor((endDateInMs - currentDateInMs) / (1000 * 60 * 60));
+
+        var toReturn: string = ''
         
-        if(timeLeftInHours < 24){
-            return timeLeftInHours + ' Hours';
+        if(timeLeftInHours < 0){
+            toReturn = 'Event Expired';
+        } else if(timeLeftInHours < 24) {
+            toReturn = timeLeftInHours + ' Hours Left';
         } else {
-            return Math.floor(timeLeftInHours / 24) + ' Days';
+            const numDaysLeft = Math.floor(timeLeftInHours / 24);
+            toReturn = numDaysLeft + ` Day${numDaysLeft > 1 ? 's' : ''} Left`;
         }
+
+        return toReturn;
     }  
 
     const navigate = useNavigate();
@@ -180,7 +186,6 @@ export default function DonationEvents() {
 
                 const updatedEventsPromises = res.map(async (eachEvent: eventType, index: number) => {
                     const donationEventItems = await getDonationEventItems(eachEvent.id);
-                    // Used split('T')[0] as a workaround instead of extracting only Date() from database as I do not want to change the API written
                     const timeLeft = calculateTimeLeft(eachEvent.endDate.split('T')[0] + ' 11:59:59 PM');
                     const numDonors = await getDonationReqCount(eachEvent.id);
                     return { ...eachEvent, donationEventItems, timeLeft, numDonors};
@@ -198,9 +203,11 @@ export default function DonationEvents() {
                 });
     
                 setEvents(updatedEvents);
+                setFetchingEventsIsLoading(false);
             } catch (error) {
                 console.error('Error:', error);
                 setErrorFetchingEvents(true);
+                setFetchingEventsIsLoading(false);
             }
         }
         fetchData();
@@ -212,87 +219,90 @@ export default function DonationEvents() {
                 setEventTypes(res);
             } catch (error) {
                 console.error('Error:', error);
-                // TODO: Will add error handling
-                // throw error;
+                setErrorFetchingEventTypes(true);
             }
         }
         fetchEventTypesData();
     }, []);
 
     return (
-        
         <Container sx={{marginTop: 3, marginX: 'auto'}}>
-            {errorFetchingEvents ? 
-                <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 3}}>Error fetching events, please try again later, sorry for the inconvenience!</Typography> 
-                    : 
-
+            {fetchingEventsIsLoading ? <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 5}}>Loading...</Typography> : 
             <>
-                <TextField fullWidth variant="outlined" 
-                    id="searchBar" 
-                    color="success"
-                    sx={{marginBottom: 2}}
-                    placeholder="Search e.g. Cabbage, Bread" 
-                    InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <SearchIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                />
+                {errorFetchingEvents ? 
+                    <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 3}}>Error fetching events, please try again later, sorry for the inconvenience!</Typography> 
+                        : 
 
-                
-                {
-                    eventOfTheWeek ? 
-                    <>
-                        <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
-                        
-                        <DonationEventCard
-                            name={eventOfTheWeek?.name || 'No Donation Event of The Week'}
-                            description={`Take part in this donation by donating ${eventOfTheWeek?.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
-                            imgSrc={eventOfTheWeek?.imageId || 'https://picsum.photos/200/300'}
-                            numJoined={eventOfTheWeek?.numDonors || 0}
-                            numHoursLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
-                            handleDonateClick={() => handleDonateClick(eventOfTheWeek)}
-                        />
-                    </>
-
-                    : <></>
-                }
-                
-                <Typography variant='h6' sx={{fontWeight: 'bold', marginY: 2}}>Donation Categories</Typography>
-
-                <Box sx={{marginBottom: 2}}>
-                    {eventTypes.map((eventType: any) => (
-                        <Chip 
-                            key={eventType.id}
-                            label={eventType.name} 
-                            sx={{marginRight: 1, marginBottom: 1}}
-                            color="success"
-                            variant={filters.includes(eventType.id) ? "filled" : "outlined"}
-                            onClick={() => handleFilterClick(eventType.id)}
-                        />
-                    ))}
-                </Box>
-
-                <Grid container spacing={3}>
-                    {searchEvents.map((event: eventType) => (
-                        <Grid item sx={{marginBottom: 2}} key={event.id}>
+                <>
+                    <TextField fullWidth variant="outlined" 
+                        id="searchBar" 
+                        color="success"
+                        sx={{marginBottom: 2}}
+                        placeholder="Search e.g. Cabbage, Bread" 
+                        InputProps={{
+                            endAdornment: (
+                            <InputAdornment position="end">
+                                <SearchIcon />
+                            </InputAdornment>
+                            ),
+                        }}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    
+                    {eventOfTheWeek && 
+                        <>
+                            <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
+                            
                             <DonationEventCard
-                                name={event.name}
-                                description={`Take part in this donation by donating ${event.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
-                                imgSrc={event.imageId}
-                                numJoined={event.numDonors}
-                                numHoursLeft={event.timeLeft}
-                                handleDonateClick={() => handleDonateClick(event)}
+                                name={eventOfTheWeek?.name || 'No Donation Event of The Week'}
+                                description={`Take part in this donation by donating ${eventOfTheWeek?.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                                imgSrc={eventOfTheWeek?.imageId || 'https://picsum.photos/200/300'}
+                                numJoined={eventOfTheWeek?.numDonors || 0}
+                                timeLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
+                                handleDonateClick={() => handleDonateClick(eventOfTheWeek)}
                             />
-                        </Grid>
-                    ))}
-                </Grid>
-            </>
-         }
+                        </>
+                    }
+
+                    {errorFetchingEventTypes ?
+                        <Typography variant='h6' sx={{fontWeight: 'bold', marginY: 2}}>Donation Events</Typography>
+                        : 
+                        <>
+                            <Typography variant='h6' sx={{fontWeight: 'bold', marginY: 2}}>Donation Categories</Typography>
+
+                            <Box sx={{marginBottom: 2}}>
+                                {eventTypes.map((eventType: any) => (
+                                    <Chip 
+                                        key={eventType.id}
+                                        label={eventType.name} 
+                                        sx={{marginRight: 1, marginBottom: 1}}
+                                        color="success"
+                                        variant={filters.includes(eventType.id) ? "filled" : "outlined"}
+                                        onClick={() => handleFilterClick(eventType.id)}
+                                    />
+                                ))}
+                            </Box>
+                        </>
+                    }
+                    
+                    <Grid container spacing={3}>
+                        {searchEvents.map((event: eventType) => (
+                            <Grid item sx={{marginBottom: 2}} key={event.id}>
+                                <DonationEventCard
+                                    name={event.name}
+                                    description={`Take part in this donation by donating ${event.donationEventItems.map(eachItem => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                                    imgSrc={event.imageId}
+                                    numJoined={event.numDonors}
+                                    timeLeft={event.timeLeft}
+                                    handleDonateClick={() => handleDonateClick(event)}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </>
+            }
+            </>}
         </Container>
     );
 }
