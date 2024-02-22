@@ -231,7 +231,7 @@ const Others = () => {
 };
 
 export default function Profile() {
-  const email = (() => {
+  const email = () => {
     const token = Cookies.get('token');
     if (token) {
       const decodedToken = decodeToken(token);
@@ -240,7 +240,7 @@ export default function Profile() {
       }
     }
     return '';
-  });
+  };
 
   const [userInfo, setUserInfo] = useState({
     name: '',

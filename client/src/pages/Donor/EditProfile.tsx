@@ -41,7 +41,7 @@ type UserStateT = {
 };
 
 export default function EditProfile() {
-  const email = (() => {
+  const email = () => {
     const token = Cookies.get('token');
     if (token) {
       const decodedToken = decodeToken(token);
@@ -50,7 +50,7 @@ export default function EditProfile() {
       }
     }
     return '';
-  });
+  };
   const { displayNotification, FeedbackNotification } =
     useFeedbackNotification();
   const navigate = useNavigate();

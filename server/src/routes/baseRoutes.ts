@@ -55,7 +55,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/refresh', async (req, res) => {
+router.post('/refresh-token', async (req, res) => {
   if (req.cookies?.token) {
     const refreshToken = req.cookies.token;
 
@@ -70,6 +70,7 @@ router.post('/refresh', async (req, res) => {
             id: decoded.id, 
             email: decoded.email,
             name: decoded.name,
+            imageId: decoded.imageId,
             role: decoded.role,
           },
           secretKey,
