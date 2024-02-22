@@ -186,15 +186,15 @@ export default function DonationEvents() {
 
                     const numDonors = await getDonationReqCount(eachEvent.id);
                     const updatedEvent = { ...eachEvent, donationEventItems, timeLeft, numDonors};
-                    updatedEvents.push(updatedEvent);
                     
                     if(numDonors > maxNumDonors && (timeLeft.includes('Hours') || parseInt(timeLeft.split(' ')[0]) < 7) && new Date(eachEvent.endDate).getDay() >= currDay){
                         maxNumDonors = numDonors;
                         setEventOfTheWeek(updatedEvent);
                     }
-                    
-                    setEvents(updatedEvents);
+                    updatedEvents.push(updatedEvent);
                 });
+                console.log(updatedEvents)
+                setEvents(updatedEvents);
             } catch (error) {
                 console.error('Error:', error);
                 setErrorFetchingEvents(true);
@@ -238,7 +238,6 @@ export default function DonationEvents() {
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
                 />
-
                 
                 {eventOfTheWeek ? 
                     <>
@@ -278,7 +277,6 @@ export default function DonationEvents() {
                     </>
                 }
                 
-
                 <Grid container spacing={3}>
                     {searchEvents.map((event: eventType) => (
                         <Grid item sx={{marginBottom: 2}} key={event.id}>
