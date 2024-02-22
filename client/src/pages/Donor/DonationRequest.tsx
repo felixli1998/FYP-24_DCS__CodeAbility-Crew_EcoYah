@@ -79,8 +79,9 @@ export const DonationRequest = () => {
     // Fetch Active/Complete request
     const email = localStorage.getItem("ecoyah-email");
     if (email) {
-      const user = getUserByEmail(email);
-      setUser(user);
+      getUserByEmail(email).then((res) => {
+        setUser(res.data);
+      });
     }
   }, [localStorage.getItem("ecoyah-email")]);
 
