@@ -226,7 +226,7 @@ export default function DonationEvents() {
     }, []);
 
     return (
-        <Container sx={{marginTop: 3, marginX: 3}}>
+        <Container sx={{marginTop: 3, marginX: 'auto'}}>
             {fetchingEventsIsLoading ? <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 5}}>Loading...</Typography> : 
             <>
                 {errorFetchingEvents ? 
