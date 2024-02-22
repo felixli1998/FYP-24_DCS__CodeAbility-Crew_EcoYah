@@ -20,18 +20,21 @@ export class DonationRequestRepository {
       omitPoints: true,
       dropOffDate: true,
       dropOffTime: true,
+      donationEvent: {
+        name: true,
+        imageId: true,
+        isActive: true, // TODO: Check if this is needed, current logic Active = "Submitted" but should we check donation event active status as well?
+        endDate: true,
+      },
       donationRequestItems: {
         id:true,
         quantity: true,
         donationEventItem: {
           id: true,
           pointsPerUnit: true,
-          donationEvent: {
-            imageId: true
-          },
-        }
-      }
-    }
+        },
+      },
+    };
     const [data, totalCount] = await AppDataSource.getRepository(
       DonationRequest
     ).findAndCount({
