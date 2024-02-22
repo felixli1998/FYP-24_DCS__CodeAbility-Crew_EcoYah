@@ -38,8 +38,20 @@ const defaultProps: ImageProps = {
   width: "250px",
   height: "250px",
 };
-
 export default function Image(props: ImageProps): JSX.Element {
+  const checkFileSize = (file: File, maxSizeInMB: number = 5): boolean => {
+    return file.size <= maxSizeInMB * 1024 * 1024; // Convert MB to bytes
+  };
+  
+  // Function to check file type
+  const checkFileType = (file: File): boolean => {
+    const supportedTypes = [
+        'image/png',
+        'image/jpeg'
+    ];
+    return supportedTypes.includes(file.type);
+};
+
   const [imagePath, setImagePath] = useState<string | undefined>(
     ImagePlaceholder
   );
@@ -80,17 +92,39 @@ export default function Image(props: ImageProps): JSX.Element {
     }
   };
 
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = event.target.files;
+  //   if (files && files.length > 0) {
+  //     const file = files[0];
+  //     setSelectedFile(file);
+
+  //     // Create a preview of the selected image
+  //     const imageUrl = URL.createObjectURL(file);
+  //     setImagePath(imageUrl);
+  //   }
+  // };
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      const file = files[0];
-      setSelectedFile(file);
+        const file = files[0];
+        
+        // Check file type
+        if (!checkFileType(file)) {
+            console.error("Unsupported file type");
+            return;
+        }
+        if (!checkFileSize(file)) {
+            console.error("File size exceeds the size limit.");
+            return;
+        }
 
-      // Create a preview of the selected image
-      const imageUrl = URL.createObjectURL(file);
-      setImagePath(imageUrl);
+        setSelectedFile(file);
+
+        // Create a preview of the selected image
+        const imageUrl = URL.createObjectURL(file);
+        setImagePath(imageUrl);
     }
-  };
+};
 
   useEffect(() => {
     const fetchImage = async () => {

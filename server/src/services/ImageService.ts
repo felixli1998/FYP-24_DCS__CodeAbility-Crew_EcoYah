@@ -9,6 +9,7 @@ interface S3Config {
 export class ImageService {
     private static instance: ImageService;
     private repository: LocalImageRepository | OnlineImageRepostitory;
+    private static fileSizeLimitInMB = 5;
 
     private constructor() {
         const repositoryType = process.env.IMAGE_DATABASE || 'local'; // Read repository type from environment variable or default to 'local'
@@ -47,10 +48,22 @@ export class ImageService {
     }
 
     public async saveImage(imageData: Buffer, imageId: string, prefix?: string): Promise<string> {
+        if (!this.isAcceptedImageType(imageData)) {
+            throw new Error('Invalid image type');
+        }
+        if (!this.checkFileSize(imageData)) {
+            throw new Error('File size exceeds the limit of ');
+        }
         return this.repository.saveImage(imageData, imageId, prefix);
     }
 
     public async updateImage(imageData: Buffer, imageId: string, prefix?: string): Promise<string> {
+        if (!this.isAcceptedImageType(imageData)) {
+            throw new Error('Invalid image type');
+        }
+        if (!this.checkFileSize(imageData)) {
+            throw new Error('File size exceeds the limit of ');
+        }
         return this.repository.updateImage(imageData, imageId, prefix);
     }
 
@@ -62,4 +75,29 @@ export class ImageService {
     public checkFolderExistence(folderName: string): Promise<boolean> {
         return this.repository.checkFolderExistence(folderName);
     }
+
+    public checkFileSize(imageData: Buffer): boolean {
+        const maxSizeInBytes = ImageService.fileSizeLimitInMB * 1024 * 1024; // Convert threshold from MB to bytes
+        return imageData.length <= maxSizeInBytes;
+    }
+
+    public isAcceptedImageType(imageData: Buffer): boolean {
+        const supportedTypes = [
+            { magicNumber: '89504E47', type: 'image/png' },
+            { magicNumber: '47494638', type: 'image/gif' },
+            { magicNumber: 'ffd8ffe0', type: 'image/jpeg' },
+            { magicNumber: 'ffd8ffe1', type: 'image/jpeg' },
+            { magicNumber: 'ffd8ffe2', type: 'image/jpeg' },
+            { magicNumber: 'ffd8ffe3', type: 'image/jpeg' },
+            { magicNumber: 'ffd8ffe8', type: 'image/jpeg' }
+        ];
+    
+        const magicNumber = imageData.toString('hex', 0, 4).toUpperCase();
+    
+        const matchedType = supportedTypes.find(type => magicNumber.startsWith(type.magicNumber));
+        return !!matchedType; // Convert matchedType to a boolean
+    }
+    
+
+
 }
