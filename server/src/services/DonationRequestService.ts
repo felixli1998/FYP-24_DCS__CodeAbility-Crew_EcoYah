@@ -126,12 +126,16 @@ export class DonationRequestService {
     const totalPts = await this.tabulateTotalPts(id);
     const donationRequest = await this.donationRequestRepository.retrieveById(id);
 
-    if(donationRequest){
-      const user_id = donationRequest.user.id;
-      await this.userPointsService.creditUserPoints(user_id, totalPts);
+    try {
+      if (donationRequest) {
+        const user_id = donationRequest.user.id;
+        await this.userPointsService.creditUserPoints(user_id, totalPts);
+      }
+    } catch (error) {
+      throw new Error("Failed to credit user points");
     }
 
-    return await this.donationRequestRepository.completeDonationRequest(id);
+    return await this.donationRequestRepository.completeDonationRequest(id); // Mark donation request as completed
   }
 
   // Helper functions below
