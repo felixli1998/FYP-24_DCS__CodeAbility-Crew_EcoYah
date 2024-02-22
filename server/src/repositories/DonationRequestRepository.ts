@@ -117,6 +117,7 @@ export class DonationRequestRepository {
       relations: [
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
+        'user',
       ],
     });
   }
