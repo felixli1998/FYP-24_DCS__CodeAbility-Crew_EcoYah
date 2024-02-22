@@ -8,6 +8,7 @@ import { orange } from '@mui/material/colors';
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Button from "@mui/material/Button";
 import PaidOutlinedIcon from '@mui/icons-material/Paid';
+import Image from "../Image/Image";
 
 type ContentCardProps = {
   contentCardData: {
@@ -38,14 +39,12 @@ export default function ContentCard(props: ContentCardProps) {
       sx={{borderRadius: 4}}
       raised={true}
     >
-      <CardMedia
-        component="img"
-        image={image}
-        height="140"
-        width="100%"
-        sx={{objectFit: "cover", margin: "auto"}}
-        alt="Not available"
-      />
+      <Image   
+        imageId='DefaultDog.png'
+        type='circle'
+        width='100%'
+        height='140px'
+        folderPrefix='events' />
       <CardContent
         sx={{
           display: "flex",
