@@ -145,7 +145,7 @@ export default function Image(props: ImageProps): JSX.Element {
     <Box
       sx={{
         width: props.width,
-        marginBottom: "1rem",
+        marginBottom: props.editable ? "1rem" : "",
       }}
     >
       <img
