@@ -3,11 +3,11 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import {CardActionArea, CardActions, Chip, Divider, Grid} from "@mui/material";
+import {CardActions, Chip} from "@mui/material";
+import { orange } from '@mui/material/colors';
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Button from "@mui/material/Button";
-import BasicButton from "../Button/BasicButton";
-import {Margin, WidthFull} from "@mui/icons-material";
+import PaidOutlinedIcon from '@mui/icons-material/Paid';
 
 type ContentCardProps = {
   contentCardData: {
@@ -93,7 +93,15 @@ export default function ContentCard(props: ContentCardProps) {
             marginTop: 0.5,
           }}
         >
-          S$ {reward}
+          <Typography
+            variant='h6'
+            color={orange[500]}
+            component='div'
+            display='flex'
+            alignItems={'center'}
+          >
+            <PaidOutlinedIcon sx={{ marginRight: 0.5 }} /> {reward}
+          </Typography>
         </Typography>
         <Box sx={{marginTop: "auto"}}>
           <Typography
