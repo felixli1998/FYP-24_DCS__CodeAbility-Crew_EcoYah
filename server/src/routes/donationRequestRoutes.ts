@@ -50,7 +50,10 @@ const donationRequestItemService = new DonationRequestItemService(
 
 router.get('/active-donation-requests', async (req, res) => {
   try {
-    const userId: number = parseInt(req.query.userId as string, 10);
+    const params = req.query;
+    const filterParams = strongParams(params, ['userId']);
+    const { userId } = filterParams;
+
     // TODO: Ensure that the person requesting the donation request is the same as the user_id
     if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
     const { data, pagination } = await donationRequestService.getActiveDonationRequestFromUser(userId);
@@ -63,7 +66,9 @@ router.get('/active-donation-requests', async (req, res) => {
 
 router.get('/completed-donation-requests', async (req, res) => {
   try {
-    const userId: number = parseInt(req.query.userId as string, 10);
+    const params = req.query;
+    const filterParams = strongParams(params, ['userId']);
+    const { userId } = filterParams;
     // TODO: Ensure that the person requesting the donation request is the same as the user_id
     if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
     const { data, pagination } = await donationRequestService.getCompletedDonationRequestFromUser(userId);
