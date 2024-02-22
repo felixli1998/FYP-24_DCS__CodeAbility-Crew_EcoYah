@@ -189,15 +189,14 @@ export default function DonationEvents() {
 
                     const numDonors = await getDonationReqCount(eachEvent.id);
                     const updatedEvent = { ...eachEvent, donationEventItems, timeLeft, numDonors};
-                    updatedEvents.push(updatedEvent);
                     
                     if(numDonors > maxNumDonors && (timeLeft.includes('Hours') || parseInt(timeLeft.split(' ')[0]) < 7) && new Date(eachEvent.endDate).getDay() >= currDay){
                         maxNumDonors = numDonors;
                         setEventOfTheWeek(updatedEvent);
                     }
-                    
-                    setEvents(updatedEvents);
+                    updatedEvents.push(updatedEvent);
                 });
+                setEvents(updatedEvents);
             } catch (error) {
                 console.error('Error:', error);
                 setErrorFetchingEvents(true);
