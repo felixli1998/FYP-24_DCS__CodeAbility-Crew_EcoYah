@@ -29,7 +29,10 @@ export class UserRepository {
   }
 
   async getUserByEmail(email: User['email']) {
-    return await AppDataSource.getRepository(User).findOne({ where: { email } });
+    return await AppDataSource.getRepository(User).findOne({
+      where: { email },
+      relations: ["userPoints"]
+     });
   }
 
   async updateUser(email: string, payload: Partial<User>) {
