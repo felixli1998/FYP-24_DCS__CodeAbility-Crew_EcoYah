@@ -154,10 +154,6 @@ export class DonationRequestRepository {
       select: selectOptions,
       withDeleted: false, // only return active records
       where: { dropOffDate: Between(start, end), status: Status.SUBMITTED },
-      cache: {
-        id: `retrieve-by-date-${date.toISOString()}`, // Cache key by date
-        milliseconds: 30000, // 30 seconds for now
-      },
       relations: [
         'user',
         'donationEvent',
