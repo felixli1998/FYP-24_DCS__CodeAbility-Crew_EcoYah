@@ -1,8 +1,12 @@
 // Internal imports
 import { EVENT_TYPE_SEED_DATA, ITEM_SEED_DATA } from './data';
 // Users
+import { User } from '../src/entities/User';
 import { UserRepository } from '../src/repositories/UserRepository';
 import { UserService } from '../src/services/UserService';
+import {ADMIN_SEED_DATA} from './data';
+import { hashSync } from "bcrypt";
+
 // Event Types
 import { EventTypeRepository } from '../src/repositories/EventTypeRepository';
 import { EventTypeService } from '../src/services/EventTypeService';
@@ -83,6 +87,18 @@ const generateSeedData = async () => {
     const createdUser = await userService.createUser(user);
 
     USER_OBJECTS[user.name] = createdUser;
+  }
+
+  console.log("=== Generating user admins seed data ... ===");
+  for(const eachAdmin of ADMIN_SEED_DATA){
+    const newAdmin = new User();
+    newAdmin.name = eachAdmin.name;
+    newAdmin.email = eachAdmin.email;
+    newAdmin.passwordDigest = hashSync(eachAdmin.passwordInput, 10);
+    newAdmin.contactNum = eachAdmin.contactNum;
+    newAdmin.imageId = eachAdmin.imageURL;
+    newAdmin.role = eachAdmin.role;
+    await userService.createUser(newAdmin);
   }
 
   console.log('=== Generating event type seed data ... ===');

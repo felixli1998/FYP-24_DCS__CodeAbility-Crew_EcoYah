@@ -16,6 +16,21 @@ export class DonationRequestService {
     this.donationEventItemRepository = new DonationEventItemRepository();
   }
 
+  async getActiveDonationRequestFromUser(user_id:number, page: number = 1) {
+    return await this.donationRequestRepository.getActiveDonationRequestFromUser(
+      user_id,
+      page
+    );
+  }
+
+  async getCompletedDonationRequestFromUser(user_id:number, page: number = 1) {
+    return await this.donationRequestRepository.getCompletedDonationRequestFromUser(
+      user_id,
+      page
+    );
+  }
+
+
   async createDonationRequest(donationRequest: DonationRequest) {
     return await this.donationRequestRepository.createDonationRequest(
       donationRequest
@@ -31,7 +46,6 @@ export class DonationRequestService {
   async cancelDonationRequest(id: number) {
     return await this.donationRequestRepository.cancelDonationRequest(id);
   }
-
 
   async createNewDonationRequestItem(
     donationRequestObj: DonationRequest,
@@ -105,4 +119,35 @@ export class DonationRequestService {
   async completeDonationRequest(id: number) {
     return await this.donationRequestRepository.completeDonationRequest(id);
   }
+
+  async retrieveDonationRequestCountByEventId(
+    donationEventId: number
+  ): Promise<number> {
+    return await this.donationRequestRepository.retrieveDonationRequestCountByEventId(donationEventId);
+  }
+
+  // Helper functions below
+  validateDonationRequestItems(donationRequestItem: DonationRequestItem[]): {valid: boolean, message: string} {
+    // Check not empty
+    if (donationRequestItem.length === 0) {
+      return {
+        valid: false,
+        message: "Donation request items cannot be empty"
+      };
+    }
+    // Check quantity
+    for (let item of donationRequestItem) {
+      if (item.quantity < 1) {
+        return {
+          valid: false,
+          message: "Quantity must be at least 1"
+        };
+      }
+    } 
+    return {
+      valid: true,
+      message: "Donation request items are valid"
+    };
+  }
+
 }

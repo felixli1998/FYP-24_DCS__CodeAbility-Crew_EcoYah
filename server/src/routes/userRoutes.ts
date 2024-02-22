@@ -73,6 +73,7 @@ router.get("/:email", async (req, res) => {
       generateResponse(res, 200, { action: false, message: "User not found", data: null });
     } else {
       const payload = {
+        id: user.id,
         name: user.name,
         email: user.email,
         contactNum: user.contactNum,
