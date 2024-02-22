@@ -82,6 +82,7 @@ export default function DonationEvents() {
             return response.data.eventTypes;
         } catch (error) {
             console.error('Error:', error);
+            // TODO: Will add error handling
             // throw error;
         }
     }
@@ -92,6 +93,7 @@ export default function DonationEvents() {
             return res.data.donationEventItems;
         } catch (error) {
             console.error('Error:', error);
+            // TODO: Will add error handling
             // throw error;
         }
     }
@@ -102,6 +104,7 @@ export default function DonationEvents() {
             return res.data;
         } catch (error) {
             console.error('Error:', error);
+            // TODO: Will add error handling
             // throw error;
         }
     }
@@ -117,8 +120,6 @@ export default function DonationEvents() {
 
     const filteredEvents = useMemo(() => {
         if(filters.length === 0) return events;
-        console.log("filters:" + filters)
-
         return events.filter((event: eventType) => {
             return event.donationEventItems.some((eachItem: donationEventItemsType) => {
                 return filters.includes(eachItem.item.eventType.id);
@@ -154,13 +155,10 @@ export default function DonationEvents() {
     const navigate = useNavigate();
     const handleDonateClick = (donationEvent: eventType) => {
         // Check if user is authenticated, if not, push to Sign In
-        console.log(isAuthenticated());
         if(!isAuthenticated()){
             navigate('/sign-in');
         } else {
             // Redirect to donation request form page
-            console.log(donationEvent);
-
             const dataToDonationRequestForm: dataToDonationRequestFormType = {
                 id: donationEvent.id,
                 donationEventItems: donationEvent.donationEventItems,
@@ -214,6 +212,7 @@ export default function DonationEvents() {
                 setEventTypes(res);
             } catch (error) {
                 console.error('Error:', error);
+                // TODO: Will add error handling
                 // throw error;
             }
         }

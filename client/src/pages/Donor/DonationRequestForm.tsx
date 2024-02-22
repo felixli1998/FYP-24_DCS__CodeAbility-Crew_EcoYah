@@ -33,7 +33,6 @@ type DonationRequestType = {
 export default function DonationRequestForm() {
   const queryParams = new URLSearchParams(useLocation().search);
   const data: dataToDonationRequestFormType | null = queryParams.get('data') ? JSON.parse(queryParams.get('data')!) : null;
-  console.log("***** IN DONATION REQUEST FORM *****")
   console.log(data);
 
   const navigate = useNavigate();
