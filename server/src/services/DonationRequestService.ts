@@ -138,6 +138,12 @@ export class DonationRequestService {
     return await this.donationRequestRepository.completeDonationRequest(id); // Mark donation request as completed
   }
 
+  async retrieveDonationRequestCountByEventId(
+    donationEventId: number
+  ): Promise<number> {
+    return await this.donationRequestRepository.retrieveDonationRequestCountByEventId(donationEventId);
+  }
+
   // Helper functions below
   validateDonationRequestItems(donationRequestItem: DonationRequestItem[]): {valid: boolean, message: string} {
     // Check not empty

@@ -8,7 +8,8 @@ export enum NavigationList {
   DONATION = 'Donation',
   DONATION_EVENT_FORM = 'Donation Event Form',
   DONATION_EVENT_OVERVIEW = 'Donation Event Overview',
-  DONATION_REQUEST = 'Donation Requests'
+  DONATION_REQUEST = 'Donation Requests',
+  DONATION_EVENTS = 'Donation Events'
 }
 
 export enum ActionList {

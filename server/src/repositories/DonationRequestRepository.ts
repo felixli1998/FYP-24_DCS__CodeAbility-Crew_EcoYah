@@ -162,6 +162,13 @@ export class DonationRequestRepository {
         'donationRequestItems.donationEventItem.item',
       ],
     });
+
+  }
+
+  async retrieveDonationRequestCountByEventId(donationEventId: number) {
+    return await AppDataSource.getRepository(DonationRequest).count({
+      where: { donationEvent: { id: donationEventId } }
+    });
   }
 
   async completeDonationRequest(id: number) {
