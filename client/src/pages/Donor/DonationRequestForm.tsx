@@ -66,6 +66,7 @@ export default function DonationRequestForm() {
     });
     setCheckBoxItems(updatedCheckBoxItems);
   }
+  console.log(checkBoxItems);
 
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
@@ -109,6 +110,7 @@ export default function DonationRequestForm() {
       });
     }
   };
+  console.log(selectedItems);
 
   const handleItemQuantityChange = (
     updatedItemQuantity: Record<number, Record<string, number | string>>
@@ -147,15 +149,25 @@ export default function DonationRequestForm() {
       donationRequest.dropOffTime !== "" &&
       donationRequest.donationRequestItems.length > 0
     ) {
-      axios
+      if (action === 'submit') {
+        axios
         .post(DONATION_REQUEST_ROUTES.CREATE, donationRequest)
         .then((resp) => {
           if (resp.data.status === 200) navigate("/");
         })
         .catch((err) => {
-          console.log(err)
           setError(true);
         });
+      } else {
+        axios
+        .put(DONATION_REQUEST_ROUTES.UPDATE, donationRequest)
+        .then((resp) => {
+          if (resp.data.status === 200) navigate("/donation-requests");
+        })
+        .catch((err) => {
+          setError(true);
+        });
+      }
     }
   };
 

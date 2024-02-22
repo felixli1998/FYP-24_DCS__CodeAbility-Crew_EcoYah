@@ -123,6 +123,7 @@ export const DonationRequest = () => {
                 dropOffDateTime: `${new Date(
                   donationRequest.dropOffDate
                 ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
+                status: selectedTab
               }}
               originalData={donationRequest}
             />

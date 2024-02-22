@@ -198,11 +198,11 @@ router.post('/create', async (req, res) => {
 
 router.put('/update', async (req, res) => {
   const payload = req.body;
-  const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'requestItems', 'omitPoints'];
+  const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'omitPoints', 'donationRequestItems'];
   const sanitisedPayload = strongParams(payload, allowedParams);
 
   if (!('id' in sanitisedPayload))
-    return generateResponse(res, 200, 'Missing id');
+    return generateResponse(res, 200, 'Missing Id');
 
   type DonationRequestUpdatePayloadWithId = DonationRequestUpdatePayload & {
     id: string;

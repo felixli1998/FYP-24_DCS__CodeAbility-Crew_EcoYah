@@ -24,6 +24,7 @@ export class DonationRequestRepository {
         name: true,
         imageId: true,
         isActive: true, // TODO: Check if this is needed, current logic Active = "Submitted" but should we check donation event active status as well?
+        startDate: true,
         endDate: true,
       },
       donationRequestItems: {
@@ -31,7 +32,13 @@ export class DonationRequestRepository {
         quantity: true,
         donationEventItem: {
           id: true,
+          minQty: true,
           pointsPerUnit: true,
+          item: {
+            id: true, 
+            name: true,
+            unit: true
+          }
         },
       },
     };
@@ -47,7 +54,7 @@ export class DonationRequestRepository {
         'donationEvent',
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
-        'donationRequestItems.donationEventItem.donationEvent',
+        'donationRequestItems.donationEventItem.item',
       ],
       order: {
         dropOffDate: 'DESC',
@@ -82,7 +89,7 @@ export class DonationRequestRepository {
         'donationEvent',
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
-        'donationRequestItems.donationEventItem.donationEvent',
+        'donationRequestItems.donationEventItem.item',
       ],
       order: {
         dropOffDate: 'DESC',

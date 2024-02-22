@@ -19,6 +19,7 @@ type ContentCardProps = {
     reward: number;
     location: string;
     dropOffDateTime: string;
+    status: string;
   };
   originalData: any;
 };
@@ -35,6 +36,7 @@ export default function ContentCard(props: ContentCardProps) {
     location,
     dropOffDateTime,
     customChipStyle,
+    status
   } = contentCardData;
   return (
     <Card
@@ -121,6 +123,7 @@ export default function ContentCard(props: ContentCardProps) {
           </Typography>
         </Box>
       </CardContent>
+      { status === 'active' && 
       <CardActions>
         <Button
           variant="contained"
@@ -135,7 +138,7 @@ export default function ContentCard(props: ContentCardProps) {
         >
           Delete
         </Button>
-      </CardActions>
+      </CardActions> }
     </Card>
   );
 }
