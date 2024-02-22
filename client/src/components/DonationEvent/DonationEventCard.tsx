@@ -1,6 +1,7 @@
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { styled } from "@mui/material/styles";
 import Image from '../Image/Image';
+import { folderPrefixNames } from '../Image/Image';
 import {
     Button,
     Card,
@@ -45,7 +46,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
                     type='rectangle'
                     width='100%'
                     height='100%'
-                    folderPrefix='events'
+                    folderPrefix={folderPrefixNames.EVENTS}
                 />
             </CardMedia>
             <CardContent>

@@ -2,6 +2,7 @@ import { CardMedia, Card, CardActionArea, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import Image from '../Image/Image';
+import { folderPrefixNames } from '../Image/Image';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   transition: 'transform 0.15s ease-in-out',
@@ -44,7 +45,7 @@ export default function ProfileCard(props: {
             type='circle'
             width='80%'
             height='80%'
-            folderPrefix='profile-pictures'
+            folderPrefix={folderPrefixNames.PROFILEPICTURES}
             />
         </CardMedia>
 

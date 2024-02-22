@@ -39,6 +39,13 @@ const defaultProps: ImageProps = {
   height: "250px",
 };
 
+export enum folderPrefixNames {
+  DEFAULT = "default",
+  DONOR = "donor",
+  EVENTS = "events",
+  PROFILEPICTURES = "profile-pictures",
+}
+
 export default function Image(props: ImageProps): JSX.Element {
   const [imagePath, setImagePath] = useState<string | undefined>(
     ImagePlaceholder
