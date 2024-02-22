@@ -42,7 +42,7 @@ export default function SignIn() {
         .then((resp) => {
           if (resp.data.data.action) {
             const token = resp.data.data.token;
-            Cookies.set('token', token, { httpOnly: true });
+            Cookies.set('token', token, { secure: true });
             navigate("/");
           } else {
             if (resp.data.data.message === 'wrong_email') {

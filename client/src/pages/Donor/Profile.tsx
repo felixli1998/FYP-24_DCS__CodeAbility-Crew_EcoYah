@@ -33,6 +33,7 @@ import { makeHttpRequest } from '../../utils/Utility';
 import { USER_ROUTES } from '../../services/routes';
 import { capitalize } from 'lodash';
 import Cookies from 'js-cookie';
+import { decodeToken } from "../../utils/Common";
 
 const navigationItems = [
   {
@@ -230,16 +231,16 @@ const Others = () => {
 };
 
 export default function Profile() {
-  const email = localStorage.getItem('ecoyah-email') || '';
-
-  const token = Cookies.get('token'); 
-  if (token) {
-    const [, payload] = token.split('.');
-    const decodedPayload = JSON.parse(atob(payload));
-    console.log(decodedPayload);
-  } else {
-    console.log('Token not found in cookies');
-  }
+  const email = (() => {
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken = decodeToken(token);
+      if (decodedToken) {
+        return decodedToken.email;
+      }
+    }
+    return '';
+  });
 
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -253,6 +254,7 @@ export default function Profile() {
         'GET',
         USER_ROUTES.RETRIEVE_BY_EMAIL.replace(':email', email)
       );
+      console.log(res)
       const { action, data } = res.data;
       if (action) {
         // Currently, we do not have points so it will be null

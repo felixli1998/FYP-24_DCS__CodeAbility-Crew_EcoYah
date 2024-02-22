@@ -24,14 +24,62 @@ router.post('/login', async (req, res) => {
     const isValidEmail = await userService.getUserByEmail(email);
     if(!isValidEmail) return generateResponse(res, 200, { action: false, message: 'wrong_email' });
 
-    const authenticated = await userService.login(email, password);
-    if(!authenticated) return generateResponse(res, 200, { action: false, message: 'wrong_credentials' });
+    const user = await userService.login(email, password);
+    if (!user)
+      return generateResponse(res, 200, {
+        action: false,
+        message: "wrong_credentials",
+      });
 
-    const accessToken = jwt.sign({ email }, secretKey, { expiresIn: '1h' });
-    res.cookie('token', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+    const accessTokenPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      imageId: user.imageId,
+      role: user.role,
+    };
+
+    const accessToken = jwt.sign(accessTokenPayload, secretKey, { expiresIn: "1h" });
+    const refreshToken = jwt.sign(accessTokenPayload, secretKey, { expiresIn: "1d" });
+
+    res.cookie("token", refreshToken, {
+      httpOnly: true,
+      sameSite: "None" as any,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     return generateResponse(res, 200, { action: true, message: 'login_success', token: accessToken});
   } catch (error) {
     return generateResponse(res, 500, "Something went wrong");
+  }
+});
+
+router.post('/refresh', async (req, res) => {
+  if (req.cookies?.token) {
+    const refreshToken = req.cookies.token;
+
+    jwt.verify(refreshToken, secretKey, (err: any, decoded: any) => {
+      if (err) {
+        // Wrong Refresh Token
+        return generateResponse(res, 406, { action: false, message: 'Unauthorized' });
+      } else {
+        // Correct token, send a new access token
+        const accessToken = jwt.sign(
+          {
+            id: decoded.id, 
+            email: decoded.email,
+            name: decoded.name,
+            role: decoded.role,
+          },
+          secretKey,
+          { expiresIn: '1d' }
+        );
+        return generateResponse(res, 200, { action: true, token: accessToken });
+      }
+    });
+  } else {
+    return generateResponse(res, 406, { action: false, message: 'Unauthorized' });
   }
 });
 

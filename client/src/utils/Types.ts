@@ -1,3 +1,21 @@
+export type User = {
+  id: number, 
+  email: string,
+  name: string,
+  imageId: number,
+  role: string
+}
+
+export type JWTPayload = {
+  id: number, 
+  email: string,
+  name: string,
+  imageId: number,
+  role: string,
+  exp: number,
+  iat: number
+}
+
 export type EventType = {
   id: number;
   name: string;

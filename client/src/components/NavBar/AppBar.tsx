@@ -1,5 +1,5 @@
 // React Imports
-import { useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer } from "react";
 
 // MUI Imports
 import { AppBar, Container, Toolbar, Box } from "@mui/material";
@@ -18,6 +18,9 @@ import {
   generateNavItem,
   NavigationListItemT,
 } from "../../utils/NavBar";
+import { User } from '../../utils/Types';
+import Cookies from "js-cookie";
+import { decodeToken } from "../../utils/Common";
 
 type ActionReducerT = {
   authenticated: boolean;
@@ -27,20 +30,26 @@ type ActionReducerT = {
 function ResponsiveAppBar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [user, setUser] = useState<User>({
+    id: 0,
+    email: '',
+    name: '',
+    imageId: 0,
+    role: ''
+  });
 
   const defaultNavigationList: NavigationListItemT[] = [];
   const defaultActionList: NavigationListItemT[] = [];
 
   // TODO: Let's refactor this subsequently using useContext
   const handleLogOut = () => {
-    localStorage.removeItem("ecoyah-email");
+    Cookies.remove('token');
     navigate("/sign-in");
     navActionLogicMap(); // handle use case if there's no change in the URL
   };
 
   const handleAdminLogOut = () => {
-    localStorage.removeItem("ecoyah-email");
-    localStorage.removeItem("admin-id");
+    Cookies.remove('token');
     navigate("/admin/sign-in");
     navActionLogicMap(); // handle use case if there's no change in the URL
   };
@@ -132,12 +141,32 @@ function ResponsiveAppBar() {
 
   // TODO: Let's refactor this subsequently using useContext
   const isAuthenticated = () => {
-    const email = localStorage.getItem("ecoyah-email");
-
-    if (email) return true;
+    const token = Cookies.get('token');
+    if (token) {
+      const decodedToken = decodeToken(token);
+      if (decodedToken) {
+        const payload = {
+          id: decodedToken.id,
+          email: decodedToken.email,
+          name: decodedToken.name,
+          imageId: decodedToken.imageId,
+          role: decodedToken.role
+        }
+        setUser(payload);
+        return true;
+      }
+    }
 
     return false;
   };
+
+  const handleRedirection = () => {
+    if (user.role === 'admin') {
+      navigate('/admin/home');
+    } else {
+      navigate('/');
+    }
+  }
 
   const navActionLogicMap = () => {
     const authenticated = isAuthenticated();
@@ -155,7 +184,7 @@ function ResponsiveAppBar() {
     <AppBar position="static" color="default">
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
-          <Link to={"/"}>
+          <Link to='#' onClick={handleRedirection}>
             <Box
               component="img"
               sx={{

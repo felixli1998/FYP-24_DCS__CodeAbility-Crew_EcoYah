@@ -19,6 +19,7 @@
     "axios": "^1.6.5",
     "dayjs": "^1.11.10",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "libphonenumber-js": "^1.10.53",
     "lodash": "^4.17.21",
     "mui-one-time-password-input": "2.0.0",

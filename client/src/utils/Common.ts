@@ -1,5 +1,7 @@
 // === Common reusable functions ===
 import _ from "lodash";
+import { jwtDecode } from 'jwt-decode';
+import { JWTPayload } from './Types';
 
 // ==== Password Related ====
 export const validatePassword = (id: number, passwordText: string) => {
@@ -14,6 +16,16 @@ export const validatePassword = (id: number, passwordText: string) => {
 
   return checkPassword[id];
 }
+
+// === JWT Decode Related ===
+export const decodeToken = (token: string) => {
+  try {
+    return jwtDecode(token) as JWTPayload;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
+};
 
 // === Sanitisation Related ===
 // Remove Leading & Trailing Spaces, Capitalise word's first letter, and 1 space between words

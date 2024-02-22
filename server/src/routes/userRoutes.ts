@@ -81,8 +81,25 @@ router.post("/create", async (req, res) => {
 
   try {
     const user = await userService.createUser(newUser);
-    const accessToken = jwt.sign({ email: newUser.email }, secretKey, { expiresIn: '1h' });
-    res.cookie('token', accessToken, { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
+
+    const accessTokenPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      imageId: user.imageId,
+      role: user.role,
+    };
+
+    const accessToken = jwt.sign(accessTokenPayload, secretKey, { expiresIn: "1h" });
+    const refreshToken = jwt.sign(accessTokenPayload, secretKey, { expiresIn: "1d" });
+
+    res.cookie("token", refreshToken, {
+      httpOnly: true,
+      sameSite: "None" as any,
+      secure: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
     return generateResponse(res, 201, {
       action: true,
       message: "User created successfully.",

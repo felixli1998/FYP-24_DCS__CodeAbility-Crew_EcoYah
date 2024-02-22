@@ -112,9 +112,9 @@ export default function SignUp() {
           console.log(resp)
           if (resp.data.status === 201) {
             const token = resp.data.data.token;
-            Cookies.set('token', token, { httpOnly: true });
+            Cookies.set('token', token, { secure: true });
             setStep(2);
-          } 
+          }
         })
         .catch((err) => { 
           console.log(err)

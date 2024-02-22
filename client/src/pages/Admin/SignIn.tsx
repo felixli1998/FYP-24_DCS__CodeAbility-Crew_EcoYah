@@ -8,6 +8,7 @@ import ReportProblemIcon from '@mui/icons-material/ReportProblem';
 import { USER_ROUTES, GENERAL_ROUTES } from "../../services/routes";
 import PinSignIn from "../../components/PinSignIn";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
 interface ProfilesType {
   id: number;
@@ -74,8 +75,8 @@ export default function SignIn() {
 
               if(res.data.action){
                   setErrorDisplay(false);
-                  localStorage.setItem("ecoyah-email", selectedProfile);
-                  localStorage.setItem("admin-id", currentAdminId.toString());
+                  const token = res.data.token;
+                  Cookies.set('token', token, { secure: true });
                   navigate("/admin/home");
               } else {
                   setErrorDisplay(true);
