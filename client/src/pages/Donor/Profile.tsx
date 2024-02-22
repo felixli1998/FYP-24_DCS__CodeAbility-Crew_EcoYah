@@ -254,7 +254,6 @@ export default function Profile() {
         'GET',
         USER_ROUTES.RETRIEVE_BY_EMAIL.replace(':email', email)
       );
-      console.log(res)
       const { action, data } = res.data;
       if (action) {
         // Currently, we do not have points so it will be null
