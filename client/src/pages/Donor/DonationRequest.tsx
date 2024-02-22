@@ -27,35 +27,55 @@ const tabs = [
   },
 ];
 
+export const getDayLeft = (date: string) => {
+  const todayDate = new Date();
+  const endDate = new Date(date);
+  // Calculate the difference in milliseconds
+  const differenceMs = endDate.getTime() - todayDate.getTime();
+  // Convert milliseconds to days
+  const remainingDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
+  return remainingDays;
+};
+
+export const getRewardAmount = (donationRequestItems: any) => {
+  let totalPoints = 0;
+
+  for (const donationItem of donationRequestItems) {
+    const {quantity, donationEventItem} = donationItem;
+    const {pointsPerUnit} = donationEventItem;
+
+    totalPoints += quantity * pointsPerUnit;
+  }
+
+  return totalPoints;
+};
+
 export const DonationRequest = () => {
   const [selectedTab, setSelectedTab] = useState<string>("active");
   const [user, setUser] = useState<any | null>(null);
 
-  const {
-    data: donationRequestsData,
-    isLoading: donationRequestIsLoading,
-    refetch: donationRequestRefetch,
-  } = useQuery({
-    queryKey: ["/get-donation-requests", {status: selectedTab}],
-    queryFn: async () => {
-      if (user) {
-        if (selectedTab === "active") {
-          // return getActiveDonationRequests(user.id);
-          return getActiveDonationRequests(19);
-        } else {
-          // return getCompletedDonationRequests(user.id);
-          return getCompletedDonationRequests(19);
+  const {data: donationRequestsData, refetch: donationRequestRefetch} =
+    useQuery({
+      queryKey: ["/get-donation-requests", {status: selectedTab}],
+      queryFn: async () => {
+        if (user) {
+          if (selectedTab === "active") {
+            // return getActiveDonationRequests(user.id);
+            return getActiveDonationRequests(19);
+          } else {
+            // return getCompletedDonationRequests(user.id);
+            return getCompletedDonationRequests(19);
+          }
         }
-      }
-    },
-    enabled: !!user,
-  });
+      },
+      enabled: !!user,
+    });
 
   useEffect(() => {
     if (user) {
       donationRequestRefetch();
     }
-  }, [selectedTab, user]);
+  }, [selectedTab, user, donationRequestRefetch]);
 
   useEffect(() => {
     // Fetch Active/Complete request
@@ -87,12 +107,24 @@ export const DonationRequest = () => {
             <ContentCard
               key={key}
               contentCardData={{
-                image: donationRequest.donationEvent.imageId,
+                image: "https://picsum.photos/200/300",
+                // image: donationRequest.donationEvent.imageId,
                 title: donationRequest.donationEvent.name,
-                chipLabel: donationRequest.donationEvent.endDate,
-                reward: "0",
+                chipLabel:
+                  getDayLeft(donationRequest.donationEvent.endDate) === 0
+                    ? "Expired"
+                    : `${getDayLeft(
+                        donationRequest.donationEvent.endDate
+                      )} day left`,
+                customChipStyle:
+                  getDayLeft(donationRequest.donationEvent.endDate) === 0
+                    ? {backgroundColor: "#e0e0e0", color: "#9e9e9e"}
+                    : {},
+                reward: getRewardAmount(donationRequest.donationRequestItems),
                 location: "Kunyah Cafe",
-                dropOffDateTime: `${donationRequest.dropOffDate}, ${donationRequest.dropOffTime}`,
+                dropOffDateTime: `${new Date(
+                  donationRequest.dropOffDate
+                ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
               }}
             />
           ))}

@@ -44,6 +44,7 @@ export class DonationRequestRepository {
         status: Status.SUBMITTED
       },
       relations: [
+        'donationEvent',
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
         'donationRequestItems.donationEventItem.donationEvent',
@@ -78,6 +79,7 @@ export class DonationRequestRepository {
         status: Status.COMPLETED
       },
       relations: [
+        'donationEvent',
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
         'donationRequestItems.donationEventItem.donationEvent',

@@ -3,33 +3,47 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import {Chip} from "@mui/material";
+import {CardActionArea, CardActions, Chip, Divider, Grid} from "@mui/material";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
+import Button from "@mui/material/Button";
+import BasicButton from "../Button/BasicButton";
+import {Margin, WidthFull} from "@mui/icons-material";
 
 type ContentCardProps = {
   contentCardData: {
     image: string;
     title: string;
     chipLabel: string;
-    reward: string;
+    customChipStyle: any;
+    reward: number;
     location: string;
     dropOffDateTime: string;
-  }
+  };
 };
 
 export default function ContentCard(props: ContentCardProps) {
-  const { contentCardData } = props
-  const { image, title, chipLabel, reward, location, dropOffDateTime} = contentCardData
+  const {contentCardData} = props;
+  const {
+    image,
+    title,
+    chipLabel,
+    reward,
+    location,
+    dropOffDateTime,
+    customChipStyle,
+  } = contentCardData;
   return (
     <Card
       variant="outlined"
       sx={{borderRadius: 4}}
+      raised={true}
     >
       <CardMedia
         component="img"
         image={image}
-        height="120"
-        sx={{objectFit: "cover"}}
+        height="140"
+        width="100%"
+        sx={{objectFit: "cover", margin: "auto"}}
         alt="Not available"
       />
       <CardContent
@@ -58,7 +72,13 @@ export default function ContentCard(props: ContentCardProps) {
           <Chip
             label={chipLabel}
             color="primary"
-            sx={{backgroundColor: "#d4edda", color: "#155724", borderRadius: 1}}
+            sx={{
+              maxWidth: 98,
+              backgroundColor: "#d4edda",
+              color: "#155724",
+              borderRadius: 1,
+              ...customChipStyle,
+            }}
             size="small"
           ></Chip>
         </Box>
@@ -91,6 +111,20 @@ export default function ContentCard(props: ContentCardProps) {
           </Typography>
         </Box>
       </CardContent>
+      <CardActions>
+        <Button
+          variant="outlined"
+          fullWidth
+        >
+          Delete
+        </Button>
+        <Button
+          variant="contained"
+          fullWidth
+        >
+          Edit
+        </Button>
+      </CardActions>
     </Card>
   );
 }
