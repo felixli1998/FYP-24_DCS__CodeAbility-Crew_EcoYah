@@ -133,7 +133,7 @@ export const DonationRequest = () => {
                   getDayLeft(donationRequest.donationEvent.endDate) === 0
                     ? {backgroundColor: "#e0e0e0", color: "#9e9e9e"}
                     : {},
-                reward: getRewardAmount(donationRequest.donationRequestItems),
+                reward: donationRequest.omitPoints ? 0 : getRewardAmount(donationRequest.donationRequestItems),
                 location: "Kunyah Cafe",
                 dropOffDateTime: `${new Date(
                   donationRequest.dropOffDate
