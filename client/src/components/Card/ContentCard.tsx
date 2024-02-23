@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -25,7 +26,7 @@ type ContentCardProps = {
 };
 
 export default function ContentCard(props: ContentCardProps) {
-  console.log(props);
+  console.log(props.originalData);
   const navigate = useNavigate();
   const {contentCardData, originalData} = props;
   const {
@@ -127,7 +128,9 @@ export default function ContentCard(props: ContentCardProps) {
         <Button
           variant="contained"
           fullWidth
-          onClick={() => navigate('/donation-request-form', { state: { action: 'edit', form: originalData }})}
+          onClick={() => {
+            navigate('/donation-request-form', { state: { action: 'edit', form: originalData }, replace: true })
+          }}
         >
           Edit
         </Button>

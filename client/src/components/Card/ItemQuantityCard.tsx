@@ -32,7 +32,10 @@ type DonationRequestItemType = {
 };
 
 export default function ItemQuantityCard(props: ItemQuantityCardType) {
-  console.log(props.label)
+  // parent (old items that were prev selected + new items selected)
+  // console.log(props.label) 
+  // subset (old) 
+  // console.log(props.data)
   const [donationRequestItems, setDonationRequestItems] =
     useState<DonationRequestItemType>({});
 
@@ -40,21 +43,13 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
   useEffect(() => {
     const initialDonationRequestItems: DonationRequestItemType = {};
     props.label.forEach((eachLabel: Record<string, string | number>) => {
-      if (props.data.length >= 1) {
-        const foundItem = props.data.find((item: any) => item.donationEventItem.id === eachLabel.id)
-        if (foundItem) {
-          initialDonationRequestItems[eachLabel.id as number] = {
-            quantity: foundItem.quantity as number,
-            points:
-              (foundItem.quantity as number) * (foundItem.donationEventItem.pointsPerUnit as number),
-            error: "",
-          };
-        }
-      } 
+      const foundItem = props.data.find((item: any) => item.donationEventItem.id === eachLabel.id);
+      
+      const quantityToUse = foundItem ? foundItem.quantity : eachLabel.minQty;
+      
       initialDonationRequestItems[eachLabel.id as number] = {
-        quantity: eachLabel.minQty as number,
-        points:
-          (eachLabel.minQty as number) * (eachLabel.pointsPerUnit as number),
+        quantity: quantityToUse as number,
+        points: quantityToUse * (eachLabel.pointsPerUnit as number),
         error: "",
       };
     });
@@ -84,6 +79,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
   };
 
   const handleAddition = (id: number, pointsPerUnit: number): void => {
+    debugger
     setDonationRequestItems((prevItems) => ({
       ...prevItems,
       [id]: {

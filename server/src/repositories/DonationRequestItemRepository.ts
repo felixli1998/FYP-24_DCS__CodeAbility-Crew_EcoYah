@@ -23,4 +23,8 @@ export class DonationRequestItemRepository {
   async updateDonationRequestItem(id: number, payload: Partial<DonationRequestItem>){
     return await AppDataSource.getRepository(DonationRequestItem).update(id, payload)
   }
+
+  async deleteById(id: Partial<DonationRequestItem>) {
+    return await AppDataSource.getRepository(DonationRequestItem).delete(id);
+  }
 }

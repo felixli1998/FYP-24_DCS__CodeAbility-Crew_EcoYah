@@ -91,9 +91,7 @@ export class DonationRequestService {
           case 'oldDonationRequestItems':
             if (Array.isArray(value)) {
               await Promise.all(value.map(async (item) => {
-                console.log(item)
                 const { id, quantity } = item;
-                console.log(id, quantity)
                 this.donationRequestItemRepository.updateDonationRequestItem(id, { quantity })
               }));
             }
@@ -104,9 +102,7 @@ export class DonationRequestService {
         }
       }
   
-      console.log(donationRequestId, updatedRequestPayload)
-      const res = await this.donationRequestRepository.updateDonationRequest(donationRequestId, updatedRequestPayload)
-      console.log(res)
+      const res = await this.donationRequestRepository.updateDonationRequest(donationRequestId, updatedRequestPayload);
       return {
         action: true,
         data: res,

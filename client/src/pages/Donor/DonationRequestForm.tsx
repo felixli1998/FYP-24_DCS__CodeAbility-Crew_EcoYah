@@ -62,10 +62,8 @@ export default function DonationRequestForm() {
   const [error, setError] = useState<boolean>(false);
 
   const handleCheckBoxItems = (action: string, donationEventItems: donationEventItemsType[], oldDonationRequestItems?: any) => {
-    console.log(oldDonationRequestItems);
     const updatedCheckBoxItems: CheckBoxItemsType[] = [];
     donationEventItems.forEach(donationEventItem => {
-      console.log(donationEventItem)
       const isOldItem = oldDonationRequestItems?.find(
        (oldItem: any) => oldItem.donationEventItem.id === donationEventItem.id
       );
@@ -78,12 +76,11 @@ export default function DonationRequestForm() {
     setCheckBoxItems(updatedCheckBoxItems);
     setCheckBoxItemsLoaded(true);
   }
-  console.log(checkBoxItems);
 
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
   ) => {
-    console.log(updatedCheckedState);
+    // console.log(updatedCheckedState);
     if ("omitPoints" in updatedCheckedState) {
       setDonationRequest((prevData) => ({
         ...prevData,
@@ -134,20 +131,18 @@ export default function DonationRequestForm() {
       setSelectedItems(updatedSelectedItems);
     }
   };
-  console.log(selectedItems);
+  // console.log(selectedItems);
 
   const handleItemQuantityChange = (
     updatedItemQuantity: Record<number, Record<string, number | string>>
   ) => {
-    console.log(updatedItemQuantity)
+    // console.log(updatedItemQuantity)
     const donationRequestItems: Record<string, number>[] = [];
     _.mapValues(updatedItemQuantity, function (value, key) {
-      console.log(value)
       if (donationRequest.oldDonationRequestItems) {
         const existingItem = donationRequest.oldDonationRequestItems.find(
           (item: any) => item.donationEventItem.id === Number(key)
         );
-        console.log(existingItem)
 
         if (existingItem) {
           existingItem.quantity = Number(value.quantity);
@@ -180,7 +175,6 @@ export default function DonationRequestForm() {
 
   const handleButtonChange = (status: boolean) => {
     setValidateForm(true);
-    console.log(donationRequest);
 
     if (action === "submit") {
       if (
@@ -189,7 +183,17 @@ export default function DonationRequestForm() {
         donationRequest.dropOffTime !== "" &&
         donationRequest.newDonationRequestItems.length > 0
       ) {
-        handleCreateDonationRequest(donationRequest);
+        handleCreateDonationRequest(donationRequest)
+        .then((createStatus) => {
+          if (createStatus) {
+            navigate("/");
+          } else {
+            setError(true);
+          }
+        })
+        .catch(() => {
+          setError(true);
+        });
       }
     } else {
       if (
@@ -198,53 +202,54 @@ export default function DonationRequestForm() {
         donationRequest.submittedBy !== 0 &&
         donationRequest.dropOffTime !== ""
       ) {
-        let createStatus = true;
-        if (donationRequest.newDonationRequestItems.length > 0) 
-          createStatus = handleCreateDonationRequest(donationRequest);
-        const updateStatus = handleUpdateDonationRequest(donationRequest);
-
-        console.log(updateStatus);
-        if (createStatus && updateStatus) {
-          navigate("/donation-requests");
-        } else {
-          setError(true);
-        }
+        Promise.all([
+          handleCreateDonationRequest(donationRequest),
+          handleUpdateDonationRequest(donationRequest),
+        ])
+          .then(([createStatus, updateStatus]) => {
+            if (createStatus && updateStatus) {
+              navigate("/donation-requests");
+            } else {
+              setError(true);
+            }
+          })
+          .catch(() => {
+            setError(true);
+          });
       }
     }
   };
 
   const handleCreateDonationRequest = (
     donationRequest: DonationRequestType
-  ) => {
-    axios
+  ): Promise<boolean> => {
+    return axios
       .post(DONATION_REQUEST_ROUTES.CREATE, donationRequest)
       .then((resp) => {
-        console.log(resp)
-        if (resp.data.status === 200 && action === 'submit') {
-          navigate("/");
-        } else {
-          return true;
-        }
+        console.log(resp);
+        if (resp.data.status === 200) return true;
+        else return false;
       })
       .catch((err) => {
-        setError(true);
+        console.error(err);
+        throw err;
       });
-    return false;
   };
 
   const handleUpdateDonationRequest = (
     donationRequest: DonationRequestType
-  ) => {
-    axios
+  ): Promise<boolean> => {
+    return axios
       .put(DONATION_REQUEST_ROUTES.UPDATE, donationRequest)
       .then((resp) => {
         console.log(resp)
         if (resp.data.status === 200) return true;
+        else return false;
       })
       .catch((err) => {
         console.error(err);
+        throw err;
       });
-    return false;
   };
 
   useEffect(() => {

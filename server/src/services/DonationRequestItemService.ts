@@ -17,4 +17,8 @@ export class DonationRequestItemService {
   async retrieveById(id: number) {
     return await this.donationRequestItemRepository.retrieveById(id);
   }
+
+  async deleteById(id: Partial<DonationRequestItem>) {
+    return await this.donationRequestItemRepository.deleteById(id);
+  }
 }

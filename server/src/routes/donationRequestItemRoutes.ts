@@ -66,4 +66,19 @@ router.post('/create-from-request', async (req, res) => {
   }
 });
 
+router.delete('/delete',  async (req, res) => {
+  const payload = req.body;
+  const allowedParams = ['donationRequestItemId'];
+  const sanitisedPayload = strongParams(payload, allowedParams);
+
+  try {
+    await donationRequestItemService.deleteById(sanitisedPayload.donationRequestItemId);
+    return generateResponse(res, 200, { action: true, message: 'Deleted Successfully!'});
+  } catch (err) {
+    console.log(err)
+    return generateResponse(res, 500, 'Something went wrong');
+  }
+
+});
+
 export default router;
