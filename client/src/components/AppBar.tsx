@@ -78,9 +78,10 @@ function ResponsiveAppBar() {
         // Admin + Unauthenticated //
         return [];
       } else {
-        // Donor + Unauthenticated //
-        const NavList = [NavigationList.HOME, NavigationList.REWARD, NavigationList.CONTACT_US];
-        return NavList.map((navItem) => generateNavItem(navItem, false));
+        // // Donor + Unauthenticated //
+        // const NavList = [NavigationList.HOME, NavigationList.REWARD, NavigationList.CONTACT_US];
+        // return NavList.map((navItem) => generateNavItem(navItem, false));
+        return [];
       }
     }
   };
