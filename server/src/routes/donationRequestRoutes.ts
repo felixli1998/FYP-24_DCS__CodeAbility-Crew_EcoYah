@@ -21,17 +21,17 @@ import { DonationEventRepository } from "../repositories/DonationEventRepository
 import { DonationEventItemService } from "../services/DonationEventItemService";
 import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
 
-export type RequestItemsPayloadT = {
+export type OldDonationRequestItemsPayloadT = {
   id: DonationRequestItem["id"];
   quantity: DonationRequestItem["quantity"];
 };
 
 export type DonationRequestUpdatePayload = {
-  id: DonationRequest["id"];
+  donationRequestId: DonationRequest["id"];
   dropOffDate?: DonationRequest["dropOffDate"];
   dropOffTime?: DonationRequest["dropOffTime"];
   omitPoints?: DonationRequest["omitPoints"];
-  requestItems?: RequestItemsPayloadT[];
+  oldDonationRequestItems?: OldDonationRequestItemsPayloadT[];
 };
 
 const router = express.Router();
@@ -148,7 +148,15 @@ router.get('/retrieve-active-by-date', async (req, res) => {
 router.post('/create', async (req, res) => {
   // sanitize inputs
   const params = req.body; 
-  const allowedEventParams = ['donationEventId', 'dropOffDate', 'dropOffTime', 'omitPoints', 'submittedBy', 'newDonationRequestItems'];
+  const allowedEventParams = [
+    "donationEventId",
+    "donationRequestId",
+    "dropOffDate",
+    "dropOffTime",
+    "omitPoints",
+    "submittedBy",
+    "newDonationRequestItems",
+  ];
   const filteredEventParams = strongParams(params, allowedEventParams);
 
   try {
@@ -165,9 +173,15 @@ router.post('/create', async (req, res) => {
     const user = await userServices.getUserById(filteredEventParams.submittedBy);
     if (user) newDonationRequest.user = user;
 
-    const donationRequest = await donationRequestService.createDonationRequest(
-      newDonationRequest
-    );
+    let donationRequest;
+    if (filteredEventParams.donationRequestId !== 0) {
+      donationRequest = await donationRequestService.retrieveById(
+        filteredEventParams.donationRequestId
+      );
+    } else {
+      donationRequest =
+        await donationRequestService.createDonationRequest(newDonationRequest);
+    }
 
     if (donationRequest) {
       for (const requestItem of filteredEventParams.newDonationRequestItems) {
@@ -192,29 +206,37 @@ router.post('/create', async (req, res) => {
       message: "create_success",
     });
   } catch (error) {
+    console.log(error)
     return generateResponse(res, 500, "Something went wrong.");
   }
 });
 
 router.put('/update', async (req, res) => {
   const payload = req.body;
-  const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'omitPoints', 'donationRequestItems'];
+  const allowedParams = [
+    "donationRequestId",
+    "dropOffDate",
+    "dropOffTime",
+    "omitPoints",
+    "oldDonationRequestItems",
+  ];
   const sanitisedPayload = strongParams(payload, allowedParams);
 
-  if (!('id' in sanitisedPayload))
-    return generateResponse(res, 200, 'Missing Id');
+  if (!("donationRequestId" in sanitisedPayload))
+    return generateResponse(res, 200, "Missing Id");
 
-  type DonationRequestUpdatePayloadWithId = DonationRequestUpdatePayload & {
-    id: string;
-  };
+  // type DonationRequestUpdatePayloadWithId = DonationRequestUpdatePayload & {
+  //   id: string;
+  // };
 
   try {
     // Type assertion that an id is definitely present due to my previous checks
     const payload = await donationRequestService.update(
-      sanitisedPayload as DonationRequestUpdatePayloadWithId
+      sanitisedPayload as DonationRequestUpdatePayload
     );
     return generateResponse(res, 200, payload);
-  } catch (err) {
+  } catch (error) {
+    console.log(error)
     return generateResponse(res, 500, 'Something went wrong');
   }
 });

@@ -17,6 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 type ItemQuantityCardType = {
   label: Record<string, string | number>[];
+  data: any;
   onItemQuantityChange: (
     itemQuantity: Record<string, Record<string, string | number>>
   ) => void;
@@ -31,6 +32,7 @@ type DonationRequestItemType = {
 };
 
 export default function ItemQuantityCard(props: ItemQuantityCardType) {
+  console.log(props.label)
   const [donationRequestItems, setDonationRequestItems] =
     useState<DonationRequestItemType>({});
 
@@ -38,6 +40,17 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
   useEffect(() => {
     const initialDonationRequestItems: DonationRequestItemType = {};
     props.label.forEach((eachLabel: Record<string, string | number>) => {
+      if (props.data.length >= 1) {
+        const foundItem = props.data.find((item: any) => item.donationEventItem.id === eachLabel.id)
+        if (foundItem) {
+          initialDonationRequestItems[eachLabel.id as number] = {
+            quantity: foundItem.quantity as number,
+            points:
+              (foundItem.quantity as number) * (foundItem.donationEventItem.pointsPerUnit as number),
+            error: "",
+          };
+        }
+      } 
       initialDonationRequestItems[eachLabel.id as number] = {
         quantity: eachLabel.minQty as number,
         points:
@@ -116,7 +129,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
                   component="div"
                   color="secondary.light"
                 >
-                  Earn {eachLabel.pointsPerUnit} points per {eachLabel.unit}{" "}
+                  Earn {eachLabel.pointsPerUnit} cashback per {eachLabel.unit}{" "}
                   donated
                 </Typography>
                 <Typography
