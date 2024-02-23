@@ -134,7 +134,7 @@ function ResponsiveAppBar() {
     navActionLogicMap();
 
     if(isAdmin()){
-      setHomePath('/admin/home');
+      setHomePath( isAuthenticated() ? '/admin/home' : '/admin/sign-in');
     } else {
       setHomePath('/');
     }
