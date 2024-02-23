@@ -32,10 +32,6 @@ type DonationRequestItemType = {
 };
 
 export default function ItemQuantityCard(props: ItemQuantityCardType) {
-  // parent (old items that were prev selected + new items selected)
-  // console.log(props.label) 
-  // subset (old) 
-  // console.log(props.data)
   const [donationRequestItems, setDonationRequestItems] =
     useState<DonationRequestItemType>({});
 

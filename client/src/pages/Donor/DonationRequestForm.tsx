@@ -135,12 +135,10 @@ export default function DonationRequestForm() {
       setSelectedItems(updatedSelectedItems);
     }
   };
-  // console.log(selectedItems);
 
   const handleItemQuantityChange = (
     updatedItemQuantity: Record<number, Record<string, number | string>>
   ) => {
-    // console.log(updatedItemQuantity)
     const donationRequestItems: Record<string, number>[] = [];
     _.mapValues(updatedItemQuantity, function (value, key) {
       if (donationRequest.oldDonationRequestItems) {
@@ -206,7 +204,6 @@ export default function DonationRequestForm() {
         donationRequest.submittedBy !== 0 &&
         donationRequest.dropOffTime !== ""
       ) {
-        console.log(selectedItems);
 
         const deleteDonationRequestItemIds: number[] = [];
         donationRequest.oldDonationRequestItems?.forEach(
@@ -222,7 +219,7 @@ export default function DonationRequestForm() {
             }
           }
         );
-        console.log(deleteDonationRequestItemIds);
+
         Promise.all([
           handleDeleteDonationRequestItem(deleteDonationRequestItemIds),
           handleCreateDonationRequest(donationRequest),
@@ -253,7 +250,6 @@ export default function DonationRequestForm() {
     return axios
       .post(DONATION_REQUEST_ROUTES.CREATE, donationRequest)
       .then((resp) => {
-        console.log(resp);
         if (resp.data.status === 200) return true;
         else return false;
       })
@@ -269,7 +265,6 @@ export default function DonationRequestForm() {
     return axios
       .put(DONATION_REQUEST_ROUTES.UPDATE, donationRequest)
       .then((resp) => {
-        console.log(resp)
         if (resp.data.status === 200) return true;
         else return false;
       })
@@ -291,7 +286,6 @@ export default function DonationRequestForm() {
             }
           })
           .then((resp) => {
-            console.log(resp);
             return resp.data.status === 200;
           })
           .catch((err) => {
@@ -305,7 +299,6 @@ export default function DonationRequestForm() {
   };
 
   useEffect(() => {
-    console.log(location.state);
     // should not be able to access this page through the url
     if (location.state === null) {
       navigate("/");
@@ -352,8 +345,6 @@ export default function DonationRequestForm() {
       }
     }
   }, [location.state]);
-
-  console.log(donationRequest);
 
   return donationEventInfo ? (
     <>

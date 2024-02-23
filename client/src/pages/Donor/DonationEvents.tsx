@@ -191,7 +191,6 @@ export default function DonationEvents() {
                     return { ...eachEvent, donationEventItems, timeLeft, numDonors};
                 });
                 const updatedEvents = await Promise.all(updatedEventsPromises);
-                console.log(updatedEvents.length);
                 
                 var maxNumDonors = 0;
                 const currDay = new Date().getDay(); // ** Sunday - Saturday: 0 - 6 **
