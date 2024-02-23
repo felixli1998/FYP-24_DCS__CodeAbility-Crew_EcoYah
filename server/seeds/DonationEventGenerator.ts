@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const GENERIC_WORDS = ['Community', 'Unity', 'Harmony', 'Hope', 'Dream', 'Impact', 'Inspire', 'Change', 'Together', 'Empower'];
 const CHARITABLE_WORDS = ['Giving', 'Caring', 'Kindness', 'Compassion', 'Support', 'Love', 'Humanity', 'Help', 'Assist', 'Serve'];
-
+const DEFAULT_IMAGES = ["ElectronicsPoster.jpg", "FoodProducePoster.jpg"]
 function* DonationEventGenerator(
     eventTypesObjects:{[key:string]:EventType}, 
     userObjects:{[key:string]:User},
@@ -26,10 +26,10 @@ function* DonationEventGenerator(
         const randomUser = Object.values(userObjects)[Math.floor(Math.random() * Object.values(User).length)];
         newEvent.createdBy = randomUser;
         // Creating event
-        newEvent.imageId = uuidv4();
+        newEvent.imageId = DEFAULT_IMAGES[i % DEFAULT_IMAGES.length];
         // Date
         const today = new Date();
-        newEvent.startDate = new Date(today.getTime() + Math.floor(Math.random() * 31) * 24 * 60 * 60 * 1000); // Random start date within 31 days from today
+        newEvent.startDate = new Date(today.getTime() - Math.floor(Math.random() * 15) * 24 * 60 * 60 * 1000); // Random start date within 31 days from today
         newEvent.endDate = new Date(newEvent.startDate.getTime() + Math.floor(Math.random() * 15) * 24 * 60 * 60 * 1000); // Random end date within 15 days from start date
 
         newEvent.createdBy = randomUser;
