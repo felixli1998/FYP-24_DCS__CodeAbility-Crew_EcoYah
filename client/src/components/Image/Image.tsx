@@ -38,6 +38,15 @@ const defaultProps: ImageProps = {
   width: "250px",
   height: "250px",
 };
+
+export enum folderPrefixNames {
+  DEFAULT = "default",
+  DONOR = "donor",
+  EVENTS = "events",
+  PROFILEPICTURES = "profile-pictures",
+}
+
+
 export default function Image(props: ImageProps): JSX.Element {
   const checkFileSize = (file: File, maxSizeInMB: number = 5): boolean => {
     return file.size <= maxSizeInMB * 1024 * 1024; // Convert MB to bytes
@@ -179,7 +188,7 @@ export default function Image(props: ImageProps): JSX.Element {
     <Box
       sx={{
         width: props.width,
-        marginBottom: "1rem",
+        marginBottom: props.editable ? "1rem" : "",
       }}
     >
       <img

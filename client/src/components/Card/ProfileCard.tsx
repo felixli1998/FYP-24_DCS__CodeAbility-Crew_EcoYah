@@ -1,7 +1,8 @@
-import { Card, CardActionArea, Typography } from '@mui/material';
+import { CardMedia, Card, CardActionArea, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
-import RoundProfilePic from '../RoundProfilePic';
+import Image from '../Image/Image';
+import { folderPrefixNames } from '../Image/Image';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   transition: 'transform 0.15s ease-in-out',
@@ -38,7 +39,16 @@ export default function ProfileCard(props: {
         onMouseOver={() => hoverCard()}
         onMouseOut={() => outHoverCard()}
       >
-        <RoundProfilePic altText={'test'} pictureSrc={props.imgSrc} />
+        <CardMedia sx={{display: 'flex', justifyContent: 'center', paddingTop: 3}}>
+          <Image
+            imageId={props.imgSrc}
+            type='circle'
+            width='80%'
+            height='80%'
+            folderPrefix={folderPrefixNames.PROFILEPICTURES}
+            />
+        </CardMedia>
+
         <Typography
           variant='h4'
           color={'white'}
