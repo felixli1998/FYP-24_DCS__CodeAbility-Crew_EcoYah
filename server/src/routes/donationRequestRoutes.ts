@@ -148,7 +148,7 @@ router.get('/retrieve-active-by-date', async (req, res) => {
 router.post('/create', async (req, res) => {
   // sanitize inputs
   const params = req.body; 
-  const allowedEventParams = ['donationEventId', 'dropOffDate', 'dropOffTime', 'omitPoints', 'submittedBy', 'donationRequestItems'];
+  const allowedEventParams = ['donationEventId', 'dropOffDate', 'dropOffTime', 'omitPoints', 'submittedBy', 'newDonationRequestItems'];
   const filteredEventParams = strongParams(params, allowedEventParams);
 
   try {
@@ -170,7 +170,7 @@ router.post('/create', async (req, res) => {
     );
 
     if (donationRequest) {
-      for (const requestItem of filteredEventParams.donationRequestItems) {
+      for (const requestItem of filteredEventParams.newDonationRequestItems) {
         const newDonationRequestItem = new DonationRequestItem();
         newDonationRequestItem.quantity = requestItem.quantity;
         newDonationRequestItem.donationRequest = donationRequest;

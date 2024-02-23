@@ -68,6 +68,23 @@ export const DonationRequest = () => {
       },
       enabled: !!user,
     });
+  console.log(donationRequestsData)
+
+  const restructureDataToDonationRequestForm = (donationRequest: any) => {
+    console.log(donationRequest);
+    return {
+      id: donationRequest.donationEvent.id,
+      name: donationRequest.donationEvent.name,
+      imageId: donationRequest.donationEvent.imageId,
+      startDate: donationRequest.donationEvent.startDate, 
+      endDate: donationRequest.donationEvent.endDate,
+      donationRequestId: donationRequest.id,
+      dropOffDate: donationRequest.dropOffDate,
+      dropOffTime: donationRequest.dropOffTime,
+      omitPoints: donationRequest.omitPoints,
+      donationRequestItems: donationRequest.donationRequestItems
+    }
+  }
 
   useEffect(() => {
     if (user) {
@@ -125,7 +142,7 @@ export const DonationRequest = () => {
                 ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
                 status: selectedTab
               }}
-              originalData={donationRequest}
+              originalData={restructureDataToDonationRequestForm(donationRequest)}
             />
           ))}
       </Stack>

@@ -32,6 +32,7 @@ export const DONATION_REQUEST_ROUTES = {
 // Donation Event-related routes //
 export const DONATION_EVENT_ROUTES = {
   GET_ALL: `${BASE_URL}/donation-events/all`,
+  RETRIEVE_BY_ID: `${BASE_URL}/donation-events/:id`,
 };
 
 // Event Type-related routes //

@@ -28,7 +28,7 @@ export default function LabelledCheckBox(props: LabelledCheckBoxType) {
     });
     return initialCheckedState;  
   });
-
+   
   // handle state change for each label
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setChecked({

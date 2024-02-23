@@ -42,7 +42,6 @@ export default function ContentCard(props: ContentCardProps) {
     <Card
       variant="outlined"
       sx={{borderRadius: 4}}
-      raised={true}
     >
       <Image   
         imageId={image}
@@ -136,7 +135,7 @@ export default function ContentCard(props: ContentCardProps) {
           variant="outlined"
           fullWidth
         >
-          Delete
+          Withdraw
         </Button>
       </CardActions> }
     </Card>

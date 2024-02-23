@@ -40,7 +40,7 @@ export class DonationEventRepository {
             where: {
                 id:id
             },
-            relations: ["eventType", "donationEventItems"]
+            relations: ["eventType", "donationEventItems", "donationEventItems.item"]
         });
         return donationEvent || null;
     }

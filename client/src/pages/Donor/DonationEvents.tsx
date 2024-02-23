@@ -53,6 +53,8 @@ export type dataToDonationRequestFormType ={
     endDate: string,
     imageId: string,
     name: string,
+    omitPoints?: boolean,
+    donationRequestId?: number
 }
 
 export default function DonationEvents() {
