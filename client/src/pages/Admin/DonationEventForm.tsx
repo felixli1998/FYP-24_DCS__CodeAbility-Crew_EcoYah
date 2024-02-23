@@ -55,7 +55,7 @@ export default function DonationEventForm() {
   const handleBack = () => {
     switch (activeStep) {
       case 0:
-        navigate('/admin/donation-event-overview');
+        navigate('/admin/donation-events');
         break;
       case 1:
         setBackStep1(true);
