@@ -15,7 +15,11 @@ import InfoToolTip from "../../components/ToolTip/InfoToolTip";
 // Other Imports
 import dayjs, { Dayjs } from "dayjs";
 import _ from "lodash";
-import { DONATION_REQUEST_ROUTES, DONATION_EVENT_ROUTES } from "../../services/routes";
+import {
+  DONATION_EVENT_ROUTES,
+  DONATION_REQUEST_ROUTES,
+  DONATION_REQUEST_ITEMS_ROUTES,
+} from "../../services/routes";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
 import { dataToDonationRequestFormType, donationEventItemsType } from "./DonationEvents";
@@ -202,12 +206,35 @@ export default function DonationRequestForm() {
         donationRequest.submittedBy !== 0 &&
         donationRequest.dropOffTime !== ""
       ) {
+        console.log(selectedItems);
+
+        const deleteDonationRequestItemIds: number[] = [];
+        donationRequest.oldDonationRequestItems?.forEach(
+          (donationRequestItem: any) => {
+            const foundItem = selectedItems.some(
+              (selectedItem) =>
+                selectedItem.id === donationRequestItem.donationEventItem.id
+            );
+
+            if (!foundItem) {
+              console.log(donationRequestItem.id);
+              deleteDonationRequestItemIds.push(donationRequestItem.id);
+            }
+          }
+        );
+        console.log(deleteDonationRequestItemIds);
         Promise.all([
+          handleDeleteDonationRequestItem(deleteDonationRequestItemIds),
           handleCreateDonationRequest(donationRequest),
           handleUpdateDonationRequest(donationRequest),
         ])
-          .then(([createStatus, updateStatus]) => {
-            if (createStatus && updateStatus) {
+          .then(([deleteStatus, createStatus, updateStatus]) => {
+            if (
+              deleteStatus.every((status) => status) &&
+              createStatus &&
+              updateStatus
+            ) {
+              console.log(status);
               navigate("/donation-requests");
             } else {
               setError(true);
@@ -250,6 +277,31 @@ export default function DonationRequestForm() {
         console.error(err);
         throw err;
       });
+  };
+
+  const handleDeleteDonationRequestItem = (
+    donationRequestItemIds: number[]
+  ): Promise<boolean[]> => {
+    const deletePromises: Promise<boolean>[] = donationRequestItemIds.map(
+      (id) => {
+        return axios
+          .delete(DONATION_REQUEST_ITEMS_ROUTES.DELETE, {
+            data: {
+              "donationRequestItemId": id
+            }
+          })
+          .then((resp) => {
+            console.log(resp);
+            return resp.data.status === 200;
+          })
+          .catch((err) => {
+            console.error(err);
+            throw err;
+          });
+      }
+    );
+
+    return Promise.all(deletePromises);
   };
 
   useEffect(() => {

@@ -29,6 +29,11 @@ export const DONATION_REQUEST_ROUTES = {
   UPDATE: `${BASE_URL}/donation-requests/update`,
 };
 
+// Donation Request Items Routes //
+export const DONATION_REQUEST_ITEMS_ROUTES = {
+  DELETE: `${BASE_URL}/donation-request-items/delete`
+};
+
 // Donation Event-related routes //
 export const DONATION_EVENT_ROUTES = {
   GET_ALL: `${BASE_URL}/donation-events/all`,

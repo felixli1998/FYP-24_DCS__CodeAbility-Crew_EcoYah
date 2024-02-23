@@ -68,10 +68,8 @@ export const DonationRequest = () => {
       },
       enabled: !!user,
     });
-  console.log(donationRequestsData)
 
   const restructureDataToDonationRequestForm = (donationRequest: any) => {
-    console.log(donationRequest);
     return {
       id: donationRequest.donationEvent.id,
       name: donationRequest.donationEvent.name,

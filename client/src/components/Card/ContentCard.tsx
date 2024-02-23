@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -26,7 +25,6 @@ type ContentCardProps = {
 };
 
 export default function ContentCard(props: ContentCardProps) {
-  console.log(props.originalData);
   const navigate = useNavigate();
   const {contentCardData, originalData} = props;
   const {
