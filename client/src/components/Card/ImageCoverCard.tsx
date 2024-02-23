@@ -39,7 +39,7 @@ export default function ImageCoverCard(props: ImageCoverCardType) {
           background: "#FFFFFF",
         }}
       >
-        <Typography variant="h5">{props.name} <br/>
+        <Typography variant="h5"><b>{props.name}</b> <br/>
           {new Date(props.startDate).toLocaleDateString()} - {new Date(props.endDate).toLocaleDateString()}
         </Typography>
       </Box>

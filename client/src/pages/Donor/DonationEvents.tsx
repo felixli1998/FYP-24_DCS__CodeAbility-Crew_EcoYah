@@ -15,7 +15,9 @@ import {
     Grid,
     InputAdornment,
     TextField,
-    Typography
+    Typography, 
+    CircularProgress,
+    Alert
   } from '@mui/material';
 
 type itemType = {
@@ -226,11 +228,18 @@ export default function DonationEvents() {
 
     return (
         <Container sx={{marginTop: 3, marginX: 'auto'}}>
-            {fetchingEventsIsLoading ? <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 5}}>Loading...</Typography> : 
+            {fetchingEventsIsLoading ? 
+                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+                    <CircularProgress size={80} />
+                    <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 5}}>Loading Donation Events...</Typography> 
+                </Box>
+                : 
             <>
                 {errorFetchingEvents ? 
-                    <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 3}}>Error fetching events, please try again later, sorry for the inconvenience!</Typography> 
-                        : 
+                    <Alert severity="error">
+                        <Typography variant='h5' sx={{fontWeight: 'bold'}}>An error occurred while fetching the donation events. Please refresh and try again. </Typography> 
+                    </Alert>
+                    : 
 
                 <>
                     <TextField fullWidth variant="outlined" 
