@@ -43,7 +43,7 @@ router.get("/all", async (req, res) =>{
     // Check if req.query is empty
     let pageNumber = parseInt(req.query['pageNumber'] as string);
     if (isNaN(pageNumber)) {
-        pageNumber = 2;
+        pageNumber = 1;
     }
 
     const queryKeys = Object.keys(req.query);

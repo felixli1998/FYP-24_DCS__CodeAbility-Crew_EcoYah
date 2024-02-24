@@ -42,7 +42,7 @@ export default function DonationEventPreview(props: DonationEventType) {
     Period: `${dayjs(startDate).format("DD/MM/YYYY")} - ${dayjs(endDate).format(
       "DD/MM/YYYY"
     )}`,
-    Status: isActive,
+    Status: isActive ? "Active" : "Inactive",
   };
 
   return (

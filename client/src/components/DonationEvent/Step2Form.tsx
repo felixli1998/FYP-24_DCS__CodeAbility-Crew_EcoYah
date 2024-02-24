@@ -59,10 +59,7 @@ export default function Step2Form(props: Step2FormProps) {
   const [menuEventTypes, setMenuEventTypes] = useState([]);
   const [selectMenuEventType, setSelectedEventType] = useState<string>("");
 
-  const {
-    data: eventTypesData,
-    isLoading: eventTypesIsLoading,
-  } = useQuery({
+  const {data: eventTypesData, isLoading: eventTypesIsLoading} = useQuery({
     queryKey: ["eventTypes"],
     queryFn: fetchEventTypes,
   });
@@ -379,6 +376,17 @@ export default function Step2Form(props: Step2FormProps) {
                             key,
                             donationEventItem
                           )}
+                          error={
+                            showMissingFields &&
+                            (!donationEventItem[key] ||
+                              (donationEventItem[key] as number) <= 0)
+                          }
+                          helperText={
+                            showMissingFields &&
+                            (!donationEventItem[key] ||
+                              (donationEventItem[key] as number) <= 0) &&
+                            "Please enter a number that is greater than 0"
+                          }
                         />
                       )
                     )}

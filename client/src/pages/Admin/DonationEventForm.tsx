@@ -55,7 +55,20 @@ export default function DonationEventForm() {
       case 0:
         return formData["name"] && formData["imageId"];
       case 1:
-        return formData["donationEventItems"].length > 0;
+        if (formData["donationEventItems"].length === 0) {
+          return false;
+        }
+        for (const eventItem of formData["donationEventItems"]) {
+          for (const [key, value] of Object.entries(eventItem)) {
+            if (
+              key !== "currentQty" &&
+              (!value || (typeof value === "number" && value <= 0))
+            ) {
+              return false;
+            }
+          }
+        }
+        return true;
       case 2:
         return (
           dayjs(formData["startDate"]).isValid() &&
@@ -104,7 +117,7 @@ export default function DonationEventForm() {
     // Execution after successful API call
     onSuccess: (response) => {
       if (response && response.data.action) {
-        navigate("/admin/home");
+        navigate("/admin/donation-events");
         return true;
       }
       return false;

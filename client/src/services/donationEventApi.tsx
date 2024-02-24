@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { DONATION_EVENT_ROUTES } from './routes';
-const URL = process.env.REACT_APP_BACKEND_URL + '/donation-events';
+import axios from "axios";
+import {DONATION_EVENT_ROUTES} from "./routes";
+const URL = process.env.REACT_APP_BACKEND_URL + "/donation-events";
 
 // Create a new donation event and donation event item(s)
 export const createDonationEvent = async (
@@ -10,7 +10,7 @@ export const createDonationEvent = async (
   try {
     const response = await axios.post(DONATION_EVENT_ROUTES.CREATE_EVENT, {
       name: donationEvent.name,
-      imageId: 'https://picsum.photos/200/300', // use https://picsum.photos/200/300 to test to prevent the payload from being too large
+      imageId: donationEvent.imageId,
       startDate: donationEvent.startDate,
       endDate: donationEvent.endDate,
       isActive: donationEvent.isActive,
@@ -19,19 +19,21 @@ export const createDonationEvent = async (
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating donation event: ', error);
-    throw new Error('Failed to create donation event');
+    console.error("Error creating donation event: ", error);
+    throw new Error("Failed to create donation event");
   }
 };
 
 // Get all donation event
 export const getDonationEvents = async () => {
   try {
-    const response = await axios.get(DONATION_EVENT_ROUTES.RETRIEVE_DONATION_EVENTS);
+    const response = await axios.get(
+      DONATION_EVENT_ROUTES.RETRIEVE_DONATION_EVENTS
+    );
     return response.data.data; // change this later to response.data for pagination data
   } catch (error) {
-    console.error('Error fetching donation event: ', error);
-    throw new Error('Failed to donation event');
+    console.error("Error fetching donation event: ", error);
+    throw new Error("Failed to donation event");
   }
 };
 
@@ -39,12 +41,15 @@ export const getDonationEvents = async () => {
 export const getDonationEventById = async (donationEventId: string) => {
   try {
     const response = await axios.get(
-      DONATION_EVENT_ROUTES.RETRIEVE_DONATION_EVENT_BY_ID.replace(':id', donationEventId),
+      DONATION_EVENT_ROUTES.RETRIEVE_DONATION_EVENT_BY_ID.replace(
+        ":id",
+        donationEventId
+      )
     );
     return response.data;
   } catch (error) {
-    console.error('Error fetching donation event: ', error);
-    throw new Error('Failed to donation event');
+    console.error("Error fetching donation event: ", error);
+    throw new Error("Failed to donation event");
   }
 };
 
@@ -55,14 +60,17 @@ export const updateDonationEventById = async (
 ) => {
   try {
     const response = await axios.put(
-      DONATION_EVENT_ROUTES.UPDATE_DONATION_EVENT_BY_ID.replace(':id', donationEventId),
+      DONATION_EVENT_ROUTES.UPDATE_DONATION_EVENT_BY_ID.replace(
+        ":id",
+        donationEventId
+      ),
       {
         updateParams,
       }
     );
     return response.data;
   } catch (error) {
-    console.error('Error fetching donation event: ', error);
-    throw new Error('Failed to donation event');
+    console.error("Error fetching donation event: ", error);
+    throw new Error("Failed to donation event");
   }
 };
