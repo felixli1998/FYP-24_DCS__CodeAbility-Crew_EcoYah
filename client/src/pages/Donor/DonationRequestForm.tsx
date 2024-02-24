@@ -52,7 +52,7 @@ export default function DonationRequestForm() {
     donationEventId: 0, 
     dropOffDate: new Date(),
     dropOffTime: "",
-    omitPoints: false,
+    omitPoints: true,
     submittedBy: 0, 
     oldDonationRequestItems: [],
     newDonationRequestItems: [],
@@ -310,7 +310,7 @@ export default function DonationRequestForm() {
         donationRequestId: formData.donationRequestId || 0,
         dropOffDate: formData.dropOffDate || new Date(),
         dropOffTime: formData.dropOffTime || "",
-        omitPoints: formData.omitPoints || false,
+        omitPoints: formData.omitPoints || true,
         submittedBy: Number(localStorage.getItem("ecoyah-id")) || 0,
         oldDonationRequestItems: formData.donationRequestItems || [],
       }));

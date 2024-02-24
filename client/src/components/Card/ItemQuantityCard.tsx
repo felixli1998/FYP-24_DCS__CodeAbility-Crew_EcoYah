@@ -75,7 +75,6 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
   };
 
   const handleAddition = (id: number, pointsPerUnit: number): void => {
-    debugger
     setDonationRequestItems((prevItems) => ({
       ...prevItems,
       [id]: {

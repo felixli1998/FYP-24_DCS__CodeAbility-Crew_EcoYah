@@ -23,7 +23,6 @@ type DonationEventCardProps = {
 
 const breakpointSize = "sm";
 const StyledCard = styled(Card)(({ theme }) => ({
-    width: '95%',
     [theme.breakpoints.up(breakpointSize)]: {
       width: '400px', // Set fixed width for larger screens
     },
@@ -62,7 +61,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
 
                 <Grid container alignItems='center' sx={{marginTop: 2}}>
                     <Grid item xs={7}>
-                        <Typography color="text.secondary">
+                        <Typography color="text.secondary" whiteSpace="nowrap">
                             {props.numJoined > 0 ? `${props.numJoined} Donor${props.numJoined > 1 ? 's' : ''} Have Joined!` : "Be the first to make a difference!"}
                         </Typography>
                     </Grid>

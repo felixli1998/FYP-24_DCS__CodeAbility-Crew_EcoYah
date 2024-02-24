@@ -39,7 +39,7 @@ export class DonationEventItemRepository {
     .leftJoin('dei.item', 'item')
     .leftJoin('item.eventType', 'eventType')
     .where('dei.donationEvent.id = :donationEventId', { donationEventId })
-    .cache("donation-event-items", 60000)
+    .cache(`donation-event-items-${donationEventId}`, 60000)
     .getMany();
   }
 }
