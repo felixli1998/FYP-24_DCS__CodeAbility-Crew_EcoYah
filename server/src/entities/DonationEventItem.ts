@@ -28,7 +28,8 @@ export class DonationEventItem {
   // DonationEventItem can only belong to one DonationEvent | DonationEvent can have many DonationEventItems
   @ManyToOne(
     () => DonationEvent,
-    (donationEvent) => donationEvent.donationEventItems
+    (donationEvent) => donationEvent.donationEventItems,
+    { cascade: ['insert', 'update'] }
   )
   donationEvent: DonationEvent;
 

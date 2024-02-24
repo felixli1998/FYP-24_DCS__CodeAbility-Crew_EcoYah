@@ -1,8 +1,10 @@
 // React Imports
-import { useState, useEffect } from 'react';
+import {useState} from "react";
+import {useMutation} from "@tanstack/react-query";
 
 // MUI Imports
 import {
+  Alert,
   Stack,
   Box,
   Stepper,
@@ -10,94 +12,124 @@ import {
   StepLabel,
   Grid,
   Button,
-} from '@mui/material';
+} from "@mui/material";
 
 // Icons
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 // Components
-import StaffTypography from '../../components/Typography/StaffTypography';
-import Step1Form from '../../components/DonationEvent/Step1Form';
-import Step2Form from '../../components/DonationEvent/Step2Form';
-import Step3Form from '../../components/DonationEvent/Step3Form';
+import StaffTypography from "../../components/Typography/StaffTypography";
+import Step1Form from "../../components/DonationEvent/Step1Form";
+import Step2Form from "../../components/DonationEvent/Step2Form";
+import Step3Form from "../../components/DonationEvent/Step3Form";
 
 // Other Imports
-import dayjs from 'dayjs';
-import { useNavigate, useLocation } from 'react-router-dom';
+import dayjs from "dayjs";
+import {useNavigate} from "react-router-dom";
 
 // Utils Imports
-import { FormDataType } from '../../utils/Types';
+import {FormDataType} from "../../utils/Types";
+import DonationEventPreview from "../../components/DonationEvent/DonationEventPreview";
+import {createDonationEvent} from "../../services/donationEventApi";
 
 export default function DonationEventForm() {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const steps = ['Step 1', 'Step 2', 'Step 3'];
+  const adminID = 4; // Hardcode for now
+  const steps = ["Step 1", "Step 2", "Step 3", "Preview"];
   const [activeStep, setActiveStep] = useState(0);
-  const [validateStep1, setValidateStep1] = useState(false);
-  const [backStep1, setBackStep1] = useState(false);
-  const [validateStep2, setValidateStep2] = useState(false);
-  const [backStep2, setBackStep2] = useState(false);
-  const [validateStep3, setValidateStep3] = useState(false);
-  const [backStep3, setBackStep3] = useState(false);
   const [formData, setFormData] = useState<FormDataType>({
-    name: '',
-    imageId: '',
-    eventType: null,
+    name: "",
+    imageId: "",
     startDate: new Date(),
     endDate: new Date(),
     isActive: false,
     donationEventItems: [],
     createdBy: 0,
   });
+  const [showMissingFields, setShowMissingFields] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const handleBack = () => {
+  const validateStepForm = async () => {
     switch (activeStep) {
       case 0:
-        navigate('/admin/donation-events');
-        break;
+        return formData["name"] && formData["imageId"];
       case 1:
-        setBackStep1(true);
-        setActiveStep(0);
-        break;
+        if (formData["donationEventItems"].length === 0) {
+          return false;
+        }
+        for (const eventItem of formData["donationEventItems"]) {
+          for (const [key, value] of Object.entries(eventItem)) {
+            if (
+              key !== "currentQty" &&
+              (!value || (typeof value === "number" && value <= 0))
+            ) {
+              return false;
+            }
+          }
+        }
+        return true;
       case 2:
-        setBackStep2(true);
-        setActiveStep(1);
-        break;
+        return (
+          dayjs(formData["startDate"]).isValid() &&
+          dayjs(formData["endDate"]).isValid()
+        );
+      default:
+        return false;
     }
   };
 
-  const handleNext = () => {
-    switch (activeStep) {
-      case 0:
-        setValidateStep1(true);
-        if (
-          formData['name'] !== '' &&
-          formData['imageId'] !== null &&
-          formData['eventType'] !== null
-        )
-          setActiveStep(1);
-        break;
-      case 1:
-        setValidateStep2(true);
-        if (formData['donationEventItems'].length !== 0) setActiveStep(2);
-        break;
-      case 2:
-        setValidateStep3(true);
-        if (
-          dayjs(formData['startDate']).isValid() &&
-          dayjs(formData['endDate']).isValid()
-        )
-          navigate('/admin/donation-event-preview', {
-            state: JSON.stringify(formData),
-          });
-        break;
+  const handleNext = async () => {
+    const isStepFormValid = await validateStepForm();
+    if (isStepFormValid) {
+      setActiveStep(activeStep + 1);
+      setShowMissingFields(false);
+    } else {
+      setShowMissingFields(true);
     }
+    return isStepFormValid;
+  };
+
+  const handleBack = () => {
+    if (activeStep === 0) {
+      navigate(-1); // Previous page based on URL
+    }
+    setActiveStep(activeStep - 1);
+    setShowMissingFields(false);
   };
 
   const handleData = (key: string, value: any) => {
-    setFormData((prevData) => ({ ...prevData, [key]: value }));
+    setFormData((formData) => ({...formData, [key]: value}));
+  };
+
+  const {mutateAsync: createItemMutateAsync} = useMutation({
+    mutationKey: ["createDonationEvent"],
+    // mutationFn: Performing the actual API call
+    mutationFn: ({
+      formData,
+      adminID,
+    }: {
+      formData: FormDataType;
+      adminID: number;
+    }) => {
+      return createDonationEvent(formData, adminID);
+    },
+    // Execution after successful API call
+    onSuccess: (response) => {
+      if (response && response.data.action) {
+        navigate("/admin/donation-events");
+        return true;
+      }
+      return false;
+    },
+    onError: (error: any) => {
+      console.error("Error creating donation event: ", error);
+      setErrorMessage("An error occurred while creating the donation event.");
+    },
+  });
+
+  const handleCreate = () => {
+    createItemMutateAsync({formData: formData, adminID: adminID});
   };
 
   const form: {
@@ -105,61 +137,69 @@ export default function DonationEventForm() {
   } = {
     0: (
       <Step1Form
-        validate={validateStep1}
-        data={handleData}
-        back={backStep1}
-        prevData={formData}
+        formData={formData}
+        showMissingFields={showMissingFields}
+        handleData={handleData}
       />
     ),
     1: (
       <Step2Form
-        validate={validateStep2}
-        data={handleData}
-        nextData={formData['eventType']}
-        back={backStep2}
-        prevData={formData}
+        formData={formData}
+        showMissingFields={showMissingFields}
+        handleData={handleData}
       />
     ),
     2: (
       <Step3Form
-        validate={validateStep3}
-        data={handleData}
-        back={backStep3}
-        prevData={formData}
+        formData={formData}
+        handleData={handleData}
+      />
+    ),
+    3: (
+      <DonationEventPreview
+        headerBar={
+          <Box
+            display="flex"
+            justifyContent={"center"}
+          >
+            <StaffTypography
+              type="title"
+              size={2.125}
+              text={`Preview the Donation Event`}
+              customStyles={{textAlign: "center"}}
+            />
+          </Box>
+        }
+        donationEvent={formData}
       />
     ),
   };
 
-  useEffect(() => {
-    if (location.state) {
-      setFormData(JSON.parse(location.state));
-      setActiveStep(2);
-      setBackStep3(true);
-    }
-  }, [location.state]);
-
   return (
     <>
-      <Box sx={{ m: 5 }}>
-        <Stepper activeStep={activeStep} alternativeLabel>
+      <Box sx={{m: 5}}>
+        <Stepper
+          activeStep={activeStep}
+          alternativeLabel
+        >
           {steps.map((label, i) => (
             <Step key={label}>
               <StepLabel
                 sx={{
-                  '.MuiSvgIcon-root': {
-                    width: '3.44rem',
-                    height: '3.44rem',
-                    borderRadius: '50rem',
+                  ".MuiSvgIcon-root": {
+                    width: "3.44rem",
+                    height: "3.44rem",
+                    borderRadius: "50rem",
                   },
-                  '.MuiStepIcon-text': { fontSize: '1rem' },
+                  ".MuiStepIcon-text": {fontSize: "1rem"},
                 }}
               >
                 <StaffTypography
-                  type='title'
+                  type="title"
                   size={1.5}
                   text={label}
                   customStyles={{
-                    color: activeStep >= i ? 'primary.main' : '',
+                    color: activeStep >= i ? "primary.main" : "",
                   }}
                 />
               </StepLabel>
@@ -167,40 +207,76 @@ export default function DonationEventForm() {
           ))}
         </Stepper>
       </Box>
-      <Grid container justifyContent='center' sx={{ p: 2 }}>
-        <Grid item xs={12} md={8} lg={8}>
+      <Grid
+        container
+        justifyContent="center"
+        sx={{p: 2}}
+      >
+        <Grid
+          item
+          xs={12}
+          md={8}
+          lg={8}
+          container
+          justifyContent="center"
+        >
           <Stack spacing={5}>
+            {errorMessage && (
+              <Alert severity="error">
+                The request encountered an issue. Please refresh and try again!
+              </Alert>
+            )}
             {form[activeStep]}
-            <Box display='flex' justifyContent='space-between'>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+            >
               <Button
-                variant='outlined'
+                variant="outlined"
                 sx={{
-                  fontSize: '1.25rem',
-                  letterSpacing: '0.15rem',
-                  width: '9.375rem',
-                  height: '3.75rem',
-                  borderColor: 'primary.dark',
-                  color: 'primary.dark',
+                  fontSize: "1.25rem",
+                  letterSpacing: "0.15rem",
+                  width: "9.375rem",
+                  height: "3.75rem",
+                  borderColor: "primary.dark",
+                  color: "primary.dark",
                 }}
                 startIcon={activeStep !== 0 && <ArrowBackIosIcon />}
                 onClick={handleBack}
               >
-                {activeStep === 0 ? 'CANCEL' : 'BACK'}
+                {activeStep === 0 ? "CANCEL" : "BACK"}
               </Button>
-              <Button
-                variant='contained'
-                sx={{
-                  fontSize: '1.25rem',
-                  letterSpacing: '0.15rem',
-                  width: '9.375rem',
-                  height: '3.75rem',
-                  backgroundColor: 'primary.dark',
-                }}
-                endIcon={<ArrowForwardIosIcon />}
-                onClick={handleNext}
-              >
-                NEXT
-              </Button>
+              {activeStep < 3 ? (
+                <Button
+                  variant="contained"
+                  sx={{
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.15rem",
+                    width: "9.375rem",
+                    height: "3.75rem",
+                    backgroundColor: "primary.dark",
+                  }}
+                  endIcon={<ArrowForwardIosIcon />}
+                  onClick={handleNext}
+                >
+                  NEXT
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  sx={{
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.15rem",
+                    width: "9.375rem",
+                    height: "3.75rem",
+                    backgroundColor: "primary.dark",
+                  }}
+                  endIcon={<ArrowForwardIosIcon />}
+                  onClick={handleCreate}
+                >
+                  CREATE
+                </Button>
+              )}
             </Box>
           </Stack>
         </Grid>

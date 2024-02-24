@@ -20,7 +20,7 @@ export class DonationEvent{
     eventType: EventType;
 
     // DonationEvent can have many DonationEventItems | DonationEventItem can only belong to one DonationEvent
-    @OneToMany(() => DonationEventItem, (donationEventItem) => donationEventItem.donationEvent)
+    @OneToMany(() => DonationEventItem, (donationEventItem) => donationEventItem.donationEvent, { cascade: ['insert', 'update'] })
     donationEventItems: DonationEventItem[]
 
     @OneToMany(() => DonationRequest, (donationRequest) => donationRequest.donationEvent)
