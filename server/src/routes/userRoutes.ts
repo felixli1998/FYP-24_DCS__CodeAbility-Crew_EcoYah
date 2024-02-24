@@ -10,11 +10,6 @@ const userService = new UserService(userRepository);
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
-  // Get all users
-  res.json("Successfully accessed user routes");
-});
-
 // Get all users that are admin and staff
 router.get("/allAdmins", async (req, res) => {
   try {
@@ -24,6 +19,31 @@ router.get("/allAdmins", async (req, res) => {
     return generateResponse(res, 500, { action: false, message: "Internal Server Error. Please refresh and try again." });
   }
 
+});
+
+router.get("/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    const user = await userService.getUserByEmail(email);
+
+    if (user === null) {
+      return generateResponse(res, 200, { action: false, message: "User not found", data: null });
+    } else {
+      const payload = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        contactNum: user.contactNum,
+        imageId: user.imageId,
+        role: user.role,
+        points: user.userPoints.points,
+      };
+      return generateResponse(res, 200, { action: true, message: "User found", data: payload });
+    }
+  } catch (error) {
+    return generateResponse(res, 500, { action: false, message: "Internal Server Error. Please refresh and try again.", data: null });
+  }
 });
 
 router.post('/', async (req, res) => {
@@ -60,31 +80,6 @@ router.put('/update', async (req, res) => {
     generateResponse(res, 200, { action: true, message: "User is updated successfully!" });
   } catch (error) {
     generateResponse(res, 500, { action: false, message: "An error occured while updating user" });
-  }
-});
-
-router.get("/:email", async (req, res) => {
-  try {
-    const { email } = req.params;
-
-    const user = await userService.getUserByEmail(email);
-
-    if (user === null) {
-      generateResponse(res, 200, { action: false, message: "User not found", data: null });
-    } else {
-      const payload = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        contactNum: user.contactNum,
-        imageId: user.imageId,
-        role: user.role,
-        points: user.userPoints.points,
-      };
-      generateResponse(res, 200, { action: true, message: "User found", data: payload });
-    }
-  } catch (error) {
-    generateResponse(res, 500, { action: false, message: "Internal Server Error. Please refresh and try again.", data: null });
   }
 });
 

@@ -7,6 +7,8 @@ import { fetchEventTypes } from '../../services/eventTypesApi';
 import { getDonationEventItemsByDonationId } from '../../services/donationEventItemApi';
 import { retrieveDonationReqCountByEventId } from '../../services/donationRequestApi';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
+import { DONATION_REQUEST_ROUTES } from "../../services/routes";
 
 import {
     Box,
@@ -15,7 +17,9 @@ import {
     Grid,
     InputAdornment,
     TextField,
-    Typography
+    Typography, 
+    CircularProgress,
+    Alert
   } from '@mui/material';
 
 type itemType = {
@@ -25,7 +29,7 @@ type itemType = {
     eventType: {id: number}
 }
 
-type donationEventItemsType = {
+export type donationEventItemsType = {
     id: number,
     item: itemType,
     minQty: number,
@@ -51,12 +55,16 @@ export type dataToDonationRequestFormType ={
     donationEventItems: donationEventItemsType[],
     startDate: string,
     endDate: string,
-    timeLeft: string,
     imageId: string,
     name: string,
+    omitPoints?: boolean,
+    donationRequestId?: number
 }
 
 export default function DonationEvents() {
+
+    const [userParticipatedEvents, setUserParticipatedEvents] = useState<number[]>([]);
+
     const [search, setSearch] = useState('');
     const [eventOfTheWeek, setEventOfTheWeek] = useState<eventType>();
     
@@ -170,16 +178,36 @@ export default function DonationEvents() {
                 donationEventItems: donationEvent.donationEventItems,
                 startDate: donationEvent.startDate,
                 endDate: donationEvent.endDate,
-                timeLeft: donationEvent.timeLeft,
                 imageId: donationEvent.imageId,
                 name: donationEvent.name
             }
-            navigate(`/donation-request-form?data=${encodeURIComponent(JSON.stringify(dataToDonationRequestForm))}`);
+            navigate('/donation-request-form', { state: { action: 'create', form: dataToDonationRequestForm }});
         }
 
     };
     
     useEffect(() => {
+        const userId = localStorage.getItem("ecoyah-id");
+        if (userId) {
+            axios
+            .get(
+                DONATION_REQUEST_ROUTES.RETRIEVE_BY_USER_ID, {
+                    params: {
+                        id: userId
+                    }
+                }
+            )
+            .then((resp) => {
+                const respData = resp.data.data;
+                const donationEventIds: number[] = [];
+                respData.forEach((donationRequest: any) => {
+                    donationEventIds.push(donationRequest.donationEvent.id);
+                })
+                setUserParticipatedEvents(donationEventIds);
+            })
+            .catch((err: any) => console.error(err));
+        }
+
         const fetchData = async () => {
             try {
                 const res = await getAllEvents();
@@ -191,7 +219,6 @@ export default function DonationEvents() {
                     return { ...eachEvent, donationEventItems, timeLeft, numDonors};
                 });
                 const updatedEvents = await Promise.all(updatedEventsPromises);
-                console.log(updatedEvents.length);
                 
                 var maxNumDonors = 0;
                 const currDay = new Date().getDay(); // ** Sunday - Saturday: 0 - 6 **
@@ -227,11 +254,18 @@ export default function DonationEvents() {
 
     return (
         <Container sx={{marginTop: 3, marginX: 'auto'}}>
-            {fetchingEventsIsLoading ? <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 5}}>Loading...</Typography> : 
+            {fetchingEventsIsLoading ? 
+                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+                    <CircularProgress size={80} />
+                    <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 5}}>Loading Donation Events...</Typography> 
+                </Box>
+                : 
             <>
                 {errorFetchingEvents ? 
-                    <Typography variant='h5' sx={{fontWeight: 'bold', marginTop: 3}}>Error fetching events, please try again later, sorry for the inconvenience!</Typography> 
-                        : 
+                    <Alert severity="error">
+                        <Typography variant='h5' sx={{fontWeight: 'bold'}}>An error occurred while fetching the donation events. Please refresh and try again. </Typography> 
+                    </Alert>
+                    : 
 
                 <>
                     <TextField fullWidth variant="outlined" 
@@ -261,6 +295,7 @@ export default function DonationEvents() {
                                 numJoined={eventOfTheWeek?.numDonors || 0}
                                 timeLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
                                 handleDonateClick={() => handleDonateClick(eventOfTheWeek)}
+                                disableButton={userParticipatedEvents.includes(eventOfTheWeek.id)}
                             />
                         </>
                     }
@@ -296,6 +331,7 @@ export default function DonationEvents() {
                                     numJoined={event.numDonors}
                                     timeLeft={event.timeLeft}
                                     handleDonateClick={() => handleDonateClick(event)}
+                                    disableButton={userParticipatedEvents.includes(event.id)}
                                 />
                             </Grid>
                         ))}

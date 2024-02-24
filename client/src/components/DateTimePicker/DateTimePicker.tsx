@@ -5,6 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 type DateTimePickerValueType = {
   label: string;
+  data: Record<string, Date | string>;
   onDateTimeChange: (dateTime: Dayjs | null) => void;
   validateForm: boolean;
 };
@@ -32,6 +33,12 @@ export default function DateTimePickerValue(props: DateTimePickerValueType) {
   };
 
   const { minDate, minTime, maxTime } = calculateTimeRange();
+
+  useEffect(() => {
+    if (props.data.dropOffTime !== '') {
+      setValue(dayjs(props.data.dropOffDate));
+    }
+  }, []);
 
   // update the final state of the date time value to parent component
   useEffect(() => {

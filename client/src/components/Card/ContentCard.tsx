@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import {CardActions, Chip} from "@mui/material";
 import { orange } from '@mui/material/colors';
@@ -9,6 +8,7 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Button from "@mui/material/Button";
 import PaidOutlinedIcon from '@mui/icons-material/Paid';
 import Image from "../Image/Image";
+import { useNavigate } from 'react-router-dom';
 
 type ContentCardProps = {
   contentCardData: {
@@ -19,11 +19,14 @@ type ContentCardProps = {
     reward: number;
     location: string;
     dropOffDateTime: string;
+    status: string;
   };
+  originalData: any;
 };
 
 export default function ContentCard(props: ContentCardProps) {
-  const {contentCardData} = props;
+  const navigate = useNavigate();
+  const {contentCardData, originalData} = props;
   const {
     image,
     title,
@@ -32,15 +35,15 @@ export default function ContentCard(props: ContentCardProps) {
     location,
     dropOffDateTime,
     customChipStyle,
+    status
   } = contentCardData;
   return (
     <Card
       variant="outlined"
       sx={{borderRadius: 4}}
-      raised={true}
     >
       <Image   
-        imageId='DefaultDog.png'
+        imageId={image}
         type='circle'
         width='100%'
         height='140px'
@@ -118,20 +121,24 @@ export default function ContentCard(props: ContentCardProps) {
           </Typography>
         </Box>
       </CardContent>
+      { status === 'active' && 
       <CardActions>
+        <Button
+          variant="contained"
+          fullWidth
+          onClick={() => {
+            navigate('/donation-request-form', { state: { action: 'edit', form: originalData }, replace: true })
+          }}
+        >
+          Edit
+        </Button>
         <Button
           variant="outlined"
           fullWidth
         >
-          Delete
+          Withdraw
         </Button>
-        <Button
-          variant="contained"
-          fullWidth
-        >
-          Edit
-        </Button>
-      </CardActions>
+      </CardActions> }
     </Card>
   );
 }

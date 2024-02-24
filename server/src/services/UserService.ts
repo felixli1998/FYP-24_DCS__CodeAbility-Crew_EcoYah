@@ -20,8 +20,9 @@ export class UserService {
     if(!user) return false;
 
     const authenticated = await compare(password, user.passwordDigest);
+    if (!authenticated) return false;
 
-    return authenticated;
+    return user;
   }
 
   async getAllUsers() {

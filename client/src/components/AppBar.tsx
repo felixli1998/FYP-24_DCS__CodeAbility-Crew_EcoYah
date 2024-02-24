@@ -37,6 +37,7 @@ function ResponsiveAppBar() {
 
   // TODO: Let's refactor this subsequently using useContext
   const handleLogOut = () => {
+    localStorage.removeItem('ecoyah-id');
     localStorage.removeItem('ecoyah-email');
     navigate('/sign-in');
     navActionLogicMap(); // handle use case if there's no change in the URL
@@ -60,14 +61,14 @@ function ResponsiveAppBar() {
         // Admin + Authenticated //
         const NavList = [
           NavigationList.HOME,
-          NavigationList.DONATION_EVENT_FORM,
-          NavigationList.DONATION_REQUEST,
           NavigationList.DONATION_EVENTS,
+          NavigationList.DONATION_REQUEST,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, true));
       } else {
         // Donor + Authenticated //
         const NavList = [
+          NavigationList.HOME,
           NavigationList.PROFILE,
           NavigationList.DONATION_REQUEST
         ];
@@ -78,10 +79,10 @@ function ResponsiveAppBar() {
         // Admin + Unauthenticated //
         return [];
       } else {
-        // // Donor + Unauthenticated //
-        // const NavList = [NavigationList.HOME, NavigationList.REWARD, NavigationList.CONTACT_US];
-        // return NavList.map((navItem) => generateNavItem(navItem, false));
-        return [];
+        // Donor + Unauthenticated //
+        const NavList = [NavigationList.HOME];
+        return NavList.map((navItem) => generateNavItem(navItem, false));
+        // return [];
       }
     }
   };

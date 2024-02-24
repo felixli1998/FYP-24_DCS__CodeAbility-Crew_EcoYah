@@ -8,6 +8,7 @@ import {
   ManyToOne,
   Index,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './User';
 import { DonationRequestItem } from './DonationRequestItem';

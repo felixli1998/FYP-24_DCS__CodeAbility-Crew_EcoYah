@@ -71,10 +71,10 @@ let DONATION_EVENT_OBJECTS: any = {};
 let ITEM_OBJECTS: any = {};
 let DONATION_EVENT_ITEMS: any = {};
 
-const NO_OF_USER_TO_CREATE = 50;
-const NO_OF_DONATION_EVENT_TO_CREATE = 50;
-const NO_OF_ITEM_PER_EVENT = 5;
-const NO_OF_DONATION_REQUEST_TO_CREATE = 50;
+const NO_OF_USER_TO_CREATE = 5;
+const NO_OF_DONATION_EVENT_TO_CREATE = 5;
+const NO_OF_ITEM_PER_EVENT = 2;
+const NO_OF_DONATION_REQUEST_TO_CREATE = 5;
 
 // TODO: Feel free to populate more into the seed data as we add more tables //
 const generateSeedData = async () => {

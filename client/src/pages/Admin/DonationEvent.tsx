@@ -117,9 +117,7 @@ export default function DonationEvent() {
       let updateParams: any = {};
       const originalData = donationEventData.data;
       for (const key in donationEvent) {
-        if (!_.isEqual(donationEvent[key], originalData[key])) {
-          updateParams[key] = donationEvent[key];
-        }
+        updateParams[key] = donationEvent[key];
       }
       const response = await updateDonationEventMutateAsync({
         donationEventId: donationEvent.id,

@@ -57,6 +57,7 @@ app.use('/donation-event-item', donationEventItemRoutes);
 app.use('/items', itemRoutes);
 app.use('/event-types', eventRoutes);
 app.use('/donation-requests', donationRequestRoutes);
+app.use('/donation-request-items', donationRequestItemRoutes);
 
 app.get('/', (req, res) => {
   res.send('Hello World!');

@@ -33,6 +33,6 @@ export const generateNavItem = (
 ): NavigationListItemT => {
   const slugOptions = { lower: true };
   const prefix = isAdmin ? '/admin/' : '/';
-  const slugifiedItem = slugify(item, slugOptions);
+  const slugifiedItem = item === 'Home' ? '' : slugify(item, slugOptions);
   return { item, path: `${prefix}${slugifiedItem}` };
 };
