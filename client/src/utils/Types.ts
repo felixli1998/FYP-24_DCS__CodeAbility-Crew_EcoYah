@@ -14,17 +14,16 @@ export type Item = {
 }
 
 export type DonationEventItems = {
-  id: number;
-  name: string;
   minQty: number;
   targetQty: number;
   pointsPerUnit: number;
+  currentQty: number | null;
+  item: Item;
 };
 
 export type FormDataType = {
   name: string;
   imageId: string;
-  eventType: EventType | null;
   startDate: Date;
   endDate: Date;
   isActive: boolean;

@@ -50,7 +50,10 @@ const donationRequestItemService = new DonationRequestItemService(
 
 router.get('/active-donation-requests', async (req, res) => {
   try {
-    const userId: number = parseInt(req.query.userId as string, 10);
+    const params = req.query;
+    const filterParams = strongParams(params, ['userId']);
+    const { userId } = filterParams;
+
     // TODO: Ensure that the person requesting the donation request is the same as the user_id
     if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
     const { data, pagination } = await donationRequestService.getActiveDonationRequestFromUser(userId);
@@ -63,7 +66,9 @@ router.get('/active-donation-requests', async (req, res) => {
 
 router.get('/completed-donation-requests', async (req, res) => {
   try {
-    const userId: number = parseInt(req.query.userId as string, 10);
+    const params = req.query;
+    const filterParams = strongParams(params, ['userId']);
+    const { userId } = filterParams;
     // TODO: Ensure that the person requesting the donation request is the same as the user_id
     if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
     const { data, pagination } = await donationRequestService.getCompletedDonationRequestFromUser(userId);
@@ -160,6 +165,25 @@ router.put('/complete', async (req, res) => {
     return generateResponse(res, 200, 'Updated successfully!');
   } catch (error) {
     return generateResponse(res, 500, 'Something went wrong');
+  }
+});
+
+router.get('/retrieve-donation-request-count-by-event-id', async (req, res) => {
+  const params = req.query;
+  const filteredParams = strongParams(params, ['donationEventId']);
+  const { donationEventId } = filteredParams;
+
+  console.log("----------------donationEventId: ", donationEventId)
+  console.log(typeof donationEventId)
+
+  if(donationEventId === undefined || donationEventId === null || donationEventId === "") {
+    return generateResponse(res, 400, 'Donation Event ID is required.');
+  }
+  try {
+    const result = await donationRequestService.retrieveDonationRequestCountByEventId(parseInt(donationEventId));
+    return generateResponse(res, 200, result);
+  } catch (error) {
+    return generateResponse(res, 500, 'Something went wrong.');
   }
 });
 

@@ -1,20 +1,20 @@
-import { useState } from 'react';
+import { ThemeProvider } from "@emotion/react";
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { ThemeProvider } from "@emotion/react";
-import { theme } from "../styles/Palette";
+import {
+  Backdrop,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  IconButton,
+  Typography
+} from '@mui/material';
 import { MuiOtpInput } from 'mui-one-time-password-input';
-import { Backdrop,
-         Box,
-         Button,
-         Card,
-         CardActions,
-         CardContent,
-         Container,
-         Grid,
-         IconButton,
-         Typography} from '@mui/material';
+import { useState } from 'react';
+import { theme } from "../styles/Palette";
 
 interface PinSignInProps {
   open: boolean;
