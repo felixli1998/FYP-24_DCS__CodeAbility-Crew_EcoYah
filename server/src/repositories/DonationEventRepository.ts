@@ -90,12 +90,16 @@ export class DonationEventRepository {
             .orderBy("donationEvent.createdAt", "ASC");
         }
 
-        if (filters.isActive){
-            console.log("^^^^^ IN FILTERS.isActive IF ^^^^^^")
-
-            queryBuilder.andWhere("donationEvent.isActive = :isActive", { isActive: filters.isActive });
-        }
-        
+         if (filters.isActive === "true" ){
+            const currentDate = new Date().toISOString();
+            queryBuilder.andWhere("donationEvent.startDate <= :currentDate", { currentDate })
+            .andWhere("donationEvent.endDate > :currentDate", { currentDate })
+            .andWhere("donationEvent.isActive = :isActive", { isActive: filters.isActive });
+        } else if (filters.isActive === "false") {
+                const currentDate = new Date().toISOString();
+                queryBuilder.andWhere("donationEvent.startDate > :currentDate OR donationEvent.endDate < :currentDate", { currentDate })
+                .orWhere("donationEvent.isActive = :isActive", { isActive: filters.isActive });
+    }
         if (filters.name) {
             queryBuilder.andWhere("donationEvent.name ILIKE :name", { name: `%${filters.name}%` });
         }
