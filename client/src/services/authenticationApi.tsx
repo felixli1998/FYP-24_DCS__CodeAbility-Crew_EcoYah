@@ -8,7 +8,7 @@ export const getUserByEmail = async (email: string) => {
 
     return res.data.data;
   } catch (error) {
-    console.error("Error fetching event types: ", error);
-    throw new Error("Failed to fetch event types");
+    console.error("Error fetching user: ", error);
+    throw new Error("Failed to fetch user");
   }
 };
