@@ -7,6 +7,8 @@ import { fetchEventTypes } from '../../services/eventTypesApi';
 import { getDonationEventItemsByDonationId } from '../../services/donationEventItemApi';
 import { retrieveDonationReqCountByEventId } from '../../services/donationRequestApi';
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios';
+import { DONATION_REQUEST_ROUTES } from "../../services/routes";
 
 import {
     Box,
@@ -60,6 +62,9 @@ export type dataToDonationRequestFormType ={
 }
 
 export default function DonationEvents() {
+
+    const [userParticipatedEvents, setUserParticipatedEvents] = useState<number[]>([]);
+
     const [search, setSearch] = useState('');
     const [eventOfTheWeek, setEventOfTheWeek] = useState<eventType>();
     
@@ -182,6 +187,27 @@ export default function DonationEvents() {
     };
     
     useEffect(() => {
+        const userId = localStorage.getItem("ecoyah-id");
+        if (userId) {
+            axios
+            .get(
+                DONATION_REQUEST_ROUTES.RETRIEVE_BY_USER_ID, {
+                    params: {
+                        id: userId
+                    }
+                }
+            )
+            .then((resp) => {
+                const respData = resp.data.data;
+                const donationEventIds: number[] = [];
+                respData.forEach((donationRequest: any) => {
+                    donationEventIds.push(donationRequest.donationEvent.id);
+                })
+                setUserParticipatedEvents(donationEventIds);
+            })
+            .catch((err: any) => console.error(err));
+        }
+
         const fetchData = async () => {
             try {
                 const res = await getAllEvents();
@@ -269,6 +295,7 @@ export default function DonationEvents() {
                                 numJoined={eventOfTheWeek?.numDonors || 0}
                                 timeLeft={eventOfTheWeek?.timeLeft || '0 Hours'}
                                 handleDonateClick={() => handleDonateClick(eventOfTheWeek)}
+                                disableButton={userParticipatedEvents.includes(eventOfTheWeek.id)}
                             />
                         </>
                     }
@@ -304,6 +331,7 @@ export default function DonationEvents() {
                                     numJoined={event.numDonors}
                                     timeLeft={event.timeLeft}
                                     handleDonateClick={() => handleDonateClick(event)}
+                                    disableButton={userParticipatedEvents.includes(event.id)}
                                 />
                             </Grid>
                         ))}

@@ -128,6 +128,20 @@ router.get('/retrieve-by-id', async (req, res) => {
   }
 });
 
+// get donation requests by user id
+router.get('/retrieve-by-user-id', async (req, res) => {
+  const params = req.query;
+  const filterParams = strongParams(params, ['id']);
+  const { id } = filterParams;
+
+  try {
+    const result = await donationRequestService.retrieveByUserId(id);
+    return generateResponse(res, 200, result);
+  } catch (err) {
+    return generateResponse(res, 500, 'Something went wrong.');
+  }
+});
+
 router.get('/retrieve-active-by-date', async (req, res) => {
   const params = req.query;
   const filteredParams = strongParams(params, ['date']);

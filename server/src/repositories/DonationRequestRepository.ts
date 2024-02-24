@@ -134,6 +134,23 @@ export class DonationRequestRepository {
     });
   }
 
+  async retrieveByUserId(user_id: number) {
+    const selectOptions = {
+      id: true,
+      donationEvent: {
+        id: true,
+      },
+      user: {
+        id: true
+      }
+    }
+    return await AppDataSource.getRepository(DonationRequest).find({
+      select: selectOptions,
+      where: { user: { id: user_id } }, 
+      relations: ['user', 'donationEvent']
+    });
+  }
+
   async retrieveDonationRequestByDate(date: Date) {
     const start = startOfDay(date);
     const end = endOfDay(date);

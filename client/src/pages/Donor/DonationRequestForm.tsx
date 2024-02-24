@@ -53,7 +53,7 @@ export default function DonationRequestForm() {
     dropOffDate: new Date(),
     dropOffTime: "",
     omitPoints: false,
-    submittedBy: 1, // Hardcode for now
+    submittedBy: 0, 
     oldDonationRequestItems: [],
     newDonationRequestItems: [],
   });
@@ -311,6 +311,7 @@ export default function DonationRequestForm() {
         dropOffDate: formData.dropOffDate || new Date(),
         dropOffTime: formData.dropOffTime || "",
         omitPoints: formData.omitPoints || false,
+        submittedBy: Number(localStorage.getItem("ecoyah-id")) || 0,
         oldDonationRequestItems: formData.donationRequestItems || [],
       }));
       // data structure receieved from previous pages are quite different so need to do data manipulation

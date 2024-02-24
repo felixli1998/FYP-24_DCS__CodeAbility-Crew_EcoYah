@@ -71,6 +71,10 @@ export class DonationRequestService {
     return await this.donationRequestRepository.retrieveById(id);
   }
 
+  async retrieveByUserId(user_id: number) {
+    return await this.donationRequestRepository.retrieveByUserId(user_id);
+  }
+
   async update(payload: DonationRequestUpdatePayload) {
     const { donationRequestId } = payload;
     const updatedRequestPayload: Partial<DonationRequest> = {};

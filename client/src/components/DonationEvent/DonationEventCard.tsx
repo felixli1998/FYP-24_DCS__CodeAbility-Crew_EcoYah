@@ -18,6 +18,7 @@ type DonationEventCardProps = {
     numJoined: number;
     timeLeft: string;
     handleDonateClick: () => void;
+    disableButton: boolean;
 } 
 
 const breakpointSize = "sm";
@@ -50,6 +51,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
                             <Button 
                                 variant='contained'
                                 size='medium'
+                                disabled={props.disableButton}
                                 onClick={() => props.handleDonateClick()}>
                                     Donate
                             </Button>

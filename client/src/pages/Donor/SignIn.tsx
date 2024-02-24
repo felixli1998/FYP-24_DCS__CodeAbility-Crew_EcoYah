@@ -26,25 +26,25 @@ export default function SignIn() {
   const [signInError, setSignInError] = useState(false);
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
-  const handleForgotPassword = () => {
-    setForgotPassword(true);
-  };
+  // const handleForgotPassword = () => {
+  //   setForgotPassword(true);
+  // };
 
-  const handleRmbMe = (status: boolean) => {
-    setRmbMe(status);
-    handleLocalStorage();
-  };
+  // const handleRmbMe = (status: boolean) => {
+  //   setRmbMe(status);
+  //   handleLocalStorage();
+  // };
   // console.log(rmbMe);
 
-  const handleLocalStorage = () => {
-    if (rmbMe) {
-      localStorage.setItem('ecoyah-email', formData['email']);
-      localStorage.setItem('ecoyah-password', formData['password']);
-    } else {
-      localStorage.removeItem('ecoyah-email');
-      localStorage.removeItem('ecoyah-password');
-    }
-  };
+  // const handleLocalStorage = () => {
+  //   if (rmbMe) {
+  //     localStorage.setItem('ecoyah-email', formData['email']);
+  //     localStorage.setItem('ecoyah-password', formData['password']);
+  //   } else {
+  //     localStorage.removeItem('ecoyah-email');
+  //     localStorage.removeItem('ecoyah-password');
+  //   }
+  // };
 
   const navigate = useNavigate();
 
@@ -62,6 +62,7 @@ export default function SignIn() {
 
         if (res.data.action) {
           // Login successful
+          localStorage.setItem('ecoyah-id', res.data.data.id);
           localStorage.setItem('ecoyah-email', formData['email']);
           navigate('/');
         } else {
@@ -99,7 +100,7 @@ export default function SignIn() {
       setIsPasswordCorrect(true);
     }
 
-    handleLocalStorage();
+    // handleLocalStorage();
   }, [formData, rmbMe]);
 
   return (
@@ -166,7 +167,7 @@ export default function SignIn() {
               error={isPasswordCorrect}
               current={currPassword}
             ></TextFields>
-            <Button
+            {/* <Button
               disableRipple
               color='secondary'
               variant='text'
@@ -183,13 +184,13 @@ export default function SignIn() {
               >
                 Forgot Password?
               </Typography>
-            </Button>
-            <Checkboxes
+            </Button> */}
+            {/* <Checkboxes
               label={rmbSignIn}
               type='remember me'
               text='none'
               isChecked={handleRmbMe}
-            ></Checkboxes>
+            ></Checkboxes> */}
             <BasicButton
               label='Sign In'
               variant='contained'
