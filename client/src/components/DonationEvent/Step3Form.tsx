@@ -39,7 +39,7 @@ export default function Step3Form(props: Step3FormProps) {
         size={1.5}
         text='6. Choose the Donation Event Period'
       />
-      <Grid container justifyContent='space-between'>
+      <Grid container justifyContent='space-between' spacing={1}>
         {datePickerFields.map((field, index) => (
           <Grid item xs={12} md={12} lg={6} key={index}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>

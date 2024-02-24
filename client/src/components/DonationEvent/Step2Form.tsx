@@ -358,7 +358,7 @@ export default function Step2Form(props: Step2FormProps) {
                           label={
                             key !== "pointsPerUnit"
                               ? label
-                              : label + donationEventItem.item.unit
+                              : label + _.capitalize(donationEventItem.item.unit)
                           }
                           type="number"
                           InputProps={{

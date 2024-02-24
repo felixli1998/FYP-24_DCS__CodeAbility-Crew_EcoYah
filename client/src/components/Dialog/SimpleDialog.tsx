@@ -1,11 +1,18 @@
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import { Button, CircularProgress, DialogActions, DialogContent } from '@mui/material';
-import React from 'react';
+import DialogTitle from "@mui/material/DialogTitle";
+import Dialog from "@mui/material/Dialog";
+import {
+  Button,
+  CircularProgress,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
+import React from "react";
 
 export interface SimpleDialogProps {
   open: boolean;
   title: string;
+  subtitleText: string;
   children: any;
   leftButtonLabel: string;
   rightButtonLabel: string;
@@ -14,7 +21,16 @@ export interface SimpleDialogProps {
 }
 
 export default function SimpleDialog(props: SimpleDialogProps) {
-  const { open, title, children, leftButtonLabel, rightButtonLabel, updateDonationIsActive, onClose } = props;
+  const {
+    open,
+    title,
+    subtitleText,
+    children,
+    leftButtonLabel,
+    rightButtonLabel,
+    updateDonationIsActive,
+    onClose,
+  } = props;
   const [loading] = React.useState(false);
 
   const handleClose = () => {
@@ -24,7 +40,10 @@ export default function SimpleDialog(props: SimpleDialogProps) {
   return (
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle>{title}</DialogTitle>
-      <DialogContent>{children}</DialogContent>
+      <DialogContent>
+        {subtitleText && <DialogContentText>{subtitleText}</DialogContentText>}
+        {children}
+      </DialogContent>
       <DialogActions>
         <Button
           variant='outlined'

@@ -278,7 +278,8 @@ export default function DonationEvent() {
       <SimpleDialog
         open={openDialog}
         onClose={handleDialogClose}
-        title={"Edit Donation Event"}
+        subtitleText="The donation event has already started. Hence, you won't be able to edit the details except for the status."
+        title={"Edit Donation Event Status"}
         children={
           <FormControlLabel
             control={
