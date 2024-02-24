@@ -84,7 +84,6 @@ export default function DonationRequestForm() {
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
   ) => {
-    // console.log(updatedCheckedState);
     if ("omitPoints" in updatedCheckedState) {
       setDonationRequest((prevData) => ({
         ...prevData,
