@@ -1,15 +1,15 @@
-import * as React from "react";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, {SelectChangeEvent} from "@mui/material/Select";
+import * as React from 'react';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface BasicSelectProps {
   name: string;
   labelId: string;
   label: string;
   selectId: string;
-  menuItems: {label: string; value: string}[];
+  menuItems: { label: string; value: string }[];
   selectValue: string;
   onChange: (value: string) => void;
 }
@@ -28,11 +28,8 @@ const BasicSelect: React.FC<BasicSelectProps> = ({
   };
 
   return (
-    <FormControl
-      fullWidth
-      sx={{marginTop: "1rem"}}
-    >
-      <InputLabel shrink id={labelId}>{label}</InputLabel>
+    <FormControl fullWidth sx={{ marginTop: '1rem' }}>
+      <InputLabel id={labelId}>{label}</InputLabel>
       <Select
         name={name}
         labelId={labelId}
@@ -42,10 +39,7 @@ const BasicSelect: React.FC<BasicSelectProps> = ({
         onChange={handleChange}
       >
         {menuItems.map((item) => (
-          <MenuItem
-            key={item.value}
-            value={item.value}
-          >
+          <MenuItem key={item.value} value={item.value}>
             {item.label}
           </MenuItem>
         ))}

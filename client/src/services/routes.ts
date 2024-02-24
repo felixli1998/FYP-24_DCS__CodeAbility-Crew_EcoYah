@@ -19,6 +19,23 @@ export const IMAGE_ROUTES = {
   RETRIEVE_BY_FILE_PATH: `${BASE_URL}/images/:filePath`,
 }
 
+// ITEM Related Routes //
+export const ITEM_ROUTES = {
+  CREATE_ITEM: `${BASE_URL}/items/create`,
+  RETRIEVE_ALL_ITEMS: `${BASE_URL}/items/all`,
+  RETRIEVE_ITEMS_BY_EVENT_TYPE_ID: `${BASE_URL}/items/:eventId`
+}
+
+// DONATION EVENT Related Routes //
+export const DONATION_EVENT_ROUTES = {
+  GET_ALL: `${BASE_URL}/donation-events/all`,
+  CREATE_EVENT: `${BASE_URL}/donation-events/create`,
+  RETRIEVE_DONATION_EVENTS: `${BASE_URL}/donation-events/all`,
+  RETRIEVE_DONATION_EVENT_BY_ID: `${BASE_URL}/donation-events/:id`,
+  UPDATE_DONATION_EVENT_BY_ID: `${BASE_URL}/donation-events/:id`,
+  RETRIEVE_BY_ID: `${BASE_URL}/donation-events/:id`
+}
+
 // Donation Request Routes //
 export const DONATION_REQUEST_ROUTES = {
   RETRIEVE_ACTIVE_DONATION_REQUESTS: `${BASE_URL}/donation-requests/active-donation-requests`,
@@ -33,12 +50,6 @@ export const DONATION_REQUEST_ROUTES = {
 // Donation Request Items Routes //
 export const DONATION_REQUEST_ITEMS_ROUTES = {
   DELETE: `${BASE_URL}/donation-request-items/delete`
-};
-
-// Donation Event-related routes //
-export const DONATION_EVENT_ROUTES = {
-  GET_ALL: `${BASE_URL}/donation-events/all`,
-  RETRIEVE_BY_ID: `${BASE_URL}/donation-events/:id`,
 };
 
 // Event Type-related routes //

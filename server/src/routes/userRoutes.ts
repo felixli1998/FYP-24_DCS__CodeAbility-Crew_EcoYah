@@ -79,6 +79,7 @@ router.get("/:email", async (req, res) => {
         contactNum: user.contactNum,
         imageId: user.imageId,
         role: user.role,
+        points: user.userPoints.points,
       };
       generateResponse(res, 200, { action: true, message: "User found", data: payload });
     }
