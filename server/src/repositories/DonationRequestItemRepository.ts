@@ -17,10 +17,11 @@ export class DonationRequestItemRepository {
   async retrieveByDonationRequestId(donationRequestId: number) {
     return await AppDataSource.getRepository(DonationRequestItem).find({
       where: { donationRequest: { id: donationRequestId } },
+      relations: ['donationEventItem']
     });
   }
 
-  async updateDonationRequestItem(id: number, payload: Partial<DonationRequestItem>){
-    return await AppDataSource.getRepository(DonationRequestItem).update(id, payload)
+  async updateDonationRequestItem(id: number, payload: Partial<DonationRequestItem>) {
+    return await AppDataSource.getRepository(DonationRequestItem).update(id, payload);
   }
 }
