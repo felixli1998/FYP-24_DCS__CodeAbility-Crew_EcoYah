@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 // MUI Imports
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography, Alert } from "@mui/material";
 
 // Components
 import ImageCoverCard from '../../components/Card/ImageCoverCard';
@@ -16,36 +16,48 @@ import InfoToolTip from '../../components/ToolTip/InfoToolTip';
 import DonationRequestPlaceholder from '../../assets/DonationRequestPlaceholder.png';
 import dayjs, { Dayjs } from 'dayjs';
 import _ from 'lodash';
+import { DONATION_REQUEST_ROUTES } from "../../services/routes";
+import axios from "axios";
+import { useNavigate, useLocation } from 'react-router-dom';
+import {dataToDonationRequestFormType} from './DonationEvents';
 
 type DonationRequestType = {
-  user: number;
-  donationRequestItems: Record<string, string | number>[];
-  omitPoints: boolean;
+  donationEventId: number;
   dropOffDate: Date;
   dropOffTime: string;
+  omitPoints: boolean;
+  submittedBy: number;
+  donationRequestItems: Record<string, number>[];
 };
 
 export default function DonationRequestForm() {
+  const queryParams = new URLSearchParams(useLocation().search);
+  const data: dataToDonationRequestFormType | null = queryParams.get('data') ? JSON.parse(queryParams.get('data')!) : null;
+  console.log(data);
+
+  const navigate = useNavigate();
   const [donationRequest, setDonationRequest] = useState<DonationRequestType>({
-    user: 0,
-    donationRequestItems: [],
-    omitPoints: false,
+    donationEventId: 1, // Hardcode for now
     dropOffDate: new Date(),
-    dropOffTime: '',
+    dropOffTime: "",
+    omitPoints: false,
+    submittedBy: 1, // Hardcode for now
+    donationRequestItems: [],
   });
+  const [error, setError] = useState<boolean>(false);
   const itemsInfo: Record<string, string | number>[] = [
-    { id: 1, item: 'Broccoli', unit: 'kilogram', minQty: 1, pointsPerUnit: 20 },
+    { id: 1, item: "Broccoli", unit: "kilogram", minQty: 1, pointsPerUnit: 20 },
     {
       id: 2,
-      item: 'Cabbage',
-      unit: 'kilogram',
+      item: "Cabbage",
+      unit: "kilogram",
       minQty: 2,
       pointsPerUnit: 40,
     },
     {
       id: 3,
-      item: 'Eggplants',
-      unit: 'kilogram',
+      item: "Eggplants",
+      unit: "kilogram",
       minQty: 1,
       pointsPerUnit: 25,
     },
@@ -58,8 +70,8 @@ export default function DonationRequestForm() {
   const handleCheckBoxChange = (
     updatedCheckedState: Record<string, boolean>
   ) => {
-    if ('omitPoints' in updatedCheckedState) {
-      if (!updatedCheckedState['omitPoints'])
+    if ("omitPoints" in updatedCheckedState) {
+      if (!updatedCheckedState["omitPoints"])
         setDonationRequest((prevData) => ({
           ...prevData,
           omitPoints: true,
@@ -74,11 +86,13 @@ export default function DonationRequestForm() {
         if (value) {
           // If value is true, add to selectedItems if not already present
           const itemExists = selectedItems.some(
-            (selectedItem) => selectedItem['id'] === Number(key)
+            (selectedItem) => selectedItem["id"] === Number(key)
           );
 
           if (!itemExists) {
-            const foundItem = itemsInfo.find((item) => item['id'] === Number(key));
+            const foundItem = itemsInfo.find(
+              (item) => item["id"] === Number(key)
+            );
             setSelectedItems((prevSelectedItems) => [
               ...prevSelectedItems,
               { ...foundItem },
@@ -87,7 +101,7 @@ export default function DonationRequestForm() {
         } else {
           // If value is false, remove from selectedItems if present
           setSelectedItems((prevSelectedItems) =>
-            prevSelectedItems.filter((item) => item['id'] !== Number(key))
+            prevSelectedItems.filter((item) => item["id"] !== Number(key))
           );
         }
       });
@@ -95,13 +109,13 @@ export default function DonationRequestForm() {
   };
 
   const handleItemQuantityChange = (
-    updatedItemQuantity: Record<string, Record<string, number | string>>
+    updatedItemQuantity: Record<number, Record<string, number | string>>
   ) => {
-    const donationRequestItems: Record<string, string | number>[] = [];
+    const donationRequestItems: Record<string, number>[] = [];
     _.mapValues(updatedItemQuantity, function (value, key) {
       donationRequestItems.push({
-        donationEventItemID: key,
-        quantity: value.quantity,
+        donationEventItemId: Number(key),
+        quantity: Number(value.quantity),
       });
     });
     setDonationRequest((prevData) => ({
@@ -124,23 +138,42 @@ export default function DonationRequestForm() {
 
   const handleButtonChange = (status: boolean) => {
     setValidateForm(true);
+    if (
+      donationRequest.donationEventId !== 0 &&
+      donationRequest.submittedBy !== 0 &&
+      donationRequest.dropOffTime !== "" &&
+      donationRequest.donationRequestItems.length > 0
+    ) {
+      axios
+        .post(DONATION_REQUEST_ROUTES.CREATE, donationRequest)
+        .then((resp) => {
+          if (resp.data.status === 200) navigate("/home");
+        })
+        .catch((err) => {
+          setError(true);
+        });
+    }
   };
 
   return (
     <>
-      <ImageCoverCard image={DonationRequestPlaceholder} name={'Food Rescue'} />
-      <Stack spacing={3} sx={{ maxWidth: '30rem', margin: '2rem 1.5rem' }}>
-        <Typography variant='h5' gutterBottom>
+      <ImageCoverCard image={DonationRequestPlaceholder} name={"Food Rescue"} />
+      <Stack spacing={3} sx={{ maxWidth: "30rem", margin: "2rem 1.5rem" }}>
+        <Typography variant="h5" gutterBottom>
           1. Choose the items to donate:
         </Typography>
         <LabelledCheckBox
-          label={[{ id: 1, name: 'Broccoli' }, { id: 2, name: 'Cabbage' }, { id: 3, name: 'Eggplants' }]}
+          label={[
+            { id: 1, name: "Broccoli" },
+            { id: 2, name: "Cabbage" },
+            { id: 3, name: "Eggplants" },
+          ]}
           onCheckBoxChange={handleCheckBoxChange}
           validateForm={validateForm}
         />
         {selectedItems.length >= 1 && (
           <>
-            <Typography variant='h5' gutterBottom>
+            <Typography variant="h5" gutterBottom>
               2. Indicate the quantity to donate:
             </Typography>
             <ItemQuantityCard
@@ -149,8 +182,8 @@ export default function DonationRequestForm() {
             />
           </>
         )}
-        <Box display='flex'>
-          <Typography variant='h5' gutterBottom>
+        <Box display="flex">
+          <Typography variant="h5" gutterBottom>
             3. Drop-off date & time:
           </Typography>
           <InfoToolTip
@@ -161,19 +194,30 @@ export default function DonationRequestForm() {
           />
         </Box>
         <DateTimePicker
-          label={'Date & Time'}
+          label={"Date & Time"}
           onDateTimeChange={handleDateTimeChange}
           validateForm={validateForm}
         />
         <LabelledCheckBox
-          label={[{ id: 'omitPoints', name: 'Receive Points Upon A Successful Donation'}]}
+          label={[
+            {
+              id: "omitPoints",
+              name: "Receive Points Upon A Successful Donation",
+            },
+          ]}
           onCheckBoxChange={handleCheckBoxChange}
         />
         <BasicButton
-          label='Submit Donation'
-          variant='contained'
+          label="Submit Donation"
+          variant="contained"
           onButtonChange={handleButtonChange}
         />
+        {error && (
+          <Alert severity="error">
+            An error occurred while saving your donation request. Please refresh
+            and try again.
+          </Alert>
+        )}
       </Stack>
     </>
   );

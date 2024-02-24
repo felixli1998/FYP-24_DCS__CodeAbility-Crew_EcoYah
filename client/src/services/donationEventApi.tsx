@@ -74,3 +74,23 @@ export const updateDonationEventById = async (
     throw new Error("Failed to donation event");
   }
 };
+// Get all donation events + filter
+export const fetchActiveDonationEvents = async (category: string) => {
+  try {
+    const response = await axios.get(URL + "/all", {
+      params: {
+        startDate: "",
+        endDate: "",
+        createdBy: "",
+        eventType: category,
+        name: "",
+        isActive: true,
+        pageNumber: 1
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching donation events: ", error);
+    throw new Error("Failed to fetch donation events");
+  }
+};

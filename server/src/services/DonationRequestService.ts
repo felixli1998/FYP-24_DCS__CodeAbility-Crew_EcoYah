@@ -4,17 +4,37 @@ import { DonationRequestItem } from '../entities/DonationRequestItem';
 import { DonationRequestUpdatePayload } from '../routes/donationRequestRoutes';
 import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
 import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
+import { UserPointsService } from './UserPointsService';
+import { UserPointsRepository } from '../repositories/UserPointsRepository';
 
 export class DonationRequestService {
   private donationRequestRepository: DonationRequestRepository;
   private donationRequestItemRepository: DonationRequestItemRepository;
   private donationEventItemRepository: DonationEventItemRepository;
+  private userPointsService: UserPointsService
 
   constructor(donationRequestRepository: DonationRequestRepository) {
     this.donationRequestRepository = donationRequestRepository;
     this.donationRequestItemRepository = new DonationRequestItemRepository();
     this.donationEventItemRepository = new DonationEventItemRepository();
+    const userPointsRepository = new UserPointsRepository();
+    this.userPointsService = new UserPointsService(userPointsRepository);
   }
+
+  async getActiveDonationRequestFromUser(user_id:number, page: number = 1) {
+    return await this.donationRequestRepository.getActiveDonationRequestFromUser(
+      user_id,
+      page
+    );
+  }
+
+  async getCompletedDonationRequestFromUser(user_id:number, page: number = 1) {
+    return await this.donationRequestRepository.getCompletedDonationRequestFromUser(
+      user_id,
+      page
+    );
+  }
+
 
   async createDonationRequest(donationRequest: DonationRequest) {
     return await this.donationRequestRepository.createDonationRequest(
@@ -31,7 +51,6 @@ export class DonationRequestService {
   async cancelDonationRequest(id: number) {
     return await this.donationRequestRepository.cancelDonationRequest(id);
   }
-
 
   async createNewDonationRequestItem(
     donationRequestObj: DonationRequest,
@@ -103,6 +122,64 @@ export class DonationRequestService {
   }
 
   async completeDonationRequest(id: number) {
-    return await this.donationRequestRepository.completeDonationRequest(id);
+    // Credit Points
+    const totalPts = await this.tabulateTotalPts(id);
+    const donationRequest = await this.donationRequestRepository.retrieveById(id);
+
+    try {
+      if (donationRequest) {
+        const user_id = donationRequest.user.id;
+        await this.userPointsService.creditUserPoints(user_id, totalPts);
+      }
+    } catch (error) {
+      throw new Error("Failed to credit user points");
+    }
+
+    return await this.donationRequestRepository.completeDonationRequest(id); // Mark donation request as completed
+  }
+
+  async retrieveDonationRequestCountByEventId(
+    donationEventId: number
+  ): Promise<number> {
+    return await this.donationRequestRepository.retrieveDonationRequestCountByEventId(donationEventId);
+  }
+
+  // Helper functions below
+  validateDonationRequestItems(donationRequestItem: DonationRequestItem[]): {valid: boolean, message: string} {
+    // Check not empty
+    if (donationRequestItem.length === 0) {
+      return {
+        valid: false,
+        message: "Donation request items cannot be empty"
+      };
+    }
+    // Check quantity
+    for (let item of donationRequestItem) {
+      if (item.quantity < 1) {
+        return {
+          valid: false,
+          message: "Quantity must be at least 1"
+        };
+      }
+    }
+    return {
+      valid: true,
+      message: "Donation request items are valid"
+    };
+  }
+
+  private async tabulateTotalPts(id: number) {
+    // Based on the donation request ID, retrieve all the donation request items
+    const donationRequestItems = await this.donationRequestItemRepository.retrieveByDonationRequestId(
+      id
+    );
+
+
+    let totalPts = 0;
+    for (let donationRequestItem of donationRequestItems) {
+      totalPts += donationRequestItem.donationEventItem.pointsPerUnit * donationRequestItem.quantity;
+    }
+
+    return totalPts;
   }
 }

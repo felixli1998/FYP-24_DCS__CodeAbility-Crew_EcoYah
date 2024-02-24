@@ -72,6 +72,13 @@ export default function DonationEventsAdmin() {
   const handleDonationEventClick = (donationEventId: number) => {
     navigate(`/admin/donation-event/${donationEventId}`);
   };
+  const displayCountDown = (endDate: string) => {
+    const dayLeft = Math.floor((+new Date(endDate) - +new Date()) / (1000 * 60 * 60 * 24));
+
+    if (dayLeft < 0) return "[EXPIRED]";
+
+    return `[${dayLeft} DAYS LEFT]`;
+  }
 
   useEffect(() => {
     axios
@@ -178,16 +185,8 @@ export default function DonationEventsAdmin() {
                 image={event.imageId}
               />
               <CardContent>
-                <Typography
-                  color="#C51818"
-                  fontWeight="bold"
-                >
-                  [
-                  {Math.floor(
-                    (+new Date(event.endDate) - +new Date()) /
-                      (1000 * 60 * 60 * 24)
-                  )}{" "}
-                  DAYS LEFT]{" "}
+                <Typography color="#C51818" fontWeight="bold">
+                  {displayCountDown(event.endDate)}
                   {new Date(event.startDate).toLocaleDateString("en-GB")} -{" "}
                   {new Date(event.endDate).toLocaleDateString("en-GB")}
                 </Typography>
