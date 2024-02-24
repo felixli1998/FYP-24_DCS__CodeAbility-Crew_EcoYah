@@ -16,7 +16,7 @@ import SuccessCard from '../../components/Card/SuccessCard';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import { makeHttpRequest } from '../../utils/Utility';
 import axios from 'axios';
-import { USER_ROUTES } from '../../services/routes';
+import { PARENT_ROUTES } from '../../services/routes';
 
 export default function SignUp() {
   const passwordCriteria: string[] = [
@@ -55,7 +55,7 @@ export default function SignUp() {
     if (isPasswordValid && isPasswordSame && isChecked) {
       // POST user to database
       try {
-        const res = await makeHttpRequest('POST', USER_ROUTES.CREATE_USER, {
+        const res = await makeHttpRequest('POST', PARENT_ROUTES.USERS, {
           email: formData['email'],
           name: formData['name'],
           contactNum: formData['number'],

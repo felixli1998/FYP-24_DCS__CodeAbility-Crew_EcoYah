@@ -8,7 +8,7 @@ import BasicButton from '../../components/Button/BasicButton';
 import EmailCard from '../../components/Card/EmailCard';
 import { Link as ReactRouterLink, useNavigate } from 'react-router-dom';
 import { makeHttpRequest } from '../../utils/Utility';
-import { GENERAL_ROUTES } from '../../services/routes';
+import { PARENT_ROUTES } from '../../services/routes';
 
 export default function SignIn() {
   const rmbSignIn: string[] = ['Remember Me'];
@@ -54,7 +54,7 @@ export default function SignIn() {
     if (formData['email'] !== '' && formData['password'] !== '') {
       // POST user to verify credentials
       try {
-        const res: any = await makeHttpRequest('POST', GENERAL_ROUTES.LOGIN, {
+        const res: any = await makeHttpRequest('POST', PARENT_ROUTES.LOGIN, {
           email: formData['email'],
           password: formData['password'],
         });

@@ -1,20 +1,21 @@
 // Donor routes //
-import Home from '../pages/Donor/Index';
-import SignUp from '../pages/Donor/SignUp';
-import SignIn from '../pages/Donor/SignIn';
-import Profile from '../pages/Donor/Profile';
-import EditProfile from '../pages/Donor/EditProfile';
-import ImageComponentExample from '../pages/Donor/ImageComponentExample';
-import { DonorHome } from '../pages/Donor/DonorHome';
-import DonationRequestForm from '../pages/Donor/DonationRequestForm';
+import Home from "../pages/Donor/Index";
+import SignUp from "../pages/Donor/SignUp";
+import SignIn from "../pages/Donor/SignIn";
+import Profile from "../pages/Donor/Profile";
+import EditProfile from "../pages/Donor/EditProfile";
+import ImageComponentExample from "../pages/Donor/ImageComponentExample";
+import { DonorHome } from "../pages/Donor/DonorHome";
+import DonationRequestForm from "../pages/Donor/DonationRequestForm";
 
 // Admin routes //
-import AdminHome from '../pages/Admin/AdminHome';
-import AdminSignIn from '../pages/Admin/SignIn';
-import DonationEventForm from '../pages/Admin/DonationEventForm';
-import DonationEventPreview from '../pages/Admin/DonationEventPreview';
+import AdminHome from "../pages/Admin/AdminHome";
+import AdminSignIn from "../pages/Admin/SignIn";
+import DonationEventForm from "../pages/Admin/DonationEventForm";
+import DonationEventPreview from "../pages/Admin/DonationEventPreview";
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
-import DonationRequests from '../pages/Admin/DonationRequests';
+import DonationRequests from "../pages/Admin/DonationRequests";
+import MyDonations from "../pages/Donor/MyDonations";
 
 type AppRoutesT = {
   path: string;
@@ -109,5 +110,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "View all donation events for the admin",
     element: <DonationEventsAdmin />,
     isAdmin: true,
+  },
+  {
+    //for testing only
+    path: "my-donations",
+    description: "My donations",
+    element: <MyDonations />,
+    isAdmin: false,
   },
 ];

@@ -5,7 +5,7 @@ import ProfileCard from '../../components/Card/ProfileCard';
 import { theme } from '../../styles/Palette';
 import { makeHttpRequest } from '../../utils/Utility';
 import ReportProblemIcon from '@mui/icons-material/ReportProblem';
-import { USER_ROUTES, GENERAL_ROUTES } from "../../services/routes";
+import { USER_ROUTES, PARENT_ROUTES } from "../../services/routes";
 import PinSignIn from "../../components/PinSignIn";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 
@@ -67,7 +67,7 @@ export default function SignIn() {
           setErrorMsg("PIN must be 4 digits long.");
       } else {
           try {
-              const res: any = await makeHttpRequest('POST', GENERAL_ROUTES.LOGIN, {
+              const res: any = await makeHttpRequest('POST', PARENT_ROUTES.LOGIN, {
                   email: selectedProfile,
                   password: pin
               });

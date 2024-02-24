@@ -1,34 +1,37 @@
 const BASE_URL = process.env.REACT_APP_BACKEND_URL
 
+// Parent Routes
+export const PARENT_ROUTES = {
+  USERS: `${BASE_URL}/users`,
+  DONATION_EVENTS: `${BASE_URL}/donation-events`,
+  DONATION_REQUESTS: `${BASE_URL}/donation-requests`,
+  IMAGES: `${BASE_URL}/images`,
+  LOGIN: `${BASE_URL}/login`
+};
+
 // Users Related Routes //
 export const USER_ROUTES = {
-  RETRIEVE_BY_EMAIL: `${BASE_URL}/users/:email`,
-  CREATE_USER: `${BASE_URL}/users`,
-  ADMIN_LOGIN: `${BASE_URL}/users/allAdmins`,
-  UPDATE_USER: `${BASE_URL}/users/update`,
-}
-
-// General Related Routes //
-export const GENERAL_ROUTES = {
-  LOGIN: `${BASE_URL}/login`,
+  RETRIEVE_BY_EMAIL: `${PARENT_ROUTES.USERS}/:email`,
+  ADMIN_LOGIN: `${PARENT_ROUTES.USERS}/allAdmins`,
+  UPDATE_USER: `${PARENT_ROUTES.USERS}/update`,
 }
 
 // Image Related Routes //
 export const IMAGE_ROUTES = {
-  UPDATE: `${BASE_URL}/images/:id`,
-  RETRIEVE_BY_FILE_PATH: `${BASE_URL}/images/:filePath`,
+  UPDATE: `${PARENT_ROUTES.IMAGES}/:id`,
+  RETRIEVE_BY_FILE_PATH: `${PARENT_ROUTES.IMAGES}/:filePath`,
 }
 
 // Donation Request Routes //
 export const DONATION_REQUEST_ROUTES = {
-  RETRIEVE_ACTIVE_BY_DATE: `${BASE_URL}/donation-requests/retrieve-active-by-date`,
-  UPDATE_STATUS: `${BASE_URL}/donation-requests/complete`,
-  CREATE: `${BASE_URL}/donation-requests/create`,
+  RETRIEVE_ACTIVE_BY_DATE: `${PARENT_ROUTES.DONATION_REQUESTS}/retrieve-active-by-date`,
+  UPDATE_STATUS: `${PARENT_ROUTES.DONATION_REQUESTS}/complete`,
+  CREATE: `${PARENT_ROUTES.DONATION_REQUESTS}/create`,
 };
 
 // Donation Event-related routes //
 export const DONATION_EVENT_ROUTES = {
-  GET_ALL: `${BASE_URL}/donation-events/all`,
+  GET_ALL: `${PARENT_ROUTES.DONATION_EVENTS}/all`,
 };
 
 // Event Type-related routes //
