@@ -5,7 +5,7 @@ import TemporaryDrawer from './Drawer';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Box } from '@mui/material';
 import logo from '../assets/Kunyah.png';
-import { useEffect, useReducer } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import {
   NavigationList,
   ActionList,
@@ -30,6 +30,7 @@ export const isAuthenticated = () => {
 function ResponsiveAppBar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [ homePath, setHomePath ] = useState<string>('/');
 
   const defaultNavigationList: NavigationListItemT[] = [];
   const defaultActionList: NavigationListItemT[] = [];
@@ -67,9 +68,7 @@ function ResponsiveAppBar() {
       } else {
         // Donor + Authenticated //
         const NavList = [
-          NavigationList.HOME,
           NavigationList.PROFILE,
-          // NavigationList.CONTACT_US, // not ready yet
           NavigationList.DONATION_REQUEST
         ];
         return NavList.map((navItem) => generateNavItem(navItem, false));
@@ -79,9 +78,10 @@ function ResponsiveAppBar() {
         // Admin + Unauthenticated //
         return [];
       } else {
-        // Donor + Unauthenticated //
-        const NavList = [NavigationList.HOME, NavigationList.REWARD, NavigationList.CONTACT_US];
-        return NavList.map((navItem) => generateNavItem(navItem, false));
+        // // Donor + Unauthenticated //
+        // const NavList = [NavigationList.HOME, NavigationList.REWARD, NavigationList.CONTACT_US];
+        // return NavList.map((navItem) => generateNavItem(navItem, false));
+        return [];
       }
     }
   };
@@ -123,15 +123,6 @@ function ResponsiveAppBar() {
     return currentPath.includes('admin');
   };
 
-  // TODO: Let's refactor this subsequently using useContext
-  // const isAuthenticated = () => {
-  //   const email = localStorage.getItem('ecoyah-email');
-
-  //   if (email) return true;
-
-  //   return false;
-  // };
-
   const navActionLogicMap = () => {
     const authenticated = isAuthenticated();
     const admin = isAdmin();
@@ -142,13 +133,19 @@ function ResponsiveAppBar() {
 
   useEffect(() => {
     navActionLogicMap();
+
+    if(isAdmin()){
+      setHomePath( isAuthenticated() ? '/admin/home' : '/admin/sign-in');
+    } else {
+      setHomePath('/');
+    }
   }, [location.pathname]);
 
   return (
     <AppBar position='static' color='default'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
-          <Link to={'/'}>
+          <Link to={homePath}>
             <Box
               component='img'
               sx={{
