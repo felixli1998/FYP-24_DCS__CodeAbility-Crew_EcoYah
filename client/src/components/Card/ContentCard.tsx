@@ -7,6 +7,7 @@ import { orange } from '@mui/material/colors';
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Button from "@mui/material/Button";
 import PaidOutlinedIcon from '@mui/icons-material/Paid';
+import { folderPrefixNames } from '../../components/Image/Image';
 import Image from "../Image/Image";
 import { useNavigate } from 'react-router-dom';
 
@@ -47,7 +48,7 @@ export default function ContentCard(props: ContentCardProps) {
         type='rectangle'
         width='100%'
         height='80%'
-        folderPrefix='events' />
+        folderPrefix={folderPrefixNames.EVENTS} />
       <CardContent
         sx={{
           display: "flex",

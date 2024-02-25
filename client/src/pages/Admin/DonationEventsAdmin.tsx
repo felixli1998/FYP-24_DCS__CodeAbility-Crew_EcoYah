@@ -183,7 +183,7 @@ export default function DonationEventsAdmin() {
               <CardMedia
                 sx={{height: "8rem"}}
                 image={event.imageId}
-              />
+              /> 
               <CardContent>
                 <Typography color="#C51818" fontWeight="bold">
                   {displayCountDown(event.endDate)}

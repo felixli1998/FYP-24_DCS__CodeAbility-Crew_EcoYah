@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Box, Typography } from '@mui/material';
+import { folderPrefixNames } from '../../components/Image/Image';
 import Image from "../Image/Image";
 
 type ImageCoverCardType = {
@@ -24,7 +25,7 @@ export default function ImageCoverCard(props: ImageCoverCardType) {
         type="rectangle"
         width="100%"
         height="320px"
-        folderPrefix="events"
+        folderPrefix={folderPrefixNames.EVENTS}
       />
       <Box
         sx={{
