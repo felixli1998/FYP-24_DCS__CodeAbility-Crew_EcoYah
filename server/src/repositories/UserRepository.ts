@@ -38,4 +38,10 @@ export class UserRepository {
   async updateUser(email: string, payload: Partial<User>) {
     await AppDataSource.getRepository(User).update({ email: email }, payload)
   }
+
+  async getAccountType(email: User['email']) {
+    const user = await AppDataSource.getRepository(User).findOne({ where: { email } });
+
+    return user?.role;
+  }
 }
