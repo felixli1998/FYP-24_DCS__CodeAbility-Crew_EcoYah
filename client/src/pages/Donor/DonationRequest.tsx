@@ -69,6 +69,21 @@ export const DonationRequest = () => {
       enabled: !!user,
     });
 
+  const restructureDataToDonationRequestForm = (donationRequest: any) => {
+    return {
+      id: donationRequest.donationEvent.id,
+      name: donationRequest.donationEvent.name,
+      imageId: donationRequest.donationEvent.imageId,
+      startDate: donationRequest.donationEvent.startDate, 
+      endDate: donationRequest.donationEvent.endDate,
+      donationRequestId: donationRequest.id,
+      dropOffDate: donationRequest.dropOffDate,
+      dropOffTime: donationRequest.dropOffTime,
+      omitPoints: donationRequest.omitPoints,
+      donationRequestItems: donationRequest.donationRequestItems
+    }
+  }
+
   useEffect(() => {
     if (user) {
       donationRequestRefetch();
@@ -119,12 +134,14 @@ export const DonationRequest = () => {
                   getDayLeft(donationRequest.donationEvent.endDate) === 0
                     ? {backgroundColor: "#e0e0e0", color: "#9e9e9e"}
                     : {},
-                reward: getRewardAmount(donationRequest.donationRequestItems),
+                reward: donationRequest.omitPoints ? 0 : getRewardAmount(donationRequest.donationRequestItems),
                 location: "Kunyah Cafe",
                 dropOffDateTime: `${new Date(
                   donationRequest.dropOffDate
                 ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
+                status: selectedTab
               }}
+              originalData={restructureDataToDonationRequestForm(donationRequest)}
             />
           ))}
       </Stack>

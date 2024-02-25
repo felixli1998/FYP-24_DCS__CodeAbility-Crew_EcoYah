@@ -76,43 +76,51 @@ export class DonationRequestService {
     return await this.donationRequestRepository.retrieveById(id);
   }
 
+  async retrieveByUserId(user_id: number) {
+    return await this.donationRequestRepository.retrieveByUserId(user_id);
+  }
+
   async update(payload: DonationRequestUpdatePayload) {
-    const { id } = payload;
+    const { donationRequestId } = payload;
     const updatedRequestPayload: Partial<DonationRequest> = {};
 
-    for (const [key, value] of Object.entries(payload)) {
-      switch (key) {
-        case 'id':
-          break;
-        case 'dropOffDate':
-          updatedRequestPayload.dropOffDate = new Date(value as string);
-          break;
-        case 'dropOffTime':
-          updatedRequestPayload.dropOffTime = value as string;
-          break;
-        case 'omitPoints':
-          updatedRequestPayload.omitPoints = value as boolean;
-        case 'requestItems':
-          if (Array.isArray(value)) {
-            await Promise.all(value.map(async (item) => {
-              const { id, quantity } = item;
-              this.donationRequestItemRepository.updateDonationRequestItem(id, { quantity })
-            }));
-          }
-          break;
-        default:
-          console.log('Invalid key provided.');
-          break;
+    try {
+      for (const [key, value] of Object.entries(payload)) {
+        switch (key) {
+          case 'donationRequestId':
+            break;
+          case 'dropOffDate':
+            updatedRequestPayload.dropOffDate = new Date(value as string);
+            break;
+          case 'dropOffTime':
+            updatedRequestPayload.dropOffTime = value as string;
+            break;
+          case 'omitPoints':
+            updatedRequestPayload.omitPoints = value as boolean;
+          case 'oldDonationRequestItems':
+            if (Array.isArray(value)) {
+              await Promise.all(value.map(async (item) => {
+                const { id, quantity } = item;
+                this.donationRequestItemRepository.updateDonationRequestItem(id, { quantity })
+              }));
+            }
+            break;
+          default:
+            console.log('Invalid key provided.');
+            break;
+        }
       }
+  
+      const res = await this.donationRequestRepository.updateDonationRequest(donationRequestId, updatedRequestPayload);
+      return {
+        action: true,
+        data: res,
+        message: 'Successfully updated donation request',
+      };
+    } catch (error) {
+      console.error(error);
+      throw new Error();
     }
-
-    const res = await this.donationRequestRepository.updateDonationRequest(id, updatedRequestPayload)
-
-    return {
-      action: true,
-      data: res,
-      message: 'Successfully updated donation request',
-    };
   }
 
   async retrieveDonationRequestByDate(date: Date) {

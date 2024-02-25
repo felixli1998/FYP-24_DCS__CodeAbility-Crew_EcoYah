@@ -17,6 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 type ItemQuantityCardType = {
   label: Record<string, string | number>[];
+  data: any;
   onItemQuantityChange: (
     itemQuantity: Record<string, Record<string, string | number>>
   ) => void;
@@ -38,10 +39,13 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
   useEffect(() => {
     const initialDonationRequestItems: DonationRequestItemType = {};
     props.label.forEach((eachLabel: Record<string, string | number>) => {
+      const foundItem = props.data.find((item: any) => item.donationEventItem.id === eachLabel.id);
+      
+      const quantityToUse = foundItem ? foundItem.quantity : eachLabel.minQty;
+      
       initialDonationRequestItems[eachLabel.id as number] = {
-        quantity: eachLabel.minQty as number,
-        points:
-          (eachLabel.minQty as number) * (eachLabel.pointsPerUnit as number),
+        quantity: quantityToUse as number,
+        points: quantityToUse * (eachLabel.pointsPerUnit as number),
         error: "",
       };
     });
@@ -116,7 +120,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
                   component="div"
                   color="secondary.light"
                 >
-                  Earn {eachLabel.pointsPerUnit} points per {eachLabel.unit}{" "}
+                  Earn {eachLabel.pointsPerUnit} cashback per {eachLabel.unit}{" "}
                   donated
                 </Typography>
                 <Typography

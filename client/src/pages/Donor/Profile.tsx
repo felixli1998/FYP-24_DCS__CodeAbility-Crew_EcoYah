@@ -32,6 +32,8 @@ import PaidOutlinedIcon from '@mui/icons-material/Paid';
 import { makeHttpRequest } from '../../utils/Utility';
 import { USER_ROUTES } from '../../services/routes';
 import { capitalize } from 'lodash';
+import { folderPrefixNames } from '../../components/Image/Image';
+import Image from '../../components/Image/Image';
 
 const navigationItems = [
   {
@@ -102,26 +104,26 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
   picture,
   name,
   role,
+  
 }) => {
+  const imageId = picture.trim() === '' ? 'DefaultProfilePicture.jpg' : picture;
   return (
     <>
-      <Box
-        component='img'
-        display='flex'
-        justifyContent='center'
-        sx={{
+      <Box display='flex' justifyContent='center' 
+        sx={{ 
           marginX: 'auto',
-          marginTop: 4,
-          marginBottom: 2,
           width: '8rem',
-          height: '8rem',
-          borderRadius: '50%',
-          boxShadow:
-            '0px 2px 6px 0px rgba(0, 0, 0, 0.25), 0 0 10px rgba(0, 0, 0, 0.2) inset',
-        }}
-        alt='EcoYah'
-        src={logo}
-      ></Box>
+          height: '8rem', 
+          marginTop: 4, 
+          }}>
+        <Image
+          imageId={imageId}
+          type='circle'
+          width="100%"
+          height="100%"
+          folderPrefix={folderPrefixNames.PROFILEPICTURES}
+        /> 
+      </Box>
       <Typography sx={{ fontWeight: 'bold' }} align='center'>
         {name}
       </Typography>
@@ -234,6 +236,7 @@ export default function Profile() {
   const [userInfo, setUserInfo] = useState({
     name: '',
     role: '',
+    imageId: '',
     points: 0,
   });
 
@@ -246,8 +249,8 @@ export default function Profile() {
       const { action, data } = res.data;
       if (action) {
         // Currently, we do not have points so it will be null
-        const { name, role, points = 1000 } = data;
-        setUserInfo({ name, role: capitalize(role), points });
+        const { name, role, imageId, points = 1000 } = data;
+        setUserInfo({ name, role: capitalize(role), imageId, points });
       } else {
         // TODO: Currently, we do not really have any robust error message
         console.log('Error retrieving user info');
@@ -265,10 +268,10 @@ export default function Profile() {
     <ThemeProvider theme={theme}>
       <Container sx={{ width: '100%' }}>
         <ProfilePicture
-          picture={''}
+          picture={userInfo.imageId}
           name={userInfo.name}
           role={userInfo.role}
-        />
+        /> 
         <Reward points={userInfo.points} />
         <Others />
       </Container>

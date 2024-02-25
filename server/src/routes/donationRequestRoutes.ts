@@ -21,17 +21,17 @@ import { DonationEventRepository } from "../repositories/DonationEventRepository
 import { DonationEventItemService } from "../services/DonationEventItemService";
 import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
 
-export type RequestItemsPayloadT = {
+export type OldDonationRequestItemsPayloadT = {
   id: DonationRequestItem["id"];
   quantity: DonationRequestItem["quantity"];
 };
 
 export type DonationRequestUpdatePayload = {
-  id: DonationRequest["id"];
+  donationRequestId: DonationRequest["id"];
   dropOffDate?: DonationRequest["dropOffDate"];
   dropOffTime?: DonationRequest["dropOffTime"];
   omitPoints?: DonationRequest["omitPoints"];
-  requestItems?: RequestItemsPayloadT[];
+  oldDonationRequestItems?: OldDonationRequestItemsPayloadT[];
 };
 
 const router = express.Router();
@@ -46,6 +46,22 @@ const donationRequestService = new DonationRequestService(
 const donationRequestItemRepository = new DonationRequestItemRepository();
 const donationRequestItemService = new DonationRequestItemService(
   donationRequestItemRepository
+);
+
+// User Service
+const userRepository = new UserRepository();
+const userServices = new UserService(userRepository);
+
+// Donation Event Service
+const donationEventRepository = new DonationEventRepository();
+const donationEventService = new DonationEventService(
+  donationEventRepository
+);
+
+// Donation Event Item Service
+const donationEventItemRepository = new DonationEventItemRepository();
+const donationEventItemService = new DonationEventItemService(
+  donationEventItemRepository
 );
 
 router.get('/active-donation-requests', async (req, res) => {
@@ -109,6 +125,20 @@ router.get('/retrieve-by-id', async (req, res) => {
   }
 });
 
+// get donation requests by user id
+router.get('/retrieve-by-user-id', async (req, res) => {
+  const params = req.query;
+  const filterParams = strongParams(params, ['id']);
+  const { id } = filterParams;
+
+  try {
+    const result = await donationRequestService.retrieveByUserId(id);
+    return generateResponse(res, 200, result);
+  } catch (err) {
+    return generateResponse(res, 500, 'Something went wrong.');
+  }
+});
+
 router.get('/retrieve-active-by-date', async (req, res) => {
   const params = req.query;
   const filteredParams = strongParams(params, ['date']);
@@ -126,25 +156,98 @@ router.get('/retrieve-active-by-date', async (req, res) => {
   }
 });
 
+router.post('/create', async (req, res) => {
+  // sanitize inputs
+  const params = req.body; 
+  const allowedEventParams = [
+    "donationEventId",
+    "donationRequestId",
+    "dropOffDate",
+    "dropOffTime",
+    "omitPoints",
+    "submittedBy",
+    "newDonationRequestItems",
+  ];
+  const filteredEventParams = strongParams(params, allowedEventParams);
+
+  try {
+    const newDonationRequest = new DonationRequest();
+    newDonationRequest.dropOffDate = filteredEventParams.dropOffDate;
+    newDonationRequest.dropOffTime = filteredEventParams.dropOffTime;
+    newDonationRequest.omitPoints = filteredEventParams.omitPoints;
+
+    const donationEvent = await donationEventService.getDonationEventById(
+      filteredEventParams.donationEventId
+    );
+    if (donationEvent) newDonationRequest.donationEvent = donationEvent;
+
+    const user = await userServices.getUserById(filteredEventParams.submittedBy);
+    if (user) newDonationRequest.user = user;
+
+    let donationRequest;
+    if (filteredEventParams.donationRequestId !== 0) {
+      donationRequest = await donationRequestService.retrieveById(
+        filteredEventParams.donationRequestId
+      );
+    } else {
+      donationRequest =
+        await donationRequestService.createDonationRequest(newDonationRequest);
+    }
+
+    if (donationRequest) {
+      for (const requestItem of filteredEventParams.newDonationRequestItems) {
+        const newDonationRequestItem = new DonationRequestItem();
+        newDonationRequestItem.quantity = requestItem.quantity;
+        newDonationRequestItem.donationRequest = donationRequest;
+        const donationEventItem =
+          await donationEventItemService.retrieveDonationEventItemById(
+            requestItem.donationEventItemId
+          );
+        if (donationEventItem)
+          newDonationRequestItem.donationEventItem = donationEventItem;
+
+        await donationRequestItemService.createDonationRequestItem(
+          newDonationRequestItem
+        );
+      }
+    }
+   
+    return generateResponse(res, 200, {
+      action: true,
+      message: "create_success",
+    });
+  } catch (error) {
+    console.log(error)
+    return generateResponse(res, 500, "Something went wrong.");
+  }
+});
+
 router.put('/update', async (req, res) => {
   const payload = req.body;
-  const allowedParams = ['id', 'dropOffDate', 'dropOffTime', 'requestItems', 'omitPoints'];
+  const allowedParams = [
+    "donationRequestId",
+    "dropOffDate",
+    "dropOffTime",
+    "omitPoints",
+    "oldDonationRequestItems",
+  ];
   const sanitisedPayload = strongParams(payload, allowedParams);
 
-  if (!('id' in sanitisedPayload))
-    return generateResponse(res, 200, 'Missing id');
+  if (!("donationRequestId" in sanitisedPayload))
+    return generateResponse(res, 200, "Missing Id");
 
-  type DonationRequestUpdatePayloadWithId = DonationRequestUpdatePayload & {
-    id: string;
-  };
+  // type DonationRequestUpdatePayloadWithId = DonationRequestUpdatePayload & {
+  //   id: string;
+  // };
 
   try {
     // Type assertion that an id is definitely present due to my previous checks
     const payload = await donationRequestService.update(
-      sanitisedPayload as DonationRequestUpdatePayloadWithId
+      sanitisedPayload as DonationRequestUpdatePayload
     );
     return generateResponse(res, 200, payload);
-  } catch (err) {
+  } catch (error) {
+    console.log(error)
     return generateResponse(res, 500, 'Something went wrong');
   }
 });

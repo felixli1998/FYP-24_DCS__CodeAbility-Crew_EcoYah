@@ -1,20 +1,21 @@
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { CardActions, Chip } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import Button from "@mui/material/Button";
 import PaidOutlinedIcon from "@mui/icons-material/Paid";
+import { folderPrefixNames } from "../../components/Image/Image";
 import Image from "../Image/Image";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import WithdrawRequestModal from "../Modal/WithdrawRequestModal";
 
 type ContentCardProps = {
   contentCardData: {
-    id: number
+    id: number;
     image: string;
     title: string;
     chipLabel: string;
@@ -22,33 +23,37 @@ type ContentCardProps = {
     reward: number;
     location: string;
     dropOffDateTime: string;
+    status: string;
   };
+  originalData: any;
 };
 
 export default function ContentCard(props: ContentCardProps) {
-  const { contentCardData } = props;
+  const navigate = useNavigate();
+  const { contentCardData, originalData } = props;
   const {
     id,
     image,
     title,
     chipLabel,
-    customChipStyle,
     reward,
     location,
     dropOffDateTime,
+    customChipStyle,
+    status,
   } = contentCardData;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
-      <Card variant="outlined" sx={{ borderRadius: 4 }} raised={true}>
+      <Card variant="outlined" sx={{ borderRadius: 4 }}>
         <Image
-          imageId="DefaultDog.png"
-          type="circle"
+          imageId={image}
+          type="rectangle"
           width="100%"
-          height="140px"
-          folderPrefix="events"
+          height="80%"
+          folderPrefix={folderPrefixNames.EVENTS}
         />
         <CardContent
           sx={{
@@ -66,7 +71,7 @@ export default function ContentCard(props: ContentCardProps) {
               marginBottom: 0.5,
             }}
           >
-            <Typography component="div" variant="body2" fontWeight={700}>
+            <Typography component="div" variant="h6" fontWeight={700}>
               {title}
             </Typography>
             <Chip
@@ -119,20 +124,30 @@ export default function ContentCard(props: ContentCardProps) {
             </Typography>
           </Box>
         </CardContent>
-        <CardActions>
-          <Button
-            variant="outlined"
-            fullWidth
-            onClick={() => setIsModalOpen(true)}
-          >
-            Withdraw
-          </Button>
-          <Button variant="contained" fullWidth>
-            Edit
-          </Button>
-        </CardActions>
+        {status === "active" && (
+          <CardActions>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => {
+                navigate("/donation-request-form", {
+                  state: { action: "edit", form: originalData },
+                  replace: true,
+                });
+              }}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="outlined"
+              fullWidth
+              onClick={() => setIsModalOpen(true)}
+            >
+              Withdraw
+            </Button>
+          </CardActions>
+        )}
       </Card>
-
       <WithdrawRequestModal
         isModalOpen={isModalOpen}
         handleClose={() => setIsModalOpen(false)}
