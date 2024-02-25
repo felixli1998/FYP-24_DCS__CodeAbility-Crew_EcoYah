@@ -66,7 +66,22 @@ export const ITEM_SEED_DATA = [
     eventType: "Electronic Waste"
   },
   {
+    name: "iPhone 12",
+    unit: "unit",
+    eventType: "Electronic Waste"
+  },
+  {
     name: "Bok Choy",
+    unit: "gram",
+    eventType: "Food Waste"
+  },
+  {
+    name: "Eggs",
+    unit: "unit",
+    eventType: "Food Waste"
+  },
+  {
+    name: "Rice",
     unit: "gram",
     eventType: "Food Waste"
   },
@@ -81,17 +96,17 @@ export const ITEM_SEED_DATA = [
     eventType: "Electronic Waste"
   },
   {
-    name: "Children's Books",
+    name: "Old Newspaper",
     unit: "unit",
     eventType: "Book Donation"
   },
   {
-    name: "Young Adult Fiction",
+    name: "Old Magazines",
     unit: "unit",
     eventType: "Book Donation"
   },
   {
-    name: "Adult Fiction",
+    name: "Old Books",
     unit: "unit",
     eventType: "Book Donation"
   },
@@ -104,26 +119,38 @@ export const ITEM_SEED_DATA = [
     name: "Young Adult Clothing",
     unit: "unit",
     eventType: "Clothing Waste"
-  },
+  }
 ]
 
 export const DONATION_EVENT_SEED_DATA = [
   {
-    name: "Do good with food",
-    imageId: "https://picsum.photos/200/300",
+    name: "Harvest for Hope: Food Donation Drive",
+    imageId: "https://www.shutterstock.com/image-photo/concept-food-needs-shortages-free-260nw-1546483745.jpg",
     user: "Siu Mei",
     eventType: "Food Waste",
-    startDate: new Date("2024-01-01"),
-    endDate: new Date("2024-01-30"),
+    startDate: new Date("2024-02-25"),
+    endDate: new Date("2024-03-25"),
     donationEventItems: [
       {
         name: "Bok Choy",
-        targetQty: 100000, // 100000g = 100kg
+        targetQty: 100000,
         minQty: 500,
-        pointsPerUnit: 50
+        pointsPerUnit: 5
       },
       {
         name: "Bread",
+        targetQty: 1000,
+        minQty: 10,
+        pointsPerUnit: 5
+      },
+      {
+        name: "Rice",
+        targetQty: 100000,
+        minQty: 500,
+        pointsPerUnit: 15
+      },
+      {
+        name: "Eggs",
         targetQty: 1000,
         minQty: 10,
         pointsPerUnit: 5
@@ -132,64 +159,48 @@ export const DONATION_EVENT_SEED_DATA = [
   },
   {
     name: "Do good with electronics",
-    imageId: "https://picsum.photos/200/300",
+    imageId: "https://www.shutterstock.com/image-photo/book-260nw-732217162.jpg",
     user: "Aaron",
-    eventType: "Electronic Waste",
-    startDate: new Date("2024-02-02"),
-    endDate: new Date("2024-02-30"),
+    eventType: "Book Donation",
+    startDate: new Date("2024-02-01"),
+    endDate: new Date("2024-04-30"),
     donationEventItems: [
       {
         name: "Laptop",
         targetQty: 10,
         minQty: 1,
-        pointsPerUnit: 1000
+        pointsPerUnit: 1500
       },
       {
-        name: "Mobile Phone",
-        targetQty: 10,
+        name: "iPhone 12",
+        targetQty: 15,
         minQty: 1,
-        pointsPerUnit: 500
+        pointsPerUnit: 5000
       }
     ]
   },
   {
-    name: "Book Driver123",
+    name: "Reshelf and Reuse: Book Recycling Initiative",
     imageId: "https://picsum.photos/200/300",
-    user: "Michael Jackson",
+    user: "Aaron",
     eventType: "Book Donation",
     startDate: new Date("2024-03-01"),
     endDate: new Date("2024-03-30"),
     donationEventItems: [
       {
-        name: "Children's Books",
+        name: "Old Newspaper",
         targetQty: 500,
         minQty: 10,
         pointsPerUnit: 20
       },
       {
-        name: "Young Adult Fiction",
+        name: "Old Books",
         targetQty: 300,
         minQty: 5,
         pointsPerUnit: 30
-      }
-    ]
-  },
-  {
-    name: "Book Drive456",
-    imageId: "https://picsum.photos/200/300",
-    user: "Michael Jackson",
-    eventType: "Book Donation",
-    startDate: new Date("2024-03-01"),
-    endDate: new Date("2024-03-30"),
-    donationEventItems: [
-      {
-        name: "Children's Books",
-        targetQty: 500,
-        minQty: 10,
-        pointsPerUnit: 20
       },
       {
-        name: "Young Adult Fiction",
+        name: "Old Magazines",
         targetQty: 300,
         minQty: 5,
         pointsPerUnit: 30
