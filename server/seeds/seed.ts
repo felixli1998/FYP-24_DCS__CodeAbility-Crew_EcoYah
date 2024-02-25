@@ -1,10 +1,9 @@
 // Internal imports
-import { EVENT_TYPE_SEED_DATA, ITEM_SEED_DATA } from './data';
+import { EVENT_TYPE_SEED_DATA, ITEM_SEED_DATA, ADMIN_SEED_DATA, DONATION_EVENT_SEED_DATA } from './data';
 // Users
 import { User } from '../src/entities/User';
 import { UserRepository } from '../src/repositories/UserRepository';
 import { UserService } from '../src/services/UserService';
-import {ADMIN_SEED_DATA} from './data';
 import { hashSync } from "bcrypt";
 
 // Event Types
@@ -30,6 +29,9 @@ import { DonationRequestItemRepository } from '../src/repositories/DonationReque
 import { DonationRequestItemService } from '../src/services/DonationRequestItemService';
 import { DonationRequestRepository } from '../src/repositories/DonationRequestRepository';
 import { DonationRequestService } from '../src/services/DonationRequestService';
+import { DonationEvent } from '../src/entities/DonationEvent';
+import { DonationEventItem } from '../src/entities/DonationEventItem';
+
 // TODO: Want to refactor this to use a singleton pattern instead of constantly creating new instances of the services //
 // Users
 const userRepository = new UserRepository();
@@ -66,17 +68,15 @@ const donationRequestItemService = new DonationRequestItemService(
 );
 
 let USER_OBJECTS: any = {};
+let ADMIN_OBJECTS: any = {};
 let EVENT_TYPE_OBJECTS: any = {};
 let DONATION_EVENT_OBJECTS: any = {};
 let ITEM_OBJECTS: any = {};
-let DONATION_EVENT_ITEMS: any = {};
 
-const NO_OF_USER_TO_CREATE = 50;
-const NO_OF_DONATION_EVENT_TO_CREATE = 15;
-const NO_OF_ITEM_PER_EVENT = 5;
-const NO_OF_DONATION_REQUEST_TO_CREATE = 50;
+const NO_OF_USER_TO_CREATE = 5;
+const NO_OF_DONATION_REQUEST_TO_CREATE = 5;
 
-// TODO: Feel free to populate more into the seed data as we add more tables //
+// Donor seed data - keep this //
 const generateSeedData = async () => {
   // Create users seed data //
   console.log('=== Generating users seed data ... ===');
@@ -89,6 +89,7 @@ const generateSeedData = async () => {
     USER_OBJECTS[user.name] = createdUser;
   }
 
+  // Admin seed data - Keep this //
   console.log("=== Generating user admins seed data ... ===");
   for(const eachAdmin of ADMIN_SEED_DATA){
     const newAdmin = new User();
@@ -98,9 +99,13 @@ const generateSeedData = async () => {
     newAdmin.contactNum = eachAdmin.contactNum;
     newAdmin.imageId = eachAdmin.imageURL;
     newAdmin.role = eachAdmin.role;
-    await userService.createUser(newAdmin);
+
+    const createdAdminUser = await userService.createUser(newAdmin);
+
+    ADMIN_OBJECTS[eachAdmin.name] = createdAdminUser;
   }
 
+  // Event Type seed data //
   console.log('=== Generating event type seed data ... ===');
   await Promise.all(
     EVENT_TYPE_SEED_DATA.map(async (eventType) => {
@@ -114,6 +119,7 @@ const generateSeedData = async () => {
     })
   );
 
+  // Item seed data //
   console.log('=== Generating item seed data ... ===');
   await Promise.all(
     ITEM_SEED_DATA.map(async (item) => {
@@ -127,37 +133,49 @@ const generateSeedData = async () => {
     })
   );
 
-  const eventGenerator = DonationEventGenerator(
-    EVENT_TYPE_OBJECTS,
-    USER_OBJECTS,
-    ITEM_OBJECTS
-  );
-  for (let i = 0; i < NO_OF_DONATION_EVENT_TO_CREATE; i++) {
-    const event = eventGenerator.next().value;
-    const createdDonationEvent = await donationEventService.createDonationEvent(event);
-    DONATION_EVENT_OBJECTS[createdDonationEvent.id] = createdDonationEvent;
-    // Adding in items
-    const donationItemGenerator = DonationItemGenerator(event, ITEM_OBJECTS);
-    for (let j = 0; j < NO_OF_ITEM_PER_EVENT; j++) {
-      const donationItem = donationItemGenerator.next().value;
-      const createdDonationEventItem =
-        await donationEventItemService.createDonationEventItem(donationItem);
+  console.log('=== Generating Donation Event seed data ... ===');
+  await Promise.all(
+    DONATION_EVENT_SEED_DATA.map(async (donationEvent) => {
+      const newDonationEvent = new DonationEvent();
 
-      DONATION_EVENT_ITEMS[createdDonationEventItem.id] =
-        createdDonationEventItem;
-    }
-    // Adding in event objects
-  }
+      newDonationEvent.name = donationEvent.name;
+      newDonationEvent.createdBy = ADMIN_OBJECTS[donationEvent.user];
+      newDonationEvent.eventType = EVENT_TYPE_OBJECTS[donationEvent.eventType];
+      newDonationEvent.imageId = donationEvent.imageId;
+      newDonationEvent.startDate = donationEvent.startDate;
+      newDonationEvent.endDate = donationEvent.endDate;
+
+      // Create donation event items
+      const donationEventItems = donationEvent.donationEventItems.map((donationEventItem) => {
+        const newDonationEventItem = new DonationEventItem();
+        newDonationEventItem.item = ITEM_OBJECTS[donationEventItem.name];
+        newDonationEventItem.minQty = donationEventItem.minQty;
+        newDonationEventItem.targetQty = donationEventItem.targetQty;
+        newDonationEventItem.pointsPerUnit = donationEventItem.pointsPerUnit;
+
+        return newDonationEventItem;
+      });
+
+      newDonationEvent.donationEventItems = donationEventItems;
+
+      const createdDonationEvent = await donationEventService.createDonationEvent(newDonationEvent);
+
+      const createdDonationEventItem = createdDonationEvent.donationEventItems;
+
+
+      DONATION_EVENT_OBJECTS[donationEvent.name] = createdDonationEvent;
+    })
+  );
 
   console.log('=== Generating Donation Request seed data ... ===');
   for (let i = 0; i < NO_OF_DONATION_REQUEST_TO_CREATE; i++) {
     const generatorResult = DonationRequestGenerator(
       USER_OBJECTS,
-      DONATION_EVENT_ITEMS,
       DONATION_EVENT_OBJECTS,
     );
     const { donationRequest, donationRequestItems } =
       generatorResult.next().value;
+
     await Promise.all([
       donationRequestItemService.createDonationRequestItem(
         donationRequestItems[0]

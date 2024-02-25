@@ -8,8 +8,8 @@ export class ItemRepository {
         return await AppDataSource.getRepository(Item).find()
     }
 
-    async getItemsByEventTypeName(eventTypeName: string) {
-      return await AppDataSource.getRepository(Item).find({where: { eventType: { name: eventTypeName }}});
+    async getItemsByEventTypeId(eventTypeId: number) {
+      return await AppDataSource.getRepository(Item).find({where: { eventType: { id: eventTypeId }}});
     }
 
     async getItemById(id: number) {

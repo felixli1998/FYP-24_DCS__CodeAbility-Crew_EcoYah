@@ -19,8 +19,8 @@ export class ItemService {
     return this.itemRepository.getItemById(id); 
   }
 
-  async getItemsByEventTypeName(eventTypeName: string) {
-    return this.itemRepository.getItemsByEventTypeName(eventTypeName); // Assuming getAllItems is a method in your repository
+  async getItemsByEventTypeId(eventTypeId: number) {
+    return this.itemRepository.getItemsByEventTypeId(eventTypeId); // Assuming getAllItems is a method in your repository
   }
 
   async createItem(item: Item) {

@@ -21,9 +21,11 @@ export class DonationRequestRepository {
       dropOffDate: true,
       dropOffTime: true,
       donationEvent: {
+        id: true,
         name: true,
         imageId: true,
         isActive: true, // TODO: Check if this is needed, current logic Active = "Submitted" but should we check donation event active status as well?
+        startDate: true,
         endDate: true,
       },
       donationRequestItems: {
@@ -31,7 +33,13 @@ export class DonationRequestRepository {
         quantity: true,
         donationEventItem: {
           id: true,
+          minQty: true,
           pointsPerUnit: true,
+          item: {
+            id: true, 
+            name: true,
+            unit: true
+          }
         },
       },
     };
@@ -47,7 +55,7 @@ export class DonationRequestRepository {
         'donationEvent',
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
-        'donationRequestItems.donationEventItem.donationEvent',
+        'donationRequestItems.donationEventItem.item',
       ],
       order: {
         dropOffDate: 'DESC',
@@ -82,7 +90,7 @@ export class DonationRequestRepository {
         'donationEvent',
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
-        'donationRequestItems.donationEventItem.donationEvent',
+        'donationRequestItems.donationEventItem.item',
       ],
       order: {
         dropOffDate: 'DESC',
@@ -122,7 +130,25 @@ export class DonationRequestRepository {
       relations: [
         'donationRequestItems',
         'donationRequestItems.donationEventItem',
+        'user',
       ],
+    });
+  }
+
+  async retrieveByUserId(user_id: number) {
+    const selectOptions = {
+      id: true,
+      donationEvent: {
+        id: true,
+      },
+      user: {
+        id: true
+      }
+    }
+    return await AppDataSource.getRepository(DonationRequest).find({
+      select: selectOptions,
+      where: { user: { id: user_id } }, 
+      relations: ['user', 'donationEvent']
     });
   }
 
@@ -158,10 +184,6 @@ export class DonationRequestRepository {
       select: selectOptions,
       withDeleted: false, // only return active records
       where: { dropOffDate: Between(start, end), status: Status.SUBMITTED },
-      cache: {
-        id: `retrieve-by-date-${date.toISOString()}`, // Cache key by date
-        milliseconds: 30000, // 30 seconds for now
-      },
       relations: [
         'user',
         'donationEvent',

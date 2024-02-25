@@ -55,14 +55,17 @@ export default function SignUp() {
     if (isPasswordValid && isPasswordSame && isChecked) {
       // POST user to database
       try {
-        const res = await makeHttpRequest('POST', USER_ROUTES.CREATE_USER, {
+        const res: any = await makeHttpRequest('POST', USER_ROUTES.CREATE_USER, {
           email: formData['email'],
           name: formData['name'],
           contactNum: formData['number'],
           passwordDigest: formData['password'],
         });
-        localStorage.setItem('ecoyah-email', formData['email']);
-        setStep(2);
+        if (res) {
+          localStorage.setItem('ecoyah-id', res.id);
+          localStorage.setItem('ecoyah-email', formData['email']);
+          setStep(2);
+        }
       } catch (error) {
         if (axios.isAxiosError(error)) {
           // Handle Axios errors

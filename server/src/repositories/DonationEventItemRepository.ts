@@ -10,6 +10,18 @@ export class DonationEventItemRepository {
     );
   }
 
+  async updateDonationEventItem(id: DonationEventItem['id'], payload: Partial<DonationEventItem>) {
+    return await AppDataSource.getRepository(DonationEventItem).update(id, payload);
+  }
+
+  async removeDonationEventItem(id: DonationEventItem['id']) {
+    const donationEventItemToRemove = await this.retrieveDonationEventItemById(id);
+
+    if (!donationEventItemToRemove) return;
+
+    return await AppDataSource.getRepository(DonationEventItem).remove(donationEventItemToRemove);
+  }
+
   async retrieveDonationEventItemById(id: number) {
     return await AppDataSource.getRepository(DonationEventItem).findOne({
       where: {
@@ -27,7 +39,7 @@ export class DonationEventItemRepository {
     .leftJoin('dei.item', 'item')
     .leftJoin('item.eventType', 'eventType')
     .where('dei.donationEvent.id = :donationEventId', { donationEventId })
-    .cache("donation-event-items", 60000)
+    .cache(`donation-event-items-${donationEventId}`, 60000)
     .getMany();
   }
 }
