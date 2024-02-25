@@ -13,9 +13,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 // Components
 import StaffTypography from "../Typography/StaffTypography";
+import Image from "../Image/Image";
+import { folderPrefixNames } from "../../components/Image/Image";
 
 // Other Imports
 import dayjs from "dayjs";
+import _ from "lodash";
 
 // Utils Imports
 import {DonationEventItems} from "../../utils/Types";
@@ -53,18 +56,12 @@ export default function DonationEventPreview(props: DonationEventType) {
     >
       <Stack spacing={3}>
         {headerBar}
-        <Box
-          component="img"
-          sx={{
-            width: "70rem",
-            height: "25rem",
-            maxWidth: {xs: "25rem", md: "80rem"},
-            maxHeight: {xs: "15rem", md: "45rem"},
-            paddingBottom: {xs: 2, md: 5},
-            objectFit: "contain",
-          }}
-          alt={name}
-          src={imageId}
+        <Image
+          imageId={imageId}
+          type='rectangle'
+          width='50rem'
+          height='25rem'
+          folderPrefix={folderPrefixNames.EVENTS}
         />
         <Accordion>
           <AccordionSummary
@@ -158,7 +155,7 @@ export default function DonationEventPreview(props: DonationEventType) {
                             } ${donationEventItem.item.unit}
                           </li>
                         <li>
-                          <b>Cash Per ${donationEventItem.item.unit}:</b> ${
+                          <b>Cashback Per ${_.capitalize(donationEventItem.item.unit)}:</b> ${
                       donationEventItem.pointsPerUnit
                     }
                         </li>
