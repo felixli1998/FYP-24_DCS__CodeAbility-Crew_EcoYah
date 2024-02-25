@@ -7,7 +7,7 @@ type ProtectedRouteT = {
   children: JSX.Element;
 };
 
-export const ProtectedRoute = (props: ProtectedRouteT) => {
+const ProtectedRoute = (props: ProtectedRouteT) => {
   const { isAdmin, children } = props;
 
   const [authorised, setAuthorised] = useState(false);
@@ -56,3 +56,5 @@ export const ProtectedRoute = (props: ProtectedRouteT) => {
 
   return authorised ? children : <Navigate to={`${isAdmin ? '/admin' : ''}/sign-in`} replace />;
 };
+
+export default ProtectedRoute;

@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import ErrorPage from "../pages/Donor/ErrorPage";
 import { APP_ROUTES } from "./appRoutes";
-import { ProtectedRoute } from "../utils/ProtectedRoutes";
+import ProtectedRoute from "../utils/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
