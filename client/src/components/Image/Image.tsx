@@ -159,7 +159,7 @@ export default function Image(props: ImageProps): JSX.Element {
         src={imagePath}
         alt="Sample Text"
         style={{
-          width: "100%",
+          width: props.width,
           height: props.height,
           ...getStyles(),
         }}
