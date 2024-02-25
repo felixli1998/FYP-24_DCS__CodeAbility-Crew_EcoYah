@@ -21,9 +21,9 @@ export default function ImageCoverCard(props: ImageCoverCardType) {
     >
       <Image
         imageId={props.image}
-        type="circle"
+        type="rectangle"
         width="100%"
-        height="100%"
+        height="320px"
         folderPrefix="events"
       />
       <Box

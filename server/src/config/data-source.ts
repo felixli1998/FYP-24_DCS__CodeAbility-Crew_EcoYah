@@ -3,15 +3,16 @@ import { DataSource } from 'typeorm';
 
 // Entities
 import { User } from '../entities/User';
-import { DonationEvent } from '../entities/DonationEvent';
+import { UserPoints } from '../entities/UserPoints';
 import { EventType } from '../entities/EventType';
 import { Item } from '../entities/Item';
+import { DonationEvent } from '../entities/DonationEvent';
 import { DonationEventItem } from '../entities/DonationEventItem';
 import { DonationRequest } from '../entities/DonationRequest';
+import { DonationRequestItem } from '../entities/DonationRequestItem';
 
 // External imports
 import dotenv from 'dotenv';
-import { DonationRequestItem } from '../entities/DonationRequestItem';
 
 dotenv.config();
 const DATABASE_USER = process.env.DATABASE_USER || 'postgres';
@@ -30,9 +31,10 @@ export const AppDataSource = new DataSource({
   database: 'ecoyahdb',
   entities: [
     User,
-    DonationEvent,
+    UserPoints,
     EventType,
     Item,
+    DonationEvent,
     DonationEventItem,
     DonationRequest,
     DonationRequestItem,
