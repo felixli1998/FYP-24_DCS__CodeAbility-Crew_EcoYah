@@ -11,7 +11,10 @@ export const ProtectedRoute = (props: ProtectedRouteT) => {
   const { isAdmin, children } = props;
 
   const [authorised, setAuthorised] = useState(false);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
+
+  // TODO: Naive way for now, let's hook it up to the BE in the future
+  const isAuthenticated = !!localStorage.getItem('ecoyah-email');
 
   const isAuthorised = async (asAdmin: boolean) => {
     const email = localStorage.getItem('ecoyah-email');
@@ -47,9 +50,9 @@ export const ProtectedRoute = (props: ProtectedRouteT) => {
     return <div>Loading...</div>;
   }
 
-  if (isAdmin) {
-    return authorised ? children : <Navigate to="/admin/sign-in" replace />;
-  } else {
-    return authorised ? children : <Navigate to="/sign-in" replace />;
+  if (!isAuthenticated) {
+    return <Navigate to={`${isAdmin ? '/admin' : ''}/sign-in`} replace />;
   }
+
+  return authorised ? children : <Navigate to={`${isAdmin ? '/admin' : ''}/sign-in`} replace />;
 };
