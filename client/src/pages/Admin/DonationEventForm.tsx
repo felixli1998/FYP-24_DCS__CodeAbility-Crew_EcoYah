@@ -27,6 +27,8 @@ import Step3Form from "../../components/DonationEvent/Step3Form";
 // Other Imports
 import dayjs from "dayjs";
 import {useNavigate} from "react-router-dom";
+import axios from 'axios';
+import { IMAGE_ROUTES } from "../../services/routes";
 
 // Utils Imports
 import {FormDataType} from "../../utils/Types";
@@ -35,7 +37,7 @@ import {createDonationEvent} from "../../services/donationEventApi";
 
 export default function DonationEventForm() {
   const navigate = useNavigate();
-  const adminID = 4; // Hardcode for now
+  const adminID = Number(localStorage.getItem('admin-id')); 
   const steps = ["Step 1", "Step 2", "Step 3", "Preview"];
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<FormDataType>({
@@ -102,6 +104,8 @@ export default function DonationEventForm() {
     setFormData((formData) => ({...formData, [key]: value}));
   };
 
+  console.log(formData);
+
   const {mutateAsync: createItemMutateAsync} = useMutation({
     mutationKey: ["createDonationEvent"],
     // mutationFn: Performing the actual API call
@@ -128,7 +132,38 @@ export default function DonationEventForm() {
     },
   });
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
+    const fileData = new FormData();
+    fileData.append("file", formData['imageId']);
+    fileData.append("folderPrefix", 'events');
+
+    let s3Image: string;
+    try {
+      const response = await axios.post(
+        IMAGE_ROUTES.CREATE,
+        fileData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(response)
+        console.log(`${response.data.data.filename} uploaded successfully`);
+        s3Image = response.data.data.filename;
+      } else {
+        console.error("Failed to update image");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    setFormData((prevData: FormDataType) => ({
+      ...prevData, 
+      imageId: s3Image
+    }));
+    console.log(formData);
     createItemMutateAsync({formData: formData, adminID: adminID});
   };
 
@@ -216,8 +251,8 @@ export default function DonationEventForm() {
         <Grid
           item
           xs={12}
-          md={8}
-          lg={8}
+          md={10}
+          lg={10}
           container
           justifyContent="center"
         >

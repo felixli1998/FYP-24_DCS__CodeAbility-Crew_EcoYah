@@ -109,11 +109,37 @@ export default function Step1Form(props: Step1FormProps) {
 
   return (
     <>
-      <StaffTypography
-        type="title"
-        size={1.5}
-        text="1. Upload an Image of the Donation Event"
-      />
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <StaffTypography
+          type="title"
+          size={1.5}
+          text="1. Upload an Image of the Donation Event"
+        />
+        <Button
+          variant="outlined"
+          sx={{
+            fontSize: "1rem",
+            fontWeight: "bold",
+            letterSpacing: "0.12rem",
+            marginX: "2rem",
+            padding: "1rem 1rem",
+            color: "primary.dark",
+            borderColor: "primary.dark",
+          }}
+          startIcon={<CloudUploadIcon sx={{ color: "primary.dark" }} />}
+        >
+          <label htmlFor="ImageInput" style={{ cursor: "pointer" }}>
+            Upload File
+          </label>
+          <input
+            type="file"
+            id="ImageInput"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageUpload}
+          />
+        </Button>
+      </Box>
       <Box
         display="flex"
         flexDirection="column"
@@ -125,7 +151,7 @@ export default function Step1Form(props: Step1FormProps) {
             width: "40.25rem",
           },
           height: "20.5rem",
-          padding: "4.5rem",
+          padding: "1rem",
           border: `1px dashed ${
             showMissingFields && !imageId ? "#d32f2f" : "#5A5858"
           }`,
@@ -144,32 +170,6 @@ export default function Step1Form(props: Step1FormProps) {
             }}
           />
         )}
-        <Button
-          variant="outlined"
-          sx={{borderColor: "primary.dark", marginTop: 2}}
-          startIcon={<CloudUploadIcon sx={{color: "primary.dark"}} />}
-        >
-          <label
-            htmlFor="ImageInput"
-            style={{cursor: "pointer"}}
-          >
-            <StaffTypography
-              type="title"
-              size={1.5}
-              text="Upload File"
-              customStyles={{
-                marginTop: "1rem",
-              }}
-            />
-          </label>
-          <input
-            type="file"
-            id="ImageInput"
-            accept="image/*"
-            style={{display: "none"}}
-            onChange={handleImageUpload}
-          />
-        </Button>
       </Box>
       {showMissingFields && !imageId && (
         <StaffTypography
@@ -186,8 +186,8 @@ export default function Step1Form(props: Step1FormProps) {
       <TextField
         label="Name"
         type="text"
-        InputLabelProps={{shrink: true}}
-        sx={{width: 350}}
+        InputLabelProps={{ shrink: true }}
+        sx={{ width: 350 }}
         value={name}
         onChange={handleTextChange}
         error={showMissingFields && name === ""}
