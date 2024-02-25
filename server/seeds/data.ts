@@ -15,7 +15,7 @@ export const ADMIN_SEED_DATA: UserSeedDataT[] = [
     email: 'layhoon@test.com',
     passwordInput: '1234',
     contactNum: '+6512345678',
-    imageURL: 'https://picsum.photos/200/300',
+    imageURL: 'DefaultProfilePicture.jpg',
     role: UserRole.STAFF
   },
   {
@@ -23,15 +23,15 @@ export const ADMIN_SEED_DATA: UserSeedDataT[] = [
     email: 'alex@test.com',
     passwordInput: '1234',
     contactNum: '+6512345678',
-    imageURL: 'https://picsum.photos/200/300',
+    imageURL: 'DefaultProfilePicture.jpg',
     role: UserRole.STAFF
   },
   {
-    name: 'Siu Mei',
+    name: 'Siew May',
     email: 'siumei@test.com',
     passwordInput: '1234',
     contactNum: '+6512345678',
-    imageURL: 'https://picsum.photos/200/300',
+    imageURL: 'DefaultProfilePicture.jpg',
     role: UserRole.STAFF
   },
   {
@@ -39,7 +39,7 @@ export const ADMIN_SEED_DATA: UserSeedDataT[] = [
     email: 'aaron@test.com',
     passwordInput: '1234',
     contactNum: '+6512345678',
-    imageURL: 'https://picsum.photos/200/300',
+    imageURL: 'DefaultProfilePicture.jpg',
     role: UserRole.ADMIN
   }
 ]
@@ -124,9 +124,31 @@ export const ITEM_SEED_DATA = [
 
 export const DONATION_EVENT_SEED_DATA = [
   {
+    name: "Clothes Upcycling",
+    imageId: "ClothesPoster.jpeg",
+    user: "Alex",
+    eventType: "Clothing Waste",
+    startDate: new Date("2024-02-25"),
+    endDate: new Date("2024-02-29"),
+    donationEventItems: [
+      {
+        name: "Children's Clothing",
+        targetQty: 200,
+        minQty: 5,
+        pointsPerUnit: 10
+      },
+      {
+        name: "Young Adult Clothing",
+        targetQty: 100,
+        minQty: 10,
+        pointsPerUnit: 20
+      }
+    ]
+  },
+  {
     name: "Harvest for Hope: Food Donation Drive",
-    imageId: "https://www.shutterstock.com/image-photo/concept-food-needs-shortages-free-260nw-1546483745.jpg",
-    user: "Siu Mei",
+    imageId: "FoodProducePoster.jpg",
+    user: "Siew May",
     eventType: "Food Waste",
     startDate: new Date("2024-02-25"),
     endDate: new Date("2024-03-25"),
@@ -159,7 +181,7 @@ export const DONATION_EVENT_SEED_DATA = [
   },
   {
     name: "Do good with electronics",
-    imageId: "https://www.shutterstock.com/image-photo/book-260nw-732217162.jpg",
+    imageId: "ElectronicsPoster.jpg",
     user: "Aaron",
     eventType: "Book Donation",
     startDate: new Date("2024-02-01"),
@@ -181,7 +203,7 @@ export const DONATION_EVENT_SEED_DATA = [
   },
   {
     name: "Reshelf and Reuse: Book Recycling Initiative",
-    imageId: "https://picsum.photos/200/300",
+    imageId: "BookPoster.jpeg",
     user: "Aaron",
     eventType: "Book Donation",
     startDate: new Date("2024-03-01"),

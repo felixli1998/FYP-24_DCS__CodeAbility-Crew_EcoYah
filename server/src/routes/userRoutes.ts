@@ -51,6 +51,7 @@ router.post('/', async (req, res) => {
   try {
     // Hash password
     req.body.passwordDigest = hashSync(req.body.passwordDigest, 10);
+    req.body.imageId = 'DefaultProfilePicture.jpg';
     const user = await userService.createUser(req.body);
     res.status(201).json({ id: user.id, message: "User created successfully." });
   } catch (error) {

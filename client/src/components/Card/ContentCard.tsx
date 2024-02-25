@@ -44,9 +44,9 @@ export default function ContentCard(props: ContentCardProps) {
     >
       <Image   
         imageId={image}
-        type='circle'
+        type='rectangle'
         width='100%'
-        height='140px'
+        height='80%'
         folderPrefix='events' />
       <CardContent
         sx={{
@@ -66,7 +66,7 @@ export default function ContentCard(props: ContentCardProps) {
         >
           <Typography
             component="div"
-            variant="body2"
+            variant="h6"
             fontWeight={700}
           >
             {title}
