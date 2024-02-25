@@ -7,12 +7,12 @@ import { User } from '../src/entities/User';
 
 function* DonationRequestGenerator(
   userObjects: { [key: string]: User },
-  donationEventItem: { [key: string]: DonationEventItem },
   donationEventObjects: { [key: string]: DonationEvent }
 ): Generator<{
   donationRequest: DonationRequest;
   donationRequestItems: DonationRequestItem[];
 }> {
+
   const newDonationRequest = new DonationRequest();
 
   // TODO: omit_points (let's default it to be false for now)
@@ -47,11 +47,9 @@ function* DonationRequestGenerator(
   const donationRequestItem = new DonationRequestItem();
   donationRequestItem.quantity = Math.floor(Math.random() * 10);
 
-  // TODO: For now, let's just associate the first 1 donation_request_items to a random donation_event_items
-  const filteredDonationEventItems = Object.values(donationEventItem)
-                                          .filter((donationEventItem) => donationEventItem.donationEvent.id === randomDonationEvent.id )
+  const donationEventItems = randomDonationEvent.donationEventItems;
 
-  const randomDonationEventItem = filteredDonationEventItems[Math.floor(Math.random() * filteredDonationEventItems.length)]
+  const randomDonationEventItem = donationEventItems[Math.floor(Math.random() * Object.values(donationEventItems).length)]
   donationRequestItem.donationEventItem = randomDonationEventItem;
   donationRequestItem.quantity = Math.floor(Math.random() * 10);
 
