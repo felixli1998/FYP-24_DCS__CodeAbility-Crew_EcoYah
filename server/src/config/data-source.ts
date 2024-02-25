@@ -11,6 +11,10 @@ import { DonationEventItem } from '../entities/DonationEventItem';
 import { DonationRequest } from '../entities/DonationRequest';
 import { DonationRequestItem } from '../entities/DonationRequestItem';
 
+// Subscribers
+import { DonationRequestSubscriber } from '../subscriber/DonationRequest';
+import { UserSubscriber } from '../subscriber/UserSubscriber';
+
 // External imports
 import dotenv from 'dotenv';
 
@@ -41,7 +45,7 @@ export const AppDataSource = new DataSource({
   ],
   synchronize: true,
   logging: true,
-  subscribers: ['src/subscriber/*.ts'],
+  subscribers: [DonationRequestSubscriber, UserSubscriber],
   migrations: [],
   cache: true,
 });
