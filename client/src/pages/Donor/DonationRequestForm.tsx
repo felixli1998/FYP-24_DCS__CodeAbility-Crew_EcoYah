@@ -163,12 +163,11 @@ export default function DonationRequestForm() {
   };
 
   const handleDateTimeChange = (dateTime: Dayjs | null) => {
-    if (dateTime !== null) {
-      const formattedDate = dayjs(dateTime).format('DD/MM/YYYY');
+    if (dateTime !== null) { // TODO: don't need to store a time attribute in db
       const formattedTime = dayjs(dateTime).format('HH:mm');
       setDonationRequest((prevData) => ({
         ...prevData,
-        dropOffDate: dayjs(formattedDate, 'DD/MM/YYYY').toDate(),
+        dropOffDate: dateTime.toDate(),
         dropOffTime: formattedTime,
       }));
     }
