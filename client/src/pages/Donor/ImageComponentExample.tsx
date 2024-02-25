@@ -10,8 +10,8 @@ const ImageComponentExample: React.FC = () => {
       <Image
         imageId='DefaultDog.png'
         type='circle'
-        width='125px'
-        height='125px'
+        width='500px'
+        height='500px'
         folderPrefix='default'
       />
       Standard, local, editable square image that DOES not exists on the server.
@@ -19,7 +19,7 @@ const ImageComponentExample: React.FC = () => {
         imageId="NoneExistent.png"
         type='rectangle'
         editable={true}
-        folderPrefix='default'
+        folderPrefix='donor'
       />
       Standard, local, editable circle image, placeholder, does not pull from server.
       <Image
