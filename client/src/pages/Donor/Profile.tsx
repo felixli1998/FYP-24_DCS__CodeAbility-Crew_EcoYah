@@ -104,7 +104,9 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
   picture,
   name,
   role,
+  
 }) => {
+  const imageId = picture.trim() === '' ? 'DefaultProfilePicture.jpg' : picture;
   return (
     <>
       <Box display='flex' justifyContent='center' 
@@ -115,10 +117,10 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
           marginTop: 4, 
           marginBottom: 2}}>
         <Image
-          imageId={picture}
+          imageId={imageId}
           type='circle'
-          width='100%'
-          height='100%'
+          width="8vw"
+          height="8vw"
           folderPrefix={folderPrefixNames.PROFILEPICTURES}
         />
       </Box>
@@ -272,7 +274,7 @@ export default function Profile() {
           picture={userInfo.imageId}
           name={userInfo.name}
           role={userInfo.role}
-        />
+        /> 
         <Reward points={userInfo.points} />
         <Others />
       </Container>
