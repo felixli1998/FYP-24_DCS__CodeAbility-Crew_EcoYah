@@ -286,7 +286,7 @@ export default function DonationEvents() {
                     
                     {eventOfTheWeek && 
                         <>
-                            <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Donation of the Week</Typography>
+                            <Typography variant='h5' sx={{fontWeight: 'bold', marginBottom: 2}}>Popular Donation of the Week</Typography>
                             
                             <DonationEventCard
                                 name={eventOfTheWeek?.name || 'No Donation Event of The Week'}
