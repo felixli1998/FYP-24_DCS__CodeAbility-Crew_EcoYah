@@ -171,6 +171,7 @@ export default function DonationEventForm() {
           </Box>
         }
         donationEvent={formData}
+        action={'create'}
       />
     ),
   };
