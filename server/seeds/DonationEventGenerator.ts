@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const GENERIC_WORDS = ['Community', 'Unity', 'Harmony', 'Hope', 'Dream', 'Impact', 'Inspire', 'Change', 'Together', 'Empower'];
 const CHARITABLE_WORDS = ['Giving', 'Caring', 'Kindness', 'Compassion', 'Support', 'Love', 'Humanity', 'Help', 'Assist', 'Serve'];
-const DEFAULT_IMAGES = ["ElectronicsPoster.jpg", "FoodProducePoster.jpg"]
+const DEFAULT_IMAGES = ["ElectronicsPoster.jpg", "FoodProducePoster.jpg", "BookPoster.jpeg", "ClothesPoster.jpeg"];
 function* DonationEventGenerator(
     eventTypesObjects:{[key:string]:EventType}, 
     userObjects:{[key:string]:User},
@@ -29,9 +29,23 @@ function* DonationEventGenerator(
         newEvent.imageId = DEFAULT_IMAGES[i % DEFAULT_IMAGES.length];
         // Date
         const today = new Date();
-        newEvent.startDate = new Date(today.getTime() - Math.floor(Math.random() * 15) * 24 * 60 * 60 * 1000); // Random start date within 31 days from today
-        newEvent.endDate = new Date(newEvent.startDate.getTime() + Math.floor(Math.random() * 15) * 24 * 60 * 60 * 1000); // Random end date within 15 days from start date
-
+        const randomOffset = Math.floor(Math.random() * 3); // Random number between 0 and 2
+        
+        let startOffset = 0;
+        if (randomOffset === 0) {
+            startOffset = -5; // 5 days ago
+        } else if (randomOffset === 1) {
+            startOffset = -2; // 2 days ago
+        } else {
+            startOffset = 3; // 3 days later
+        }
+        
+        const startDate = new Date(today.getTime() + startOffset * 24 * 60 * 60 * 1000); // Start date
+        
+        const endDate = new Date(startDate.getTime() + 4 * 24 * 60 * 60 * 1000); // End date is 4 days after the start date
+        
+        newEvent.startDate = startDate;
+        newEvent.endDate = endDate;
         newEvent.createdBy = randomUser;
         // Item related
         yield newEvent;
