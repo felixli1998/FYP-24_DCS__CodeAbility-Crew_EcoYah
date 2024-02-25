@@ -32,19 +32,19 @@ export const ProtectedRoute = (props: ProtectedRouteT) => {
 
   useEffect(() => {
     const fetchAuthorisation = async () => {
-      setLoading(true); // Set loading state to true before fetching
+      setLoading(true);
 
       const authorised = await isAuthorised(isAdmin);
 
       setAuthorised(authorised);
-      setLoading(false); // Set loading state to false after fetching
+      setLoading(false);
     };
 
     fetchAuthorisation();
   }, [isAdmin]);
 
   if (loading) {
-    return <div>Loading...</div>; // Render a loading indicator while fetching
+    return <div>Loading...</div>;
   }
 
   if (isAdmin) {
