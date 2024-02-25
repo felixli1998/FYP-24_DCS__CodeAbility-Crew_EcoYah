@@ -87,7 +87,7 @@ export default function DonationRequestForm() {
     if ("omitPoints" in updatedCheckedState) {
       setDonationRequest((prevData) => ({
         ...prevData,
-        omitPoints: !prevData.omitPoints,
+        omitPoints: !updatedCheckedState.omitPoints,
       }));
     } else {
       let updatedSelectedItems: Record<string, string | number>[] = [];
