@@ -119,10 +119,10 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
         <Image
           imageId={imageId}
           type='circle'
-          width="8vw"
-          height="8vw"
+          width="100%"
+          height="100%"
           folderPrefix={folderPrefixNames.PROFILEPICTURES}
-        />
+        /> 
       </Box>
       <Typography sx={{ fontWeight: 'bold' }} align='center'>
         {name}
