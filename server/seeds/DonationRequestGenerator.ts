@@ -41,7 +41,6 @@ function* DonationRequestGenerator(
       Math.floor(Math.random() * Object.values(donationEventObjects).length)
     ]
 
-  console.log(randomDonationEvent);
   newDonationRequest.donationEvent = randomDonationEvent;
 
   // TODO: associate this event to a random donation_request_item
