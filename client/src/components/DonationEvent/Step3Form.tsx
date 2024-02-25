@@ -37,7 +37,7 @@ export default function Step3Form(props: Step3FormProps) {
       <StaffTypography
         type='title'
         size={1.5}
-        text='6. Choose the Donation Event Period'
+        text='5. Choose the Donation Event Period'
       />
       <Grid container justifyContent='space-between' spacing={1}>
         {datePickerFields.map((field, index) => (
@@ -75,7 +75,7 @@ export default function Step3Form(props: Step3FormProps) {
       <StaffTypography
         type='title'
         size={1.5}
-        text='7. Activate the Donation Event'
+        text='6. Activate the Donation Event'
       />
       <FormControlLabel
         control={

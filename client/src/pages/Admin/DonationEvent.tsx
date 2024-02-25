@@ -229,6 +229,7 @@ export default function DonationEvent() {
           </Box>
         }
         donationEvent={donationEvent}
+        action={'create'}
       />
     ),
   };
@@ -254,29 +255,47 @@ export default function DonationEvent() {
                 text={`Donation Event`}
                 customStyles={{textAlign: "center"}}
               />
-              <Button
-                variant="contained"
-                sx={{
-                  fontSize: "1.25rem",
-                  letterSpacing: "0.15rem",
-                  width: "9.375rem",
-                  height: "3.75rem",
-                  backgroundColor: "primary.dark",
-                }}
-                onClick={() => handleEdit()}
-              >
-                Edit
-              </Button>
+              <Box>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.15rem",
+                    width: "9.375rem",
+                    height: "3.75rem",
+                    borderColor: "primary.dark",
+                    color: "primary.dark",
+                    marginX: '2rem'
+                  }}
+                  onClick={() => navigate('/admin/donation-events')}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.15rem",
+                    width: "9.375rem",
+                    height: "3.75rem",
+                    backgroundColor: "primary.dark",
+                  }}
+                  onClick={() => handleEdit()}
+                >
+                  Edit
+                </Button>
+              </Box>
             </Box>
           }
           donationEvent={donationEvent}
+          action={'preview'}
         />
       )}
       {/* Edit Dialog */}
       <SimpleDialog
         open={openDialog}
         onClose={handleDialogClose}
-        subtitleText="The donation event has already started. Hence, you won't be able to edit the details except for the status."
+        subtitleText="The donation event has already started. You won't be able to edit the details except for the status."
         title={"Edit Donation Event Status"}
         children={
           <FormControlLabel
@@ -287,6 +306,7 @@ export default function DonationEvent() {
                 sx={{
                   width: "9rem",
                   height: "5.25rem",
+                  marginTop: "2rem",
                   ".MuiSwitch-thumb": {
                     width: "4.4rem",
                     height: "4.1rem",
@@ -303,6 +323,7 @@ export default function DonationEvent() {
                   color: isActive ? "primary.dark" : "secondary.dark",
                   letterSpacing: "0.18rem",
                   marginLeft: "0.5rem",
+                  marginTop: "2rem",
                 }}
               >
                 {isActive ? "Active" : "Inactive"}

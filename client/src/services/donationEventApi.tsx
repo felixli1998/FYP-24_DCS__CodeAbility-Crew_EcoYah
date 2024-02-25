@@ -28,7 +28,7 @@ export const createDonationEvent = async (
 export const getDonationEvents = async () => {
   try {
     const response = await axios.get(
-      DONATION_EVENT_ROUTES.RETRIEVE_DONATION_EVENTS
+      DONATION_EVENT_ROUTES.GET_ALL
     );
     return response.data.data; // change this later to response.data for pagination data
   } catch (error) {
@@ -41,7 +41,7 @@ export const getDonationEvents = async () => {
 export const getDonationEventById = async (donationEventId: string) => {
   try {
     const response = await axios.get(
-      DONATION_EVENT_ROUTES.RETRIEVE_DONATION_EVENT_BY_ID.replace(
+      DONATION_EVENT_ROUTES.BY_ID.replace(
         ":id",
         donationEventId
       )
@@ -60,7 +60,7 @@ export const updateDonationEventById = async (
 ) => {
   try {
     const response = await axios.put(
-      DONATION_EVENT_ROUTES.UPDATE_DONATION_EVENT_BY_ID.replace(
+      DONATION_EVENT_ROUTES.BY_ID.replace(
         ":id",
         donationEventId
       ),

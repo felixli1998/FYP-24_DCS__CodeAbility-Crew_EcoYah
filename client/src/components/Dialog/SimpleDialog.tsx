@@ -39,9 +39,9 @@ export default function SimpleDialog(props: SimpleDialogProps) {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle sx={{ fontSize: '1.5rem', letterSpacing: '0.18rem' }}>{title}</DialogTitle>
       <DialogContent>
-        {subtitleText && <DialogContentText>{subtitleText}</DialogContentText>}
+        {subtitleText && <DialogContentText sx={{ fontSize: '1.125rem', letterSpacing: '0.135rem' }}>{subtitleText}</DialogContentText>}
         {children}
       </DialogContent>
       <DialogActions>

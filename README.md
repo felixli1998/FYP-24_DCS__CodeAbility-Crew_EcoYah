@@ -28,7 +28,7 @@ Under `server>.env`, add in the following environment variables. `IMAGE_DATABASE
 ```
 S3_ACCESS_KEY=<Access Key Here>
 S3_SECRET=<Secret Key Here>
-S3_BUCKET=ecoyah
+S3_BUCKET=fyp-ecoyah
 IMAGE_DATABASE=online
 ```
 
@@ -50,7 +50,7 @@ Ideally, your `.env` should be of this following format.
 Created an `.env.production` file too if you are going to be building this. The URL should be "https://<*.com>" without trailing back slashes.
 ```
 PORT=XXXX
-DATABASE_USER=xxxx
+DATABASE_USERNAME=xxxx
 DATABASE_PASSWORD=xxxx
 RUN_SEED_FILE=false
 ```

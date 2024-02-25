@@ -48,8 +48,8 @@ export class DonationRequestService {
     );
   }
 
-  async cancelDonationRequest(id: number) {
-    return await this.donationRequestRepository.cancelDonationRequest(id);
+  async withdrawDonationRequest(id: number) {
+    return await this.donationRequestRepository.withdrawDonationRequest(id);
   }
 
   async createNewDonationRequestItem(

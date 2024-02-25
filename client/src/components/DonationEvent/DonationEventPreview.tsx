@@ -13,14 +13,18 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 // Components
 import StaffTypography from "../Typography/StaffTypography";
+import Image from "../Image/Image";
+import { folderPrefixNames } from "../../components/Image/Image";
 
 // Other Imports
 import dayjs from "dayjs";
+import _ from "lodash";
 
 // Utils Imports
 import {DonationEventItems} from "../../utils/Types";
 
 type DonationEventType = {
+  action: string
   donationEvent: {
     name: string;
     donationEventItems: DonationEventItems[];
@@ -33,7 +37,7 @@ type DonationEventType = {
 };
 
 export default function DonationEventPreview(props: DonationEventType) {
-  const {donationEvent, headerBar} = props;
+  const {donationEvent, headerBar, action} = props;
   const {name, imageId, startDate, endDate, isActive, donationEventItems} =
     donationEvent;
 
@@ -53,19 +57,27 @@ export default function DonationEventPreview(props: DonationEventType) {
     >
       <Stack spacing={3}>
         {headerBar}
+        { action === 'create' ?
         <Box
           component="img"
           sx={{
             width: "70rem",
             height: "25rem",
-            maxWidth: {xs: "25rem", md: "80rem"},
+            maxWidth: {xs: "25rem", md: "60rem"},
             maxHeight: {xs: "15rem", md: "45rem"},
             paddingBottom: {xs: 2, md: 5},
             objectFit: "contain",
           }}
           alt={name}
           src={imageId}
-        />
+        /> :
+        <Image
+          imageId={imageId}
+          type='rectangle'
+          width='50rem'
+          height='25rem'
+          folderPrefix={folderPrefixNames.EVENTS}
+        /> }
         <Accordion>
           <AccordionSummary
             expandIcon={
@@ -158,7 +170,7 @@ export default function DonationEventPreview(props: DonationEventType) {
                             } ${donationEventItem.item.unit}
                           </li>
                         <li>
-                          <b>Cash Per ${donationEventItem.item.unit}:</b> ${
+                          <b>Cashback Per ${_.capitalize(donationEventItem.item.unit)}:</b> ${
                       donationEventItem.pointsPerUnit
                     }
                         </li>

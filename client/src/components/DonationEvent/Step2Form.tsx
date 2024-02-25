@@ -47,7 +47,7 @@ const itemInputFields: InputField[] = [
   },
   {
     key: "pointsPerUnit",
-    label: "Cash Per ",
+    label: "Cashback Per ",
   },
 ];
 
@@ -217,7 +217,7 @@ export default function Step2Form(props: Step2FormProps) {
         <StaffTypography
           type="title"
           size={1.5}
-          text={`4. Choose items`}
+          text={`3. Choose items`}
           customStyles={{marginRight: 4}}
         />
         <FormDialog
@@ -310,7 +310,7 @@ export default function Step2Form(props: Step2FormProps) {
         <StaffTypography
           type="title"
           size={1.5}
-          text="5. Fill up the information for each donation item"
+          text="4. Fill up the information for each donation item"
         />
       )}
       <Grid

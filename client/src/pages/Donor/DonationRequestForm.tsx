@@ -200,7 +200,7 @@ export default function DonationRequestForm() {
         donationRequest.donationEventId !== 0 &&
         donationRequest.donationRequestId !== 0 &&
         donationRequest.submittedBy !== 0 &&
-        donationRequest.dropOffTime !== ""
+        donationRequest.dropOffTime !== "00:00"
       ) {
 
         const deleteDonationRequestItemIds: number[] = [];
@@ -322,7 +322,7 @@ export default function DonationRequestForm() {
         setAction("edit");
         axios
           .get(
-            DONATION_EVENT_ROUTES.RETRIEVE_BY_ID.replace(
+            DONATION_EVENT_ROUTES.BY_ID.replace(
               ":id",
               `/${formData.id}`
             )

@@ -5,7 +5,7 @@ import SignIn from "../pages/Donor/SignIn";
 import Profile from "../pages/Donor/Profile";
 import EditProfile from "../pages/Donor/EditProfile";
 import ImageComponentExample from "../pages/Donor/ImageComponentExample";
-import {DonorHome} from "../pages/Donor/DonorHome";
+import { DonorHome } from "../pages/Donor/DonorHome";
 import DonationRequestForm from "../pages/Donor/DonationRequestForm";
 
 // Admin routes //
@@ -14,8 +14,8 @@ import AdminSignIn from "../pages/Admin/SignIn";
 import DonationEventForm from "../pages/Admin/DonationEventForm";
 import DonationEvent from "../pages/Admin/DonationEvent";
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
-import DonationRequests from '../pages/Admin/DonationRequests';
-import { DonationRequest } from '../pages/Donor/DonationRequest';
+import DonationRequests from "../pages/Admin/DonationRequests";
+import { DonationRequest } from "../pages/Donor/DonationRequest";
 
 type AppRoutesT = {
   path: string;
@@ -81,8 +81,8 @@ export const APP_ROUTES: AppRoutesT[] = [
     protected: true,
   },
   {
-    path: 'sign-in',
-    description: 'Sign in page for the admin',
+    path: "sign-in",
+    description: "Sign in page for the admin",
     element: <AdminSignIn />,
     isAdmin: true,
   },
