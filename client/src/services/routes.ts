@@ -6,6 +6,7 @@ export const USER_ROUTES = {
   CREATE_USER: `${BASE_URL}/users`,
   ADMIN_LOGIN: `${BASE_URL}/users/allAdmins`,
   UPDATE_USER: `${BASE_URL}/users/update`,
+  GET_ACCOUNT_TYPE: `${BASE_URL}/users/get-account-type`,
 }
 
 // General Related Routes //
