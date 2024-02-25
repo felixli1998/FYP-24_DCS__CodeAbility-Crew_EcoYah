@@ -49,11 +49,11 @@ export default function DonationRequestForm() {
     useState<dataToDonationRequestFormType | null>(null);
   const [donationRequest, setDonationRequest] = useState<DonationRequestType>({
     donationRequestId: 0,
-    donationEventId: 0, 
+    donationEventId: 0,
     dropOffDate: new Date(),
     dropOffTime: "",
-    omitPoints: true,
-    submittedBy: 0, 
+    omitPoints: false,
+    submittedBy: 0,
     oldDonationRequestItems: [],
     newDonationRequestItems: [],
   });
@@ -213,32 +213,36 @@ export default function DonationRequestForm() {
             );
 
             if (!foundItem) {
-              console.log(donationRequestItem.id);
               deleteDonationRequestItemIds.push(donationRequestItem.id);
             }
           }
         );
-
-        Promise.all([
-          handleDeleteDonationRequestItem(deleteDonationRequestItemIds),
-          handleCreateDonationRequest(donationRequest),
-          handleUpdateDonationRequest(donationRequest),
-        ])
-          .then(([deleteStatus, createStatus, updateStatus]) => {
-            if (
-              deleteStatus.every((status) => status) &&
-              createStatus &&
-              updateStatus
-            ) {
-              console.log(status);
-              navigate("/donation-requests");
-            } else {
+        
+        if (
+          deleteDonationRequestItemIds.length !==
+          donationRequest.oldDonationRequestItems?.length ||
+          donationRequest.newDonationRequestItems.length >= 1
+        ) {
+          Promise.all([
+            handleDeleteDonationRequestItem(deleteDonationRequestItemIds),
+            handleCreateDonationRequest(donationRequest),
+            handleUpdateDonationRequest(donationRequest),
+          ])
+            .then(([deleteStatus, createStatus, updateStatus]) => {
+              if (
+                deleteStatus.every((status) => status) &&
+                createStatus &&
+                updateStatus
+              ) {
+                navigate("/donation-requests");
+              } else {
+                setError(true);
+              }
+            })
+            .catch(() => {
               setError(true);
-            }
-          })
-          .catch(() => {
-            setError(true);
-          });
+            });
+        }
       }
     }
   };
@@ -310,7 +314,7 @@ export default function DonationRequestForm() {
         donationRequestId: formData.donationRequestId || 0,
         dropOffDate: formData.dropOffDate || new Date(),
         dropOffTime: formData.dropOffTime || "",
-        omitPoints: formData.omitPoints || true,
+        omitPoints: formData.omitPoints || false,
         submittedBy: Number(localStorage.getItem("ecoyah-id")) || 0,
         oldDonationRequestItems: formData.donationRequestItems || [],
       }));
@@ -404,7 +408,7 @@ export default function DonationRequestForm() {
               name: "Receive Cashback Upon A Successful Donation",
               value:
                 action === "edit"
-                  ? !donationEventInfo.omitPoints ?? false
+                  ? !donationRequest.omitPoints
                   : false,
             },
           ]}
