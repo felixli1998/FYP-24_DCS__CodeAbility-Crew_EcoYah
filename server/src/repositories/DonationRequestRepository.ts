@@ -1,11 +1,11 @@
 // External Imports
-import { startOfDay, endOfDay } from 'date-fns';
+import { startOfDay, endOfDay } from "date-fns";
 
 // Internal imports
-import { DonationRequest, Status } from '../entities/DonationRequest';
-import { AppDataSource } from '../config/data-source';
-import { Between } from 'typeorm';
-import IPagination from '../common/IPagination';
+import { DonationRequest, Status } from "../entities/DonationRequest";
+import { AppDataSource } from "../config/data-source";
+import { Between } from "typeorm";
+import IPagination from "../common/IPagination";
 
 export class DonationRequestRepository {
   static PAGE_SIZE: number = 25;
@@ -27,7 +27,7 @@ export class DonationRequestRepository {
         endDate: true,
       },
       donationRequestItems: {
-        id:true,
+        id: true,
         quantity: true,
         donationEventItem: {
           id: true,
@@ -41,17 +41,17 @@ export class DonationRequestRepository {
       select: selectOptions,
       where: {
         user: { id: user_id },
-        status: Status.SUBMITTED
+        status: Status.SUBMITTED,
       },
       relations: [
-        'donationEvent',
-        'donationRequestItems',
-        'donationRequestItems.donationEventItem',
-        'donationRequestItems.donationEventItem.donationEvent',
+        "donationEvent",
+        "donationRequestItems",
+        "donationRequestItems.donationEventItem",
+        "donationRequestItems.donationEventItem.donationEvent",
       ],
       order: {
-        dropOffDate: 'DESC',
-        dropOffTime: 'DESC',
+        dropOffDate: "DESC",
+        dropOffTime: "DESC",
       },
       skip: offset,
       take: DonationRequestRepository.PAGE_SIZE,
@@ -76,17 +76,17 @@ export class DonationRequestRepository {
     ).findAndCount({
       where: {
         user: { id: user_id },
-        status: Status.COMPLETED
+        status: Status.COMPLETED,
       },
       relations: [
-        'donationEvent',
-        'donationRequestItems',
-        'donationRequestItems.donationEventItem',
-        'donationRequestItems.donationEventItem.donationEvent',
+        "donationEvent",
+        "donationRequestItems",
+        "donationRequestItems.donationEventItem",
+        "donationRequestItems.donationEventItem.donationEvent",
       ],
       order: {
-        dropOffDate: 'DESC',
-        dropOffTime: 'DESC',
+        dropOffDate: "DESC",
+        dropOffTime: "DESC",
       },
       skip: offset,
       take: DonationRequestRepository.PAGE_SIZE,
@@ -108,8 +108,10 @@ export class DonationRequestRepository {
     );
   }
 
-  async cancelDonationRequest(id: number) {
-    return await AppDataSource.getRepository(DonationRequest).softDelete(id);
+  async withdrawDonationRequest(id: number) {
+    return await AppDataSource.getRepository(DonationRequest).update(id, {
+      status: "withdrawn",
+    });
   }
 
   async updateDonationRequest(id: number, payload: Partial<DonationRequest>) {
@@ -120,9 +122,9 @@ export class DonationRequestRepository {
     return await AppDataSource.getRepository(DonationRequest).findOne({
       where: { id },
       relations: [
-        'donationRequestItems',
-        'donationRequestItems.donationEventItem',
-        'user',
+        "donationRequestItems",
+        "donationRequestItems.donationEventItem",
+        "user",
       ],
     });
   }
@@ -160,23 +162,25 @@ export class DonationRequestRepository {
       withDeleted: false, // only return active records
       where: { dropOffDate: Between(start, end), status: Status.SUBMITTED },
       relations: [
-        'user',
-        'donationEvent',
-        'donationRequestItems',
-        'donationRequestItems.donationEventItem',
-        'donationRequestItems.donationEventItem.item',
+        "user",
+        "donationEvent",
+        "donationRequestItems",
+        "donationRequestItems.donationEventItem",
+        "donationRequestItems.donationEventItem.item",
       ],
     });
-
   }
 
   async retrieveDonationRequestCountByEventId(donationEventId: number) {
     return await AppDataSource.getRepository(DonationRequest).count({
-      where: { donationEvent: { id: donationEventId } }
+      where: { donationEvent: { id: donationEventId } },
     });
   }
 
   async completeDonationRequest(id: number) {
-    await AppDataSource.getRepository(DonationRequest).update({ id: id }, { status: Status.COMPLETED });
+    await AppDataSource.getRepository(DonationRequest).update(
+      { id: id },
+      { status: Status.COMPLETED }
+    );
   }
 }

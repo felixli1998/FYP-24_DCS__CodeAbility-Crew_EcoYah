@@ -17,7 +17,6 @@ import DonationEventPreview from "../components/DonationEvent/DonationEventPrevi
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
 import DonationRequests from "../pages/Admin/DonationRequests";
 import { DonationRequest } from "../pages/Donor/DonationRequest";
-import MyDonations from "../pages/Donor/MyDonations";
 
 type AppRoutesT = {
   path: string;
@@ -118,12 +117,5 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "View all donation events for the admin",
     element: <DonationEventsAdmin />,
     isAdmin: true,
-  },
-  {
-    //for testing only
-    path: "my-donations",
-    description: "My donations",
-    element: <MyDonations />,
-    isAdmin: false,
   },
 ];

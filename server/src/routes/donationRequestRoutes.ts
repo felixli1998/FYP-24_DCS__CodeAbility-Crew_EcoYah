@@ -85,9 +85,9 @@ router.post("/", async(req, res) => {
 })
 
 // TODO: Created during model creation. Feel free to delete or expand as needed
-router.post('/cancel', async (req, res) => {
+router.put('/withdraw', async (req, res) => {
   try {
-    const result = await donationRequestRepository.cancelDonationRequest(req.body.id);
+    const result = await donationRequestRepository.withdrawDonationRequest(req.body.id);
     return generateResponse(res, 200, result);
   } catch (error) {
     console.error(error);

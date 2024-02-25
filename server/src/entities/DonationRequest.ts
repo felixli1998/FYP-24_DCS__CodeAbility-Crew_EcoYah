@@ -16,6 +16,7 @@ import { DonationEvent } from './DonationEvent';
 export enum Status {
   SUBMITTED = 'submitted',
   COMPLETED = 'completed',
+  WITHDRAWN = 'withdrawn'
 }
 
 @Entity()

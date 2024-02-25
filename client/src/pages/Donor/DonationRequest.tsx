@@ -106,6 +106,7 @@ export const DonationRequest = () => {
             <ContentCard
               key={key}
               contentCardData={{
+                id: donationRequest.id,
                 image: donationRequest.donationEvent.imageId,
                 title: donationRequest.donationEvent.name,
                 chipLabel:
