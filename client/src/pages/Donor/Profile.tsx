@@ -247,7 +247,6 @@ export default function Profile() {
         USER_ROUTES.RETRIEVE_BY_EMAIL.replace(':email', email)
       );
       const { action, data } = res.data;
-      console.log(data)
       if (action) {
         // Currently, we do not have points so it will be null
         const { name, role, imageId, points = 1000 } = data;
@@ -264,8 +263,6 @@ export default function Profile() {
   useEffect(() => {
     retrieveProfileInfo();
   }, []);
-
-  console.log(userInfo);
 
   return (
     <ThemeProvider theme={theme}>
