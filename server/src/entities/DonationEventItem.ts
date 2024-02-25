@@ -6,12 +6,10 @@ import {
   UpdateDateColumn,
   ManyToOne,
   BeforeInsert,
-  BeforeUpdate,
   OneToMany,
 } from 'typeorm';
 import { Item } from './Item';
 import { DonationEvent } from './DonationEvent';
-import { DonationRequest } from './DonationRequest';
 import { DonationRequestItem } from './DonationRequestItem';
 
 @Entity()
