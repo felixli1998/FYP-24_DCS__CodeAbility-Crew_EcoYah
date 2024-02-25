@@ -115,7 +115,7 @@ const ProfilePicture: React.FC<ProfilePictureProps> = ({
           width: '8rem',
           height: '8rem', 
           marginTop: 4, 
-          marginBottom: 2}}>
+          }}>
         <Image
           imageId={imageId}
           type='circle'
