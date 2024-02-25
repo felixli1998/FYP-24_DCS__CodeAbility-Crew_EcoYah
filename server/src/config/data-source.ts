@@ -15,7 +15,7 @@ import { DonationRequestItem } from '../entities/DonationRequestItem';
 
 dotenv.config();
 const DATABASE_USER = process.env.DATABASE_USER || 'postgres';
-const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || '';
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || '0000';
 const DATABASE_HOST = process.env.DATABASE_HOST || 'localhost';
 const SnakeNamingStrategy =
   require('typeorm-naming-strategies').SnakeNamingStrategy;
