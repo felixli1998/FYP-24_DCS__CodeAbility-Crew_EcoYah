@@ -47,7 +47,7 @@ export default function ContentCard(props: ContentCardProps) {
 
   return (
     <>
-      <Card variant="outlined" sx={{ borderRadius: 4 }}>
+      <Card variant="outlined" sx={{ borderRadius: 4, marginBottom: 5 }}>
         <Image
           imageId={image}
           type="rectangle"

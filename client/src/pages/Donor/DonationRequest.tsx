@@ -8,7 +8,7 @@ import {
 } from "../../services/donationRequestApi";
 
 // MUI
-import {Stack} from "@mui/material";
+import {Stack, Grid} from "@mui/material";
 
 // Components
 import StaffTypography from "../../components/Typography/StaffTypography";
@@ -116,34 +116,37 @@ export const DonationRequest = () => {
           selectedTab={selectedTab}
           toggleTab={(tabValue) => setSelectedTab(tabValue)}
         />
-        {donationRequestsData &&
-          donationRequestsData.data.map((donationRequest: any, key: number) => (
-            <ContentCard
-              key={key}
-              contentCardData={{
-                id: donationRequest.id,
-                image: donationRequest.donationEvent.imageId,
-                title: donationRequest.donationEvent.name,
-                chipLabel:
-                  getDayLeft(donationRequest.donationEvent.endDate) === 0
-                    ? "Expired"
-                    : `${getDayLeft(
-                        donationRequest.donationEvent.endDate
-                      )} day left`,
-                customChipStyle:
-                  getDayLeft(donationRequest.donationEvent.endDate) === 0
-                    ? {backgroundColor: "#e0e0e0", color: "#9e9e9e"}
-                    : {},
-                reward: donationRequest.omitPoints ? 0 : getRewardAmount(donationRequest.donationRequestItems),
-                location: "Kunyah Cafe",
-                dropOffDateTime: `${new Date(
-                  donationRequest.dropOffDate
-                ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
-                status: selectedTab
-              }}
-              originalData={restructureDataToDonationRequestForm(donationRequest)}
-            />
-          ))}
+        <Grid container spacing={{ md: 2 }}>
+          {donationRequestsData &&
+            donationRequestsData.data.map((donationRequest: any, key: number) => (
+              <Grid item xs={12} md={6} key={key}>
+                <ContentCard
+                  contentCardData={{
+                    id: donationRequest.id,
+                    image: donationRequest.donationEvent.imageId,
+                    title: donationRequest.donationEvent.name,
+                    chipLabel:
+                      getDayLeft(donationRequest.donationEvent.endDate) === 0
+                        ? "Expired"
+                        : `${getDayLeft(
+                            donationRequest.donationEvent.endDate
+                          )} day left`,
+                    customChipStyle:
+                      getDayLeft(donationRequest.donationEvent.endDate) === 0
+                        ? {backgroundColor: "#e0e0e0", color: "#9e9e9e"}
+                        : {},
+                    reward: donationRequest.omitPoints ? 0 : getRewardAmount(donationRequest.donationRequestItems),
+                    location: "Kunyah Cafe",
+                    dropOffDateTime: `${new Date(
+                      donationRequest.dropOffDate
+                    ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
+                    status: selectedTab
+                  }}
+                  originalData={restructureDataToDonationRequestForm(donationRequest)}
+                />
+              </Grid>
+            ))}
+          </Grid>
       </Stack>
     </>
   );

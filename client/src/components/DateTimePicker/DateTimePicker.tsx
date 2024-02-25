@@ -58,14 +58,19 @@ export default function DateTimePickerValue(props: DateTimePickerValueType) {
         slotProps={{
           textField: {
             InputLabelProps: { shrink: true },
-            error: props.validateForm && value === null,
+            error:
+              (props.validateForm && value === null) ||
+              (props.validateForm && value?.hour() === 0),
             helperText:
-              props.validateForm &&
-              value === null &&
-              'Please choose a date and time',
+              (props.validateForm &&
+                value === null &&
+                "Please choose a date and time") ||
+              (props.validateForm &&
+                value?.hour() === 0 &&
+                "Please select a timing from 12pm - 2pm"),
           },
         }}
-        format='DD/MM/YYYY HH:mm'
+        format="DD/MM/YYYY HH:mm"
       />
     </LocalizationProvider>
   );

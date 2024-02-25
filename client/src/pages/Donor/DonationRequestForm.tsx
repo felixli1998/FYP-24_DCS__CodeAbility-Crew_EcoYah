@@ -200,7 +200,7 @@ export default function DonationRequestForm() {
         donationRequest.donationEventId !== 0 &&
         donationRequest.donationRequestId !== 0 &&
         donationRequest.submittedBy !== 0 &&
-        donationRequest.dropOffTime !== ""
+        donationRequest.dropOffTime !== "00:00"
       ) {
 
         const deleteDonationRequestItemIds: number[] = [];

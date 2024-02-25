@@ -27,7 +27,7 @@ export default function WithdrawRequestModal(props: {
       <Modal open={props.isModalOpen} onClose={props.handleClose}>
         <Box sx={style}>
           <Typography sx={{ mt: 2 }}>
-            Are you sure you want to withdraw this donation request?
+            Are you sure you want to withdraw from this donation request?
           </Typography>
           <Box display="flex" justifyContent="flex-end">
             <Button onClick={props.handleClose}>Cancel</Button>
@@ -48,7 +48,7 @@ export default function WithdrawRequestModal(props: {
               }
               color="error"
             >
-              Delete
+              Withdraw
             </Button>
           </Box>
         </Box>
