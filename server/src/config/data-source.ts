@@ -12,20 +12,20 @@ import { DonationRequest } from '../entities/DonationRequest';
 // External imports
 import dotenv from 'dotenv';
 import { DonationRequestItem } from '../entities/DonationRequestItem';
-import { UserPoints } from '../entities/UserPoints';
 
 dotenv.config();
-const DATABASE_USERNAME = process.env.DATABASE_USERNAME || 'postgres';
-const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || '0000';
+const DATABASE_USER = process.env.DATABASE_USER || 'postgres';
+const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD || '';
+const DATABASE_HOST = process.env.DATABASE_HOST || 'localhost';
 const SnakeNamingStrategy =
   require('typeorm-naming-strategies').SnakeNamingStrategy;
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  host: 'localhost',
+  host: DATABASE_HOST,
   port: 5432,
   namingStrategy: new SnakeNamingStrategy(),
-  username: DATABASE_USERNAME,
+  username: DATABASE_USER,
   password: DATABASE_PASSWORD,
   database: 'ecoyahdb',
   entities: [
@@ -36,11 +36,10 @@ export const AppDataSource = new DataSource({
     DonationEventItem,
     DonationRequest,
     DonationRequestItem,
-    UserPoints
   ],
   synchronize: true,
   logging: true,
-  subscribers: ['src/subscriber/*.ts'],
+  subscribers: [],
   migrations: [],
   cache: true,
 });
