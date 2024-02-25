@@ -56,6 +56,7 @@ export default function Image(props: ImageProps): JSX.Element {
   const checkFileType = (file: File): boolean => {
     const supportedTypes = [
         'image/png',
+        'image/jpg',
         'image/jpeg'
     ];
     return supportedTypes.includes(file.type);
