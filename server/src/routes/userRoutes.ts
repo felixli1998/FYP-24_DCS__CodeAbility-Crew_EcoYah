@@ -21,6 +21,19 @@ router.get("/allAdmins", async (req, res) => {
 
 });
 
+router.get('/get-account-type', async (req, res) => {
+  try {
+    const params = req.query;
+    const filterParams = strongParams(params, ['email']);
+    const { email } = filterParams;
+
+    const accountType = await userService.getAccountType(email);
+    generateResponse(res, 200, { action: true, message: "User account type found", data: accountType });
+  } catch (error) {
+    generateResponse(res, 500, { action: false, message: "An error occured while getting user account type" });
+  }
+});
+
 router.get("/:email", async (req, res) => {
   try {
     const { email } = req.params;
@@ -82,5 +95,6 @@ router.put('/update', async (req, res) => {
     generateResponse(res, 500, { action: false, message: "An error occured while updating user" });
   }
 });
+
 
 export default router;
