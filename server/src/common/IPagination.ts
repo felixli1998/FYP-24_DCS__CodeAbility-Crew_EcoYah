@@ -1,4 +1,4 @@
 export default interface IPagination {
-    pageNumber: number;
-    hasNext: boolean;
+  pageNumber: number;
+  hasNext: boolean;
 }

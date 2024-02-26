@@ -1,12 +1,12 @@
 // External Imports
-import express from 'express';
+import express from "express";
 
 // Internal Imports
 import { generateResponse, strongParams } from "../common/methods";
 
 import { DonationRequest } from "../entities/DonationRequest";
 import { DonationRequestService } from "../services/DonationRequestService";
-import { DonationRequestRepository } from '../repositories/DonationRequestRepository';
+import { DonationRequestRepository } from "../repositories/DonationRequestRepository";
 
 import { DonationRequestItem } from "../entities/DonationRequestItem";
 import { DonationRequestItemService } from "../services/DonationRequestItemService";
@@ -39,13 +39,13 @@ const router = express.Router();
 // Donation Request Service
 const donationRequestRepository = new DonationRequestRepository();
 const donationRequestService = new DonationRequestService(
-  donationRequestRepository
+  donationRequestRepository,
 );
 
 // Donation Request Item Service
 const donationRequestItemRepository = new DonationRequestItemRepository();
 const donationRequestItemService = new DonationRequestItemService(
-  donationRequestItemRepository
+  donationRequestItemRepository,
 );
 
 // User Service
@@ -54,56 +54,60 @@ const userServices = new UserService(userRepository);
 
 // Donation Event Service
 const donationEventRepository = new DonationEventRepository();
-const donationEventService = new DonationEventService(
-  donationEventRepository
-);
+const donationEventService = new DonationEventService(donationEventRepository);
 
 // Donation Event Item Service
 const donationEventItemRepository = new DonationEventItemRepository();
 const donationEventItemService = new DonationEventItemService(
-  donationEventItemRepository
+  donationEventItemRepository,
 );
 
-router.get('/active-donation-requests', async (req, res) => {
+router.get("/active-donation-requests", async (req, res) => {
   try {
     const params = req.query;
-    const filterParams = strongParams(params, ['userId']);
+    const filterParams = strongParams(params, ["userId"]);
     const { userId } = filterParams;
 
     // TODO: Ensure that the person requesting the donation request is the same as the user_id
-    if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
-    const { data, pagination } = await donationRequestService.getActiveDonationRequestFromUser(userId);
+    if (isNaN(userId))
+      return generateResponse(res, 400, "ID should be a number");
+    const { data, pagination } =
+      await donationRequestService.getActiveDonationRequestFromUser(userId);
     return generateResponse(res, 200, data, pagination);
-    }catch (error) {
-      console.log(res)
-      return generateResponse(res, 500, 'Something went wrong.');
-    }
+  } catch (error) {
+    console.log(res);
+    return generateResponse(res, 500, "Something went wrong.");
+  }
 });
 
-router.get('/completed-donation-requests', async (req, res) => {
+router.get("/completed-donation-requests", async (req, res) => {
   try {
     const params = req.query;
-    const filterParams = strongParams(params, ['userId']);
+    const filterParams = strongParams(params, ["userId"]);
     const { userId } = filterParams;
     // TODO: Ensure that the person requesting the donation request is the same as the user_id
-    if (isNaN(userId)) return generateResponse(res, 400, 'ID should be a number');
-    const { data, pagination } = await donationRequestService.getCompletedDonationRequestFromUser(userId);
+    if (isNaN(userId))
+      return generateResponse(res, 400, "ID should be a number");
+    const { data, pagination } =
+      await donationRequestService.getCompletedDonationRequestFromUser(userId);
     return generateResponse(res, 200, data, pagination);
-    }catch (error) {
-      return generateResponse(res, 500, 'Something went wrong.');
-    }
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong.");
+  }
 });
 
-router.post("/", async(req, res) => {
+router.post("/", async (req, res) => {
   // Assume that the request body contains an object of the fom
   // { request: {requestDetails}, eventId: 1, userId:1  }
   return generateResponse(res, 200, "Not implemented");
-})
+});
 
 // TODO: Created during model creation. Feel free to delete or expand as needed
-router.put('/withdraw', async (req, res) => {
+router.put("/withdraw", async (req, res) => {
   try {
-    const result = await donationRequestRepository.withdrawDonationRequest(req.body.id);
+    const result = await donationRequestRepository.withdrawDonationRequest(
+      req.body.id,
+    );
     return generateResponse(res, 200, result);
   } catch (error) {
     console.error(error);
@@ -111,9 +115,9 @@ router.put('/withdraw', async (req, res) => {
 });
 
 // TODO: Retrieve by request id
-router.get('/retrieve-by-id', async (req, res) => {
+router.get("/retrieve-by-id", async (req, res) => {
   const params = req.query;
-  const filterParams = strongParams(params, ['id']);
+  const filterParams = strongParams(params, ["id"]);
   const { id } = filterParams;
 
   try {
@@ -121,44 +125,43 @@ router.get('/retrieve-by-id', async (req, res) => {
 
     return generateResponse(res, 200, result);
   } catch (err) {
-    return generateResponse(res, 500, 'Something went wrong.');
+    return generateResponse(res, 500, "Something went wrong.");
   }
 });
 
 // get donation requests by user id
-router.get('/retrieve-by-user-id', async (req, res) => {
+router.get("/retrieve-by-user-id", async (req, res) => {
   const params = req.query;
-  const filterParams = strongParams(params, ['id']);
+  const filterParams = strongParams(params, ["id"]);
   const { id } = filterParams;
 
   try {
     const result = await donationRequestService.retrieveByUserId(id);
     return generateResponse(res, 200, result);
   } catch (err) {
-    return generateResponse(res, 500, 'Something went wrong.');
+    return generateResponse(res, 500, "Something went wrong.");
   }
 });
 
-router.get('/retrieve-active-by-date', async (req, res) => {
+router.get("/retrieve-active-by-date", async (req, res) => {
   const params = req.query;
-  const filteredParams = strongParams(params, ['date']);
+  const filteredParams = strongParams(params, ["date"]);
   const { date } = filteredParams;
 
   try {
-    const result =
-      await donationRequestService.retrieveDonationRequestByDate(
-        new Date(date as string)
-      );
+    const result = await donationRequestService.retrieveDonationRequestByDate(
+      new Date(date as string),
+    );
 
     return generateResponse(res, 200, result);
   } catch (error) {
-    return generateResponse(res, 500, 'Something went wrong.');
+    return generateResponse(res, 500, "Something went wrong.");
   }
 });
 
-router.post('/create', async (req, res) => {
+router.post("/create", async (req, res) => {
   // sanitize inputs
-  const params = req.body; 
+  const params = req.body;
   const allowedEventParams = [
     "donationEventId",
     "donationRequestId",
@@ -177,17 +180,19 @@ router.post('/create', async (req, res) => {
     newDonationRequest.omitPoints = filteredEventParams.omitPoints;
 
     const donationEvent = await donationEventService.getDonationEventById(
-      filteredEventParams.donationEventId
+      filteredEventParams.donationEventId,
     );
     if (donationEvent) newDonationRequest.donationEvent = donationEvent;
 
-    const user = await userServices.getUserById(filteredEventParams.submittedBy);
+    const user = await userServices.getUserById(
+      filteredEventParams.submittedBy,
+    );
     if (user) newDonationRequest.user = user;
 
     let donationRequest;
     if (filteredEventParams.donationRequestId !== 0) {
       donationRequest = await donationRequestService.retrieveById(
-        filteredEventParams.donationRequestId
+        filteredEventParams.donationRequestId,
       );
     } else {
       donationRequest =
@@ -201,28 +206,28 @@ router.post('/create', async (req, res) => {
         newDonationRequestItem.donationRequest = donationRequest;
         const donationEventItem =
           await donationEventItemService.retrieveDonationEventItemById(
-            requestItem.donationEventItemId
+            requestItem.donationEventItemId,
           );
         if (donationEventItem)
           newDonationRequestItem.donationEventItem = donationEventItem;
 
         await donationRequestItemService.createDonationRequestItem(
-          newDonationRequestItem
+          newDonationRequestItem,
         );
       }
     }
-   
+
     return generateResponse(res, 200, {
       action: true,
       message: "create_success",
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return generateResponse(res, 500, "Something went wrong.");
   }
 });
 
-router.put('/update', async (req, res) => {
+router.put("/update", async (req, res) => {
   const payload = req.body;
   const allowedParams = [
     "donationRequestId",
@@ -243,50 +248,57 @@ router.put('/update', async (req, res) => {
   try {
     // Type assertion that an id is definitely present due to my previous checks
     const payload = await donationRequestService.update(
-      sanitisedPayload as DonationRequestUpdatePayload
+      sanitisedPayload as DonationRequestUpdatePayload,
     );
     return generateResponse(res, 200, payload);
   } catch (error) {
-    console.log(error)
-    return generateResponse(res, 500, 'Something went wrong');
+    console.log(error);
+    return generateResponse(res, 500, "Something went wrong");
   }
 });
 
-router.put('/complete', async (req, res) => {
+router.put("/complete", async (req, res) => {
   const payload = req.body;
-  const allowedParams = ['id'];
+  const allowedParams = ["id"];
   const sanitisedPayload = strongParams(payload, allowedParams);
 
-  if (!('id' in sanitisedPayload))
-    return generateResponse(res, 200, 'Missing id');
+  if (!("id" in sanitisedPayload))
+    return generateResponse(res, 200, "Missing id");
 
   const { id } = sanitisedPayload;
 
   try {
-    const payload = await donationRequestService.completeDonationRequest(id);
+    await donationRequestService.completeDonationRequest(id);
 
-    return generateResponse(res, 200, 'Updated successfully!');
+    return generateResponse(res, 200, "Updated successfully!");
   } catch (error) {
-    return generateResponse(res, 500, 'Something went wrong');
+    return generateResponse(res, 500, "Something went wrong");
   }
 });
 
-router.get('/retrieve-donation-request-count-by-event-id', async (req, res) => {
+router.get("/retrieve-donation-request-count-by-event-id", async (req, res) => {
   const params = req.query;
-  const filteredParams = strongParams(params, ['donationEventId']);
+  const filteredParams = strongParams(params, ["donationEventId"]);
   const { donationEventId } = filteredParams;
 
-  console.log("----------------donationEventId: ", donationEventId)
-  console.log(typeof donationEventId)
+  console.log("----------------donationEventId: ", donationEventId);
+  console.log(typeof donationEventId);
 
-  if(donationEventId === undefined || donationEventId === null || donationEventId === "") {
-    return generateResponse(res, 400, 'Donation Event ID is required.');
+  if (
+    donationEventId === undefined ||
+    donationEventId === null ||
+    donationEventId === ""
+  ) {
+    return generateResponse(res, 400, "Donation Event ID is required.");
   }
   try {
-    const result = await donationRequestService.retrieveDonationRequestCountByEventId(parseInt(donationEventId));
+    const result =
+      await donationRequestService.retrieveDonationRequestCountByEventId(
+        parseInt(donationEventId),
+      );
     return generateResponse(res, 200, result);
   } catch (error) {
-    return generateResponse(res, 500, 'Something went wrong.');
+    return generateResponse(res, 500, "Something went wrong.");
   }
 });
 

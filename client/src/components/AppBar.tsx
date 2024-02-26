@@ -1,17 +1,17 @@
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Container from '@mui/material/Container';
-import TemporaryDrawer from './Drawer';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
-import logo from '../assets/Kunyah.png';
-import { useState, useEffect, useReducer } from 'react';
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Container from "@mui/material/Container";
+import TemporaryDrawer from "./Drawer";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Box } from "@mui/material";
+import logo from "../assets/Kunyah.png";
+import { useState, useEffect, useReducer } from "react";
 import {
   NavigationList,
   ActionList,
   generateNavItem,
   NavigationListItemT,
-} from '../utils/NavBar';
+} from "../utils/NavBar";
 
 type ActionReducerT = {
   authenticated: boolean;
@@ -20,7 +20,7 @@ type ActionReducerT = {
 
 // TODO: Let's refactor this subsequently using useContext
 export const isAuthenticated = () => {
-  const email = localStorage.getItem('ecoyah-email');
+  const email = localStorage.getItem("ecoyah-email");
 
   if (email) return true;
 
@@ -30,29 +30,29 @@ export const isAuthenticated = () => {
 function ResponsiveAppBar() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [ homePath, setHomePath ] = useState<string>('/');
+  const [homePath, setHomePath] = useState<string>("/");
 
   const defaultNavigationList: NavigationListItemT[] = [];
   const defaultActionList: NavigationListItemT[] = [];
 
   // TODO: Let's refactor this subsequently using useContext
   const handleLogOut = () => {
-    localStorage.removeItem('ecoyah-id');
-    localStorage.removeItem('ecoyah-email');
-    navigate('/sign-in');
+    localStorage.removeItem("ecoyah-id");
+    localStorage.removeItem("ecoyah-email");
+    navigate("/sign-in");
     navActionLogicMap(); // handle use case if there's no change in the URL
   };
 
   const handleAdminLogOut = () => {
-    localStorage.removeItem('ecoyah-email');
-    localStorage.removeItem('admin-id');
-    navigate('/admin/sign-in');
+    localStorage.removeItem("ecoyah-email");
+    localStorage.removeItem("admin-id");
+    navigate("/admin/sign-in");
     navActionLogicMap(); // handle use case if there's no change in the URL
-  }
+  };
 
   const navigationReducer = (
     state: NavigationListItemT[],
-    action: ActionReducerT
+    action: ActionReducerT,
   ): NavigationListItemT[] => {
     const { authenticated, admin } = action;
 
@@ -70,7 +70,7 @@ function ResponsiveAppBar() {
         const NavList = [
           NavigationList.HOME,
           NavigationList.PROFILE,
-          NavigationList.DONATION_REQUEST
+          NavigationList.DONATION_REQUEST,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, false));
       }
@@ -89,22 +89,27 @@ function ResponsiveAppBar() {
 
   const actionReducer = (
     state: NavigationListItemT[],
-    action: ActionReducerT
+    action: ActionReducerT,
   ): NavigationListItemT[] => {
     const { authenticated, admin } = action;
     // TODO: I am assuming that the handleLogOut function is standard across Admin and Donor. Let's refactor this subsequently
     if (authenticated)
-      return [{ item: ActionList.SIGN_OUT, action: admin ? handleAdminLogOut: handleLogOut }];
+      return [
+        {
+          item: ActionList.SIGN_OUT,
+          action: admin ? handleAdminLogOut : handleLogOut,
+        },
+      ];
 
     const ActionItemList = [ActionList.SIGN_IN, ActionList.SIGN_UP];
 
     if (admin) {
       return ActionItemList.filter(
-        (actionItem) => actionItem !== ActionList.SIGN_UP // Admin does not have a sign up
+        (actionItem) => actionItem !== ActionList.SIGN_UP, // Admin does not have a sign up
       ).map((actionItem) => generateNavItem(actionItem, admin));
     } else {
       return ActionItemList.map((actionItem) =>
-        generateNavItem(actionItem, admin)
+        generateNavItem(actionItem, admin),
       );
     }
   };
@@ -121,7 +126,7 @@ function ResponsiveAppBar() {
   const isAdmin = () => {
     const currentPath = location.pathname;
 
-    return currentPath.includes('admin');
+    return currentPath.includes("admin");
   };
 
   const navActionLogicMap = () => {
@@ -135,27 +140,27 @@ function ResponsiveAppBar() {
   useEffect(() => {
     navActionLogicMap();
 
-    if(isAdmin()){
-      setHomePath( isAuthenticated() ? '/admin/home' : '/admin/sign-in');
+    if (isAdmin()) {
+      setHomePath(isAuthenticated() ? "/admin/home" : "/admin/sign-in");
     } else {
-      setHomePath('/');
+      setHomePath("/");
     }
   }, [location.pathname]);
 
   return (
-    <AppBar position='static' color='default'>
-      <Container maxWidth='xl'>
-        <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
+    <AppBar position="static" color="default">
+      <Container maxWidth="xl">
+        <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
           <Link to={homePath}>
             <Box
-              component='img'
+              component="img"
               sx={{
-                m: 'auto',
+                m: "auto",
                 marginTop: 2,
-                width: '5rem',
-                height: '5rem',
+                width: "5rem",
+                height: "5rem",
               }}
-              alt='Kunyah'
+              alt="Kunyah"
               src={logo}
             ></Box>
           </Link>

@@ -1,6 +1,6 @@
 // React Imports
-import {useState} from "react";
-import {useMutation} from "@tanstack/react-query";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 // MUI Imports
 import {
@@ -26,12 +26,12 @@ import Step3Form from "../../components/DonationEvent/Step3Form";
 
 // Other Imports
 import dayjs from "dayjs";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // Utils Imports
-import {FormDataType} from "../../utils/Types";
+import { FormDataType } from "../../utils/Types";
 import DonationEventPreview from "../../components/DonationEvent/DonationEventPreview";
-import {createDonationEvent} from "../../services/donationEventApi";
+import { createDonationEvent } from "../../services/donationEventApi";
 
 export default function DonationEventForm() {
   const navigate = useNavigate();
@@ -99,10 +99,10 @@ export default function DonationEventForm() {
   };
 
   const handleData = (key: string, value: any) => {
-    setFormData((formData) => ({...formData, [key]: value}));
+    setFormData((formData) => ({ ...formData, [key]: value }));
   };
 
-  const {mutateAsync: createItemMutateAsync} = useMutation({
+  const { mutateAsync: createItemMutateAsync } = useMutation({
     mutationKey: ["createDonationEvent"],
     // mutationFn: Performing the actual API call
     mutationFn: ({
@@ -129,7 +129,7 @@ export default function DonationEventForm() {
   });
 
   const handleCreate = () => {
-    createItemMutateAsync({formData: formData, adminID: adminID});
+    createItemMutateAsync({ formData: formData, adminID: adminID });
   };
 
   const form: {
@@ -149,40 +149,29 @@ export default function DonationEventForm() {
         handleData={handleData}
       />
     ),
-    2: (
-      <Step3Form
-        formData={formData}
-        handleData={handleData}
-      />
-    ),
+    2: <Step3Form formData={formData} handleData={handleData} />,
     3: (
       <DonationEventPreview
         headerBar={
-          <Box
-            display="flex"
-            justifyContent={"center"}
-          >
+          <Box display="flex" justifyContent={"center"}>
             <StaffTypography
               type="title"
               size={2.125}
               text={`Preview the Donation Event`}
-              customStyles={{textAlign: "center"}}
+              customStyles={{ textAlign: "center" }}
             />
           </Box>
         }
         donationEvent={formData}
-        action={'create'}
+        action={"create"}
       />
     ),
   };
 
   return (
     <>
-      <Box sx={{m: 5}}>
-        <Stepper
-          activeStep={activeStep}
-          alternativeLabel
-        >
+      <Box sx={{ m: 5 }}>
+        <Stepper activeStep={activeStep} alternativeLabel>
           {steps.map((label, i) => (
             <Step key={label}>
               <StepLabel
@@ -192,7 +181,7 @@ export default function DonationEventForm() {
                     height: "3.44rem",
                     borderRadius: "50rem",
                   },
-                  ".MuiStepIcon-text": {fontSize: "1rem"},
+                  ".MuiStepIcon-text": { fontSize: "1rem" },
                 }}
               >
                 <StaffTypography
@@ -208,19 +197,8 @@ export default function DonationEventForm() {
           ))}
         </Stepper>
       </Box>
-      <Grid
-        container
-        justifyContent="center"
-        sx={{p: 2}}
-      >
-        <Grid
-          item
-          xs={12}
-          md={8}
-          lg={8}
-          container
-          justifyContent="center"
-        >
+      <Grid container justifyContent="center" sx={{ p: 2 }}>
+        <Grid item xs={12} md={8} lg={8} container justifyContent="center">
           <Stack spacing={5}>
             {errorMessage && (
               <Alert severity="error">
@@ -228,10 +206,7 @@ export default function DonationEventForm() {
               </Alert>
             )}
             {form[activeStep]}
-            <Box
-              display="flex"
-              justifyContent="space-between"
-            >
+            <Box display="flex" justifyContent="space-between">
               <Button
                 variant="outlined"
                 sx={{

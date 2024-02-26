@@ -39,7 +39,8 @@ export default function WithdrawRequestModal(props: {
                   })
                   .then((resp) => {
                     console.log(resp.data);
-                    queryClient.invalidateQueries({ // TODO: modify cache instead of refetching
+                    queryClient.invalidateQueries({
+                      // TODO: modify cache instead of refetching
                       queryKey: ["/get-donation-requests"],
                     });
                     props.handleClose();

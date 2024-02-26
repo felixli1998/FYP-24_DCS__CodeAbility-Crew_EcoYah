@@ -1,17 +1,17 @@
-import { DonationRequestRepository } from '../repositories/DonationRequestRepository';
-import { DonationRequest } from '../entities/DonationRequest';
-import { DonationRequestItem } from '../entities/DonationRequestItem';
-import { DonationRequestUpdatePayload } from '../routes/donationRequestRoutes';
-import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
-import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
-import { UserPointsService } from './UserPointsService';
-import { UserPointsRepository } from '../repositories/UserPointsRepository';
+import { DonationRequestRepository } from "../repositories/DonationRequestRepository";
+import { DonationRequest } from "../entities/DonationRequest";
+import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { DonationRequestUpdatePayload } from "../routes/donationRequestRoutes";
+import { DonationRequestItemRepository } from "../repositories/DonationRequestItemRepository";
+import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
+import { UserPointsService } from "./UserPointsService";
+import { UserPointsRepository } from "../repositories/UserPointsRepository";
 
 export class DonationRequestService {
   private donationRequestRepository: DonationRequestRepository;
   private donationRequestItemRepository: DonationRequestItemRepository;
   private donationEventItemRepository: DonationEventItemRepository;
-  private userPointsService: UserPointsService
+  private userPointsService: UserPointsService;
 
   constructor(donationRequestRepository: DonationRequestRepository) {
     this.donationRequestRepository = donationRequestRepository;
@@ -21,30 +21,29 @@ export class DonationRequestService {
     this.userPointsService = new UserPointsService(userPointsRepository);
   }
 
-  async getActiveDonationRequestFromUser(user_id:number, page: number = 1) {
+  async getActiveDonationRequestFromUser(user_id: number, page: number = 1) {
     return await this.donationRequestRepository.getActiveDonationRequestFromUser(
       user_id,
-      page
+      page,
     );
   }
 
-  async getCompletedDonationRequestFromUser(user_id:number, page: number = 1) {
+  async getCompletedDonationRequestFromUser(user_id: number, page: number = 1) {
     return await this.donationRequestRepository.getCompletedDonationRequestFromUser(
       user_id,
-      page
+      page,
     );
   }
-
 
   async createDonationRequest(donationRequest: DonationRequest) {
     return await this.donationRequestRepository.createDonationRequest(
-      donationRequest
+      donationRequest,
     );
   }
 
   async updateDonationRequest(donationRequest: DonationRequest) {
     return await this.donationRequestRepository.createDonationRequest(
-      donationRequest
+      donationRequest,
     );
   }
 
@@ -55,16 +54,16 @@ export class DonationRequestService {
   async createNewDonationRequestItem(
     donationRequestObj: DonationRequest,
     donationEventId: number,
-    quantity: number
+    quantity: number,
   ) {
     const requestItem = new DonationRequestItem();
     const donationEventItem =
       await this.donationEventItemRepository.retrieveDonationEventItemById(
-        donationEventId
+        donationEventId,
       );
 
     if (donationEventItem) {
-      requestItem.donationRequest = donationRequestObj
+      requestItem.donationRequest = donationRequestObj;
       requestItem.quantity = quantity;
       requestItem.donationEventItem = donationEventItem;
     }
@@ -87,35 +86,43 @@ export class DonationRequestService {
     try {
       for (const [key, value] of Object.entries(payload)) {
         switch (key) {
-          case 'donationRequestId':
+          case "donationRequestId":
             break;
-          case 'dropOffDate':
+          case "dropOffDate":
             updatedRequestPayload.dropOffDate = new Date(value as string);
             break;
-          case 'dropOffTime':
+          case "dropOffTime":
             updatedRequestPayload.dropOffTime = value as string;
             break;
-          case 'omitPoints':
+          case "omitPoints":
             updatedRequestPayload.omitPoints = value as boolean;
-          case 'oldDonationRequestItems':
+          case "oldDonationRequestItems":
             if (Array.isArray(value)) {
-              await Promise.all(value.map(async (item) => {
-                const { id, quantity } = item;
-                this.donationRequestItemRepository.updateDonationRequestItem(id, { quantity })
-              }));
+              await Promise.all(
+                value.map(async (item) => {
+                  const { id, quantity } = item;
+                  this.donationRequestItemRepository.updateDonationRequestItem(
+                    id,
+                    { quantity },
+                  );
+                }),
+              );
             }
             break;
           default:
-            console.log('Invalid key provided.');
+            console.log("Invalid key provided.");
             break;
         }
       }
-  
-      const res = await this.donationRequestRepository.updateDonationRequest(donationRequestId, updatedRequestPayload);
+
+      const res = await this.donationRequestRepository.updateDonationRequest(
+        donationRequestId,
+        updatedRequestPayload,
+      );
       return {
         action: true,
         data: res,
-        message: 'Successfully updated donation request',
+        message: "Successfully updated donation request",
       };
     } catch (error) {
       console.error(error);
@@ -125,14 +132,15 @@ export class DonationRequestService {
 
   async retrieveDonationRequestByDate(date: Date) {
     return await this.donationRequestRepository.retrieveDonationRequestByDate(
-      date
+      date,
     );
   }
 
   async completeDonationRequest(id: number) {
     // Credit Points
     const totalPts = await this.tabulateTotalPts(id);
-    const donationRequest = await this.donationRequestRepository.retrieveById(id);
+    const donationRequest =
+      await this.donationRequestRepository.retrieveById(id);
 
     try {
       if (donationRequest) {
@@ -147,45 +155,50 @@ export class DonationRequestService {
   }
 
   async retrieveDonationRequestCountByEventId(
-    donationEventId: number
+    donationEventId: number,
   ): Promise<number> {
-    return await this.donationRequestRepository.retrieveDonationRequestCountByEventId(donationEventId);
+    return await this.donationRequestRepository.retrieveDonationRequestCountByEventId(
+      donationEventId,
+    );
   }
 
   // Helper functions below
-  validateDonationRequestItems(donationRequestItem: DonationRequestItem[]): {valid: boolean, message: string} {
+  validateDonationRequestItems(donationRequestItem: DonationRequestItem[]): {
+    valid: boolean;
+    message: string;
+  } {
     // Check not empty
     if (donationRequestItem.length === 0) {
       return {
         valid: false,
-        message: "Donation request items cannot be empty"
+        message: "Donation request items cannot be empty",
       };
     }
     // Check quantity
-    for (let item of donationRequestItem) {
+    for (const item of donationRequestItem) {
       if (item.quantity < 1) {
         return {
           valid: false,
-          message: "Quantity must be at least 1"
+          message: "Quantity must be at least 1",
         };
       }
     }
     return {
       valid: true,
-      message: "Donation request items are valid"
+      message: "Donation request items are valid",
     };
   }
 
   private async tabulateTotalPts(id: number) {
     // Based on the donation request ID, retrieve all the donation request items
-    const donationRequestItems = await this.donationRequestItemRepository.retrieveByDonationRequestId(
-      id
-    );
-
+    const donationRequestItems =
+      await this.donationRequestItemRepository.retrieveByDonationRequestId(id);
 
     let totalPts = 0;
-    for (let donationRequestItem of donationRequestItems) {
-      totalPts += donationRequestItem.donationEventItem.pointsPerUnit * donationRequestItem.quantity;
+    for (const donationRequestItem of donationRequestItems) {
+      totalPts +=
+        donationRequestItem.donationEventItem.pointsPerUnit *
+        donationRequestItem.quantity;
     }
 
     return totalPts;

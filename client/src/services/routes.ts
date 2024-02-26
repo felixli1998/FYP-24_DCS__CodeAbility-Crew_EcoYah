@@ -46,7 +46,7 @@ export const DONATION_REQUEST_ROUTES = {
 
 // Donation Request Items Routes //
 export const DONATION_REQUEST_ITEMS_ROUTES = {
-  DELETE: `${PARENT_ROUTES.DONATION_REQUEST_ITEMS}/delete`
+  DELETE: `${PARENT_ROUTES.DONATION_REQUEST_ITEMS}/delete`,
 };
 
 // Image Related Routes //

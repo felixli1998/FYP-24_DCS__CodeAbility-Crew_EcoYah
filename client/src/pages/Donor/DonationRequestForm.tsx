@@ -22,7 +22,10 @@ import {
 } from "../../services/routes";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import { dataToDonationRequestFormType, donationEventItemsType } from "./DonationEvents";
+import {
+  dataToDonationRequestFormType,
+  donationEventItemsType,
+} from "./DonationEvents";
 
 type DonationRequestType = {
   donationRequestId?: number;
@@ -44,7 +47,7 @@ type CheckBoxItemsType = {
 export default function DonationRequestForm() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [action, setAction] = useState<string>('submit'); // create == submit
+  const [action, setAction] = useState<string>("submit"); // create == submit
   const [donationEventInfo, setDonationEventInfo] =
     useState<dataToDonationRequestFormType | null>(null);
   const [donationRequest, setDonationRequest] = useState<DonationRequestType>({
@@ -58,31 +61,40 @@ export default function DonationRequestForm() {
     newDonationRequestItems: [],
   });
   const [itemsInfo, setItemsInfo] = useState<donationEventItemsType[] | []>([]);
-  const [isCheckBoxItemsLoaded, setCheckBoxItemsLoaded] = useState<boolean>(false);
+  const [isCheckBoxItemsLoaded, setCheckBoxItemsLoaded] =
+    useState<boolean>(false);
   const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
-  const [checkBoxItems, setCheckBoxItems] = useState<CheckBoxItemsType[] | []>([]);
-  const [selectedItems, setSelectedItems] = useState<Record<string, string | number>[] | []>([]);
+  const [checkBoxItems, setCheckBoxItems] = useState<CheckBoxItemsType[] | []>(
+    [],
+  );
+  const [selectedItems, setSelectedItems] = useState<
+    Record<string, string | number>[] | []
+  >([]);
   const [validateForm, setValidateForm] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
-  const handleCheckBoxItems = (action: string, donationEventItems: donationEventItemsType[], oldDonationRequestItems?: any) => {
+  const handleCheckBoxItems = (
+    action: string,
+    donationEventItems: donationEventItemsType[],
+    oldDonationRequestItems?: any,
+  ) => {
     const updatedCheckBoxItems: CheckBoxItemsType[] = [];
-    donationEventItems.forEach(donationEventItem => {
+    donationEventItems.forEach((donationEventItem) => {
       const isOldItem = oldDonationRequestItems?.find(
-       (oldItem: any) => oldItem.donationEventItem.id === donationEventItem.id
+        (oldItem: any) => oldItem.donationEventItem.id === donationEventItem.id,
       );
       updatedCheckBoxItems.push({
         id: donationEventItem.id,
         name: donationEventItem.item.name,
-        value: action === 'edit' && !!isOldItem ,
+        value: action === "edit" && !!isOldItem,
       });
     });
     setCheckBoxItems(updatedCheckBoxItems);
     setCheckBoxItemsLoaded(true);
-  }
+  };
 
   const handleCheckBoxChange = (
-    updatedCheckedState: Record<string, boolean>
+    updatedCheckedState: Record<string, boolean>,
   ) => {
     if ("omitPoints" in updatedCheckedState) {
       setDonationRequest((prevData) => ({
@@ -96,14 +108,16 @@ export default function DonationRequestForm() {
       if (isFirstLoad) {
         checkBoxItems.forEach((item) => {
           if (item.value && updatedCheckedKeys.includes(item.id.toString())) {
-            const foundItem = itemsInfo.find((targetItem) => targetItem.id === item.id);
+            const foundItem = itemsInfo.find(
+              (targetItem) => targetItem.id === item.id,
+            );
             if (foundItem) {
               updatedSelectedItems.push({
-                id: foundItem.id, 
+                id: foundItem.id,
                 item: foundItem.item.name,
                 unit: foundItem.item.unit,
                 minQty: foundItem.minQty,
-                pointsPerUnit: foundItem.pointsPerUnit
+                pointsPerUnit: foundItem.pointsPerUnit,
               });
             }
           }
@@ -116,16 +130,16 @@ export default function DonationRequestForm() {
             const isSelected = updatedCheckedState[key];
             if (isSelected) {
               updatedSelectedItems.push({
-                id: foundItem.id, 
+                id: foundItem.id,
                 item: foundItem.item.name,
                 unit: foundItem.item.unit,
                 minQty: foundItem.minQty,
-                pointsPerUnit: foundItem.pointsPerUnit
+                pointsPerUnit: foundItem.pointsPerUnit,
               });
             } else {
               // remove the item if it's not selected anymore
               updatedSelectedItems = updatedSelectedItems.filter(
-                (item) => item.id !== foundItem.id
+                (item) => item.id !== foundItem.id,
               );
             }
           }
@@ -136,13 +150,13 @@ export default function DonationRequestForm() {
   };
 
   const handleItemQuantityChange = (
-    updatedItemQuantity: Record<number, Record<string, number | string>>
+    updatedItemQuantity: Record<number, Record<string, number | string>>,
   ) => {
     const donationRequestItems: Record<string, number>[] = [];
     _.mapValues(updatedItemQuantity, function (value, key) {
       if (donationRequest.oldDonationRequestItems) {
         const existingItem = donationRequest.oldDonationRequestItems.find(
-          (item: any) => item.donationEventItem.id === Number(key)
+          (item: any) => item.donationEventItem.id === Number(key),
         );
 
         if (existingItem) {
@@ -153,7 +167,6 @@ export default function DonationRequestForm() {
             quantity: Number(value.quantity),
           });
         }
-        
       }
     });
     setDonationRequest((prevData) => ({
@@ -163,8 +176,9 @@ export default function DonationRequestForm() {
   };
 
   const handleDateTimeChange = (dateTime: Dayjs | null) => {
-    if (dateTime !== null) { // TODO: don't need to store a time attribute in db
-      const formattedTime = dayjs(dateTime).format('HH:mm');
+    if (dateTime !== null) {
+      // TODO: don't need to store a time attribute in db
+      const formattedTime = dayjs(dateTime).format("HH:mm");
       setDonationRequest((prevData) => ({
         ...prevData,
         dropOffDate: dateTime.toDate(),
@@ -184,16 +198,16 @@ export default function DonationRequestForm() {
         donationRequest.newDonationRequestItems.length > 0
       ) {
         handleCreateDonationRequest(donationRequest)
-        .then((createStatus) => {
-          if (createStatus) {
-            navigate("/");
-          } else {
+          .then((createStatus) => {
+            if (createStatus) {
+              navigate("/");
+            } else {
+              setError(true);
+            }
+          })
+          .catch(() => {
             setError(true);
-          }
-        })
-        .catch(() => {
-          setError(true);
-        });
+          });
       }
     } else {
       if (
@@ -202,24 +216,23 @@ export default function DonationRequestForm() {
         donationRequest.submittedBy !== 0 &&
         donationRequest.dropOffTime !== "00:00"
       ) {
-
         const deleteDonationRequestItemIds: number[] = [];
         donationRequest.oldDonationRequestItems?.forEach(
           (donationRequestItem: any) => {
             const foundItem = selectedItems.some(
               (selectedItem) =>
-                selectedItem.id === donationRequestItem.donationEventItem.id
+                selectedItem.id === donationRequestItem.donationEventItem.id,
             );
 
             if (!foundItem) {
               deleteDonationRequestItemIds.push(donationRequestItem.id);
             }
-          }
+          },
         );
-        
+
         if (
           deleteDonationRequestItemIds.length !==
-          donationRequest.oldDonationRequestItems?.length ||
+            donationRequest.oldDonationRequestItems?.length ||
           donationRequest.newDonationRequestItems.length >= 1
         ) {
           Promise.all([
@@ -247,7 +260,7 @@ export default function DonationRequestForm() {
   };
 
   const handleCreateDonationRequest = (
-    donationRequest: DonationRequestType
+    donationRequest: DonationRequestType,
   ): Promise<boolean> => {
     return axios
       .post(DONATION_REQUEST_ROUTES.CREATE, donationRequest)
@@ -262,7 +275,7 @@ export default function DonationRequestForm() {
   };
 
   const handleUpdateDonationRequest = (
-    donationRequest: DonationRequestType
+    donationRequest: DonationRequestType,
   ): Promise<boolean> => {
     return axios
       .put(DONATION_REQUEST_ROUTES.UPDATE, donationRequest)
@@ -277,15 +290,15 @@ export default function DonationRequestForm() {
   };
 
   const handleDeleteDonationRequestItem = (
-    donationRequestItemIds: number[]
+    donationRequestItemIds: number[],
   ): Promise<boolean[]> => {
     const deletePromises: Promise<boolean>[] = donationRequestItemIds.map(
       (id) => {
         return axios
           .delete(DONATION_REQUEST_ITEMS_ROUTES.DELETE, {
             data: {
-              "donationRequestItemId": id
-            }
+              donationRequestItemId: id,
+            },
           })
           .then((resp) => {
             return resp.data.status === 200;
@@ -294,7 +307,7 @@ export default function DonationRequestForm() {
             console.error(err);
             throw err;
           });
-      }
+      },
     );
 
     return Promise.all(deletePromises);
@@ -321,24 +334,19 @@ export default function DonationRequestForm() {
       if (location.state.action === "edit") {
         setAction("edit");
         axios
-          .get(
-            DONATION_EVENT_ROUTES.BY_ID.replace(
-              ":id",
-              `/${formData.id}`
-            )
-          )
+          .get(DONATION_EVENT_ROUTES.BY_ID.replace(":id", `/${formData.id}`))
           .then((resp) => {
             const updatedDonationEventItems: donationEventItemsType[] = [];
             resp.data.data.donationEventItems.forEach(
               (donationEventItem: any) => {
                 updatedDonationEventItems.push(donationEventItem);
-              }
+              },
             );
             setItemsInfo(updatedDonationEventItems);
             handleCheckBoxItems(
               location.state.action,
               updatedDonationEventItems,
-              formData.donationRequestItems
+              formData.donationRequestItems,
             );
           })
           .catch((err) => console.error(err));
@@ -405,10 +413,7 @@ export default function DonationRequestForm() {
             {
               id: "omitPoints",
               name: "Receive Cashback Upon A Successful Donation",
-              value:
-                action === "edit"
-                  ? !donationRequest.omitPoints
-                  : false,
+              value: action === "edit" ? !donationRequest.omitPoints : false,
             },
           ]}
           onCheckBoxChange={handleCheckBoxChange}

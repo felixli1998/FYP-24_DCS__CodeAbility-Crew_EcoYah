@@ -12,7 +12,7 @@ export class DonationRequestRepository {
 
   async getActiveDonationRequestFromUser(
     user_id: number,
-    page: number = 1
+    page: number = 1,
   ): Promise<{ data: DonationRequest[]; pagination: IPagination }> {
     const offset = (page - 1) * DonationRequestRepository.PAGE_SIZE;
     const selectOptions = {
@@ -44,7 +44,7 @@ export class DonationRequestRepository {
       },
     };
     const [data, totalCount] = await AppDataSource.getRepository(
-      DonationRequest
+      DonationRequest,
     ).findAndCount({
       select: selectOptions,
       where: {
@@ -65,7 +65,7 @@ export class DonationRequestRepository {
       take: DonationRequestRepository.PAGE_SIZE,
     });
     const totalPages = Math.ceil(
-      totalCount / DonationRequestRepository.PAGE_SIZE
+      totalCount / DonationRequestRepository.PAGE_SIZE,
     );
     const pagination: IPagination = {
       pageNumber: page,
@@ -76,11 +76,11 @@ export class DonationRequestRepository {
 
   async getCompletedDonationRequestFromUser(
     user_id: number,
-    page: number = 1
+    page: number = 1,
   ): Promise<{ data: DonationRequest[]; pagination: IPagination }> {
     const offset = (page - 1) * DonationRequestRepository.PAGE_SIZE;
     const [data, totalCount] = await AppDataSource.getRepository(
-      DonationRequest
+      DonationRequest,
     ).findAndCount({
       where: {
         user: { id: user_id },
@@ -100,7 +100,7 @@ export class DonationRequestRepository {
       take: DonationRequestRepository.PAGE_SIZE,
     });
     const totalPages = Math.ceil(
-      totalCount / DonationRequestRepository.PAGE_SIZE
+      totalCount / DonationRequestRepository.PAGE_SIZE,
     );
     const pagination: IPagination = {
       pageNumber: page,
@@ -112,7 +112,7 @@ export class DonationRequestRepository {
   // TODO: This was created during model creation. Feel free to expand upon it as needed
   async createDonationRequest(donationRequest: DonationRequest) {
     return await AppDataSource.getRepository(DonationRequest).save(
-      donationRequest
+      donationRequest,
     );
   }
 
@@ -205,7 +205,7 @@ export class DonationRequestRepository {
   async completeDonationRequest(id: number) {
     await AppDataSource.getRepository(DonationRequest).update(
       { id: id },
-      { status: Status.COMPLETED }
+      { status: Status.COMPLETED },
     );
   }
 }

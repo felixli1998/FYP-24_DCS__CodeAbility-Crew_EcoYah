@@ -11,116 +11,116 @@ type UserSeedDataT = {
 
 export const ADMIN_SEED_DATA: UserSeedDataT[] = [
   {
-    name: 'Lay Hoon',
-    email: 'layhoon@test.com',
-    passwordInput: '1234',
-    contactNum: '+6512345678',
-    imageURL: 'DefaultProfilePicture.jpg',
-    role: UserRole.STAFF
+    name: "Lay Hoon",
+    email: "layhoon@test.com",
+    passwordInput: "1234",
+    contactNum: "+6512345678",
+    imageURL: "DefaultProfilePicture.jpg",
+    role: UserRole.STAFF,
   },
   {
-    name: 'Alex',
-    email: 'alex@test.com',
-    passwordInput: '1234',
-    contactNum: '+6512345678',
-    imageURL: 'DefaultProfilePicture.jpg',
-    role: UserRole.STAFF
+    name: "Alex",
+    email: "alex@test.com",
+    passwordInput: "1234",
+    contactNum: "+6512345678",
+    imageURL: "DefaultProfilePicture.jpg",
+    role: UserRole.STAFF,
   },
   {
-    name: 'Siew May',
-    email: 'siumei@test.com',
-    passwordInput: '1234',
-    contactNum: '+6512345678',
-    imageURL: 'DefaultProfilePicture.jpg',
-    role: UserRole.STAFF
+    name: "Siew May",
+    email: "siumei@test.com",
+    passwordInput: "1234",
+    contactNum: "+6512345678",
+    imageURL: "DefaultProfilePicture.jpg",
+    role: UserRole.STAFF,
   },
   {
-    name: 'Aaron',
-    email: 'aaron@test.com',
-    passwordInput: '1234',
-    contactNum: '+6512345678',
-    imageURL: 'DefaultProfilePicture.jpg',
-    role: UserRole.ADMIN
-  }
-]
+    name: "Aaron",
+    email: "aaron@test.com",
+    passwordInput: "1234",
+    contactNum: "+6512345678",
+    imageURL: "DefaultProfilePicture.jpg",
+    role: UserRole.ADMIN,
+  },
+];
 
 export const EVENT_TYPE_SEED_DATA = [
   {
-    name: "Electronic Waste"
+    name: "Electronic Waste",
   },
   {
-    name: "Food Waste"
+    name: "Food Waste",
   },
   {
-    name: "Book Donation"
+    name: "Book Donation",
   },
   {
-    name: "Clothing Waste"
+    name: "Clothing Waste",
   },
-]
+];
 
 export const ITEM_SEED_DATA = [
   {
     name: "Laptop",
     unit: "unit",
-    eventType: "Electronic Waste"
+    eventType: "Electronic Waste",
   },
   {
     name: "iPhone 12",
     unit: "unit",
-    eventType: "Electronic Waste"
+    eventType: "Electronic Waste",
   },
   {
     name: "Bok Choy",
     unit: "gram",
-    eventType: "Food Waste"
+    eventType: "Food Waste",
   },
   {
     name: "Eggs",
     unit: "unit",
-    eventType: "Food Waste"
+    eventType: "Food Waste",
   },
   {
     name: "Rice",
     unit: "gram",
-    eventType: "Food Waste"
+    eventType: "Food Waste",
   },
   {
     name: "Bread",
     unit: "slice",
-    eventType: "Food Waste"
+    eventType: "Food Waste",
   },
   {
     name: "Mobile Phone",
     unit: "unit",
-    eventType: "Electronic Waste"
+    eventType: "Electronic Waste",
   },
   {
     name: "Old Newspaper",
     unit: "unit",
-    eventType: "Book Donation"
+    eventType: "Book Donation",
   },
   {
     name: "Old Magazines",
     unit: "unit",
-    eventType: "Book Donation"
+    eventType: "Book Donation",
   },
   {
     name: "Old Books",
     unit: "unit",
-    eventType: "Book Donation"
+    eventType: "Book Donation",
   },
   {
     name: "Children's Clothing",
     unit: "unit",
-    eventType: "Clothing Waste"
+    eventType: "Clothing Waste",
   },
   {
     name: "Young Adult Clothing",
     unit: "unit",
-    eventType: "Clothing Waste"
-  }
-]
+    eventType: "Clothing Waste",
+  },
+];
 
 export const DONATION_EVENT_SEED_DATA = [
   {
@@ -135,15 +135,15 @@ export const DONATION_EVENT_SEED_DATA = [
         name: "Children's Clothing",
         targetQty: 200,
         minQty: 5,
-        pointsPerUnit: 10
+        pointsPerUnit: 10,
       },
       {
         name: "Young Adult Clothing",
         targetQty: 100,
         minQty: 10,
-        pointsPerUnit: 20
-      }
-    ]
+        pointsPerUnit: 20,
+      },
+    ],
   },
   {
     name: "Harvest for Hope: Food Donation Drive",
@@ -157,27 +157,27 @@ export const DONATION_EVENT_SEED_DATA = [
         name: "Bok Choy",
         targetQty: 100000,
         minQty: 500,
-        pointsPerUnit: 5
+        pointsPerUnit: 5,
       },
       {
         name: "Bread",
         targetQty: 1000,
         minQty: 10,
-        pointsPerUnit: 5
+        pointsPerUnit: 5,
       },
       {
         name: "Rice",
         targetQty: 100000,
         minQty: 500,
-        pointsPerUnit: 15
+        pointsPerUnit: 15,
       },
       {
         name: "Eggs",
         targetQty: 1000,
         minQty: 10,
-        pointsPerUnit: 5
-      }
-    ]
+        pointsPerUnit: 5,
+      },
+    ],
   },
   {
     name: "Do good with electronics",
@@ -191,15 +191,15 @@ export const DONATION_EVENT_SEED_DATA = [
         name: "Laptop",
         targetQty: 10,
         minQty: 1,
-        pointsPerUnit: 1500
+        pointsPerUnit: 1500,
       },
       {
         name: "iPhone 12",
         targetQty: 15,
         minQty: 1,
-        pointsPerUnit: 5000
-      }
-    ]
+        pointsPerUnit: 5000,
+      },
+    ],
   },
   {
     name: "Reshelf and Reuse: Book Recycling Initiative",
@@ -213,20 +213,20 @@ export const DONATION_EVENT_SEED_DATA = [
         name: "Old Newspaper",
         targetQty: 500,
         minQty: 10,
-        pointsPerUnit: 20
+        pointsPerUnit: 20,
       },
       {
         name: "Old Books",
         targetQty: 300,
         minQty: 5,
-        pointsPerUnit: 30
+        pointsPerUnit: 30,
       },
       {
         name: "Old Magazines",
         targetQty: 300,
         minQty: 5,
-        pointsPerUnit: 30
-      }
-    ]
+        pointsPerUnit: 30,
+      },
+    ],
   },
-]
+];

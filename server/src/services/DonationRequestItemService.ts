@@ -1,5 +1,5 @@
-import { DonationRequestItem } from '../entities/DonationRequestItem';
-import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
+import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { DonationRequestItemRepository } from "../repositories/DonationRequestItemRepository";
 
 export class DonationRequestItemService {
   private donationRequestItemRepository: DonationRequestItemRepository;
@@ -10,7 +10,7 @@ export class DonationRequestItemService {
 
   async createDonationRequestItem(donationRequestItem: DonationRequestItem) {
     return await this.donationRequestItemRepository.createDonationRequestItem(
-      donationRequestItem
+      donationRequestItem,
     );
   }
 

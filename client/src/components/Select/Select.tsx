@@ -1,8 +1,8 @@
-import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import * as React from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 
 interface BasicSelectProps {
   name: string;
@@ -28,7 +28,7 @@ const BasicSelect: React.FC<BasicSelectProps> = ({
   };
 
   return (
-    <FormControl fullWidth sx={{ marginTop: '1rem' }}>
+    <FormControl fullWidth sx={{ marginTop: "1rem" }}>
       <InputLabel id={labelId}>{label}</InputLabel>
       <Select
         name={name}

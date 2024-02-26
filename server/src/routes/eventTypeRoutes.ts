@@ -1,9 +1,9 @@
 // routes/itemRoutes.ts
 import express from "express";
-import {EventTypeService} from "../services/EventTypeService";
-import {EventTypeRepository} from "../repositories/EventTypeRepository";
-import {strongParams, generateResponse} from "../common/methods";
-import {EventType} from "../entities/EventType";
+import { EventTypeService } from "../services/EventTypeService";
+import { EventTypeRepository } from "../repositories/EventTypeRepository";
+import { strongParams, generateResponse } from "../common/methods";
+import { EventType } from "../entities/EventType";
 
 const router = express.Router();
 const eventTypeRepository = new EventTypeRepository();
@@ -11,7 +11,7 @@ const eventTypeService = new EventTypeService(eventTypeRepository);
 
 router.post("/create-event-type", async (req, res) => {
   try {
-    const {eventTypeName} = req.body;
+    const { eventTypeName } = req.body;
     if (!eventTypeName || eventTypeName.trim() === "") {
       return generateResponse(res, 400, {
         error: "Invalid input: eventTypeName parameter is required",
@@ -26,14 +26,14 @@ router.post("/create-event-type", async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return generateResponse(res, 500, {error: "Failed to create event type"});
+    return generateResponse(res, 500, { error: "Failed to create event type" });
   }
 });
 
 router.get("/event-types", async (req, res) => {
   try {
     const eventTypes = await eventTypeService.retrieveEventTypes();
-    return generateResponse(res, 200, {eventTypes});
+    return generateResponse(res, 200, { eventTypes });
   } catch (error) {
     console.error(error);
     return generateResponse(res, 500, {
@@ -48,7 +48,7 @@ router.get("/event-type-by-name", async (req, res) => {
     const allowedParams = ["name"];
     const filteredParams = strongParams(params, allowedParams);
 
-    const {name} = filteredParams;
+    const { name } = filteredParams;
 
     if (!name) {
       return generateResponse(res, 404, {
@@ -57,7 +57,7 @@ router.get("/event-type-by-name", async (req, res) => {
     }
 
     const eventType = await eventTypeService.retrieveEventTypeByName(name);
-    return generateResponse(res, 200, {eventType});
+    return generateResponse(res, 200, { eventType });
   } catch (error) {
     console.error(error);
     return generateResponse(res, 500, {

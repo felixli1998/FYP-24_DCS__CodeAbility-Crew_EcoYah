@@ -6,11 +6,19 @@ export class UserPointsRepository {
     return await AppDataSource.getRepository(UserPoints).save(userPoints);
   }
 
-  async getUserPointsByUserId(userId: UserPoints['user']['id']) {
-    return await AppDataSource.getRepository(UserPoints).findOne({ where: { user: { id: userId } } });
+  async getUserPointsByUserId(userId: UserPoints["user"]["id"]) {
+    return await AppDataSource.getRepository(UserPoints).findOne({
+      where: { user: { id: userId } },
+    });
   }
 
-  async updateUserPoints(userId: UserPoints['user']['id'], payload: Partial<UserPoints>) {
-    await AppDataSource.getRepository(UserPoints).update({ user: { id: userId } }, payload);
+  async updateUserPoints(
+    userId: UserPoints["user"]["id"],
+    payload: Partial<UserPoints>,
+  ) {
+    await AppDataSource.getRepository(UserPoints).update(
+      { user: { id: userId } },
+      payload,
+    );
   }
 }

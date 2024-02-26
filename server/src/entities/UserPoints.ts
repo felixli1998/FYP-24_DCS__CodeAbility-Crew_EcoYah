@@ -6,9 +6,8 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
-  BeforeInsert,
-} from 'typeorm';
-import { User } from './User';
+} from "typeorm";
+import { User } from "./User";
 
 @Entity()
 export class UserPoints {
@@ -19,11 +18,11 @@ export class UserPoints {
 
   @Column({
     default: 0, // Every new user will start with 0 points
-    comment: 'The user points',
+    comment: "The user points",
   })
   points: number;
 
-  @OneToOne(() => User, (user) => user.userPoints, { cascade: ['insert'] })
+  @OneToOne(() => User, (user) => user.userPoints, { cascade: ["insert"] })
   @JoinColumn()
   user: User;
 

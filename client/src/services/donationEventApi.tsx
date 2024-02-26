@@ -1,11 +1,11 @@
 import axios from "axios";
-import {DONATION_EVENT_ROUTES} from "./routes";
+import { DONATION_EVENT_ROUTES } from "./routes";
 const URL = process.env.REACT_APP_BACKEND_URL + "/donation-events";
 
 // Create a new donation event and donation event item(s)
 export const createDonationEvent = async (
   donationEvent: any,
-  adminID: number
+  adminID: number,
 ) => {
   try {
     const response = await axios.post(DONATION_EVENT_ROUTES.CREATE_EVENT, {
@@ -27,9 +27,7 @@ export const createDonationEvent = async (
 // Get all donation event
 export const getDonationEvents = async () => {
   try {
-    const response = await axios.get(
-      DONATION_EVENT_ROUTES.GET_ALL
-    );
+    const response = await axios.get(DONATION_EVENT_ROUTES.GET_ALL);
     return response.data.data; // change this later to response.data for pagination data
   } catch (error) {
     console.error("Error fetching donation event: ", error);
@@ -41,10 +39,7 @@ export const getDonationEvents = async () => {
 export const getDonationEventById = async (donationEventId: string) => {
   try {
     const response = await axios.get(
-      DONATION_EVENT_ROUTES.BY_ID.replace(
-        ":id",
-        donationEventId
-      )
+      DONATION_EVENT_ROUTES.BY_ID.replace(":id", donationEventId),
     );
     return response.data;
   } catch (error) {
@@ -56,17 +51,14 @@ export const getDonationEventById = async (donationEventId: string) => {
 // Update Donation Event by Id
 export const updateDonationEventById = async (
   donationEventId: string,
-  updateParams: any
+  updateParams: any,
 ) => {
   try {
     const response = await axios.put(
-      DONATION_EVENT_ROUTES.BY_ID.replace(
-        ":id",
-        donationEventId
-      ),
+      DONATION_EVENT_ROUTES.BY_ID.replace(":id", donationEventId),
       {
         updateParams,
-      }
+      },
     );
     return response.data;
   } catch (error) {
@@ -85,7 +77,7 @@ export const fetchActiveDonationEvents = async (category: string) => {
         eventType: category,
         name: "",
         isActive: true,
-        pageNumber: 1
+        pageNumber: 1,
       },
     });
     return response.data;

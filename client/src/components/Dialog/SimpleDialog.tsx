@@ -39,31 +39,39 @@ export default function SimpleDialog(props: SimpleDialogProps) {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle sx={{ fontSize: '1.5rem', letterSpacing: '0.18rem' }}>{title}</DialogTitle>
+      <DialogTitle sx={{ fontSize: "1.5rem", letterSpacing: "0.18rem" }}>
+        {title}
+      </DialogTitle>
       <DialogContent>
-        {subtitleText && <DialogContentText sx={{ fontSize: '1.125rem', letterSpacing: '0.135rem' }}>{subtitleText}</DialogContentText>}
+        {subtitleText && (
+          <DialogContentText
+            sx={{ fontSize: "1.125rem", letterSpacing: "0.135rem" }}
+          >
+            {subtitleText}
+          </DialogContentText>
+        )}
         {children}
       </DialogContent>
       <DialogActions>
         <Button
-          variant='outlined'
+          variant="outlined"
           onClick={handleClose}
           disabled={loading}
           sx={{
-            fontSize: '1.125rem',
-            letterSpacing: '0.135rem',
+            fontSize: "1.125rem",
+            letterSpacing: "0.135rem",
             margin: 2,
           }}
         >
           {leftButtonLabel}
         </Button>
         <Button
-          variant='contained'
+          variant="contained"
           onClick={updateDonationIsActive}
           disabled={loading}
           sx={{
-            fontSize: '1.125rem',
-            letterSpacing: '0.135rem',
+            fontSize: "1.125rem",
+            letterSpacing: "0.135rem",
             margin: 2,
           }}
         >

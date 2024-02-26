@@ -7,10 +7,10 @@ import {
   ManyToOne,
   BeforeInsert,
   OneToMany,
-} from 'typeorm';
-import { Item } from './Item';
-import { DonationEvent } from './DonationEvent';
-import { DonationRequestItem } from './DonationRequestItem';
+} from "typeorm";
+import { Item } from "./Item";
+import { DonationEvent } from "./DonationEvent";
+import { DonationRequestItem } from "./DonationRequestItem";
 
 @Entity()
 export class DonationEventItem {
@@ -27,13 +27,13 @@ export class DonationEventItem {
   @ManyToOne(
     () => DonationEvent,
     (donationEvent) => donationEvent.donationEventItems,
-    { cascade: ['insert', 'update'] }
+    { cascade: ["insert", "update"] },
   )
   donationEvent: DonationEvent;
 
   @OneToMany(
     () => DonationRequestItem,
-    (donationRequestItem) => donationRequestItem.donationEventItem
+    (donationRequestItem) => donationRequestItem.donationEventItem,
   )
   donationRequestItems: DonationRequestItem[];
 
@@ -68,7 +68,7 @@ export class DonationEventItem {
   @BeforeInsert()
   beforeInsert() {
     if (!this.isValidTargetQty())
-      throw new Error('Target Qty has to be more than 0');
+      throw new Error("Target Qty has to be more than 0");
   }
 
   private isValidTargetQty() {

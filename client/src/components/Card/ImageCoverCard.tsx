@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { Box, Typography } from '@mui/material';
-import { folderPrefixNames } from '../../components/Image/Image';
+import * as React from "react";
+import { Box, Typography } from "@mui/material";
+import { folderPrefixNames } from "../../components/Image/Image";
 import Image from "../Image/Image";
 
 type ImageCoverCardType = {
@@ -40,8 +40,10 @@ export default function ImageCoverCard(props: ImageCoverCardType) {
           background: "#FFFFFF",
         }}
       >
-        <Typography variant="h5"><b>{props.name}</b> <br/>
-          {new Date(props.startDate).toLocaleDateString()} - {new Date(props.endDate).toLocaleDateString()}
+        <Typography variant="h5">
+          <b>{props.name}</b> <br />
+          {new Date(props.startDate).toLocaleDateString()} -{" "}
+          {new Date(props.endDate).toLocaleDateString()}
         </Typography>
       </Box>
     </Box>

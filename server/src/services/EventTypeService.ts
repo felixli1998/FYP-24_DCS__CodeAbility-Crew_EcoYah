@@ -1,7 +1,6 @@
 // Internal Imports
-import { EventType } from '../entities/EventType';
-import { EventTypeRepository } from '../repositories/EventTypeRepository';
-
+import { EventType } from "../entities/EventType";
+import { EventTypeRepository } from "../repositories/EventTypeRepository";
 
 export class EventTypeService {
   private eventTypeRepository: EventTypeRepository;

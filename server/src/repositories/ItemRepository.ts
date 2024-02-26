@@ -4,27 +4,27 @@ import { AppDataSource } from "../config/data-source";
 // Interacts database open close
 
 export class ItemRepository {
-    async getAllItems() {
-        return await AppDataSource.getRepository(Item).find()
-    }
+  async getAllItems() {
+    return await AppDataSource.getRepository(Item).find();
+  }
 
-    async getItemsByEventTypeId(eventTypeId: number) {
-      return await AppDataSource.getRepository(Item).find({where: { eventType: { id: eventTypeId }}});
-    }
+  async getItemsByEventTypeId(eventTypeId: number) {
+    return await AppDataSource.getRepository(Item).find({
+      where: { eventType: { id: eventTypeId } },
+    });
+  }
 
-    async getItemById(id: number) {
-        return await AppDataSource.getRepository(Item).findOne({ where: { id } })
-    }
-    
-    async createItem(item: Item) {
-        return await AppDataSource.getRepository(Item).save(item)
-    }
-//     async updateItem(item: Item) {
-//         return await AppDataSource.getRepository(Item).save(item)
-//     }
-//     async deleteItem(id: number) {
-//         return await AppDataSource.getRepository(Item).delete(id)
-//     }
+  async getItemById(id: number) {
+    return await AppDataSource.getRepository(Item).findOne({ where: { id } });
+  }
 
-    
+  async createItem(item: Item) {
+    return await AppDataSource.getRepository(Item).save(item);
+  }
+  //     async updateItem(item: Item) {
+  //         return await AppDataSource.getRepository(Item).save(item)
+  //     }
+  //     async deleteItem(id: number) {
+  //         return await AppDataSource.getRepository(Item).delete(id)
+  //     }
 }

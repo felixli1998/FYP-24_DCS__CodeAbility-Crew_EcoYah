@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useState, useEffect } from "react";
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 type DatePickerValueType = {
   label: string;
@@ -31,11 +31,11 @@ export default function DatePickerValue(props: DatePickerValueType) {
             helperText:
               props.validateForm &&
               value === null &&
-              'Please choose a date and time',
+              "Please choose a date and time",
           },
         }}
-        format='DD/MM/YYYY'
-        sx={{ width: 300, marginBottom: '1.5rem' }}
+        format="DD/MM/YYYY"
+        sx={{ width: 300, marginBottom: "1.5rem" }}
       />
     </LocalizationProvider>
   );

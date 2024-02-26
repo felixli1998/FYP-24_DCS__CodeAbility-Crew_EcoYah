@@ -1,24 +1,26 @@
 // External Imports
-import express from 'express';
+import express from "express";
 
 // Internal Imports
-import { DonationRequestRepository } from '../repositories/DonationRequestRepository';
-import { DonationRequestService } from '../services/DonationRequestService';
-import { generateResponse, strongParams } from '../common/methods';
-import { DonationRequestItemService } from '../services/DonationRequestItemService';
-import { DonationRequestItemRepository } from '../repositories/DonationRequestItemRepository';
+import { DonationRequestRepository } from "../repositories/DonationRequestRepository";
+import { DonationRequestService } from "../services/DonationRequestService";
+import { generateResponse, strongParams } from "../common/methods";
+import { DonationRequestItemService } from "../services/DonationRequestItemService";
+import { DonationRequestItemRepository } from "../repositories/DonationRequestItemRepository";
 
 const router = express.Router();
 
 // Donation Request Service
 const donationRequestRepository = new DonationRequestRepository();
 const donationRequestService = new DonationRequestService(
-  donationRequestRepository
+  donationRequestRepository,
 );
 
 // Donation Request Item Service
 const donationRequestItemRepository = new DonationRequestItemRepository();
-const donationRequestItemService = new DonationRequestItemService(donationRequestItemRepository)
+const donationRequestItemService = new DonationRequestItemService(
+  donationRequestItemRepository,
+);
 
 type RequestItemT = {
   donationEventItemId: number; // This is to associate donationEventItem
@@ -26,9 +28,9 @@ type RequestItemT = {
 };
 
 // Endpoint to create donation request item for an existing donation request //
-router.post('/create-from-request', async (req, res) => {
+router.post("/create-from-request", async (req, res) => {
   const payload = req.body;
-  const allowedParams = ['donationRequestId', 'requestItems'];
+  const allowedParams = ["donationRequestId", "requestItems"];
 
   const sanitisedPayload = strongParams(payload, allowedParams);
   const { donationRequestId, requestItems } = sanitisedPayload as {
@@ -40,7 +42,7 @@ router.post('/create-from-request', async (req, res) => {
   const donationRequestObj =
     await donationRequestService.retrieveById(donationRequestId);
 
-  if (!donationRequestObj) return generateResponse(res, 200, 'Invalid ID');
+  if (!donationRequestObj) return generateResponse(res, 200, "Invalid ID");
 
   const donationRequestItemsObj = await Promise.all(
     requestItems.map(async (requestItem) => {
@@ -48,37 +50,46 @@ router.post('/create-from-request', async (req, res) => {
         await donationRequestService.createNewDonationRequestItem(
           donationRequestObj,
           requestItem.donationEventItemId,
-          requestItem.quantity
+          requestItem.quantity,
         );
       return requestItemObj;
-    })
+    }),
   );
 
   try {
-      const payload = await Promise.all((donationRequestItemsObj.map(async (donationRequestItemObj) => {
-        const createdDonationRequestItem = await donationRequestItemService.createDonationRequestItem(donationRequestItemObj)
+    const payload = await Promise.all(
+      donationRequestItemsObj.map(async (donationRequestItemObj) => {
+        const createdDonationRequestItem =
+          await donationRequestItemService.createDonationRequestItem(
+            donationRequestItemObj,
+          );
         return createdDonationRequestItem;
-      })))
+      }),
+    );
 
     return generateResponse(res, 200, payload);
   } catch (err) {
-    return generateResponse(res, 500, 'Something went wrong');
+    return generateResponse(res, 500, "Something went wrong");
   }
 });
 
-router.delete('/delete',  async (req, res) => {
+router.delete("/delete", async (req, res) => {
   const payload = req.body;
-  const allowedParams = ['donationRequestItemId'];
+  const allowedParams = ["donationRequestItemId"];
   const sanitisedPayload = strongParams(payload, allowedParams);
 
   try {
-    await donationRequestItemService.deleteById(sanitisedPayload.donationRequestItemId);
-    return generateResponse(res, 200, { action: true, message: 'Deleted Successfully!'});
+    await donationRequestItemService.deleteById(
+      sanitisedPayload.donationRequestItemId,
+    );
+    return generateResponse(res, 200, {
+      action: true,
+      message: "Deleted Successfully!",
+    });
   } catch (err) {
-    console.log(err)
-    return generateResponse(res, 500, 'Something went wrong');
+    console.log(err);
+    return generateResponse(res, 500, "Something went wrong");
   }
-
 });
 
 export default router;

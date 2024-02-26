@@ -1,5 +1,5 @@
 import axios from "axios";
-import {DONATION_REQUEST_ROUTES} from "./routes";
+import { DONATION_REQUEST_ROUTES } from "./routes";
 
 // Get all active donation requests by user
 export const getActiveDonationRequests = async (userId: number) => {
@@ -10,7 +10,7 @@ export const getActiveDonationRequests = async (userId: number) => {
         params: {
           userId: userId,
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {
@@ -28,7 +28,7 @@ export const getCompletedDonationRequests = async (userId: number) => {
         params: {
           userId: userId,
         },
-      }
+      },
     );
     return response.data;
   } catch (error) {
@@ -39,16 +39,21 @@ export const getCompletedDonationRequests = async (userId: number) => {
 
 const URL = process.env.REACT_APP_BACKEND_URL + "/donation-requests";
 
-export const retrieveDonationReqCountByEventId = async (donationEventId: number) => {
+export const retrieveDonationReqCountByEventId = async (
+  donationEventId: number,
+) => {
   try {
-    const response = await axios.get(URL + "/retrieve-donation-request-count-by-event-id", {
-      params: {
-        donationEventId: donationEventId
-      }
-    });
+    const response = await axios.get(
+      URL + "/retrieve-donation-request-count-by-event-id",
+      {
+        params: {
+          donationEventId: donationEventId,
+        },
+      },
+    );
     return response.data;
   } catch (error) {
     console.error("Error fetching donation requests: ", error);
     throw new Error("Failed to fetch donation requests");
   }
-}
+};
