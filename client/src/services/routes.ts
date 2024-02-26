@@ -1,59 +1,61 @@
-const BASE_URL = process.env.REACT_APP_BACKEND_URL
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
-// Users Related Routes //
-export const USER_ROUTES = {
-  RETRIEVE_BY_EMAIL: `${BASE_URL}/users/:email`,
-  CREATE_USER: `${BASE_URL}/users`,
-  ADMIN_LOGIN: `${BASE_URL}/users/allAdmins`,
-  UPDATE_USER: `${BASE_URL}/users/update`,
-  GET_ACCOUNT_TYPE: `${BASE_URL}/users/get-account-type`,
-}
-
-// General Related Routes //
-export const GENERAL_ROUTES = {
+// Parent Routes
+export const PARENT_ROUTES = {
+  USERS: `${BASE_URL}/users`,
+  ITEMS: `${BASE_URL}/items`,
+  DONATION_EVENTS: `${BASE_URL}/donation-events`,
+  DONATION_REQUESTS: `${BASE_URL}/donation-requests`,
+  DONATION_REQUEST_ITEMS: `${BASE_URL}/donation-request-items`,
+  IMAGES: `${BASE_URL}/images`,
   LOGIN: `${BASE_URL}/login`,
-}
+};
 
-// Image Related Routes //
-export const IMAGE_ROUTES = {
-  UPDATE: `${BASE_URL}/images/:id`,
-  RETRIEVE_BY_FILE_PATH: `${BASE_URL}/images/:filePath`,
-}
+// User Related Routes //
+export const USER_ROUTES = {
+  RETRIEVE_BY_EMAIL: `${PARENT_ROUTES.USERS}/:email`,
+  ADMIN_LOGIN: `${PARENT_ROUTES.USERS}/allAdmins`,
+  UPDATE_USER: `${PARENT_ROUTES.USERS}/update`,
+  GET_ACCOUNT_TYPE: `${PARENT_ROUTES.USERS}/get-account-type`,
+};
 
 // ITEM Related Routes //
 export const ITEM_ROUTES = {
-  CREATE_ITEM: `${BASE_URL}/items/create`,
-  RETRIEVE_ALL_ITEMS: `${BASE_URL}/items/all`,
-  RETRIEVE_ITEMS_BY_EVENT_TYPE_ID: `${BASE_URL}/items/:eventId`
-}
+  CREATE_ITEM: `${PARENT_ROUTES.ITEMS}/create`,
+  RETRIEVE_ALL_ITEMS: `${PARENT_ROUTES.ITEMS}/all`,
+  RETRIEVE_ITEMS_BY_EVENT_TYPE_ID: `${PARENT_ROUTES.ITEMS}/:eventId`,
+};
 
-// DONATION EVENT Related Routes //
+// Donation Event-related routes //
 export const DONATION_EVENT_ROUTES = {
-  GET_ALL: `${BASE_URL}/donation-events/all`,
-  CREATE_EVENT: `${BASE_URL}/donation-events/create`,
-  RETRIEVE_DONATION_EVENTS: `${BASE_URL}/donation-events/all`,
-  RETRIEVE_DONATION_EVENT_BY_ID: `${BASE_URL}/donation-events/:id`,
-  UPDATE_DONATION_EVENT_BY_ID: `${BASE_URL}/donation-events/:id`,
-  RETRIEVE_BY_ID: `${BASE_URL}/donation-events/:id`
-}
+  GET_ALL: `${PARENT_ROUTES.DONATION_EVENTS}/all`,
+  CREATE_EVENT: `${PARENT_ROUTES.DONATION_EVENTS}/create`,
+  BY_ID: `${PARENT_ROUTES.DONATION_EVENTS}/:id`,
+};
 
 // Donation Request Routes //
 export const DONATION_REQUEST_ROUTES = {
-  RETRIEVE_ACTIVE_DONATION_REQUESTS: `${BASE_URL}/donation-requests/active-donation-requests`,
-  RETRIEVE_COMPLETED_DONATION_REQUESTS: `${BASE_URL}/donation-requests/completed-donation-requests`,
-  RETRIEVE_ACTIVE_BY_DATE: `${BASE_URL}/donation-requests/retrieve-active-by-date`,
-  RETRIEVE_BY_USER_ID: `${BASE_URL}/donation-requests/retrieve-by-user-id`,
-  UPDATE_STATUS: `${BASE_URL}/donation-requests/complete`,
-  CREATE: `${BASE_URL}/donation-requests/create`,
-  UPDATE: `${BASE_URL}/donation-requests/update`,
+  RETRIEVE_ACTIVE_DONATION_REQUESTS: `${PARENT_ROUTES.DONATION_REQUESTS}/active-donation-requests`,
+  RETRIEVE_COMPLETED_DONATION_REQUESTS: `${PARENT_ROUTES.DONATION_REQUESTS}/completed-donation-requests`,
+  RETRIEVE_ACTIVE_BY_DATE: `${PARENT_ROUTES.DONATION_REQUESTS}/retrieve-active-by-date`,
+  RETRIEVE_BY_USER_ID: `${PARENT_ROUTES.DONATION_REQUESTS}/retrieve-by-user-id`,
+  UPDATE_STATUS: `${PARENT_ROUTES.DONATION_REQUESTS}/complete`,
+  CREATE: `${PARENT_ROUTES.DONATION_REQUESTS}/create`,
+  UPDATE: `${PARENT_ROUTES.DONATION_REQUESTS}/update`,
 };
 
 // Donation Request Items Routes //
 export const DONATION_REQUEST_ITEMS_ROUTES = {
-  DELETE: `${BASE_URL}/donation-request-items/delete`
+  DELETE: `${PARENT_ROUTES.DONATION_REQUEST_ITEMS}/delete`,
+};
+
+// Image Related Routes //
+export const IMAGE_ROUTES = {
+  UPDATE: `${PARENT_ROUTES.IMAGES}/:id`,
+  RETRIEVE_BY_FILE_PATH: `${PARENT_ROUTES.IMAGES}/:filePath`,
 };
 
 // Event Type-related routes //
 export const EVENT_TYPE_ROUTES = {
   GET_ALL: `${BASE_URL}/event-types/event-types`,
-}
+};

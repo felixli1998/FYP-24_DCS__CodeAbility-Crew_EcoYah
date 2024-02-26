@@ -1,7 +1,7 @@
 // React Imports
-import {useEffect, useState} from "react";
-import {useParams, useNavigate} from "react-router-dom";
-import {useQuery, useMutation} from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import _ from "lodash";
 
 // MUI Imports
@@ -42,7 +42,7 @@ import dayjs from "dayjs";
 
 export default function DonationEvent() {
   const navigate = useNavigate();
-  const {donationEventId} = useParams();
+  const { donationEventId } = useParams();
   const [donationEvent, setDonationEventData] = useState<any>();
   const [editMode, setEditMode] = useState<Boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
@@ -87,7 +87,7 @@ export default function DonationEvent() {
     }
   };
 
-  const {mutateAsync: updateDonationEventMutateAsync} = useMutation({
+  const { mutateAsync: updateDonationEventMutateAsync } = useMutation({
     mutationKey: ["updateDonationEvent"],
     // mutationFn: Performing the actual API call
     mutationFn: ({
@@ -146,7 +146,7 @@ export default function DonationEvent() {
     try {
       const response = await updateDonationEventMutateAsync({
         donationEventId: donationEvent.id,
-        updateParams: {isActive: isActive},
+        updateParams: { isActive: isActive },
       });
     } catch (error) {
       console.error("Error updating donation event");
@@ -207,28 +207,21 @@ export default function DonationEvent() {
         handleData={handleData}
       />
     ),
-    2: (
-      <Step3Form
-        formData={donationEvent}
-        handleData={handleData}
-      />
-    ),
+    2: <Step3Form formData={donationEvent} handleData={handleData} />,
     3: (
       <DonationEventPreview
         headerBar={
-          <Box
-            display="flex"
-            justifyContent={"center"}
-          >
+          <Box display="flex" justifyContent={"center"}>
             <StaffTypography
               type="title"
               size={2.125}
               text={`Preview the Donation Event`}
-              customStyles={{textAlign: "center"}}
+              customStyles={{ textAlign: "center" }}
             />
           </Box>
         }
         donationEvent={donationEvent}
+        action={"create"}
       />
     ),
   };
@@ -244,39 +237,54 @@ export default function DonationEvent() {
       {donationEvent && !editMode && (
         <DonationEventPreview
           headerBar={
-            <Box
-              display="flex"
-              justifyContent={"space-between"}
-            >
+            <Box display="flex" justifyContent={"space-between"}>
               <StaffTypography
                 type="title"
                 size={2.125}
                 text={`Donation Event`}
-                customStyles={{textAlign: "center"}}
+                customStyles={{ textAlign: "center" }}
               />
-              <Button
-                variant="contained"
-                sx={{
-                  fontSize: "1.25rem",
-                  letterSpacing: "0.15rem",
-                  width: "9.375rem",
-                  height: "3.75rem",
-                  backgroundColor: "primary.dark",
-                }}
-                onClick={() => handleEdit()}
-              >
-                Edit
-              </Button>
+              <Box>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.15rem",
+                    width: "9.375rem",
+                    height: "3.75rem",
+                    borderColor: "primary.dark",
+                    color: "primary.dark",
+                    marginX: "2rem",
+                  }}
+                  onClick={() => navigate("/admin/donation-events")}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.15rem",
+                    width: "9.375rem",
+                    height: "3.75rem",
+                    backgroundColor: "primary.dark",
+                  }}
+                  onClick={() => handleEdit()}
+                >
+                  Edit
+                </Button>
+              </Box>
             </Box>
           }
           donationEvent={donationEvent}
+          action={"preview"}
         />
       )}
       {/* Edit Dialog */}
       <SimpleDialog
         open={openDialog}
         onClose={handleDialogClose}
-        subtitleText="The donation event has already started. Hence, you won't be able to edit the details except for the status."
+        subtitleText="The donation event has already started. You won't be able to edit the details except for the status."
         title={"Edit Donation Event Status"}
         children={
           <FormControlLabel
@@ -287,6 +295,7 @@ export default function DonationEvent() {
                 sx={{
                   width: "9rem",
                   height: "5.25rem",
+                  marginTop: "2rem",
                   ".MuiSwitch-thumb": {
                     width: "4.4rem",
                     height: "4.1rem",
@@ -303,6 +312,7 @@ export default function DonationEvent() {
                   color: isActive ? "primary.dark" : "secondary.dark",
                   letterSpacing: "0.18rem",
                   marginLeft: "0.5rem",
+                  marginTop: "2rem",
                 }}
               >
                 {isActive ? "Active" : "Inactive"}
@@ -318,11 +328,8 @@ export default function DonationEvent() {
       {/* Full Edit Mode */}
       {donationEvent && editMode && (
         <>
-          <Box sx={{m: 5}}>
-            <Stepper
-              activeStep={activeStep}
-              alternativeLabel
-            >
+          <Box sx={{ m: 5 }}>
+            <Stepper activeStep={activeStep} alternativeLabel>
               {steps.map((label, i) => (
                 <Step key={label}>
                   <StepLabel
@@ -332,7 +339,7 @@ export default function DonationEvent() {
                         height: "3.44rem",
                         borderRadius: "50rem",
                       },
-                      ".MuiStepIcon-text": {fontSize: "1rem"},
+                      ".MuiStepIcon-text": { fontSize: "1rem" },
                     }}
                   >
                     <StaffTypography
@@ -348,19 +355,8 @@ export default function DonationEvent() {
               ))}
             </Stepper>
           </Box>
-          <Grid
-            container
-            justifyContent="center"
-            sx={{p: 2}}
-          >
-            <Grid
-              item
-              xs={12}
-              md={8}
-              lg={8}
-              container
-              justifyContent="center"
-            >
+          <Grid container justifyContent="center" sx={{ p: 2 }}>
+            <Grid item xs={12} md={8} lg={8} container justifyContent="center">
               <Stack spacing={5}>
                 {errorMessage && (
                   <Alert severity="error">
@@ -369,10 +365,7 @@ export default function DonationEvent() {
                   </Alert>
                 )}
                 {form[activeStep]}
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                >
+                <Box display="flex" justifyContent="space-between">
                   <Button
                     variant="outlined"
                     sx={{

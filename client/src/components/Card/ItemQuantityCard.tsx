@@ -1,5 +1,5 @@
 // React Imports
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // MUI Imports
 import {
@@ -10,16 +10,16 @@ import {
   CardActions,
   IconButton,
   FormHelperText,
-} from '@mui/material';
-import PaidOutlinedIcon from '@mui/icons-material/PaidOutlined';
-import RemoveIcon from '@mui/icons-material/Remove';
-import AddIcon from '@mui/icons-material/Add';
+} from "@mui/material";
+import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
+import RemoveIcon from "@mui/icons-material/Remove";
+import AddIcon from "@mui/icons-material/Add";
 
 type ItemQuantityCardType = {
   label: Record<string, string | number>[];
   data: any;
   onItemQuantityChange: (
-    itemQuantity: Record<string, Record<string, string | number>>
+    itemQuantity: Record<string, Record<string, string | number>>,
   ) => void;
 };
 
@@ -39,10 +39,12 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
   useEffect(() => {
     const initialDonationRequestItems: DonationRequestItemType = {};
     props.label.forEach((eachLabel: Record<string, string | number>) => {
-      const foundItem = props.data.find((item: any) => item.donationEventItem.id === eachLabel.id);
-      
+      const foundItem = props.data.find(
+        (item: any) => item.donationEventItem.id === eachLabel.id,
+      );
+
       const quantityToUse = foundItem ? foundItem.quantity : eachLabel.minQty;
-      
+
       initialDonationRequestItems[eachLabel.id as number] = {
         quantity: quantityToUse as number,
         points: quantityToUse * (eachLabel.pointsPerUnit as number),
@@ -94,7 +96,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
     <>
       {props.label.map(function (
         eachLabel: Record<string, string | number>,
-        index: number
+        index: number,
       ) {
         return (
           <FormControl
@@ -151,7 +153,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
                   onClick={() =>
                     handleDeduction(
                       eachLabel.id as number,
-                      eachLabel.pointsPerUnit as number
+                      eachLabel.pointsPerUnit as number,
                     )
                   }
                 >
@@ -166,7 +168,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
                   onClick={() =>
                     handleAddition(
                       eachLabel.id as number,
-                      eachLabel.pointsPerUnit as number
+                      eachLabel.pointsPerUnit as number,
                     )
                   }
                 >

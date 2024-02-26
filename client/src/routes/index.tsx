@@ -13,14 +13,15 @@ const router = createBrowserRouter([
       let { path, element } = route;
 
       if (route.isAdmin) path = `/admin/${path}`;
-      if (route.protected) element = <ProtectedRoute isAdmin={route.isAdmin} children={element} />;
+      if (route.protected)
+        element = <ProtectedRoute isAdmin={route.isAdmin} children={element} />;
 
       return {
         path,
         element,
       };
     }),
-  }
+  },
 ]);
 
 export default router;

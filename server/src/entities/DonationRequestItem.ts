@@ -5,18 +5,18 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  Index
-} from 'typeorm';
-import { DonationRequest } from './DonationRequest';
-import { DonationEventItem } from './DonationEventItem';
+  Index,
+} from "typeorm";
+import { DonationRequest } from "./DonationRequest";
+import { DonationEventItem } from "./DonationEventItem";
 
 export enum Status {
-  SUBMITTED = 'submitted',
-  COMPLETED = 'completed',
+  SUBMITTED = "submitted",
+  COMPLETED = "completed",
 }
 
 @Entity()
-@Index(['donationRequest', 'donationEventItem'], { unique: true })
+@Index(["donationRequest", "donationEventItem"], { unique: true })
 export class DonationRequestItem {
   @PrimaryGeneratedColumn()
   id: number;
@@ -29,14 +29,14 @@ export class DonationRequestItem {
   // Belongs to a donation request
   @ManyToOne(
     () => DonationRequest,
-    (donationRequest) => donationRequest.donationRequestItems
+    (donationRequest) => donationRequest.donationRequestItems,
   )
   donationRequest: DonationRequest;
 
   // Belongs to a donation event item
   @ManyToOne(
     () => DonationEventItem,
-    (donationEventItem) => donationEventItem.donationRequestItems
+    (donationEventItem) => donationEventItem.donationRequestItems,
   )
   donationEventItem: DonationEventItem;
 

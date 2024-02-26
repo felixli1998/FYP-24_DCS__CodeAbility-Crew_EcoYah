@@ -15,8 +15,8 @@ export class UserRepository {
       order: { name: "ASC" },
       cache: {
         id: "all-admin-users", // Cache Key
-        milliseconds: 1200000 // 2 minutes
-      }
+        milliseconds: 1200000, // 2 minutes
+      },
     });
   }
 
@@ -24,23 +24,25 @@ export class UserRepository {
     return await AppDataSource.getRepository(User).save(user);
   }
 
-  async getUserById(id: User['id']) {
+  async getUserById(id: User["id"]) {
     return await AppDataSource.getRepository(User).findOne({ where: { id } });
   }
 
-  async getUserByEmail(email: User['email']) {
+  async getUserByEmail(email: User["email"]) {
     return await AppDataSource.getRepository(User).findOne({
       where: { email },
-      relations: ["userPoints"]
-     });
+      relations: ["userPoints"],
+    });
   }
 
   async updateUser(email: string, payload: Partial<User>) {
-    await AppDataSource.getRepository(User).update({ email: email }, payload)
+    await AppDataSource.getRepository(User).update({ email: email }, payload);
   }
 
-  async getAccountType(email: User['email']) {
-    const user = await AppDataSource.getRepository(User).findOne({ where: { email } });
+  async getAccountType(email: User["email"]) {
+    const user = await AppDataSource.getRepository(User).findOne({
+      where: { email },
+    });
 
     return user?.role;
   }

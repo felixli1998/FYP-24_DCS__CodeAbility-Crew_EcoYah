@@ -11,7 +11,7 @@ export type Item = {
   unit: string;
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type DonationEventItems = {
   minQty: number;

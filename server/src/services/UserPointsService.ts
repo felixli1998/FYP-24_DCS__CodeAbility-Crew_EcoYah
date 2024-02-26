@@ -1,6 +1,5 @@
 // Internal Imports
-import { UserPointsRepository } from '../repositories/UserPointsRepository';
-
+import { UserPointsRepository } from "../repositories/UserPointsRepository";
 
 export class UserPointsService {
   private userPointsRepository: UserPointsRepository;
@@ -10,9 +9,10 @@ export class UserPointsService {
   }
 
   async creditUserPoints(userId: number, points: number) {
-    const UserPoints = await this.userPointsRepository.getUserPointsByUserId(userId);
+    const UserPoints =
+      await this.userPointsRepository.getUserPointsByUserId(userId);
 
-    if(UserPoints) {
+    if (UserPoints) {
       const currentPoints = UserPoints.points;
       const newPoints = currentPoints + points;
 
@@ -20,7 +20,9 @@ export class UserPointsService {
       // Implement this in the future OR we can use subscriber
 
       // Update User Points
-      await this.userPointsRepository.updateUserPoints(userId, { points: newPoints });
+      await this.userPointsRepository.updateUserPoints(userId, {
+        points: newPoints,
+      });
     }
   }
 }

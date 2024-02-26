@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import {IconProps} from "@mui/material";
+import { IconProps } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -61,7 +61,13 @@ const FormDialog: React.FC<FormDialogProps> = ({
         variant="contained"
         startIcon={buttonIcon}
         onClick={handleClickOpen}
-        sx={{ backgroundColor: "primary.dark", fontSize: "1.25rem", letterSpacing: "0.15rem", width: "9.375rem", height: "3.75rem" }}
+        sx={{
+          backgroundColor: "primary.dark",
+          fontSize: "1.25rem",
+          letterSpacing: "0.15rem",
+          width: "9.375rem",
+          height: "3.75rem",
+        }}
       >
         {buttonName}
       </Button>
@@ -76,14 +82,27 @@ const FormDialog: React.FC<FormDialogProps> = ({
           },
         }}
       >
-        <DialogTitle sx={{paddingX: "4rem", textAlign: "center", fontSize: "1.5rem", letterSpacing: "0.18rem"}}>{dialogTitle}</DialogTitle>
+        <DialogTitle
+          sx={{
+            paddingX: "4rem",
+            textAlign: "center",
+            fontSize: "1.5rem",
+            letterSpacing: "0.18rem",
+          }}
+        >
+          {dialogTitle}
+        </DialogTitle>
         <DialogContent>
           {formComponent}
           {errorMessage && (
             <Alert
               variant="filled"
               severity="error"
-              sx={{marginTop: "1rem", fontSize: "1rem", letterSpacing: "0.12rem"}}
+              sx={{
+                marginTop: "1rem",
+                fontSize: "1rem",
+                letterSpacing: "0.12rem",
+              }}
             >
               {errorMessage}
             </Alert>
@@ -95,10 +114,11 @@ const FormDialog: React.FC<FormDialogProps> = ({
             variant="outlined"
             onClick={handleClose}
             disabled={loading}
-            sx={{   
-            fontSize: "1.125rem",
-            letterSpacing: "0.135rem", 
-            margin: 2 }}
+            sx={{
+              fontSize: "1.125rem",
+              letterSpacing: "0.135rem",
+              margin: 2,
+            }}
           >
             {leftActionButtonName}
           </Button>
@@ -106,10 +126,11 @@ const FormDialog: React.FC<FormDialogProps> = ({
             variant="contained"
             type="submit"
             disabled={loading}
-            sx={{   
+            sx={{
               fontSize: "1.125rem",
-              letterSpacing: "0.135rem", 
-              margin: 2 }}
+              letterSpacing: "0.135rem",
+              margin: 2,
+            }}
           >
             {loading ? <CircularProgress /> : rightActionButtonName}
           </Button>

@@ -1,6 +1,6 @@
-import React from 'react';
-import Image from '../../components/Image/Image';
-import { Box } from '@mui/material';
+import React from "react";
+import Image from "../../components/Image/Image";
+import { Box } from "@mui/material";
 
 const ImageComponentExample: React.FC = () => {
   return (
@@ -8,25 +8,22 @@ const ImageComponentExample: React.FC = () => {
       <h1>Image Component Example</h1>
       Standard, local, not editable square image that exists on the server.
       <Image
-        imageId='DefaultDog.png'
-        type='circle'
-        width='500px'
-        height='500px'
-        folderPrefix='default'
+        imageId="DefaultDog.png"
+        type="circle"
+        width="500px"
+        height="500px"
+        folderPrefix="default"
       />
       Standard, local, editable square image that DOES not exists on the server.
       <Image
         imageId="NoneExistent.png"
-        type='rectangle'
+        type="rectangle"
         editable={true}
-        folderPrefix='donor'
+        folderPrefix="donor"
       />
-      Standard, local, editable circle image, placeholder, does not pull from server.
-      <Image
-        type='circle'
-        editable={true}
-        folderPrefix='donor'
-      />
+      Standard, local, editable circle image, placeholder, does not pull from
+      server.
+      <Image type="circle" editable={true} folderPrefix="donor" />
     </Box>
   );
 };

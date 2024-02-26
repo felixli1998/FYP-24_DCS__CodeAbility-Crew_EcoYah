@@ -7,7 +7,7 @@ export const formatAndCapitalizeString = (stringVariable: string) => {
   const sanitisedString = _.replace(
     _.startCase(_.trim(stringVariable)),
     /\s+/g,
-    " "
+    " ",
   );
 
   return sanitisedString;
@@ -18,7 +18,7 @@ export const formatAndCapitalizeString = (stringVariable: string) => {
 export const isValueExistsInObjectArray = (
   ObjectArray: any,
   key: string,
-  target: string
+  target: string,
 ) => {
   const isTargetExistsInObjectArray = _.some(ObjectArray, (object) => {
     return object[key] === target;

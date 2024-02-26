@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment } from "react";
 import {
   Box,
   Drawer,
@@ -9,11 +9,11 @@ import {
   ListItemText,
   IconButton,
   Button,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom';
-import { NavigationListItemT } from '../utils/NavBar';
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import { Link } from "react-router-dom";
+import { NavigationListItemT } from "../utils/NavBar";
 
 type DrawerListProps = {
   topDrawerList: NavigationListItemT[];
@@ -30,7 +30,7 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
           <ListItem key={idx} disablePadding>
             <Button
               sx={{ marginX: 2, marginY: 2 }}
-              variant='outlined'
+              variant="outlined"
               fullWidth={true}
             >
               <Link to={actionItem.path}>
@@ -46,7 +46,7 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
           <ListItem key={idx} disablePadding>
             <Button
               sx={{ marginX: 2, marginY: 2 }}
-              variant='outlined'
+              variant="outlined"
               fullWidth={true}
               onClick={actionItem.action}
             >
@@ -62,14 +62,14 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
 
   const list = () => (
     <Box
-      role='presentation'
+      role="presentation"
       onClick={() => setIsDrawerOpen(true)}
       sx={{
         width: 150,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        height: '100%',
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
       }}
     >
       <List>
@@ -99,14 +99,14 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
           <MenuIcon></MenuIcon>
         </IconButton>
         <Drawer
-          anchor={'right'}
+          anchor={"right"}
           open={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
         >
           <IconButton
             disableRipple={true}
             onClick={() => setIsDrawerOpen(false)}
-            sx={{ justifyContent: 'flex-end' }}
+            sx={{ justifyContent: "flex-end" }}
           >
             <CloseIcon></CloseIcon>
           </IconButton>

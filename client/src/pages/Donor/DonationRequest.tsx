@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {useQuery} from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 // API
 import {
@@ -8,13 +8,13 @@ import {
 } from "../../services/donationRequestApi";
 
 // MUI
-import {Stack} from "@mui/material";
+import { Stack, Grid } from "@mui/material";
 
 // Components
 import StaffTypography from "../../components/Typography/StaffTypography";
 import ColorTabs from "../../components/Tabs/Tabs";
 import ContentCard from "../../components/Card/ContentCard";
-import {getUserByEmail} from "../../services/authenticationApi";
+import { getUserByEmail } from "../../services/authenticationApi";
 
 const tabs = [
   {
@@ -41,8 +41,8 @@ export const getRewardAmount = (donationRequestItems: any) => {
   let totalPoints = 0;
 
   for (const donationItem of donationRequestItems) {
-    const {quantity, donationEventItem} = donationItem;
-    const {pointsPerUnit} = donationEventItem;
+    const { quantity, donationEventItem } = donationItem;
+    const { pointsPerUnit } = donationEventItem;
 
     totalPoints += quantity * pointsPerUnit;
   }
@@ -54,9 +54,9 @@ export const DonationRequest = () => {
   const [selectedTab, setSelectedTab] = useState<string>("active");
   const [user, setUser] = useState<any | null>(null);
 
-  const {data: donationRequestsData, refetch: donationRequestRefetch} =
+  const { data: donationRequestsData, refetch: donationRequestRefetch } =
     useQuery({
-      queryKey: ["/get-donation-requests", {status: selectedTab}],
+      queryKey: ["/get-donation-requests", { status: selectedTab }],
       queryFn: async () => {
         if (user) {
           if (selectedTab === "active") {
@@ -74,15 +74,15 @@ export const DonationRequest = () => {
       id: donationRequest.donationEvent.id,
       name: donationRequest.donationEvent.name,
       imageId: donationRequest.donationEvent.imageId,
-      startDate: donationRequest.donationEvent.startDate, 
+      startDate: donationRequest.donationEvent.startDate,
       endDate: donationRequest.donationEvent.endDate,
       donationRequestId: donationRequest.id,
       dropOffDate: donationRequest.dropOffDate,
       dropOffTime: donationRequest.dropOffTime,
       omitPoints: donationRequest.omitPoints,
-      donationRequestItems: donationRequest.donationRequestItems
-    }
-  }
+      donationRequestItems: donationRequest.donationRequestItems,
+    };
+  };
 
   useEffect(() => {
     if (user) {
@@ -102,10 +102,7 @@ export const DonationRequest = () => {
 
   return (
     <>
-      <Stack
-        spacing={2}
-        sx={{margin: {xs: "2rem 2rem", md: "2rem 4rem"}}}
-      >
+      <Stack spacing={2} sx={{ margin: { xs: "2rem 2rem", md: "2rem 4rem" } }}>
         <StaffTypography
           type="title"
           size={1.5}
@@ -116,33 +113,43 @@ export const DonationRequest = () => {
           selectedTab={selectedTab}
           toggleTab={(tabValue) => setSelectedTab(tabValue)}
         />
-        {donationRequestsData &&
-          donationRequestsData.data.map((donationRequest: any, key: number) => (
-            <ContentCard
-              key={key}
-              contentCardData={{
-                image: donationRequest.donationEvent.imageId,
-                title: donationRequest.donationEvent.name,
-                chipLabel:
-                  getDayLeft(donationRequest.donationEvent.endDate) === 0
-                    ? "Expired"
-                    : `${getDayLeft(
-                        donationRequest.donationEvent.endDate
-                      )} day left`,
-                customChipStyle:
-                  getDayLeft(donationRequest.donationEvent.endDate) === 0
-                    ? {backgroundColor: "#e0e0e0", color: "#9e9e9e"}
-                    : {},
-                reward: donationRequest.omitPoints ? 0 : getRewardAmount(donationRequest.donationRequestItems),
-                location: "Kunyah Cafe",
-                dropOffDateTime: `${new Date(
-                  donationRequest.dropOffDate
-                ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
-                status: selectedTab
-              }}
-              originalData={restructureDataToDonationRequestForm(donationRequest)}
-            />
-          ))}
+        <Grid container spacing={{ md: 2 }}>
+          {donationRequestsData &&
+            donationRequestsData.data.map(
+              (donationRequest: any, key: number) => (
+                <Grid item xs={12} md={6} key={key}>
+                  <ContentCard
+                    contentCardData={{
+                      id: donationRequest.id,
+                      image: donationRequest.donationEvent.imageId,
+                      title: donationRequest.donationEvent.name,
+                      chipLabel:
+                        getDayLeft(donationRequest.donationEvent.endDate) === 0
+                          ? "Expired"
+                          : `${getDayLeft(
+                              donationRequest.donationEvent.endDate,
+                            )} day left`,
+                      customChipStyle:
+                        getDayLeft(donationRequest.donationEvent.endDate) === 0
+                          ? { backgroundColor: "#e0e0e0", color: "#9e9e9e" }
+                          : {},
+                      reward: donationRequest.omitPoints
+                        ? 0
+                        : getRewardAmount(donationRequest.donationRequestItems),
+                      location: "Kunyah Cafe",
+                      dropOffDateTime: `${new Date(
+                        donationRequest.dropOffDate,
+                      ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
+                      status: selectedTab,
+                    }}
+                    originalData={restructureDataToDonationRequestForm(
+                      donationRequest,
+                    )}
+                  />
+                </Grid>
+              ),
+            )}
+        </Grid>
       </Stack>
     </>
   );

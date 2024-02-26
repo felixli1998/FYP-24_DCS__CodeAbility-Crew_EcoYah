@@ -1,21 +1,21 @@
-import slugify from 'slugify';
+import slugify from "slugify";
 
 export enum NavigationList {
-  HOME = 'Home',
-  CONTACT_US = 'Contact us',
-  REWARD = 'Reward',
-  PROFILE = 'Profile',
-  DONATION = 'Donation',
-  DONATION_EVENT_FORM = 'Donation Event Form',
-  DONATION_EVENT_OVERVIEW = 'Donation Event Overview',
-  DONATION_REQUEST = 'Donation Requests',
-  DONATION_EVENTS = 'Donation Events'
+  HOME = "Home",
+  CONTACT_US = "Contact us",
+  REWARD = "Reward",
+  PROFILE = "Profile",
+  DONATION = "Donation",
+  DONATION_EVENT_FORM = "Donation Event Form",
+  DONATION_EVENT_OVERVIEW = "Donation Event Overview",
+  DONATION_REQUEST = "Donation Requests",
+  DONATION_EVENTS = "Donation Events",
 }
 
 export enum ActionList {
-  SIGN_IN = 'Sign in',
-  SIGN_UP = 'Sign up',
-  SIGN_OUT = 'Sign out',
+  SIGN_IN = "Sign in",
+  SIGN_UP = "Sign up",
+  SIGN_OUT = "Sign out",
 }
 
 export type NavigationListItemT = {
@@ -32,7 +32,7 @@ export const generateNavItem = (
   isAdmin: boolean,
 ): NavigationListItemT => {
   const slugOptions = { lower: true };
-  const prefix = isAdmin ? '/admin/' : '/';
-  const slugifiedItem = item === 'Home' ? '' : slugify(item, slugOptions);
+  const prefix = isAdmin ? "/admin/" : "/";
+  const slugifiedItem = item === "Home" ? "" : slugify(item, slugOptions);
   return { item, path: `${prefix}${slugifiedItem}` };
 };

@@ -1,9 +1,9 @@
 // React Imports
-import {ChangeEvent} from "react";
+import { ChangeEvent } from "react";
 
 // MUI Imports
-import {useTheme} from "@mui/system";
-import {Box, TextField, Button, Grid} from "@mui/material";
+import { useTheme } from "@mui/system";
+import { Box, TextField, Button, Grid } from "@mui/material";
 
 // Icons
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -12,7 +12,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import StaffTypography from "../Typography/StaffTypography";
 
 // Utils Imports
-import {FormDataType} from "../../utils/Types";
+import { FormDataType } from "../../utils/Types";
 
 type Step1FormProps = {
   formData: FormDataType;
@@ -21,8 +21,8 @@ type Step1FormProps = {
 };
 
 export default function Step1Form(props: Step1FormProps) {
-  const {formData, handleData, showMissingFields} = props;
-  const {imageId, name} = formData;
+  const { formData, handleData, showMissingFields } = props;
+  const { imageId, name } = formData;
   const theme = useTheme();
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
@@ -146,13 +146,10 @@ export default function Step1Form(props: Step1FormProps) {
         )}
         <Button
           variant="outlined"
-          sx={{borderColor: "primary.dark", marginTop: 2}}
-          startIcon={<CloudUploadIcon sx={{color: "primary.dark"}} />}
+          sx={{ borderColor: "primary.dark", marginTop: 2 }}
+          startIcon={<CloudUploadIcon sx={{ color: "primary.dark" }} />}
         >
-          <label
-            htmlFor="ImageInput"
-            style={{cursor: "pointer"}}
-          >
+          <label htmlFor="ImageInput" style={{ cursor: "pointer" }}>
             <StaffTypography
               type="title"
               size={1.5}
@@ -166,7 +163,7 @@ export default function Step1Form(props: Step1FormProps) {
             type="file"
             id="ImageInput"
             accept="image/*"
-            style={{display: "none"}}
+            style={{ display: "none" }}
             onChange={handleImageUpload}
           />
         </Button>
@@ -186,8 +183,8 @@ export default function Step1Form(props: Step1FormProps) {
       <TextField
         label="Name"
         type="text"
-        InputLabelProps={{shrink: true}}
-        sx={{width: 350}}
+        InputLabelProps={{ shrink: true }}
+        sx={{ width: 350 }}
         value={name}
         onChange={handleTextChange}
         error={showMissingFields && name === ""}

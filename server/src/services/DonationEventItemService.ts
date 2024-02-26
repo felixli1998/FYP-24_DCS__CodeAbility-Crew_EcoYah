@@ -1,10 +1,10 @@
 // Internal Imports
-import { DonationEventItem } from '../entities/DonationEventItem';
-import { DonationEventItemRepository } from '../repositories/DonationEventItemRepository';
-import { DonationEventRepository } from '../repositories/DonationEventRepository';
-import { DonationEvent } from '../entities/DonationEvent';
-import { ItemRepository } from '../repositories/ItemRepository';
-import { Item } from '../entities/Item';
+import { DonationEventItem } from "../entities/DonationEventItem";
+import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
+import { DonationEventRepository } from "../repositories/DonationEventRepository";
+import { DonationEvent } from "../entities/DonationEvent";
+import { ItemRepository } from "../repositories/ItemRepository";
+import { Item } from "../entities/Item";
 
 export class DonationEventItemService {
   private donationItemRepository: DonationEventItemRepository;
@@ -19,13 +19,20 @@ export class DonationEventItemService {
 
   async createDonationEventItem(donationEventItem: DonationEventItem) {
     return this.donationItemRepository.createDonationEventItem(
-      donationEventItem
+      donationEventItem,
     );
   }
 
-  async createItemFromEvent(itemId: number, donationEventId: number, donationEventItem: any) {
+  async createItemFromEvent(
+    itemId: number,
+    donationEventId: number,
+    donationEventItem: any,
+  ) {
     const { currentQty, minQty, pointsPerUnit, targetQty } = donationEventItem;
-    const donationEvent = await this.donationEventRepository.getAllDonationEventById(donationEventId);
+    const donationEvent =
+      await this.donationEventRepository.getAllDonationEventById(
+        donationEventId,
+      );
     const item = await this.itemRepository.getItemById(itemId);
 
     const donationEventItemObj = new DonationEventItem();
@@ -36,13 +43,17 @@ export class DonationEventItemService {
     donationEventItemObj.donationEvent = donationEvent as DonationEvent; // Assign the donationEvent object
     donationEventItemObj.item = item as Item;
 
-    const createdDonationEventItem = await this.createDonationEventItem(donationEventItemObj); // Pass the donationEventItemObj
+    const createdDonationEventItem =
+      await this.createDonationEventItem(donationEventItemObj); // Pass the donationEventItemObj
 
     return createdDonationEventItem;
   }
 
-  async updateDonationEventItem(id: DonationEventItem['id'], payload: Partial<DonationEventItem>){
-    return this.donationItemRepository.updateDonationEventItem(id, payload)
+  async updateDonationEventItem(
+    id: DonationEventItem["id"],
+    payload: Partial<DonationEventItem>,
+  ) {
+    return this.donationItemRepository.updateDonationEventItem(id, payload);
   }
 
   async retrieveDonationEventItemById(id: number) {
@@ -51,7 +62,7 @@ export class DonationEventItemService {
 
   async getDonationEventItembyDonationEventId(donationEventId: number) {
     return this.donationItemRepository.getDonationEventItembyDonationEventId(
-      donationEventId
+      donationEventId,
     );
   }
 }
