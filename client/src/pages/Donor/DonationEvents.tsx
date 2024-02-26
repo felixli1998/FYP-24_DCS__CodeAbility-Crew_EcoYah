@@ -9,6 +9,9 @@ import { retrieveDonationReqCountByEventId } from "../../services/donationReques
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import { DONATION_REQUEST_ROUTES } from "../../services/routes";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 import {
   Box,
@@ -152,12 +155,15 @@ export default function DonationEvents() {
     });
   }, [search, filteredEvents]);
 
+  // ------ dayjs ------
+  dayjs.extend(utc)
+  dayjs.extend(timezone)
+  const dateNow = dayjs();
+  const dateNowSG = dayjs.tz(dateNow, "Asia/Singapore");
+  const currentDateInMs = dateNowSG.valueOf();
+
   const calculateTimeLeft = (endDate: string) => {
     const endDateInMs = new Date(endDate).getTime();
-    const currentDateInSGT = new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Singapore",
-    });
-    const currentDateInMs = new Date(currentDateInSGT).getTime();
     const timeLeftInHours = Math.floor(
       (endDateInMs - currentDateInMs) / (1000 * 60 * 60),
     );

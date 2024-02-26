@@ -183,7 +183,7 @@ export const DONATION_EVENT_SEED_DATA = [
     name: "Do good with electronics",
     imageId: "ElectronicsPoster.jpg",
     user: "Aaron",
-    eventType: "Book Donation",
+    eventType: "Electronic Waste",
     startDate: new Date("2024-02-01"),
     endDate: new Date("2024-04-30"),
     donationEventItems: [

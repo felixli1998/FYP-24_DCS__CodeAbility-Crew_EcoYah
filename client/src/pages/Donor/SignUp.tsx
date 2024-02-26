@@ -217,7 +217,7 @@ export default function SignUp() {
             ></Checkboxes>
             {validateForm && !isChecked && (
               <FormHelperText error>
-                Please indicate that you have read
+                Please indicate that you have read the Terms of Service and Privacy Policy.
               </FormHelperText>
             )}
             <BasicButton
