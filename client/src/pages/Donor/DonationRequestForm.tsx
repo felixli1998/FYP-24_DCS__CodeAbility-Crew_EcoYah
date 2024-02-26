@@ -194,7 +194,8 @@ export default function DonationRequestForm() {
       if (
         donationRequest.donationEventId !== 0 &&
         donationRequest.submittedBy !== 0 &&
-        donationRequest.dropOffTime !== "" &&
+        donationRequest.dropOffTime !== '' && 
+        donationRequest.dropOffTime !== "00:00" &&
         donationRequest.newDonationRequestItems.length > 0
       ) {
         handleCreateDonationRequest(donationRequest)
