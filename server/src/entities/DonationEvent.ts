@@ -13,6 +13,7 @@ import {
 import { User } from "./User";
 import { EventType } from "./EventType";
 import { DonationEventItem } from "./DonationEventItem";
+import { DonationRequest } from "./DonationRequest";
 
 @Entity()
 export class DonationEvent {
@@ -32,9 +33,16 @@ export class DonationEvent {
   // DonationEvent can have many DonationEventItems | DonationEventItem can only belong to one DonationEvent
   @OneToMany(
     () => DonationEventItem,
-    (donationEventItem) => donationEventItem.donationEvent
+    (donationEventItem) => donationEventItem.donationEvent,
+    { cascade: ["insert", "update"] }
   )
   donationEventItems: DonationEventItem[];
+
+  @OneToMany(
+    () => DonationRequest,
+    (donationRequest) => donationRequest.donationEvent
+  )
+  donationRequests: DonationRequest[];
 
   @Column({
     length: 100,

@@ -1,9 +1,9 @@
 // React Imports
-import { useState, useEffect, ChangeEvent } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {useState, useEffect, ChangeEvent} from "react";
+import {useMutation, useQuery} from "@tanstack/react-query";
 
 // MUI Imports
-import { Grid, Box, Stack, TextField, InputAdornment } from "@mui/material";
+import {Grid, Box, Stack, TextField, InputAdornment} from "@mui/material";
 
 // Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -16,46 +16,78 @@ import OutlinedTextField from "../TextFields/OutlinedTextField";
 import BasicSelect from "../Select/Select";
 
 // Utils Imports
-import {
-  createItem,
-  getItemsByEventTypeName,
-} from "../../services/itemApi";
+import {createItem, getAllItems} from "../../services/itemApi";
+import {fetchEventTypes} from "../../services/eventTypesApi";
 import {
   formatAndCapitalizeString,
   isValueExistsInObjectArray,
 } from "../../utils/Common";
-import { Item } from "../../utils/Types";
+import {FormDataType, Item, DonationEventItems} from "../../utils/Types";
+import _ from "lodash";
 
 type Step2FormProps = {
-  validate: boolean;
-  data: (key: string, value: any) => void;
-  nextData: any;
-  back: boolean;
-  prevData: any;
+  formData: FormDataType;
+  showMissingFields: boolean;
+  handleData: (key: string, value: any) => void;
 };
 
+type InputField = {
+  key: keyof DonationEventItems;
+  label: string;
+};
+
+const itemInputFields: InputField[] = [
+  {
+    key: "minQty",
+    label: "Minimum Quantity",
+  },
+  {
+    key: "targetQty",
+    label: "Target Quantity",
+  },
+  {
+    key: "pointsPerUnit",
+    label: "Cashback Per ",
+  },
+];
+
 export default function Step2Form(props: Step2FormProps) {
+  const {formData, handleData, showMissingFields} = props;
+  const {donationEventItems} = formData;
+
+  // === For Event Type Selection === //
+  const [menuEventTypes, setMenuEventTypes] = useState([]);
+  const [selectMenuEventType, setSelectedEventType] = useState<string>("");
+
+  const {data: eventTypesData, isLoading: eventTypesIsLoading} = useQuery({
+    queryKey: ["eventTypes"],
+    queryFn: fetchEventTypes,
+  });
+
+  useEffect(() => {
+    if (!eventTypesIsLoading && eventTypesData) {
+      const eventTypes = eventTypesData.data.eventTypes.map(
+        ({id, name}: {id: number; name: string}) => ({
+          label: name,
+          value: id,
+        })
+      );
+
+      setMenuEventTypes(eventTypes);
+    }
+  }, [eventTypesData, eventTypesIsLoading]);
+  // === For Event Type Selection === //
+
   // === For Item View and Create ===
   const [items, setItems] = useState<Item[]>([]);
-  const [selectedItems, setSelectedItems] = useState<Item[] | null>(
-    Array.isArray(props.prevData["selectedItems"])
-    ? props.prevData["selectedItems"]
-    : null
-  );
-  const [selectedItemsInfo, setSelectedItemsInfo] = useState(
-    Array.isArray(props.prevData["donationEventItems"])
-    ? props.prevData["donationEventItems"]
-    : []
-    ); // REFACTOR: maybe don't need this, can add the extra attributes into selectedItems
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const eventTypeName = props.nextData.name;
 
   const menuItems = [
-    { label: "Kilogram", value: "kilogram" },
-    { label: "Litre", value: "litre" },
-    { label: "Dollar", value: "dollar" },
-    { label: "Hour", value: "hour" },
-    { label: "Unit", value: "unit" },
+    {label: "Kilogram", value: "kilogram"},
+    {label: "Litre", value: "litre"},
+    {label: "Dollar", value: "dollar"},
+    {label: "Hour", value: "hour"},
+    {label: "Unit", value: "unit"},
   ];
   const [selectMenuItems, setSelectedMenuItems] = useState<string>("");
 
@@ -64,70 +96,56 @@ export default function Step2Form(props: Step2FormProps) {
     isLoading: itemsIsLoading,
     refetch: itemsRefetch,
   } = useQuery({
-    queryKey: ["items", { eventTypeName: eventTypeName }],
-    queryFn: () => getItemsByEventTypeName(eventTypeName),
+    queryKey: ["items"],
+    queryFn: getAllItems,
   });
 
   useEffect(() => {
     if (!itemsIsLoading && itemsData) {
-        const updatedItems = itemsData.data.items;
-        setItems(updatedItems);
-
-        if (selectedItems) {
-            const checkSubset = selectedItems.every(
-                selectedItem => updatedItems.some((item: Item) => item.id === selectedItem.id)
-            );
-            if (checkSubset) {
-                // console.log('Partial array is a subset of full array');
-            } else {
-                // console.log('Partial array is not a subset of full array');
-                setSelectedItems(null);
-                setSelectedItemsInfo([]);
-            }
-        }
+      setItems(itemsData.data.items);
     }
-  }, [itemsData, itemsIsLoading, selectedItems]);
+  }, [itemsData, itemsIsLoading]);
 
-  const handleItemBoxButtonClick = (item: Item) => {
-    if (selectedItems?.some(selectedItem => selectedItem.id === item.id)) {
-      // If the item is already in the array, remove it
-      setSelectedItems(
-        selectedItems.filter((selectedItem) => selectedItem.id !== item.id)
+  const toggleDonationEventItem = (item: Item) => {
+    const isItemInDonationEvent = donationEventItems?.some(
+      (donationEventItem) => _.isEqual(donationEventItem.item, item)
+    );
+
+    if (isItemInDonationEvent) {
+      handleData(
+        "donationEventItems",
+        donationEventItems.filter(
+          (donationEventItem) => !_.isEqual(donationEventItem.item, item)
+        )
       );
-      setSelectedItemsInfo(selectedItemsInfo.filter((selectedItemInfo: Item) => selectedItemInfo.id !== item.id));
     } else {
-      // If the item is not in the array, add it
-      setSelectedItems((prevSelectedItems: Item[] | null) => {
-        const newSelectedItems = prevSelectedItems ? [...prevSelectedItems, item] : [item];
-        setSelectedItemsInfo((prevSelectedItemsInfo: any) => [
-          ...prevSelectedItemsInfo,
-          {
-            id: item.id, 
-            name: item.name,
-            unit: item.unit,
-            minQty: "",
-            targetQty: "",
-            pointsPerUnit: "",
-          },
-        ]);
-        return newSelectedItems;
-      });
-    };
-  }
+      const newDonationEventItem: DonationEventItems = {
+        minQty: 0,
+        targetQty: 0,
+        pointsPerUnit: 0,
+        currentQty: 0,
+        item: item,
+      };
+      handleData("donationEventItems", [
+        ...donationEventItems,
+        newDonationEventItem,
+      ]);
+    }
+  };
 
-  const { mutateAsync: createItemMutateAsync } = useMutation({
+  const {mutateAsync: createItemMutateAsync} = useMutation({
     mutationKey: ["createItem"],
     // mutationFn: Performing the actual API call
     mutationFn: ({
       name,
       unit,
-      eventTypeName,
+      eventTypeId,
     }: {
       name: string;
       unit: string;
-      eventTypeName: string;
+      eventTypeId: number;
     }) => {
-      return createItem(name, unit, eventTypeName);
+      return createItem(name, unit, eventTypeId);
     },
     // Execution after successful API call
     onSuccess: (response) => {
@@ -145,7 +163,7 @@ export default function Step2Form(props: Step2FormProps) {
 
   const handleItemFormSubmit = async (formData: any): Promise<boolean> => {
     setErrorMessage("");
-    const { item, unit } = formData;
+    const {item, unit, category} = formData;
     const sanitisedItem = formatAndCapitalizeString(item); // Sanitize input to safeguard duplicate creation of event type
     const existingItems = itemsData.data.items;
     const isItemExists = isValueExistsInObjectArray(
@@ -154,9 +172,9 @@ export default function Step2Form(props: Step2FormProps) {
       sanitisedItem
     );
 
-    if (item === "" && unit === "") {
-        setErrorMessage("Please enter an item and choose a unit");
-        return false;
+    if (item === "" || unit === "" || category === "") {
+      setErrorMessage("Please fill in all the required fields");
+      return false;
     }
 
     if (isItemExists) {
@@ -166,51 +184,41 @@ export default function Step2Form(props: Step2FormProps) {
     return createItemMutateAsync({
       name: sanitisedItem,
       unit: unit,
-      eventTypeName: eventTypeName,
+      eventTypeId: parseInt(category) as number,
     });
   };
   // === For Item View and Create ===
 
-  const itemFields = ["Minimum Quantity", "Target Quantity", "Points Per "];
-  const itemKeys = ["minQty", "targetQty", "pointsPerUnit"];
-
-  const handleTextChange =
-    (itemKey: string, index: number) =>
+  const handleItemFieldChange =
+    (
+      itemKey: keyof DonationEventItems,
+      donationEventItem: DonationEventItems
+    ) =>
     (event: ChangeEvent<HTMLInputElement>) => {
-      setSelectedItemsInfo((prevData: any) => {
-        const updatedItemsInfo = [...prevData];
-        updatedItemsInfo[index] = {
-          ...updatedItemsInfo[index],
-          [itemKey]: parseFloat(event.target.value),
-        };
-        return updatedItemsInfo;
+      const updatedDonationEventItems = donationEventItems.map((item) => {
+        if (item === donationEventItem) {
+          return {
+            ...item,
+            [itemKey]: parseFloat(event.target.value),
+          };
+        }
+        return item;
       });
+      handleData("donationEventItems", updatedDonationEventItems);
     };
-
-  useEffect(() => {
-    // check that each value is neither empty nor NaN, then update the state
-    if (
-        selectedItemsInfo.every((item: { [s: string]: any }) =>
-        Object.values(item).every(
-          (value) => value !== "" && !Number.isNaN(value)
-        )
-      )
-    ) {
-      props.data("selectedItems", selectedItems);
-      props.data("donationEventItems", selectedItemsInfo);
-    } else {
-      props.data("donationEventItems", []);
-    }
-  }, [selectedItemsInfo]);
 
   return (
     <>
-      <Box display="flex" alignItems="center">
+      {/* Item Creation Dialog */}
+      <Box
+        display="flex"
+        alignItems="center"
+      >
         <StaffTypography
           type="title"
           size={1.5}
-          text={`4. Choose items under ${eventTypeName}`}
-          customStyles={{ marginRight: 4 }}
+          text={`3. Choose items`}
+          customStyles={{marginRight: 4}}
         />
         <FormDialog
           buttonName="Add"
@@ -220,7 +228,7 @@ export default function Step2Form(props: Step2FormProps) {
           rightActionButtonName="Add"
           errorMessage={errorMessage}
           formComponent={
-            <div>
+            <Box>
               <OutlinedTextField
                 id={"create-item"}
                 name="item"
@@ -237,125 +245,156 @@ export default function Step2Form(props: Step2FormProps) {
                 selectValue={selectMenuItems}
                 onChange={setSelectedMenuItems}
               />
-            </div>
+              <BasicSelect
+                name="category"
+                labelId="select-category-label"
+                label="Category"
+                selectId="select-category-id"
+                menuItems={menuEventTypes}
+                selectValue={selectMenuEventType}
+                onChange={setSelectedEventType}
+              />
+            </Box>
           }
           handleFormSubmit={handleItemFormSubmit}
         ></FormDialog>
       </Box>
+      {/* Item Creation Dialog */}
       {itemsIsLoading ? (
-        <div>Loading Items</div>
+        <Box>Loading Items</Box>
       ) : (
-        <Grid container>
-            { items &&
+        <Grid
+          container
+          rowSpacing={2}
+          textAlign="center"
+        >
+          {items &&
             items.map((item: any) => (
-            <Grid item xs={12} md={4} key={item.id}>
+              <Grid
+                item
+                key={item.id}
+                xs={6}
+                sm={4}
+                lg={3}
+                xl={2}
+              >
                 <BoxButton
-                    key={item.id}
-                    handleClick={() => handleItemBoxButtonClick(item)}
-                    color="primary"
-                    size="small"
-                    name={item.name}
-                    isSelected={selectedItems ? selectedItems.some(selectedItem => selectedItem.id === item.id) : false}
+                  key={item.id}
+                  handleClick={() => toggleDonationEventItem(item)}
+                  color="primary"
+                  size="small"
+                  name={item.name}
+                  isSelected={
+                    donationEventItems
+                      ? donationEventItems.some((donationEventItem) =>
+                          _.isEqual(donationEventItem.item, item)
+                        )
+                      : false
+                  }
+                  customStyles={{
+                    marginTop: "0",
+                  }}
                 ></BoxButton>
-            </Grid>
-            )) }
+              </Grid>
+            ))}
         </Grid>
       )}
-      {props.validate && selectedItems === null && (
+      {showMissingFields && donationEventItems.length === 0 && (
         <StaffTypography
           type="helperText"
           size={1.5}
           text="Please choose at least 1 item"
         />
       )}
-      <StaffTypography
-        type="title"
-        size={1.5}
-        text="5. Fill up the information for each donation item"
-      />
-      <Grid container justifyContent="space-between" sx={{ p: 2 }}>
-        {selectedItems && selectedItems.map(function (item, i) {
-          return (
-            <Grid
-              item
-              xs={12}
-              md={12}
-              lg={6}
-              sx={{ marginBottom: "1rem" }}
-              key={i}
-            >
-              <Box
-                component="form"
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                sx={{
-                  width: 400,
-                  m: "auto",
-                  "& > :not(style)": { m: "1rem", p: "1rem" },
-                  boxShadow: 5,
-                  borderRadius: 2,
-                }}
-                noValidate
-                autoComplete="off"
+      {donationEventItems.length > 0 && (
+        <StaffTypography
+          type="title"
+          size={1.5}
+          text="4. Fill up the information for each donation item"
+        />
+      )}
+      <Grid
+        container
+        justifyContent="space-evenly"
+      >
+        {donationEventItems &&
+          donationEventItems.map(function (donationEventItem, index) {
+            return (
+              <Grid
+                item
+                sx={{marginBottom: "1rem"}}
+                key={index}
               >
-                <Stack spacing={5}>
-                  <StaffTypography
-                    type="title"
-                    size={1.5}
-                    text={"Item " + (i + 1) + ": " + item.name}
-                  />
-                  {itemFields.map(function (field, j) {
-                    return (
-                      <TextField
-                        key={j}
-                        label={
-                          j !== 2
-                            ? itemFields[j]
-                            : itemFields[j] + item.unit
-                        }
-                        type="number"
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="end">
-                              {j !== 2 && item.unit}
-                            </InputAdornment>
-                          ),
-                        }}
-                        InputLabelProps={{ shrink: true }}
-                        sx={{ width: 350 }}
-                        value={
-                          selectedItemsInfo[i] && selectedItemsInfo[i][itemKeys[j]]
-                            ? selectedItemsInfo[i][itemKeys[j]]
-                            : ""
-                        }
-                        onChange={handleTextChange(itemKeys[j], i)}
-                        error={
-                          (props.validate && !selectedItemsInfo[i]) ||
-                          (props.validate &&
-                            selectedItemsInfo[i] &&
-                            !selectedItemsInfo[i][itemKeys[j]])
-                        }
-                        helperText={
-                          ((props.validate && !selectedItemsInfo[i]) ||
-                            (props.validate &&
-                                selectedItemsInfo[i] &&
-                              !selectedItemsInfo[i][itemKeys[j]])) && (
-                            <StaffTypography
-                              type="helperText"
-                              size={1.5}
-                              text="Please enter a number"
-                            />
-                          )
-                        }
-                      />
-                    );
-                  })}
-                </Stack>
-              </Box>
-            </Grid>
-          );
-        })}
+                <Box
+                  component="form"
+                  display="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{
+                    width: 400,
+                    m: "auto",
+                    "& > :not(style)": {m: "1rem", p: "1rem"},
+                    boxShadow: 5,
+                    borderRadius: 2,
+                  }}
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Stack spacing={5}>
+                    <StaffTypography
+                      type="title"
+                      size={1.5}
+                      text={
+                        "Item " +
+                        (index + 1) +
+                        ": " +
+                        donationEventItem.item.name
+                      }
+                    />
+                    {itemInputFields.map(
+                      ({key, label}: InputField, itemFieldIndex: number) => (
+                        <TextField
+                          key={itemFieldIndex}
+                          label={
+                            key !== "pointsPerUnit"
+                              ? label
+                              : label + _.capitalize(donationEventItem.item.unit)
+                          }
+                          type="number"
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                {key !== "pointsPerUnit" &&
+                                  donationEventItem.item.unit}
+                              </InputAdornment>
+                            ),
+                          }}
+                          InputLabelProps={{shrink: true}}
+                          sx={{width: 350}}
+                          value={donationEventItem[key]}
+                          onChange={handleItemFieldChange(
+                            key,
+                            donationEventItem
+                          )}
+                          error={
+                            showMissingFields &&
+                            (!donationEventItem[key] ||
+                              (donationEventItem[key] as number) <= 0)
+                          }
+                          helperText={
+                            showMissingFields &&
+                            (!donationEventItem[key] ||
+                              (donationEventItem[key] as number) <= 0) &&
+                            "Please enter a number that is greater than 0"
+                          }
+                        />
+                      )
+                    )}
+                  </Stack>
+                </Box>
+              </Grid>
+            );
+          })}
       </Grid>
     </>
   );

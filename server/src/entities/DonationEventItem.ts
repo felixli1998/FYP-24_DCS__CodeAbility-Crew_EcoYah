@@ -6,12 +6,10 @@ import {
   UpdateDateColumn,
   ManyToOne,
   BeforeInsert,
-  BeforeUpdate,
   OneToMany,
 } from "typeorm";
 import { Item } from "./Item";
 import { DonationEvent } from "./DonationEvent";
-import { DonationRequest } from "./DonationRequest";
 import { DonationRequestItem } from "./DonationRequestItem";
 
 @Entity()
@@ -28,7 +26,8 @@ export class DonationEventItem {
   // DonationEventItem can only belong to one DonationEvent | DonationEvent can have many DonationEventItems
   @ManyToOne(
     () => DonationEvent,
-    (donationEvent) => donationEvent.donationEventItems
+    (donationEvent) => donationEvent.donationEventItems,
+    { cascade: ["insert", "update"] }
   )
   donationEvent: DonationEvent;
 

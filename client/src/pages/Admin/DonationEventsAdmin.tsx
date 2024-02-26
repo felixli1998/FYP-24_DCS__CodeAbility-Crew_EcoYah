@@ -4,7 +4,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  CardMedia,
   Grid,
   MenuItem,
   Pagination,
@@ -20,6 +19,9 @@ import {
   DONATION_EVENT_ROUTES,
   EVENT_TYPE_ROUTES,
 } from "../../services/routes";
+import { useNavigate } from "react-router-dom";
+import Image from "../../components/Image/Image";
+import { folderPrefixNames } from '../../components/Image/Image';
 
 type DonationEvent = {
   id: number;
@@ -38,6 +40,7 @@ type EventType = {
 };
 
 export default function DonationEventsAdmin() {
+  const navigate = useNavigate();
   const eventStatuses = ["All", "Active", "Inactive"];
   const [statusFilter, setStatusFilter] = useState("All");
   const [eventTypes, setEventTypes] = useState<EventType[]>([]);
@@ -70,6 +73,19 @@ export default function DonationEventsAdmin() {
       .catch((err) => console.log(err));
   }
 
+  const handleDonationEventClick = (donationEventId: number) => {
+    navigate(`/admin/donation-event/${donationEventId}`);
+  };
+  const displayCountDown = (endDate: string) => {
+    const dateDiff = +new Date(endDate) - +new Date();
+    const day = 1000 * 60 * 60 * 24;
+    const daysLeft = Math.floor(dateDiff / day);
+
+    if (daysLeft < 0) return "[EXPIRED] ";
+
+    return `[${daysLeft} DAYS ${Math.floor(((dateDiff % day) / day) * 24)} HOURS LEFT] `;
+  };
+
   useEffect(() => {
     axios
       .get(EVENT_TYPE_ROUTES.GET_ALL)
@@ -83,29 +99,38 @@ export default function DonationEventsAdmin() {
   return (
     <>
       <Box
-        padding="0 20rem"
+        padding={{ md: "0 5rem", lg: "0 10rem"}}
         display="flex"
         justifyContent="space-between"
-        marginTop="2rem"
+        alignItems='center'
+        marginX="1.5rem"
+        marginTop="3rem"
       >
-        <Typography variant="h5" fontWeight="bold" color="primary.main">
+        <Typography fontWeight="bold" color="primary.dark" sx={{ fontSize: '2.215rem', letterSpacing: '0.255rem' }}>
           Donation Events
         </Typography>
         <Button
           href="donation-event-form"
           variant="contained"
-          sx={{ height: "2.75rem" }}
+          sx={{ 
+            paddingX: "5rem",
+            width: "9.375rem",
+            height: "3.75rem",
+            backgroundColor: "primary.dark"
+          }}
         >
           <AddIcon />
-          &nbsp; <Typography>Create</Typography>
+          &nbsp; <Typography sx={{ fontSize: '1.5rem', letterSpacing: '0.18rem' }}>Create</Typography>
         </Button>
       </Box>
 
       <Box
-        padding="0 20rem"
-        display="flex"
-        justifyContent="space-between"
-        marginTop="2.5rem"
+        padding={{ md: "0 5rem", lg: "0 10rem"}}
+        display={{ md: 'flex' }}
+        justifyContent={{ md: "space-between" }}
+        flexDirection={{ sm: 'column', md: 'row'}}
+        marginX="1.5rem"
+        marginTop="3rem"
       >
         <FormControl>
           <InputLabel>Status</InputLabel>
@@ -116,7 +141,7 @@ export default function DonationEventsAdmin() {
               getData(e.target.value, typeFilter, false);
               setPage(1);
             }}
-            sx={{ height: "2.5rem", width: "20rem" }}
+            sx={{ height: "2.5rem", width: "20rem", marginBottom: '2rem' }}
             label="Status"
           >
             {eventStatuses.map((option, i) => (
@@ -147,29 +172,31 @@ export default function DonationEventsAdmin() {
         </FormControl>
       </Box>
 
-      <Grid padding="0 19rem" container marginTop="3rem">
+      <Grid padding={{ sm: "0 2rem", md: "0 5rem", lg: '0 8rem'}} container marginTop="2rem">
         {events.slice((page - 1) * 4, page * 4).map((event) => (
-          <Grid item xs={6} key={event.id} padding="1rem">
+          <Grid item xs={12} md={6} key={event.id} padding="1rem">
             <Card>
-              <CardMedia sx={{ height: "8rem" }} image={event.imageId} />
+              <Image
+                  imageId={event.imageId}
+                  type='rectangle'
+                  width='100%'
+                  height='100%'
+                  folderPrefix={folderPrefixNames.EVENTS}
+              />
               <CardContent>
-                <Typography color="#C51818" fontWeight="bold">
-                  [
-                  {Math.floor(
-                    (+new Date(event.endDate) - +new Date()) /
-                      (1000 * 60 * 60 * 24)
-                  )}{" "}
-                  DAYS LEFT]{" "}
+                <Typography color="#C51818" fontWeight="bold" variant="h6" sx={{ letterSpacing: '0.15rem' }}>
+                  {displayCountDown(event.endDate)}
                   {new Date(event.startDate).toLocaleDateString("en-GB")} -{" "}
                   {new Date(event.endDate).toLocaleDateString("en-GB")}
                 </Typography>
-                <Typography marginTop="0.5rem" fontWeight="bold">
+                <Typography marginTop="0.5rem" fontWeight="bold" variant="h5" sx={{ letterSpacing: '0.18rem' }}>
                   {event.name}
                 </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent: "flex-end" }}>
                 <Button
-                  sx={{ textDecoration: "underline", fontWeight: "bold" }}
+                  onClick={() => handleDonationEventClick(event.id)}
+                  sx={{ textDecoration: "underline", fontWeight: "bold", fontSize: '1.25rem', letterSpacing: '0.15rem' }}
                 >
                   View More
                 </Button>

@@ -43,7 +43,7 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
 
       if (actionItem.action) {
         return (
-          <ListItem disablePadding>
+          <ListItem key={idx} disablePadding>
             <Button
               sx={{ marginX: 2, marginY: 2 }}
               variant='outlined'

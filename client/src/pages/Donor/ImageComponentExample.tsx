@@ -6,28 +6,24 @@ const ImageComponentExample: React.FC = () => {
   return (
     <Box m={2}>
       <h1>Image Component Example</h1>
-      Standard, local, not editable square image.
+      Standard, local, not editable square image that exists on the server.
       <Image
-        imageId="1.png"
-        imageSource="local"
+        imageId="DefaultDog.png"
         type="circle"
-        width="125px"
-        height="125px"
+        width="500px"
+        height="500px"
+        folderPrefix="default"
       />
-      Standard, local, editable square image.
+      Standard, local, editable square image that DOES not exists on the server.
       <Image
-        imageId="1.png"
-        imageSource="local"
+        imageId="NoneExistent.png"
         type="rectangle"
         editable={true}
+        folderPrefix="donor"
       />
-      Standard, local, editable circle image.
-      <Image
-        imageId="1.png"
-        imageSource="local"
-        type="circle"
-        editable={true}
-      />
+      Standard, local, editable circle image, placeholder, does not pull from
+      server.
+      <Image type="circle" editable={true} folderPrefix="donor" />
     </Box>
   );
 };

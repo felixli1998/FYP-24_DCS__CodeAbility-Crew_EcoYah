@@ -36,6 +36,14 @@ export class DonationEventRepository {
     return { data, pagination };
   }
 
+  async getAllDonationEventById(id: number): Promise<DonationEvent | null> {
+    return await AppDataSource.getRepository(DonationEvent).findOne({
+      where: {
+        id: id,
+      },
+    });
+  }
+
   async getDonationEventById(id: number): Promise<DonationEvent | null> {
     const donationEvent = await AppDataSource.getRepository(
       DonationEvent
@@ -43,14 +51,45 @@ export class DonationEventRepository {
       where: {
         id: id,
       },
-      relations: ["eventType", "donationEventItems"],
+      relations: ["eventType", "donationEventItems", "donationEventItems.item"],
     });
     return donationEvent || null;
+  }
+
+  async findAllDonationEventItems(id: number) {
+    const selectOptions = {
+      donationEventItems: {
+        id: true,
+      },
+    };
+
+    const donationEvent = await AppDataSource.getRepository(
+      DonationEvent
+    ).findOne({
+      select: selectOptions,
+      where: { id },
+      relations: ["donationEventItems"],
+    });
+
+    if (!donationEvent) return [];
+
+    const donationEventItemIds = donationEvent?.donationEventItems.flatMap(
+      (item) => item.id
+    );
+
+    return donationEventItemIds;
   }
 
   async updateDonationEvent(donationEvent: DonationEvent) {
     // Clarify with product owner if there are business rules to be applied here
     return await AppDataSource.getRepository(DonationEvent).save(donationEvent);
+  }
+
+  async updateDonationEventv1(
+    id: DonationEvent["id"],
+    payload: Partial<DonationEvent>
+  ) {
+    return await AppDataSource.getRepository(DonationEvent).update(id, payload);
   }
 
   async filterDonationEvents(
@@ -96,6 +135,8 @@ export class DonationEventRepository {
     }
 
     if (filters.eventType) {
+      console.log("^^^^^ IN FILTERS.EVENTTYPE IF ^^^^^^");
+
       queryBuilder
         .andWhere("donationEvent.eventType = :eventTypeId", {
           eventTypeId: filters.eventType,
@@ -103,10 +144,24 @@ export class DonationEventRepository {
         .orderBy("donationEvent.createdAt", "ASC");
     }
 
-    if (filters.isActive) {
-      queryBuilder.andWhere("donationEvent.isActive = :isActive", {
-        isActive: filters.isActive,
-      });
+    if (filters.isActive === "true") {
+      const currentDate = new Date().toISOString();
+      queryBuilder.andWhere(
+        "donationEvent.isActive = :isActive AND \
+                    :currentDate BETWEEN donationEvent.startDate AND donationEvent.endDate",
+        { isActive: filters.isActive, currentDate: currentDate }
+      );
+    } else if (filters.isActive === "false") {
+      queryBuilder
+        .andWhere("donationEvent.isActive = :isActive", {
+          isActive: filters.isActive,
+        })
+        .orWhere("donationEvent.endDate < :currentDate", {
+          currentDate: new Date().toISOString(),
+        })
+        .orWhere("donationEvent.startDate > :currentDate", {
+          currentDate: new Date().toISOString(),
+        });
     }
 
     if (filters.name) {
@@ -114,6 +169,7 @@ export class DonationEventRepository {
         name: `%${filters.name}%`,
       });
     }
+
     // Pagination
     const totalCount = await queryBuilder.getCount();
     const totalPages = Math.ceil(

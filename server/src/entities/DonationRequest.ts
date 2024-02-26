@@ -8,13 +8,16 @@ import {
   ManyToOne,
   Index,
   OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './User';
 import { DonationRequestItem } from './DonationRequestItem';
+import { DonationEvent } from './DonationEvent';
 
 export enum Status {
   SUBMITTED = 'submitted',
   COMPLETED = 'completed',
+  WITHDRAWN = 'withdrawn'
 }
 
 @Entity()
@@ -23,11 +26,18 @@ export class DonationRequest {
   id: number;
 
   @Index() // To facilitate for the use case on the occasional lookup of the user's donation requests
-  @ManyToOne(() => User, (user) => user.donationRequests)
+  @ManyToOne(() => User, (user) => user.donationRequests, { nullable: false })
   user: User;
 
-  @OneToMany(() => DonationRequestItem, (DonationRequestItem) => DonationRequestItem.donationRequest)
+  @OneToMany(
+    () => DonationRequestItem,
+    (DonationRequestItem) => DonationRequestItem.donationRequest,
+    { cascade: ['update', 'insert'], nullable: false },
+  )
   donationRequestItems: DonationRequestItem[];
+
+  @ManyToOne(() => DonationEvent, (donationEvent) => donationEvent.donationRequests, { nullable: false })
+  donationEvent: DonationEvent;
 
   @Column({
     comment: 'If the donor wants to omit the points for this donation request.',
@@ -64,7 +74,8 @@ export class DonationRequest {
 
   // To support soft delete
   @DeleteDateColumn({
-    comment: 'The date at which the donor wish to terminate the donation request.'
+    comment:
+      'The date at which the donor wish to terminate the donation request.',
   })
   deletedAt: Date;
 }

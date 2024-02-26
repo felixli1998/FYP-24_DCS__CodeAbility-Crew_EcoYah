@@ -9,14 +9,14 @@ import {
   Link,
 } from "@mui/material";
 import logo from "../../assets/EcoYah.png";
-import TextFields from "../../components/TextFields";
-import Checkboxes from "../../components/CheckBox";
-import LongButtons from "../../components/LongButton";
-import SuccessCard from "../../components/SuccessCard";
+import TextFields from "../../components/TextFields/FormTextFields";
+import Checkboxes from "../../components/Checkbox/FormCheckBox";
+import BasicButton from "../../components/Button/BasicButton";
+import SuccessCard from "../../components/Card/SuccessCard";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { makeHttpRequest } from "../../utils/Utility";
 import axios from "axios";
-import { USER_ROUTES } from "../../services/routes";
+import { PARENT_ROUTES } from "../../services/routes";
 
 export default function SignUp() {
   const passwordCriteria: string[] = [
@@ -49,20 +49,23 @@ export default function SignUp() {
     setIsChecked(status);
   };
 
-  const handleClickStatus = async (status: boolean) => {
+  const handleButtonChange = async (status: boolean) => {
     setValidateForm(status);
 
     if (isPasswordValid && isPasswordSame && isChecked) {
       // POST user to database
       try {
-        const res = await makeHttpRequest("POST", USER_ROUTES.CREATE_USER, {
+        const res: any = await makeHttpRequest("POST", PARENT_ROUTES.USERS, {
           email: formData["email"],
           name: formData["name"],
           contactNum: formData["number"],
           passwordDigest: formData["password"],
         });
-        localStorage.setItem("ecoyah-email", formData["email"]);
-        setStep(2);
+        if (res) {
+          localStorage.setItem("ecoyah-id", res.id);
+          localStorage.setItem("ecoyah-email", formData["email"]);
+          setStep(2);
+        }
       } catch (error) {
         if (axios.isAxiosError(error)) {
           // Handle Axios errors
@@ -217,10 +220,11 @@ export default function SignUp() {
                 Please indicate that you have read
               </FormHelperText>
             )}
-            <LongButtons
+            <BasicButton
               label="Sign Up"
-              clickStatus={handleClickStatus}
-            ></LongButtons>
+              variant="contained"
+              onButtonChange={handleButtonChange}
+            />
           </Stack>
         ) : (
           <SuccessCard type="sign up" />

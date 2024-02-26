@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import "../../styles/App.css";
 import { Box, Alert, Stack, Button, Typography, Link } from "@mui/material";
 import logo from "../../assets/EcoYah.png";
-import TextFields from "../../components/TextFields";
-import Checkboxes from "../../components/CheckBox";
-import LongButtons from "../../components/LongButton";
-import EmailCard from "../../components/EmailCard";
+import TextFields from "../../components/TextFields/FormTextFields";
+import Checkboxes from "../../components/Checkbox/FormCheckBox";
+import BasicButton from "../../components/Button/BasicButton";
+import EmailCard from "../../components/Card/EmailCard";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { makeHttpRequest } from "../../utils/Utility";
-import { GENERAL_ROUTES } from "../../services/routes";
+import { PARENT_ROUTES } from "../../services/routes";
 
 export default function SignIn() {
   const rmbSignIn: string[] = ["Remember Me"];
@@ -26,35 +26,35 @@ export default function SignIn() {
   const [signInError, setSignInError] = useState(false);
   const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
-  const handleForgotPassword = () => {
-    setForgotPassword(true);
-  };
+  // const handleForgotPassword = () => {
+  //   setForgotPassword(true);
+  // };
 
-  const handleRmbMe = (status: boolean) => {
-    setRmbMe(status);
-    handleLocalStorage();
-  };
+  // const handleRmbMe = (status: boolean) => {
+  //   setRmbMe(status);
+  //   handleLocalStorage();
+  // };
   // console.log(rmbMe);
 
-  const handleLocalStorage = () => {
-    if (rmbMe) {
-      localStorage.setItem("ecoyah-email", formData["email"]);
-      localStorage.setItem("ecoyah-password", formData["password"]);
-    } else {
-      localStorage.removeItem("ecoyah-email");
-      localStorage.removeItem("ecoyah-password");
-    }
-  };
+  // const handleLocalStorage = () => {
+  //   if (rmbMe) {
+  //     localStorage.setItem('ecoyah-email', formData['email']);
+  //     localStorage.setItem('ecoyah-password', formData['password']);
+  //   } else {
+  //     localStorage.removeItem('ecoyah-email');
+  //     localStorage.removeItem('ecoyah-password');
+  //   }
+  // };
 
   const navigate = useNavigate();
 
-  const handleClickStatus = async (status: boolean) => {
+  const handleButtonChange = async (status: boolean) => {
     setValidateForm(status);
 
     if (formData["email"] !== "" && formData["password"] !== "") {
       // POST user to verify credentials
       try {
-        const res: any = await makeHttpRequest("POST", GENERAL_ROUTES.LOGIN, {
+        const res: any = await makeHttpRequest("POST", PARENT_ROUTES.LOGIN, {
           email: formData["email"],
           password: formData["password"],
         });
@@ -62,6 +62,7 @@ export default function SignIn() {
 
         if (res.data.action) {
           // Login successful
+          localStorage.setItem("ecoyah-id", res.data.data.id);
           localStorage.setItem("ecoyah-email", formData["email"]);
           navigate("/");
         } else {
@@ -99,7 +100,7 @@ export default function SignIn() {
       setIsPasswordCorrect(true);
     }
 
-    handleLocalStorage();
+    // handleLocalStorage();
   }, [formData, rmbMe]);
 
   return (
@@ -166,34 +167,35 @@ export default function SignIn() {
               error={isPasswordCorrect}
               current={currPassword}
             ></TextFields>
-            <Button
+            {/* <Button
               disableRipple
-              color="secondary"
-              variant="text"
+              color='secondary'
+              variant='text'
               sx={{
-                justifyContent: "flex-end",
-                "&:hover": { background: "none" },
+                justifyContent: 'flex-end',
+                '&:hover': { background: 'none' },
               }}
               onClick={handleForgotPassword}
             >
               <Typography
-                sx={{ textDecoration: "underline" }}
-                variant="caption"
+                sx={{ textDecoration: 'underline' }}
+                variant='caption'
                 gutterBottom
               >
                 Forgot Password?
               </Typography>
-            </Button>
-            <Checkboxes
+            </Button> */}
+            {/* <Checkboxes
               label={rmbSignIn}
-              type="remember me"
-              text="none"
+              type='remember me'
+              text='none'
               isChecked={handleRmbMe}
-            ></Checkboxes>
-            <LongButtons
+            ></Checkboxes> */}
+            <BasicButton
               label="Sign In"
-              clickStatus={handleClickStatus}
-            ></LongButtons>
+              variant="contained"
+              onButtonChange={handleButtonChange}
+            />
           </Stack>
         ) : (
           <EmailCard />

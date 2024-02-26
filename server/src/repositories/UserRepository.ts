@@ -9,12 +9,15 @@ export class UserRepository {
   }
 
   async getAllAdminUsers() {
-    return await AppDataSource.getRepository(User)
-      .createQueryBuilder("user")
-      .select(["user.id", "user.name", "user.email", "user.imageId"])
-      .where({ role: In([UserRole.ADMIN, UserRole.STAFF]) })
-      .orderBy("user.name", "ASC")
-      .getMany();
+    return await AppDataSource.getRepository(User).find({
+      select: ["id", "name", "email", "imageId"],
+      where: { role: In([UserRole.ADMIN, UserRole.STAFF]) },
+      order: { name: "ASC" },
+      cache: {
+        id: "all-admin-users", // Cache Key
+        milliseconds: 1200000, // 2 minutes
+      },
+    });
   }
 
   async createUser(user: User) {
@@ -28,10 +31,19 @@ export class UserRepository {
   async getUserByEmail(email: User["email"]) {
     return await AppDataSource.getRepository(User).findOne({
       where: { email },
+      relations: ["userPoints"],
     });
   }
 
   async updateUser(email: string, payload: Partial<User>) {
     await AppDataSource.getRepository(User).update({ email: email }, payload);
+  }
+
+  async getAccountType(email: User["email"]) {
+    const user = await AppDataSource.getRepository(User).findOne({
+      where: { email },
+    });
+
+    return user?.role;
   }
 }

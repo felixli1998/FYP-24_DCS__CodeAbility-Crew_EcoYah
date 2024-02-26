@@ -6,19 +6,23 @@ import Profile from "../pages/Donor/Profile";
 import EditProfile from "../pages/Donor/EditProfile";
 import ImageComponentExample from "../pages/Donor/ImageComponentExample";
 import { DonorHome } from "../pages/Donor/DonorHome";
+import DonationRequestForm from "../pages/Donor/DonationRequestForm";
 
 // Admin routes //
 import AdminHome from "../pages/Admin/AdminHome";
 import AdminSignIn from "../pages/Admin/SignIn";
 import DonationEventForm from "../pages/Admin/DonationEventForm";
-import DonationEventPreview from "../pages/Admin/DonationEventPreview";
+import DonationEvent from "../pages/Admin/DonationEvent";
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
+import DonationRequests from "../pages/Admin/DonationRequests";
+import { DonationRequest } from "../pages/Donor/DonationRequest";
 
 type AppRoutesT = {
   path: string;
   description: string; // for developers to understand what this route is for
   element: JSX.Element;
   isAdmin: boolean; // all admin routes are prefixed with /admin
+  protected?: boolean; // if true, it checks if the user credential is authorized to enter this page
 };
 
 export const ADMIN_PREFIX = "admin";
@@ -47,12 +51,14 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "Profile page for the donor",
     element: <Profile />,
     isAdmin: false,
+    protected: true,
   },
   {
     path: "edit-profile",
     description: "Edit profile page for the donor",
     element: <EditProfile />,
     isAdmin: false,
+    protected: true,
   },
   {
     path: "image-component-example",
@@ -65,12 +71,14 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "Home page for authenticated admin",
     element: <AdminHome />,
     isAdmin: true,
+    protected: true,
   },
   {
     path: "home",
     description: "Home page for authenticated donor",
     element: <DonorHome />,
     isAdmin: false,
+    protected: true,
   },
   {
     path: "sign-in",
@@ -79,21 +87,45 @@ export const APP_ROUTES: AppRoutesT[] = [
     isAdmin: true,
   },
   {
+    path: "donation-requests",
+    description: "View donation requests for authenticated donor",
+    element: <DonationRequest />,
+    isAdmin: false,
+    protected: true,
+  },
+  {
     path: "donation-event-form",
     description: "Creation of donation event form for the admin",
     element: <DonationEventForm />,
     isAdmin: true,
+    protected: true,
   },
   {
-    path: "donation-event-preview",
-    description: "Preview of donation event for the admin",
-    element: <DonationEventPreview />,
+    path: "donation-event/:donationEventId",
+    description: "View & Edit of donation event for the admin",
+    element: <DonationEvent />,
     isAdmin: true,
+    protected: true,
+  },
+  {
+    path: "donation-requests",
+    description: "Preview of donation requests for the admin",
+    element: <DonationRequests />,
+    isAdmin: true,
+    protected: true,
+  },
+  {
+    path: "donation-request-form",
+    description: "Submission of donation request form for the donor",
+    element: <DonationRequestForm />,
+    isAdmin: false,
+    protected: true,
   },
   {
     path: "donation-events",
     description: "View all donation events for the admin",
     element: <DonationEventsAdmin />,
     isAdmin: true,
+    protected: true,
   },
 ];
