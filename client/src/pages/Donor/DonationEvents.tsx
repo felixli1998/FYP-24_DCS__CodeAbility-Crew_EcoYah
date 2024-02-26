@@ -9,6 +9,11 @@ import { retrieveDonationReqCountByEventId } from "../../services/donationReques
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
 import { DONATION_REQUEST_ROUTES } from "../../services/routes";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+// import "date-fns";
+// import { utcToZonedTime } from "date-fns-tz";
 
 import {
   Box,
@@ -152,12 +157,32 @@ export default function DonationEvents() {
     });
   }, [search, filteredEvents]);
 
+  // ------ date-fns-tz ------
+  // const { zonedTimeToUtc, utcToZonedTime, format } = require("date-fns-tz");
+  // const dateNow = new Date();
+  // const dateNowSG =  utcToZonedTime(dateNow, "Asia/Singapore");
+  // console.log(dateNowSG);
+
+
+  // ------ dayjs ------
+  dayjs.extend(utc)
+  dayjs.extend(timezone)
+  const dateNow = dayjs();
+  const dateNowSG = dayjs.tz(dateNow, "Asia/Singapore");
+  console.log(dateNowSG);
+  const currentDateInMs = dateNowSG.valueOf();
+  console.log(currentDateInMs)
+
   const calculateTimeLeft = (endDate: string) => {
+    console.log("new Date(endDate): " + new Date(endDate))
     const endDateInMs = new Date(endDate).getTime();
-    const currentDateInSGT = new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Singapore",
-    });
-    const currentDateInMs = new Date(currentDateInSGT).getTime();
+    // const currentDateInSGT = new Date().toLocaleString("en-US", {
+    //   timeZone: "Asia/Singapore",
+    // });
+
+    // const currentDateInSGT = new Date()
+    // console.log("currentDateInSGT: " + currentDateInSGT)
+    // const currentDateInMs = new Date(currentDateInSGT).getTime();
     const timeLeftInHours = Math.floor(
       (endDateInMs - currentDateInMs) / (1000 * 60 * 60),
     );
@@ -229,6 +254,12 @@ export default function DonationEvents() {
             const timeLeft = calculateTimeLeft(
               eachEvent.endDate.split("T")[0] + " 11:59:59 PM",
             );
+            // console.log(eachEvent.endDate)  
+            // console.log(typeof eachEvent.endDate)
+
+            // const timeLeft = calculateTimeLeft(
+            //   eachEvent.endDate
+            // );
             const numDonors = await getDonationReqCount(eachEvent.id);
             return { ...eachEvent, donationEventItems, timeLeft, numDonors };
           },
