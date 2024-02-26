@@ -233,7 +233,7 @@ export default function DonationEvents() {
               eachEvent.id,
             );
             const timeLeft = calculateTimeLeft(
-              eachEvent.endDate.split("T")[0] + " 11:59:59 PM",
+              eachEvent.endDate.split("T")[0] + "T23:59:59.000Z",
             );
             const numDonors = await getDonationReqCount(eachEvent.id);
             return { ...eachEvent, donationEventItems, timeLeft, numDonors };
