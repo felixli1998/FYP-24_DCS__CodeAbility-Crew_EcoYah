@@ -34,13 +34,13 @@ export class DonationEvent {
   @OneToMany(
     () => DonationEventItem,
     (donationEventItem) => donationEventItem.donationEvent,
-    { cascade: ["insert", "update"] }
+    { cascade: ["insert", "update"] },
   )
   donationEventItems: DonationEventItem[];
 
   @OneToMany(
     () => DonationRequest,
-    (donationRequest) => donationRequest.donationEvent
+    (donationRequest) => donationRequest.donationEvent,
   )
   donationRequests: DonationRequest[];
 

@@ -1,5 +1,5 @@
 // React Imports
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // MUI Imports
 import { Box, Stack, Modal, Alert } from "@mui/material";
@@ -47,13 +47,13 @@ export default function BasicModal(props: BasicModalType) {
   };
 
   const populateDonationItems = (
-    donationRequestItems: DonationRequestItemsType[]
+    donationRequestItems: DonationRequestItemsType[],
   ): string => {
     let result = "<ol>";
     donationRequestItems.forEach(
       (donationRequestItem: DonationRequestItemsType) => {
         result += `<li>${donationRequestItem.quantity} ${donationRequestItem.donationEventItem.item.unit} of ${donationRequestItem.donationEventItem.item.name}</li>`;
-      }
+      },
     );
     result += "</ol>";
 
@@ -112,7 +112,7 @@ export default function BasicModal(props: BasicModalType) {
           <StaffTypography
             size={1}
             text={`<b>Drop off Date:</b> ${new Date(
-              props.data.dropOffDate
+              props.data.dropOffDate,
             ).toLocaleDateString("en-GB")}`}
             type={"title"}
             customStyles={{ fontWeight: "none" }}

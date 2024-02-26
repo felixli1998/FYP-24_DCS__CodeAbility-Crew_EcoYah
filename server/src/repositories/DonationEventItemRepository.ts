@@ -5,17 +5,17 @@ import { AppDataSource } from "../config/data-source";
 export class DonationEventItemRepository {
   async createDonationEventItem(donationEventItem: DonationEventItem) {
     return await AppDataSource.getRepository(DonationEventItem).save(
-      donationEventItem
+      donationEventItem,
     );
   }
 
   async updateDonationEventItem(
     id: DonationEventItem["id"],
-    payload: Partial<DonationEventItem>
+    payload: Partial<DonationEventItem>,
   ) {
     return await AppDataSource.getRepository(DonationEventItem).update(
       id,
-      payload
+      payload,
     );
   }
 
@@ -26,7 +26,7 @@ export class DonationEventItemRepository {
     if (!donationEventItemToRemove) return;
 
     return await AppDataSource.getRepository(DonationEventItem).remove(
-      donationEventItemToRemove
+      donationEventItemToRemove,
     );
   }
 

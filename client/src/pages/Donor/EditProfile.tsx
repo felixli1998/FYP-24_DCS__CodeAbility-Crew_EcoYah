@@ -1,23 +1,23 @@
-import { useEffect, useReducer } from 'react';
-import '../../styles/App.css';
-import { ThemeProvider } from '@mui/material';
-import { theme } from '../../styles/Palette';
-import profilePic from '../../assets/ProfilePicture.png';
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Button from '@mui/material/Button';
+import { useEffect, useReducer } from "react";
+import "../../styles/App.css";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "../../styles/Palette";
+import profilePic from "../../assets/ProfilePicture.png";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 // Components
-import ProfilePic from '../../components/EditProfile/ProfilePic';
-import ProfileTextField from '../../components/EditProfile/ProfileTextField';
-import { useFeedbackNotification } from '../../components/useFeedbackNotification';
+import ProfilePic from "../../components/EditProfile/ProfilePic";
+import ProfileTextField from "../../components/EditProfile/ProfileTextField";
+import { useFeedbackNotification } from "../../components/useFeedbackNotification";
 // import TerminateModal from "../components/EditProfile/TerminateModal";
-import { makeHttpRequest } from '../../utils/Utility';
-import { USER_ROUTES } from '../../services/routes';
-import { useNavigate } from 'react-router-dom';
+import { makeHttpRequest } from "../../utils/Utility";
+import { USER_ROUTES } from "../../services/routes";
+import { useNavigate } from "react-router-dom";
 
 type ErrorActionT = {
-  type: 'requiredField' | 'invalidContact' | 'reset' | 'resetAll';
+  type: "requiredField" | "invalidContact" | "reset" | "resetAll";
   payload: keyof UserStateT;
 };
 
@@ -30,7 +30,7 @@ type ErrorStateT = {
 
 type UserActionT =
   | { type: keyof UserStateT; payload: string }
-  | { type: 'all'; payload: UserStateT };
+  | { type: "all"; payload: UserStateT };
 
 type UserStateT = {
   name: string;
@@ -40,35 +40,35 @@ type UserStateT = {
 };
 
 export default function EditProfile() {
-  const email = localStorage.getItem('ecoyah-email') || '';
+  const email = localStorage.getItem("ecoyah-email") || "";
   const { displayNotification, FeedbackNotification } =
     useFeedbackNotification();
   const navigate = useNavigate();
 
   const defaultUserState: UserStateT = {
-    name: '',
-    contactNum: '',
-    email: '',
-    profilePic: '',
+    name: "",
+    contactNum: "",
+    email: "",
+    profilePic: "",
   };
 
   const defaultErrorState: ErrorStateT = {
-    name: { error: false, helperText: '' },
-    contactNum: { error: false, helperText: '' },
-    email: { error: false, helperText: '' },
-    profilePic: { error: false, helperText: '' },
+    name: { error: false, helperText: "" },
+    contactNum: { error: false, helperText: "" },
+    email: { error: false, helperText: "" },
+    profilePic: { error: false, helperText: "" },
   };
 
   // TODO: Note to self, can I just use a regular useState and achieve the same outcome?
   const userDataReducer = (state: UserStateT, action: UserActionT) => {
     switch (action.type) {
-      case 'name':
+      case "name":
         return { ...state, name: action.payload };
-      case 'contactNum':
+      case "contactNum":
         return { ...state, contactNum: action.payload };
-      case 'profilePic':
+      case "profilePic":
         return { ...state, profilePic: action.payload };
-      case 'all':
+      case "all":
         return { ...state, ...action.payload };
       default:
         throw new Error();
@@ -77,14 +77,14 @@ export default function EditProfile() {
 
   const errorReducer = (state: ErrorStateT, action: ErrorActionT) => {
     const FIELDS_MAPPER = {
-      name: 'name',
-      contactNum: 'contact number',
-      email: 'email',
-      profilePic: 'profile picture',
+      name: "name",
+      contactNum: "contact number",
+      email: "email",
+      profilePic: "profile picture",
     };
 
     switch (action.type) {
-      case 'requiredField':
+      case "requiredField":
         return {
           ...state,
           [action.payload]: {
@@ -92,56 +92,56 @@ export default function EditProfile() {
             helperText: `Please enter your ${FIELDS_MAPPER[action.payload]}`,
           },
         };
-      case 'invalidContact':
+      case "invalidContact":
         return {
           ...state,
           [action.payload]: {
             error: true,
-            helperText: 'Please enter a valid contact number',
+            helperText: "Please enter a valid contact number",
           },
         };
-      case 'reset':
-        return { ...state, [action.payload]: { error: false, helperText: '' } };
-      case 'resetAll':
+      case "reset":
+        return { ...state, [action.payload]: { error: false, helperText: "" } };
+      case "resetAll":
         return { ...defaultErrorState };
     }
   };
 
   const [userData, userDataDispatch] = useReducer(
     userDataReducer,
-    defaultUserState
+    defaultUserState,
   );
   const [errorData, errorDataDispatch] = useReducer(
     errorReducer,
-    defaultErrorState
+    defaultErrorState,
   );
 
   const retrieveProfileInfo = async () => {
     try {
       const res: any = await makeHttpRequest(
-        'GET',
-        USER_ROUTES.RETRIEVE_BY_EMAIL.replace(':email', email)
+        "GET",
+        USER_ROUTES.RETRIEVE_BY_EMAIL.replace(":email", email),
       );
       const { action, data } = res.data;
 
       if (action) {
         const { name, email, contactNum, imageUrl = profilePic } = data;
         userDataDispatch({
-          type: 'all',
+          type: "all",
           payload: { name, email, contactNum, profilePic: imageUrl },
         });
       } else {
         // TODO: Currently, we do not really have any robust error message
         displayNotification(
-          'error',
-          'We encountered some error while retrieving your profile information. Please try again later'
+          "error",
+          "We encountered some error while retrieving your profile information. Please try again later",
         );
       }
     } catch (error) {
       console.log(error);
       displayNotification(
-        'error',
-        'Whoooops. We might be facing some technical error! Please try again later'
+        "error",
+        "Whoooops. We might be facing some technical error! Please try again later",
       );
     }
   };
@@ -153,23 +153,23 @@ export default function EditProfile() {
   // Function to validate changes are valid
   const validateChanges = () => {
     const requiredFieldS: (keyof UserStateT)[] = [
-      'name',
-      'contactNum',
-      'email',
+      "name",
+      "contactNum",
+      "email",
     ];
     let isValid = true;
 
     requiredFieldS.forEach((field) => {
-      if (userData[field] === '') {
+      if (userData[field] === "") {
         isValid = false;
-        errorDataDispatch({ type: 'requiredField', payload: field });
+        errorDataDispatch({ type: "requiredField", payload: field });
       }
     });
 
     // Ensure contact is a number
-    if (isNaN(Number(userData['contactNum']))) {
+    if (isNaN(Number(userData["contactNum"]))) {
       isValid = false;
-      errorDataDispatch({ type: 'invalidContact', payload: 'contactNum' });
+      errorDataDispatch({ type: "invalidContact", payload: "contactNum" });
     }
 
     return isValid;
@@ -182,7 +182,7 @@ export default function EditProfile() {
       const reader = new FileReader();
       reader.onloadend = () => {
         userDataDispatch({
-          type: 'profilePic',
+          type: "profilePic",
           payload: reader.result as string,
         });
       };
@@ -196,37 +196,37 @@ export default function EditProfile() {
 
     try {
       const res: any = await makeHttpRequest(
-        'PUT',
+        "PUT",
         USER_ROUTES.UPDATE_USER,
-        userData
+        userData,
       );
       if (res.data.action) {
         displayNotification(
-          'success',
-          'Your profile has been updated successfully!'
+          "success",
+          "Your profile has been updated successfully!",
         );
         retrieveProfileInfo();
       } else {
         displayNotification(
-          'error',
-          'Encountered an error while saving changes. Please try again'
+          "error",
+          "Encountered an error while saving changes. Please try again",
         );
       }
     } catch (error) {
       console.log(error);
       displayNotification(
-        'error',
-        'Whoooops. We might be facing some technical error! Please try again later'
+        "error",
+        "Whoooops. We might be facing some technical error! Please try again later",
       );
     }
   };
 
   const handleFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    field: keyof UserStateT
+    field: keyof UserStateT,
   ) => {
     userDataDispatch({ type: field, payload: event.target.value });
-    errorDataDispatch({ type: 'reset', payload: field }); // Remove existing error message
+    errorDataDispatch({ type: "reset", payload: field }); // Remove existing error message
   };
 
   // // Function to handle terminate account
@@ -238,24 +238,24 @@ export default function EditProfile() {
   return (
     <ThemeProvider theme={theme}>
       <Box
-        component='form'
-        display='flex'
-        justifyContent='center'
-        alignItems='top'
+        component="form"
+        display="flex"
+        justifyContent="center"
+        alignItems="top"
         sx={{
-          marginTop: '2rem',
+          marginTop: "2rem",
         }}
         noValidate
-        autoComplete='off'
+        autoComplete="off"
       >
         <Stack spacing={6}>
           <Box
             sx={{
               width: 350,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'left',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "left",
+              alignItems: "center",
             }}
           >
             <ProfilePic
@@ -263,52 +263,52 @@ export default function EditProfile() {
               handlePhotoUpload={handlePhotoUpload}
             />
             <ProfileTextField
-              label='Name'
+              label="Name"
               value={userData.name}
-              onChange={(e) => handleFieldChange(e, 'name')}
+              onChange={(e) => handleFieldChange(e, "name")}
               error={errorData.name.error}
               helperText={errorData.name.helperText}
             />
             <ProfileTextField
-              label='Contact'
+              label="Contact"
               value={userData.contactNum}
-              onChange={(e) => handleFieldChange(e, 'contactNum')}
+              onChange={(e) => handleFieldChange(e, "contactNum")}
               error={errorData.contactNum.error}
               helperText={errorData.contactNum.helperText}
             />
             <ProfileTextField
-              label='Email'
+              label="Email"
               value={userData.email}
               disabled={true}
             />
           </Box>
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'left',
-              gap: '1rem',
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "left",
+              gap: "1rem",
             }}
           >
             <Button
-              variant='contained'
-              color='primary'
+              variant="contained"
+              color="primary"
               sx={{
-                fontWeight: 'bold', // Make the font bold
-                height: '3rem', // Adjust the height to make it thicker
+                fontWeight: "bold", // Make the font bold
+                height: "3rem", // Adjust the height to make it thicker
               }}
               onClick={() => handleSaveChanges()}
             >
               Save changes
             </Button>
             <Button
-              variant='outlined'
-              color='error'
+              variant="outlined"
+              color="error"
               sx={{
-                fontWeight: 'bold', // Make the font bold
-                height: '3rem', // Adjust the height to make it thicker
+                fontWeight: "bold", // Make the font bold
+                height: "3rem", // Adjust the height to make it thicker
               }}
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate("/profile")}
             >
               Cancel
             </Button>

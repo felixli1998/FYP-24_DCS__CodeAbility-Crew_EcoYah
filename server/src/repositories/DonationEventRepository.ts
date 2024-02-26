@@ -12,12 +12,12 @@ export class DonationEventRepository {
   }
 
   async getAllDonationEvents(
-    page: number = 1
+    page: number = 1,
   ): Promise<{ data: DonationEvent[]; pagination: IPagination }> {
     // Pagination
     const totalCount = await AppDataSource.getRepository(DonationEvent).count();
     const totalPages = Math.ceil(
-      totalCount / DonationEventRepository.PAGE_SIZE
+      totalCount / DonationEventRepository.PAGE_SIZE,
     );
     const offset = (page - 1) * DonationEventRepository.PAGE_SIZE;
     const queryBuilder = AppDataSource.getRepository(DonationEvent)
@@ -46,7 +46,7 @@ export class DonationEventRepository {
 
   async getDonationEventById(id: number): Promise<DonationEvent | null> {
     const donationEvent = await AppDataSource.getRepository(
-      DonationEvent
+      DonationEvent,
     ).findOne({
       where: {
         id: id,
@@ -64,7 +64,7 @@ export class DonationEventRepository {
     };
 
     const donationEvent = await AppDataSource.getRepository(
-      DonationEvent
+      DonationEvent,
     ).findOne({
       select: selectOptions,
       where: { id },
@@ -74,7 +74,7 @@ export class DonationEventRepository {
     if (!donationEvent) return [];
 
     const donationEventItemIds = donationEvent?.donationEventItems.flatMap(
-      (item) => item.id
+      (item) => item.id,
     );
 
     return donationEventItemIds;
@@ -87,18 +87,18 @@ export class DonationEventRepository {
 
   async updateDonationEventv1(
     id: DonationEvent["id"],
-    payload: Partial<DonationEvent>
+    payload: Partial<DonationEvent>,
   ) {
     return await AppDataSource.getRepository(DonationEvent).update(id, payload);
   }
 
   async filterDonationEvents(
     filters: any,
-    page: number = 1
+    page: number = 1,
   ): Promise<{ data: DonationEvent[]; pagination: IPagination }> {
     const queryBuilder =
       AppDataSource.getRepository(DonationEvent).createQueryBuilder(
-        "donationEvent"
+        "donationEvent",
       );
 
     if (filters.startDate && !filters.endDate) {
@@ -120,7 +120,7 @@ export class DonationEventRepository {
           {
             startDate: filters.startDate,
             endDate: filters.endDate,
-          }
+          },
         )
         .orderBy("donationEvent.startDate", "ASC")
         .addOrderBy("donationEvent.endDate", "ASC");
@@ -149,7 +149,7 @@ export class DonationEventRepository {
       queryBuilder.andWhere(
         "donationEvent.isActive = :isActive AND \
                     :currentDate BETWEEN donationEvent.startDate AND donationEvent.endDate",
-        { isActive: filters.isActive, currentDate: currentDate }
+        { isActive: filters.isActive, currentDate: currentDate },
       );
     } else if (filters.isActive === "false") {
       queryBuilder
@@ -173,7 +173,7 @@ export class DonationEventRepository {
     // Pagination
     const totalCount = await queryBuilder.getCount();
     const totalPages = Math.ceil(
-      totalCount / DonationEventRepository.PAGE_SIZE
+      totalCount / DonationEventRepository.PAGE_SIZE,
     );
     const offset = (page - 1) * DonationEventRepository.PAGE_SIZE;
     queryBuilder

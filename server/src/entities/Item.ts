@@ -6,9 +6,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-} from 'typeorm';
-import { EventType } from './EventType';
-import { DonationEventItem } from './DonationEventItem';
+} from "typeorm";
+import { EventType } from "./EventType";
+import { DonationEventItem } from "./DonationEventItem";
 
 @Entity()
 export class Item {
@@ -31,7 +31,7 @@ export class Item {
   // Item can have many DonationEventItems | DonationEventItem can only belong to one Item
   @OneToMany(
     () => DonationEventItem,
-    (donationEventItem) => donationEventItem.item
+    (donationEventItem) => donationEventItem.item,
   )
   donationEventItems: DonationEventItem[];
 

@@ -246,7 +246,7 @@ export default function Profile() {
     try {
       const res: any = await makeHttpRequest(
         "GET",
-        USER_ROUTES.RETRIEVE_BY_EMAIL.replace(":email", email)
+        USER_ROUTES.RETRIEVE_BY_EMAIL.replace(":email", email),
       );
       const { action, data } = res.data;
       if (action) {

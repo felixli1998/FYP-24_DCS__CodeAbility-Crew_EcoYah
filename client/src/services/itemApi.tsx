@@ -1,11 +1,11 @@
-import axios from 'axios';
-import { ITEM_ROUTES } from './routes';
+import axios from "axios";
+import { ITEM_ROUTES } from "./routes";
 
 // Create a new event type
 export const createItem = async (
   name: string,
   unit: string,
-  eventTypeId: number
+  eventTypeId: number,
 ) => {
   try {
     const response = await axios.post(ITEM_ROUTES.CREATE_ITEM, {
@@ -15,8 +15,8 @@ export const createItem = async (
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating item: ', error);
-    throw new Error('Failed to create item');
+    console.error("Error creating item: ", error);
+    throw new Error("Failed to create item");
   }
 };
 
@@ -26,8 +26,8 @@ export const getAllItems = async () => {
     const response = await axios.get(ITEM_ROUTES.RETRIEVE_ALL_ITEMS);
     return response.data;
   } catch (error) {
-    console.error('Error fetching items: ', error);
-    throw new Error('Failed to fetch items');
+    console.error("Error fetching items: ", error);
+    throw new Error("Failed to fetch items");
   }
 };
 
@@ -36,14 +36,14 @@ export const getItemsByEventTypeId = async (eventTypeId: string) => {
   try {
     const response = await axios.get(
       ITEM_ROUTES.RETRIEVE_ITEMS_BY_EVENT_TYPE_ID.replace(
-        ':eventId',
-        eventTypeId
-      )
+        ":eventId",
+        eventTypeId,
+      ),
     );
 
     return response.data;
   } catch (error) {
-    console.error('Error fetching items: ', error);
-    throw new Error('Failed to fetch items');
+    console.error("Error fetching items: ", error);
+    throw new Error("Failed to fetch items");
   }
 };

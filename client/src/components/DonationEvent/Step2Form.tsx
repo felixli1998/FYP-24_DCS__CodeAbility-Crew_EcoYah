@@ -1,9 +1,9 @@
 // React Imports
-import {useState, useEffect, ChangeEvent} from "react";
-import {useMutation, useQuery} from "@tanstack/react-query";
+import { useState, useEffect, ChangeEvent } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 // MUI Imports
-import {Grid, Box, Stack, TextField, InputAdornment} from "@mui/material";
+import { Grid, Box, Stack, TextField, InputAdornment } from "@mui/material";
 
 // Icons
 import AddIcon from "@mui/icons-material/Add";
@@ -16,13 +16,13 @@ import OutlinedTextField from "../TextFields/OutlinedTextField";
 import BasicSelect from "../Select/Select";
 
 // Utils Imports
-import {createItem, getAllItems} from "../../services/itemApi";
-import {fetchEventTypes} from "../../services/eventTypesApi";
+import { createItem, getAllItems } from "../../services/itemApi";
+import { fetchEventTypes } from "../../services/eventTypesApi";
 import {
   formatAndCapitalizeString,
   isValueExistsInObjectArray,
 } from "../../utils/Common";
-import {FormDataType, Item, DonationEventItems} from "../../utils/Types";
+import { FormDataType, Item, DonationEventItems } from "../../utils/Types";
 import _ from "lodash";
 
 type Step2FormProps = {
@@ -52,14 +52,14 @@ const itemInputFields: InputField[] = [
 ];
 
 export default function Step2Form(props: Step2FormProps) {
-  const {formData, handleData, showMissingFields} = props;
-  const {donationEventItems} = formData;
+  const { formData, handleData, showMissingFields } = props;
+  const { donationEventItems } = formData;
 
   // === For Event Type Selection === //
   const [menuEventTypes, setMenuEventTypes] = useState([]);
   const [selectMenuEventType, setSelectedEventType] = useState<string>("");
 
-  const {data: eventTypesData, isLoading: eventTypesIsLoading} = useQuery({
+  const { data: eventTypesData, isLoading: eventTypesIsLoading } = useQuery({
     queryKey: ["eventTypes"],
     queryFn: fetchEventTypes,
   });
@@ -67,10 +67,10 @@ export default function Step2Form(props: Step2FormProps) {
   useEffect(() => {
     if (!eventTypesIsLoading && eventTypesData) {
       const eventTypes = eventTypesData.data.eventTypes.map(
-        ({id, name}: {id: number; name: string}) => ({
+        ({ id, name }: { id: number; name: string }) => ({
           label: name,
           value: id,
-        })
+        }),
       );
 
       setMenuEventTypes(eventTypes);
@@ -83,11 +83,11 @@ export default function Step2Form(props: Step2FormProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const menuItems = [
-    {label: "Kilogram", value: "kilogram"},
-    {label: "Litre", value: "litre"},
-    {label: "Dollar", value: "dollar"},
-    {label: "Hour", value: "hour"},
-    {label: "Unit", value: "unit"},
+    { label: "Kilogram", value: "kilogram" },
+    { label: "Litre", value: "litre" },
+    { label: "Dollar", value: "dollar" },
+    { label: "Hour", value: "hour" },
+    { label: "Unit", value: "unit" },
   ];
   const [selectMenuItems, setSelectedMenuItems] = useState<string>("");
 
@@ -108,15 +108,15 @@ export default function Step2Form(props: Step2FormProps) {
 
   const toggleDonationEventItem = (item: Item) => {
     const isItemInDonationEvent = donationEventItems?.some(
-      (donationEventItem) => _.isEqual(donationEventItem.item, item)
+      (donationEventItem) => _.isEqual(donationEventItem.item, item),
     );
 
     if (isItemInDonationEvent) {
       handleData(
         "donationEventItems",
         donationEventItems.filter(
-          (donationEventItem) => !_.isEqual(donationEventItem.item, item)
-        )
+          (donationEventItem) => !_.isEqual(donationEventItem.item, item),
+        ),
       );
     } else {
       const newDonationEventItem: DonationEventItems = {
@@ -133,7 +133,7 @@ export default function Step2Form(props: Step2FormProps) {
     }
   };
 
-  const {mutateAsync: createItemMutateAsync} = useMutation({
+  const { mutateAsync: createItemMutateAsync } = useMutation({
     mutationKey: ["createItem"],
     // mutationFn: Performing the actual API call
     mutationFn: ({
@@ -163,13 +163,13 @@ export default function Step2Form(props: Step2FormProps) {
 
   const handleItemFormSubmit = async (formData: any): Promise<boolean> => {
     setErrorMessage("");
-    const {item, unit, category} = formData;
+    const { item, unit, category } = formData;
     const sanitisedItem = formatAndCapitalizeString(item); // Sanitize input to safeguard duplicate creation of event type
     const existingItems = itemsData.data.items;
     const isItemExists = isValueExistsInObjectArray(
       existingItems,
       "name",
-      sanitisedItem
+      sanitisedItem,
     );
 
     if (item === "" || unit === "" || category === "") {
@@ -192,7 +192,7 @@ export default function Step2Form(props: Step2FormProps) {
   const handleItemFieldChange =
     (
       itemKey: keyof DonationEventItems,
-      donationEventItem: DonationEventItems
+      donationEventItem: DonationEventItems,
     ) =>
     (event: ChangeEvent<HTMLInputElement>) => {
       const updatedDonationEventItems = donationEventItems.map((item) => {
@@ -210,15 +210,12 @@ export default function Step2Form(props: Step2FormProps) {
   return (
     <>
       {/* Item Creation Dialog */}
-      <Box
-        display="flex"
-        alignItems="center"
-      >
+      <Box display="flex" alignItems="center">
         <StaffTypography
           type="title"
           size={1.5}
           text={`3. Choose items`}
-          customStyles={{marginRight: 4}}
+          customStyles={{ marginRight: 4 }}
         />
         <FormDialog
           buttonName="Add"
@@ -263,21 +260,10 @@ export default function Step2Form(props: Step2FormProps) {
       {itemsIsLoading ? (
         <Box>Loading Items</Box>
       ) : (
-        <Grid
-          container
-          rowSpacing={2}
-          textAlign="center"
-        >
+        <Grid container rowSpacing={2} textAlign="center">
           {items &&
             items.map((item: any) => (
-              <Grid
-                item
-                key={item.id}
-                xs={6}
-                sm={4}
-                lg={3}
-                xl={2}
-              >
+              <Grid item key={item.id} xs={6} sm={4} lg={3} xl={2}>
                 <BoxButton
                   key={item.id}
                   handleClick={() => toggleDonationEventItem(item)}
@@ -287,7 +273,7 @@ export default function Step2Form(props: Step2FormProps) {
                   isSelected={
                     donationEventItems
                       ? donationEventItems.some((donationEventItem) =>
-                          _.isEqual(donationEventItem.item, item)
+                          _.isEqual(donationEventItem.item, item),
                         )
                       : false
                   }
@@ -313,18 +299,11 @@ export default function Step2Form(props: Step2FormProps) {
           text="4. Fill up the information for each donation item"
         />
       )}
-      <Grid
-        container
-        justifyContent="space-evenly"
-      >
+      <Grid container justifyContent="space-evenly">
         {donationEventItems &&
           donationEventItems.map(function (donationEventItem, index) {
             return (
-              <Grid
-                item
-                sx={{marginBottom: "1rem"}}
-                key={index}
-              >
+              <Grid item sx={{ marginBottom: "1rem" }} key={index}>
                 <Box
                   component="form"
                   display="flex"
@@ -333,7 +312,7 @@ export default function Step2Form(props: Step2FormProps) {
                   sx={{
                     width: 400,
                     m: "auto",
-                    "& > :not(style)": {m: "1rem", p: "1rem"},
+                    "& > :not(style)": { m: "1rem", p: "1rem" },
                     boxShadow: 5,
                     borderRadius: 2,
                   }}
@@ -352,13 +331,14 @@ export default function Step2Form(props: Step2FormProps) {
                       }
                     />
                     {itemInputFields.map(
-                      ({key, label}: InputField, itemFieldIndex: number) => (
+                      ({ key, label }: InputField, itemFieldIndex: number) => (
                         <TextField
                           key={itemFieldIndex}
                           label={
                             key !== "pointsPerUnit"
                               ? label
-                              : label + _.capitalize(donationEventItem.item.unit)
+                              : label +
+                                _.capitalize(donationEventItem.item.unit)
                           }
                           type="number"
                           InputProps={{
@@ -369,12 +349,12 @@ export default function Step2Form(props: Step2FormProps) {
                               </InputAdornment>
                             ),
                           }}
-                          InputLabelProps={{shrink: true}}
-                          sx={{width: 350}}
+                          InputLabelProps={{ shrink: true }}
+                          sx={{ width: 350 }}
                           value={donationEventItem[key]}
                           onChange={handleItemFieldChange(
                             key,
-                            donationEventItem
+                            donationEventItem,
                           )}
                           error={
                             showMissingFields &&
@@ -388,7 +368,7 @@ export default function Step2Form(props: Step2FormProps) {
                             "Please enter a number that is greater than 0"
                           }
                         />
-                      )
+                      ),
                     )}
                   </Stack>
                 </Box>

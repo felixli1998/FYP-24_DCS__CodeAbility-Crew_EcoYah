@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { FormGroup, FormControlLabel } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
+import { useState, useEffect } from "react";
+import { FormGroup, FormControlLabel } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
 
 type CheckBoxProps = {
   label: string[];
@@ -30,17 +30,17 @@ export default function CheckBox(props: CheckBoxProps) {
       {props.label.map(function (label, i) {
         return (
           <FormControlLabel
-            disabled={props.type === 'password'}
+            disabled={props.type === "password"}
             control={
               <Checkbox
                 checked={
-                  (props.type === 'password' &&
+                  (props.type === "password" &&
                     ((i === 0 && props.text! && props.text.length >= 12) ||
                       (i === 1 && /[A-Z]/.test(props.text)) ||
                       (i === 2 && /[a-z]/.test(props.text)) ||
                       (i === 3 && /\d/.test(props.text)) ||
                       (i === 4 && symbol.test(props.text)))) ||
-                  (props.type !== 'password' && isTrue)
+                  (props.type !== "password" && isTrue)
                 }
               />
             }
@@ -48,7 +48,7 @@ export default function CheckBox(props: CheckBoxProps) {
             key={i}
             onChange={() => {
               setIsTrue((prevIsTrue) => !prevIsTrue);
-              if (props.type !== 'password') props.isChecked?.(!isTrue);
+              if (props.type !== "password") props.isChecked?.(!isTrue);
             }}
           />
         );

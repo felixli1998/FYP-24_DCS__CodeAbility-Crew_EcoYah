@@ -53,7 +53,7 @@ const itemService = new ItemService(itemRepository);
 // Donation Event Items
 const donationEventItemRepository = new DonationEventItemRepository();
 const donationEventItemService = new DonationEventItemService(
-  donationEventItemRepository
+  donationEventItemRepository,
 );
 
 // Donation Events
@@ -63,13 +63,13 @@ const donationEventService = new DonationEventService(donationEventRepository);
 // Donation Request
 const donationRequestRepository = new DonationRequestRepository();
 const donationRequestService = new DonationRequestService(
-  donationRequestRepository
+  donationRequestRepository,
 );
 
 // Donation Request Items
 const donationRequestItemRepository = new DonationRequestItemRepository();
 const donationRequestItemService = new DonationRequestItemService(
-  donationRequestItemRepository
+  donationRequestItemRepository,
 );
 
 let USER_OBJECTS: any = {};
@@ -120,7 +120,7 @@ const generateSeedData = async () => {
         await eventTypeService.createEventType(newEventType);
 
       EVENT_TYPE_OBJECTS[eventType.name] = createdEventType;
-    })
+    }),
   );
 
   // Item seed data //
@@ -134,7 +134,7 @@ const generateSeedData = async () => {
 
       const createdItem = await itemService.createItem(newItem);
       ITEM_OBJECTS[item.name] = createdItem;
-    })
+    }),
   );
 
   console.log("=== Generating Donation Event seed data ... ===");
@@ -159,7 +159,7 @@ const generateSeedData = async () => {
           newDonationEventItem.pointsPerUnit = donationEventItem.pointsPerUnit;
 
           return newDonationEventItem;
-        }
+        },
       );
 
       newDonationEvent.donationEventItems = donationEventItems;
@@ -170,21 +170,21 @@ const generateSeedData = async () => {
       const createdDonationEventItem = createdDonationEvent.donationEventItems;
 
       DONATION_EVENT_OBJECTS[donationEvent.name] = createdDonationEvent;
-    })
+    }),
   );
 
   console.log("=== Generating Donation Request seed data ... ===");
   for (let i = 0; i < NO_OF_DONATION_REQUEST_TO_CREATE; i++) {
     const generatorResult = DonationRequestGenerator(
       USER_OBJECTS,
-      DONATION_EVENT_OBJECTS
+      DONATION_EVENT_OBJECTS,
     );
     const { donationRequest, donationRequestItems } =
       generatorResult.next().value;
 
     await Promise.all([
       donationRequestItemService.createDonationRequestItem(
-        donationRequestItems[0]
+        donationRequestItems[0],
       ),
     ]);
 

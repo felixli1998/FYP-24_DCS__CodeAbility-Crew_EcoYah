@@ -1,6 +1,6 @@
 // Internal Imports
-import { Item } from '../entities/Item';
-import { ItemRepository } from '../repositories/ItemRepository';
+import { Item } from "../entities/Item";
+import { ItemRepository } from "../repositories/ItemRepository";
 
 export class ItemService {
   private itemRepository: ItemRepository;
@@ -10,11 +10,11 @@ export class ItemService {
   }
 
   async getAllItems() {
-    return this.itemRepository.getAllItems(); 
+    return this.itemRepository.getAllItems();
   }
 
   async getItemById(id: number) {
-    return this.itemRepository.getItemById(id); 
+    return this.itemRepository.getItemById(id);
   }
 
   async getItemsByEventTypeId(eventTypeId: number) {
@@ -22,6 +22,6 @@ export class ItemService {
   }
 
   async createItem(item: Item) {
-    return this.itemRepository.createItem(item); 
+    return this.itemRepository.createItem(item);
   }
 }

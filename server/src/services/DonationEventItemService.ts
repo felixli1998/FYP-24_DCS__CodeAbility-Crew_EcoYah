@@ -19,19 +19,19 @@ export class DonationEventItemService {
 
   async createDonationEventItem(donationEventItem: DonationEventItem) {
     return this.donationItemRepository.createDonationEventItem(
-      donationEventItem
+      donationEventItem,
     );
   }
 
   async createItemFromEvent(
     itemId: number,
     donationEventId: number,
-    donationEventItem: any
+    donationEventItem: any,
   ) {
     const { currentQty, minQty, pointsPerUnit, targetQty } = donationEventItem;
     const donationEvent =
       await this.donationEventRepository.getAllDonationEventById(
-        donationEventId
+        donationEventId,
       );
     const item = await this.itemRepository.getItemById(itemId);
 
@@ -51,7 +51,7 @@ export class DonationEventItemService {
 
   async updateDonationEventItem(
     id: DonationEventItem["id"],
-    payload: Partial<DonationEventItem>
+    payload: Partial<DonationEventItem>,
   ) {
     return this.donationItemRepository.updateDonationEventItem(id, payload);
   }
@@ -62,7 +62,7 @@ export class DonationEventItemService {
 
   async getDonationEventItembyDonationEventId(donationEventId: number) {
     return this.donationItemRepository.getDonationEventItembyDonationEventId(
-      donationEventId
+      donationEventId,
     );
   }
 }

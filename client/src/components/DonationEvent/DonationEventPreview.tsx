@@ -21,10 +21,10 @@ import dayjs from "dayjs";
 import _ from "lodash";
 
 // Utils Imports
-import {DonationEventItems} from "../../utils/Types";
+import { DonationEventItems } from "../../utils/Types";
 
 type DonationEventType = {
-  action: string
+  action: string;
   donationEvent: {
     name: string;
     donationEventItems: DonationEventItems[];
@@ -37,47 +37,45 @@ type DonationEventType = {
 };
 
 export default function DonationEventPreview(props: DonationEventType) {
-  const {donationEvent, headerBar, action} = props;
-  const {name, imageId, startDate, endDate, isActive, donationEventItems} =
+  const { donationEvent, headerBar, action } = props;
+  const { name, imageId, startDate, endDate, isActive, donationEventItems } =
     donationEvent;
 
   const donationEventDetails: any = {
     Name: name,
     Period: `${dayjs(startDate).format("DD/MM/YYYY")} - ${dayjs(endDate).format(
-      "DD/MM/YYYY"
+      "DD/MM/YYYY",
     )}`,
     Status: isActive ? "Active" : "Inactive",
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      sx={{m: 5}}
-    >
+    <Box display="flex" justifyContent="center" sx={{ m: 5 }}>
       <Stack spacing={3}>
         {headerBar}
-        { action === 'create' ?
-        <Box
-          component="img"
-          sx={{
-            width: "70rem",
-            height: "25rem",
-            maxWidth: {xs: "25rem", md: "60rem"},
-            maxHeight: {xs: "15rem", md: "45rem"},
-            paddingBottom: {xs: 2, md: 5},
-            objectFit: "contain",
-          }}
-          alt={name}
-          src={imageId}
-        /> :
-        <Image
-          imageId={imageId}
-          type='rectangle'
-          width='50rem'
-          height='25rem'
-          folderPrefix={folderPrefixNames.EVENTS}
-        /> }
+        {action === "create" ? (
+          <Box
+            component="img"
+            sx={{
+              width: "70rem",
+              height: "25rem",
+              maxWidth: { xs: "25rem", md: "60rem" },
+              maxHeight: { xs: "15rem", md: "45rem" },
+              paddingBottom: { xs: 2, md: 5 },
+              objectFit: "contain",
+            }}
+            alt={name}
+            src={imageId}
+          />
+        ) : (
+          <Image
+            imageId={imageId}
+            type="rectangle"
+            width="50rem"
+            height="25rem"
+            folderPrefix={folderPrefixNames.EVENTS}
+          />
+        )}
         <Accordion>
           <AccordionSummary
             expandIcon={
@@ -96,7 +94,7 @@ export default function DonationEventPreview(props: DonationEventType) {
               type="title"
               size={2.125}
               text="Donation Event Details"
-              customStyles={{textAlign: "center"}}
+              customStyles={{ textAlign: "center" }}
             />
           </AccordionSummary>
           <Divider />
@@ -136,14 +134,14 @@ export default function DonationEventPreview(props: DonationEventType) {
               type="title"
               size={2.125}
               text="Item Details"
-              customStyles={{textAlign: "center"}}
+              customStyles={{ textAlign: "center" }}
             />
           </AccordionSummary>
           <Divider />
           {donationEventItems &&
             donationEventItems.map(function (
               donationEventItem: DonationEventItems,
-              i: number
+              i: number,
             ) {
               return (
                 <AccordionDetails key={i}>
@@ -171,8 +169,8 @@ export default function DonationEventPreview(props: DonationEventType) {
                           </li>
                         <li>
                           <b>Cashback Per ${_.capitalize(donationEventItem.item.unit)}:</b> ${
-                      donationEventItem.pointsPerUnit
-                    }
+                            donationEventItem.pointsPerUnit
+                          }
                         </li>
                       </ul></div>`}
                     customStyles={{

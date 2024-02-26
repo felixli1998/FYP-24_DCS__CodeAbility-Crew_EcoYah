@@ -5,9 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-} from 'typeorm';
-import { Item } from './Item';
-import { DonationEvent } from './DonationEvent';
+} from "typeorm";
+import { Item } from "./Item";
+import { DonationEvent } from "./DonationEvent";
 
 @Entity()
 export class EventType {

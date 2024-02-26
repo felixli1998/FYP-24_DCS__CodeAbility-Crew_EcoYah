@@ -16,17 +16,17 @@ export class DonationEventService {
     this.donationEventRepository = donationEventRepository;
     this.donationEventItemRepository = new DonationEventItemRepository();
     this.donationEventItemService = new DonationEventItemService(
-      this.donationEventItemRepository
+      this.donationEventItemRepository,
     );
   }
 
   async createDonationEvent(
-    donationEvent: DonationEvent
+    donationEvent: DonationEvent,
   ): Promise<DonationEvent> {
     try {
       // This will trigger the @BeforeInsert() validations in the entity
       return await this.donationEventRepository.createDonationEvent(
-        donationEvent
+        donationEvent,
       );
     } catch (error) {
       let errorMessage = "An error occurred while saving the donation event.";
@@ -38,7 +38,7 @@ export class DonationEventService {
   }
 
   async getAllDonationEvents(
-    pageNumber: number = 1
+    pageNumber: number = 1,
   ): Promise<{ data: DonationEvent[]; pagination: IPagination }> {
     return this.donationEventRepository.getAllDonationEvents(pageNumber);
   }
@@ -48,7 +48,7 @@ export class DonationEventService {
   }
 
   async updateDonationEvent(
-    donationEvent: DonationEvent
+    donationEvent: DonationEvent,
   ): Promise<DonationEvent> {
     return this.donationEventRepository.updateDonationEvent(donationEvent);
   }
@@ -76,11 +76,11 @@ export class DonationEventService {
         case "donationEventItems":
           if (Array.isArray(value)) {
             const newDonationEventItemIds = value.map(
-              (donationEvent) => donationEvent.id
+              (donationEvent) => donationEvent.id,
             );
             const toBeRemovedIds = await this.removeDonationEventItemIds(
               id,
-              newDonationEventItemIds as number[]
+              newDonationEventItemIds as number[],
             );
 
             if (toBeRemovedIds.length > 0) {
@@ -88,7 +88,7 @@ export class DonationEventService {
                 toBeRemovedIds.map(async (id) => {
                   try {
                     await this.donationEventItemRepository.removeDonationEventItem(
-                      id
+                      id,
                     );
                   } catch (err) {
                     return {
@@ -98,7 +98,7 @@ export class DonationEventService {
                         "You cannot delete a donation event item from an ongoing event!",
                     };
                   }
-                })
+                }),
               );
             }
 
@@ -108,7 +108,7 @@ export class DonationEventService {
                 if (donationEventItem.hasOwnProperty("id")) {
                   await this.donationEventItemRepository.updateDonationEventItem(
                     donationEventItem.id as number,
-                    donationEventItem
+                    donationEventItem,
                   );
                 } else {
                   const { item } = donationEventItem;
@@ -117,10 +117,10 @@ export class DonationEventService {
                   await this.donationEventItemService.createItemFromEvent(
                     itemId,
                     id,
-                    donationEventItem
+                    donationEventItem,
                   );
                 }
-              })
+              }),
             );
           }
           break;
@@ -135,7 +135,7 @@ export class DonationEventService {
     console.log("let me update", updatedDonationEventPayload);
     const res = await this.donationEventRepository.updateDonationEventv1(
       id,
-      updatedDonationEventPayload
+      updatedDonationEventPayload,
     );
 
     return {
@@ -147,14 +147,14 @@ export class DonationEventService {
 
   async removeDonationEventItemIds(
     donationEventId: number,
-    newDonationEventItemIds: number[]
+    newDonationEventItemIds: number[],
   ) {
     const existingDonationEventItemIds =
       await this.donationEventRepository.findAllDonationEventItems(
-        donationEventId
+        donationEventId,
       );
     const toBeRemovedIds = existingDonationEventItemIds.filter(
-      (id) => !newDonationEventItemIds.includes(id)
+      (id) => !newDonationEventItemIds.includes(id),
     );
 
     return toBeRemovedIds;
@@ -163,7 +163,7 @@ export class DonationEventService {
   // Filtering
   async getFilteredDonationEvents(
     filters: any,
-    page: number
+    page: number,
   ): Promise<{ data: DonationEvent[]; pagination: IPagination }> {
     return this.donationEventRepository.filterDonationEvents(filters, page);
   }

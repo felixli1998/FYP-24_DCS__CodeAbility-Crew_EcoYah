@@ -100,11 +100,9 @@ router.post("/", async (req, res) => {
         .status(409)
         .json({ message: "A user with this email already exists." });
     } else {
-      res
-        .status(500)
-        .json({
-          message: "Internal Server Error. Please refresh and try again.",
-        });
+      res.status(500).json({
+        message: "Internal Server Error. Please refresh and try again.",
+      });
     }
   }
 });

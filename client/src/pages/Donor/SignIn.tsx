@@ -14,10 +14,10 @@ export default function SignIn() {
   const rmbSignIn: string[] = ["Remember Me"];
   const [validateForm, setValidateForm] = useState(false);
   const [currEmail, setCurrEmail] = useState(
-    localStorage.getItem("ecoyah-email") || ""
+    localStorage.getItem("ecoyah-email") || "",
   );
   const [currPassword, setCurrPassword] = useState(
-    localStorage.getItem("ecoyah-password") || ""
+    localStorage.getItem("ecoyah-password") || "",
   );
   const [emailExists, setEmailExists] = useState(true);
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(true);

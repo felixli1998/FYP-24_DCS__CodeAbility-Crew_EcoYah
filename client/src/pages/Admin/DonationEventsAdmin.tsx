@@ -21,7 +21,7 @@ import {
 } from "../../services/routes";
 import { useNavigate } from "react-router-dom";
 import Image from "../../components/Image/Image";
-import { folderPrefixNames } from '../../components/Image/Image';
+import { folderPrefixNames } from "../../components/Image/Image";
 
 type DonationEvent = {
   id: number;
@@ -99,36 +99,43 @@ export default function DonationEventsAdmin() {
   return (
     <>
       <Box
-        padding={{ md: "0 5rem", lg: "0 10rem"}}
+        padding={{ md: "0 5rem", lg: "0 10rem" }}
         display="flex"
         justifyContent="space-between"
-        alignItems='center'
+        alignItems="center"
         marginX="1.5rem"
         marginTop="3rem"
       >
-        <Typography fontWeight="bold" color="primary.dark" sx={{ fontSize: '2.215rem', letterSpacing: '0.255rem' }}>
+        <Typography
+          fontWeight="bold"
+          color="primary.dark"
+          sx={{ fontSize: "2.215rem", letterSpacing: "0.255rem" }}
+        >
           Donation Events
         </Typography>
         <Button
           href="donation-event-form"
           variant="contained"
-          sx={{ 
+          sx={{
             paddingX: "5rem",
             width: "9.375rem",
             height: "3.75rem",
-            backgroundColor: "primary.dark"
+            backgroundColor: "primary.dark",
           }}
         >
           <AddIcon />
-          &nbsp; <Typography sx={{ fontSize: '1.5rem', letterSpacing: '0.18rem' }}>Create</Typography>
+          &nbsp;{" "}
+          <Typography sx={{ fontSize: "1.5rem", letterSpacing: "0.18rem" }}>
+            Create
+          </Typography>
         </Button>
       </Box>
 
       <Box
-        padding={{ md: "0 5rem", lg: "0 10rem"}}
-        display={{ md: 'flex' }}
+        padding={{ md: "0 5rem", lg: "0 10rem" }}
+        display={{ md: "flex" }}
         justifyContent={{ md: "space-between" }}
-        flexDirection={{ sm: 'column', md: 'row'}}
+        flexDirection={{ sm: "column", md: "row" }}
         marginX="1.5rem"
         marginTop="3rem"
       >
@@ -141,7 +148,7 @@ export default function DonationEventsAdmin() {
               getData(e.target.value, typeFilter, false);
               setPage(1);
             }}
-            sx={{ height: "2.5rem", width: "20rem", marginBottom: '2rem' }}
+            sx={{ height: "2.5rem", width: "20rem", marginBottom: "2rem" }}
             label="Status"
           >
             {eventStatuses.map((option, i) => (
@@ -172,31 +179,50 @@ export default function DonationEventsAdmin() {
         </FormControl>
       </Box>
 
-      <Grid padding={{ sm: "0 2rem", md: "0 5rem", lg: '0 8rem'}} container marginTop="2rem">
+      <Grid
+        padding={{ sm: "0 2rem", md: "0 5rem", lg: "0 8rem" }}
+        container
+        marginTop="2rem"
+      >
         {events.slice((page - 1) * 4, page * 4).map((event) => (
           <Grid item xs={12} md={6} key={event.id} padding="1rem">
             <Card>
               <Image
-                  imageId={event.imageId}
-                  type='rectangle'
-                  width='100%'
-                  height='100%'
-                  folderPrefix={folderPrefixNames.EVENTS}
+                imageId={event.imageId}
+                type="rectangle"
+                width="100%"
+                height="100%"
+                folderPrefix={folderPrefixNames.EVENTS}
               />
               <CardContent>
-                <Typography color="#C51818" fontWeight="bold" variant="h6" sx={{ letterSpacing: '0.15rem' }}>
+                <Typography
+                  color="#C51818"
+                  fontWeight="bold"
+                  variant="h6"
+                  sx={{ letterSpacing: "0.15rem" }}
+                >
                   {displayCountDown(event.endDate)}
                   {new Date(event.startDate).toLocaleDateString("en-GB")} -{" "}
                   {new Date(event.endDate).toLocaleDateString("en-GB")}
                 </Typography>
-                <Typography marginTop="0.5rem" fontWeight="bold" variant="h5" sx={{ letterSpacing: '0.18rem' }}>
+                <Typography
+                  marginTop="0.5rem"
+                  fontWeight="bold"
+                  variant="h5"
+                  sx={{ letterSpacing: "0.18rem" }}
+                >
                   {event.name}
                 </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent: "flex-end" }}>
                 <Button
                   onClick={() => handleDonationEventClick(event.id)}
-                  sx={{ textDecoration: "underline", fontWeight: "bold", fontSize: '1.25rem', letterSpacing: '0.15rem' }}
+                  sx={{
+                    textDecoration: "underline",
+                    fontWeight: "bold",
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.15rem",
+                  }}
                 >
                   View More
                 </Button>

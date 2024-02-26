@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import React, { useState } from "react";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 interface TerminateModalProps {
   handleConfirmTerminate: () => void;
@@ -29,26 +29,26 @@ const TerminateModal: React.FC<TerminateModalProps> = ({
   };
 
   const style = {
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '60vw',
-    bgcolor: 'white',
-    borderRadius: '5px', // Adjust the border-radius for rounded corners
-    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Add shadow
+    position: "absolute" as const,
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "60vw",
+    bgcolor: "white",
+    borderRadius: "5px", // Adjust the border-radius for rounded corners
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // Add shadow
     p: 3, // Adjust padding
-    outline: 'none', // Remove default outline
+    outline: "none", // Remove default outline
   };
 
   return (
     <div>
       <Button
-        variant='outlined'
-        color='error'
+        variant="outlined"
+        color="error"
         sx={{
-          fontWeight: 'bold', // Make the font bold
-          height: '3rem', // Adjust the height to make it thicker
+          fontWeight: "bold", // Make the font bold
+          height: "3rem", // Adjust the height to make it thicker
         }}
         fullWidth
         onClick={handleOpen}
@@ -59,17 +59,17 @@ const TerminateModal: React.FC<TerminateModalProps> = ({
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography variant='h4' mb={'1rem'}>
+          <Typography variant="h4" mb={"1rem"}>
             Woah, there!
           </Typography>
           <Typography
-            id='modal-modal-title'
-            variant='body1'
-            component='h2'
+            id="modal-modal-title"
+            variant="body1"
+            component="h2"
             sx={{ mb: 2 }}
           >
             Once you delete your account, there's no going back. All your points
@@ -78,11 +78,11 @@ const TerminateModal: React.FC<TerminateModalProps> = ({
             <br />
             Are you sure you want to terminate?
           </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button onClick={handleClose} color='primary'>
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            <Button onClick={handleClose} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleConfirm} color='error'>
+            <Button onClick={handleConfirm} color="error">
               Terminate
             </Button>
           </Box>

@@ -1,4 +1,4 @@
-import Button, {ButtonProps} from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
 
 interface BoxButtonProps {
   handleClick: () => void;
@@ -15,7 +15,7 @@ const BoxButton: React.FC<BoxButtonProps> = ({
   size,
   name,
   isSelected,
-  customStyles
+  customStyles,
 }) => {
   return (
     <Button

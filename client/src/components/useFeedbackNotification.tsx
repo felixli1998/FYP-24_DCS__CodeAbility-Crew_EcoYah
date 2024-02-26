@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Alert, Snackbar } from '@mui/material';
-import { set } from 'lodash';
+import React, { useState } from "react";
+import { Alert, Snackbar } from "@mui/material";
+import { set } from "lodash";
 
 // ***********************************************************************************************************************************************//
 // -- How do I use this? -- //
@@ -14,29 +14,29 @@ import { set } from 'lodash';
 
 type FeedBackNotificationProps = {
   message: string;
-  severity: 'success' | 'info' | 'warning' | 'error';
+  severity: "success" | "info" | "warning" | "error";
   displayTime?: number;
 };
 
 export const useFeedbackNotification = () => {
   const [open, setOpen] = useState(false);
   const [notification, setNotification] = useState<FeedBackNotificationProps>({
-    message: '',
-    severity: 'info',
+    message: "",
+    severity: "info",
     displayTime: 5000,
   });
 
   const handleClose = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     setOpen(false);
   };
 
   // TODO: Feel free to expand on this for more customizability (e.g. custom display time)
   const displayNotification = (
-    severity: 'success' | 'info' | 'warning' | 'error',
-    message: string
+    severity: "success" | "info" | "warning" | "error",
+    message: string,
   ) => {
     setNotification({
       message,
@@ -54,14 +54,14 @@ export const useFeedbackNotification = () => {
         open={open}
         autoHideDuration={notification.displayTime}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         message={notification.message}
       >
         <Alert
           onClose={handleClose}
           severity={notification.severity}
-          variant='filled'
-          sx={{ width: '100%' }}
+          variant="filled"
+          sx={{ width: "100%" }}
         >
           {notification.message}
         </Alert>

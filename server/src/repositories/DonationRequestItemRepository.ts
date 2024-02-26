@@ -1,10 +1,10 @@
-import { DonationRequestItem } from '../entities/DonationRequestItem';
-import { AppDataSource } from '../config/data-source';
+import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { AppDataSource } from "../config/data-source";
 
 export class DonationRequestItemRepository {
   async createDonationRequestItem(donationRequestItem: DonationRequestItem) {
     return await AppDataSource.getRepository(DonationRequestItem).save(
-      donationRequestItem
+      donationRequestItem,
     );
   }
 
@@ -17,12 +17,18 @@ export class DonationRequestItemRepository {
   async retrieveByDonationRequestId(donationRequestId: number) {
     return await AppDataSource.getRepository(DonationRequestItem).find({
       where: { donationRequest: { id: donationRequestId } },
-      relations: ['donationEventItem']
+      relations: ["donationEventItem"],
     });
   }
 
-  async updateDonationRequestItem(id: number, payload: Partial<DonationRequestItem>) {
-    return await AppDataSource.getRepository(DonationRequestItem).update(id, payload);
+  async updateDonationRequestItem(
+    id: number,
+    payload: Partial<DonationRequestItem>,
+  ) {
+    return await AppDataSource.getRepository(DonationRequestItem).update(
+      id,
+      payload,
+    );
   }
 
   async deleteById(id: Partial<DonationRequestItem>) {

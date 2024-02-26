@@ -64,7 +64,7 @@ export default function TextFields(props: TextFieldsProps) {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
+    event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
   };
@@ -76,7 +76,7 @@ export default function TextFields(props: TextFieldsProps) {
 
   const handlePhoneChange = (
     event: React.ChangeEvent<{}>,
-    country: Country | null
+    country: Country | null,
   ) => {
     if (country) {
       setCode(country.code);

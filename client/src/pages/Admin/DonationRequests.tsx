@@ -1,5 +1,5 @@
 // React Imports
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // MUI Imports
 import { Stack, Alert } from "@mui/material";
@@ -42,7 +42,7 @@ export default function DonationRequests() {
 
   const handleRemoveRequest = (requestId: number) => {
     const updatedDonationRequests = donationRequests.filter(
-      (request: DonationRequestType) => request.id !== requestId
+      (request: DonationRequestType) => request.id !== requestId,
     );
     setDonationRequests(updatedDonationRequests);
   };

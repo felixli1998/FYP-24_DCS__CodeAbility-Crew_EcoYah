@@ -8,7 +8,7 @@ type PayloadT = {
 
 export const strongParams = (
   payload: PayloadT,
-  allowedParams: string[]
+  allowedParams: string[],
 ): Partial<PayloadT> => {
   const filteredParams: Partial<PayloadT> = {};
 
@@ -25,7 +25,7 @@ export const generateResponse = (
   res: Response,
   status: number,
   data: any,
-  pagination?: IPagination
+  pagination?: IPagination,
 ) => {
   return res.status(status).json({
     status: status,

@@ -58,7 +58,7 @@ export default function Image(props: ImageProps): JSX.Element {
   };
 
   const [imagePath, setImagePath] = useState<string | undefined>(
-    ImagePlaceholder
+    ImagePlaceholder,
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -80,14 +80,14 @@ export default function Image(props: ImageProps): JSX.Element {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       if (response.status === 200) {
         // Update the displayed image after successful upload
         console.log(`${response.data.data.filename} uploaded successfully`);
         console.log(
-          "TODO: This is likely where you update the database with this particular image id, so that on the next refresh it will know which ID to request."
+          "TODO: This is likely where you update the database with this particular image id, so that on the next refresh it will know which ID to request.",
         );
       } else {
         console.error("Failed to update image");
@@ -144,7 +144,7 @@ export default function Image(props: ImageProps): JSX.Element {
           IMAGE_ROUTES.RETRIEVE_BY_FILE_PATH.replace(":filePath", filepath),
           {
             responseType: "arraybuffer",
-          }
+          },
         );
 
         if (response.status === 200 && response.data) {
