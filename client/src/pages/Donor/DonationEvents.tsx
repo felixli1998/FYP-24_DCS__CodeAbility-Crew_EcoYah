@@ -232,10 +232,6 @@ export default function DonationEvents() {
             const donationEventItems = await getDonationEventItems(
               eachEvent.id,
             );
-            console.log(eachEvent.endDate);
-            // const timeLeft = calculateTimeLeft(
-            //   eachEvent.endDate.split("T")[0] + " 11:59:59 PM",
-            // );
             const timeLeft = calculateTimeLeft(
               eachEvent.endDate.split("T")[0] + "T23:59:59.000Z",
             );
