@@ -12,8 +12,6 @@ import { DONATION_REQUEST_ROUTES } from "../../services/routes";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-// import "date-fns";
-// import { utcToZonedTime } from "date-fns-tz";
 
 import {
   Box,
