@@ -165,7 +165,6 @@ export default function DonationEvents() {
   const currentDateInMs = dateNowSG.valueOf();
 
   const calculateTimeLeft = (endDate: string) => {
-    console.log("new Date(endDate): " + new Date(endDate))
     const endDateInMs = new Date(endDate).getTime();
     const timeLeftInHours = Math.floor(
       (endDateInMs - currentDateInMs) / (1000 * 60 * 60),

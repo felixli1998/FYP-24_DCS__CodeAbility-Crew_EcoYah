@@ -1,5 +1,6 @@
 // External Imports
 import { startOfDay, endOfDay } from "date-fns";
+import { In } from "typeorm";
 
 // Internal imports
 import { DonationRequest, Status } from "../entities/DonationRequest";
@@ -149,7 +150,7 @@ export class DonationRequestRepository {
     };
     return await AppDataSource.getRepository(DonationRequest).find({
       select: selectOptions,
-      where: { user: { id: user_id } },
+      where: { user: { id: user_id }, status: In([Status.SUBMITTED, Status.COMPLETED]) },
       relations: ["user", "donationEvent"],
     });
   }
