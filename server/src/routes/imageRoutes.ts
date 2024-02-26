@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import multer, { MulterError } from "multer";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage }).array("file");
 
-router.get("/:folderPrefix/:imageId", async function (req, res, next) {
+router.get("/:folderPrefix/:imageId", async function (req, res) {
   const folderPrefix = req.params.folderPrefix;
   const imageId = req.params.imageId;
   const imageData = await imageService.getImage(imageId, folderPrefix);
@@ -33,7 +33,7 @@ router.get("/:folderPrefix/:imageId", async function (req, res, next) {
   }
 });
 
-router.post("/", function (req: Request, res: Response, next: NextFunction) {
+router.post("/", function (req: Request, res: Response) {
   upload(req, res, async function (err) {
     if (err instanceof MulterError) {
       return generateResponse(res, 500, {
@@ -75,7 +75,7 @@ router.post("/", function (req: Request, res: Response, next: NextFunction) {
 
 router.put(
   "/:imageId",
-  function (req: Request, res: Response, next: NextFunction) {
+  function (req: Request, res: Response) {
     // This function is a false update.
     // It does not delete the old image from the server.
     // It simply uploads a new image and returns a new unique ID.

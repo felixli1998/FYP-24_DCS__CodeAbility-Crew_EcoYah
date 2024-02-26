@@ -1,6 +1,5 @@
-import { EntitySubscriberInterface, EventSubscriber, UpdateEvent } from "typeorm"
+import { EntitySubscriberInterface, EventSubscriber } from "typeorm"
 import { DonationRequest } from "../entities/DonationRequest"
-import { DonationRequestItem } from "../entities/DonationRequestItem"
 
 @EventSubscriber()
 export class DonationRequestSubscriber implements EntitySubscriberInterface<DonationRequest> {
@@ -14,7 +13,7 @@ export class DonationRequestSubscriber implements EntitySubscriberInterface<Dona
     /**
      * Called before post insertion.
      */
-    afterUpdate(event: UpdateEvent<DonationRequest>): void | Promise<any> {
+    // afterUpdate(event: UpdateEvent<DonationRequest>): void | Promise<any> {
       // TODO: UPDATE CURRENT QTY OF DONATION EVENT ITEM
-    }
+    // }
 }

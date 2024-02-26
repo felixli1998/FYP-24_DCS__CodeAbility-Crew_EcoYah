@@ -1,5 +1,5 @@
 import ImageRepositoryInterface from "./ImageRepositoryInterface";
-import AWS, { S3, AWSError} from 'aws-sdk';
+import AWS, { S3 } from 'aws-sdk';
 
 
 // Interface for the configuration options

@@ -162,7 +162,7 @@ export class DonationRequestService {
       };
     }
     // Check quantity
-    for (let item of donationRequestItem) {
+    for (const item of donationRequestItem) {
       if (item.quantity < 1) {
         return {
           valid: false,
@@ -184,7 +184,7 @@ export class DonationRequestService {
 
 
     let totalPts = 0;
-    for (let donationRequestItem of donationRequestItems) {
+    for (const donationRequestItem of donationRequestItems) {
       totalPts += donationRequestItem.donationEventItem.pointsPerUnit * donationRequestItem.quantity;
     }
 

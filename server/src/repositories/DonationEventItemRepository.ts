@@ -1,5 +1,4 @@
 import { DonationEventItem } from "../entities/DonationEventItem";
-import { Item } from "../entities/Item";
 import { AppDataSource } from "../config/data-source";
 
 // Interacts database open close

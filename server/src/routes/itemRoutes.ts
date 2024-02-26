@@ -4,7 +4,6 @@ import { Item } from "../entities/Item";
 import { ItemService } from "../services/ItemService";
 import { ItemRepository } from "../repositories/ItemRepository";
 import { generateResponse, strongParams } from "../common/methods";
-import { EventType } from "../entities/EventType";
 import { EventTypeRepository } from "../repositories/EventTypeRepository";
 
 const router = express.Router();

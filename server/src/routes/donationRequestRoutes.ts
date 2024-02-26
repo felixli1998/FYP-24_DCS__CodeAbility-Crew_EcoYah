@@ -263,7 +263,7 @@ router.put('/complete', async (req, res) => {
   const { id } = sanitisedPayload;
 
   try {
-    const payload = await donationRequestService.completeDonationRequest(id);
+    await donationRequestService.completeDonationRequest(id);
 
     return generateResponse(res, 200, 'Updated successfully!');
   } catch (error) {

@@ -1,7 +1,6 @@
 // Internal Imports
 import { Item } from '../entities/Item';
 import { ItemRepository } from '../repositories/ItemRepository';
-import { EventType } from "../entities/EventType";
 
 export class ItemService {
   private itemRepository: ItemRepository;

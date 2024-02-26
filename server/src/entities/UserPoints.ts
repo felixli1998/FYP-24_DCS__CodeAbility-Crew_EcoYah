@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
-  BeforeInsert,
 } from 'typeorm';
 import { User } from './User';
 
