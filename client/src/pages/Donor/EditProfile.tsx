@@ -133,6 +133,9 @@ export default function EditProfile() {
           type: "all",
           payload: { name, email, contactNum, profilePic: imageUrl },
         });
+        // TODO: The profile pic receieved here is /static/media/ProfilePicture.7ed21e034b8cb055135a.png
+        // It should be the same as when you are in /profile, which resolves to DefaultProfilePic.jpg
+        console.log(profilePic)
       } else {
         // TODO: Currently, we do not really have any robust error message
         displayNotification(
