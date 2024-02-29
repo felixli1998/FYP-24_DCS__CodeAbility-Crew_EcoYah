@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import "../../styles/App.css";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "../../styles/Palette";
@@ -15,6 +15,7 @@ import { useFeedbackNotification } from "../../components/useFeedbackNotificatio
 import { makeHttpRequest } from "../../utils/Utility";
 import { USER_ROUTES } from "../../services/routes";
 import { useNavigate } from "react-router-dom";
+import { uploadImage } from "../../utils/UploadImage";
 
 type ErrorActionT = {
   type: "requiredField" | "invalidContact" | "reset" | "resetAll";
@@ -40,6 +41,8 @@ type UserStateT = {
 };
 
 export default function EditProfile() {
+  const [base64ImageString, setBase64ImageString] = useState<string>("");
+
   const email = localStorage.getItem("ecoyah-email") || "";
   const { displayNotification, FeedbackNotification } =
     useFeedbackNotification();
@@ -185,6 +188,7 @@ export default function EditProfile() {
           type: "profilePic",
           payload: reader.result as string,
         });
+        setBase64ImageString(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -195,6 +199,12 @@ export default function EditProfile() {
     if (!validateChanges()) return;
 
     try {
+      // This means user changed profile picture
+      if (base64ImageString !== "") {
+        uploadImage("profile-pictures", base64ImageString).then((imageId) => {
+          console.log("Save the resulting id to db", imageId);
+        });
+      }
       const res: any = await makeHttpRequest(
         "PUT",
         USER_ROUTES.UPDATE_USER,
