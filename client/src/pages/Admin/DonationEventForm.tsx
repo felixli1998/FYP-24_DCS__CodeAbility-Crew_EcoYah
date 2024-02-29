@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import { FormDataType } from "../../utils/Types";
 import DonationEventPreview from "../../components/DonationEvent/DonationEventPreview";
 import { createDonationEvent } from "../../services/donationEventApi";
+import { uploadImage } from "../../utils/UploadImage";
 
 export default function DonationEventForm() {
   const navigate = useNavigate();
@@ -129,6 +130,11 @@ export default function DonationEventForm() {
   });
 
   const handleCreate = () => {
+     // Uploads image to S3
+     // If the above fails, the photo will not be uploaded to S3
+     uploadImage("events", formData.imageId).then((imageId) => {
+      console.log("save this image id to db to pull it from S3", imageId);
+    });
     createItemMutateAsync({ formData: formData, adminID: adminID });
   };
 
