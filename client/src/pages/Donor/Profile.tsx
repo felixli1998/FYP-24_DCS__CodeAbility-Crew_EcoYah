@@ -94,45 +94,46 @@ const navigationItems = [
 ];
 
 // == Profile Picture Section ==
-interface ProfilePictureProps {
-  picture: string;
-  name: string;
-  role: string;
-}
+// interface ProfilePictureProps {
+//   picture: string;
+//   name: string;
+//   role: string;
+// }
 
-const ProfilePicture: React.FC<ProfilePictureProps> = ({
-  picture,
-  name,
-  role,
-}) => {
-  const imageId = picture.trim() === "" ? "DefaultProfilePicture.jpg" : picture;
-  return (
-    <>
-      <Box
-        display="flex"
-        justifyContent="center"
-        sx={{
-          marginX: "auto",
-          width: "8rem",
-          height: "8rem",
-          marginTop: 4,
-        }}
-      >
-        <Image
-          imageId={imageId}
-          type="circle"
-          width="100%"
-          height="100%"
-          folderPrefix={folderPrefixNames.PROFILEPICTURES}
-        />
-      </Box>
-      <Typography sx={{ fontWeight: "bold" }} align="center">
-        {name}
-      </Typography>
-      <Typography align="center">{role}</Typography>
-    </>
-  );
-};
+// const ProfilePicture: React.FC<ProfilePictureProps> = ({
+//   picture,
+//   name,
+//   role,
+// }) => {
+//   const imageId = picture.trim() === "" ? "DefaultProfilePicture.jpg" : picture;
+//   console.log(picture)
+//   return (
+//     <>
+//       <Box
+//         display="flex"
+//         justifyContent="center"
+//         sx={{
+//           marginX: "auto",
+//           width: "8rem",
+//           height: "8rem",
+//           marginTop: 4,
+//         }}
+//       >
+//         <Image
+//           imageId={imageId}
+//           type="circle"
+//           width="100%"
+//           height="100%"
+//           folderPrefix={folderPrefixNames.PROFILEPICTURES}
+//         />
+//       </Box>
+//       <Typography sx={{ fontWeight: "bold" }} align="center">
+//         {name}
+//       </Typography>
+//       <Typography align="center">{role}</Typography>
+//     </>
+//   );
+// };
 
 // == Reward Section ==
 interface RewardProps {
@@ -242,6 +243,8 @@ export default function Profile() {
     points: 0,
   });
 
+  const [loading, setLoading] = useState(true);
+
   const retrieveProfileInfo = async () => {
     try {
       const res: any = await makeHttpRequest(
@@ -259,6 +262,8 @@ export default function Profile() {
       }
     } catch (error) {
       console.log("Error retrieving user info");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -269,11 +274,36 @@ export default function Profile() {
   return (
     <ThemeProvider theme={theme}>
       <Container sx={{ width: "100%" }}>
-        <ProfilePicture
+        {/* <ProfilePicture
           picture={userInfo.imageId}
           name={userInfo.name}
           role={userInfo.role}
-        />
+        /> */}
+        <Box
+          display="flex"
+          justifyContent="center"
+          sx={{
+            marginX: "auto",
+            width: "8rem",
+            height: "8rem",
+            marginTop: 4,
+          }}
+        >
+          {loading ? (
+            <div>Loading...</div>
+          ) : 
+          (<Image
+            imageId={userInfo.imageId}
+            type="circle"
+            width="100%"
+            height="100%"
+            folderPrefix={folderPrefixNames.PROFILEPICTURES}
+          />)}
+        </Box>
+        <Typography sx={{ fontWeight: "bold" }} align="center">
+          {userInfo.name}
+        </Typography>
+        <Typography align="center">{userInfo.role}</Typography>
         <Reward points={userInfo.points} />
         <Others />
       </Container>
