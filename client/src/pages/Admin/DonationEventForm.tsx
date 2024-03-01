@@ -134,7 +134,6 @@ export default function DonationEventForm() {
       // Uploads image to S3
       // If the above fails, the photo will not be uploaded to S3
       const imageId = await uploadImage("events", formData.imageId)
-      console.log("save this image id to db to pull it from S3", imageId[0]);
       const updatedFormData = {
         ...formData,
         imageId: imageId[0],
