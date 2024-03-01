@@ -68,6 +68,7 @@ router.post("/", function (req: Request, res: Response) {
         filename: uploadedFiles.map((file) => file.filename),
       });
     } catch (error) {
+      console.error("Error:", error);
       return generateResponse(res, 500, { message: "Internal server error" });
     }
   });

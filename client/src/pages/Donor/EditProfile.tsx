@@ -199,10 +199,9 @@ export default function EditProfile() {
     try {
       // This means user changed profile picture
       if (base64ImageString !== "") {
-        uploadImage("profile-pictures", base64ImageString).then((imageId) => {
-          console.log("Save the resulting id to db", imageId);
-          userDataDispatch({ type: "profilePic", payload: imageId });
-        });
+        const imageId = await uploadImage("profile-pictures", base64ImageString);
+        console.log("Save the resulting id to db", imageId[0]);
+        userDataDispatch({ type: "profilePic", payload: imageId[0] });
       }
       const res: any = await makeHttpRequest(
         "PUT",

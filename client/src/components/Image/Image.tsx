@@ -73,8 +73,8 @@ export default function Image(props: ImageProps): JSX.Element {
     formData.append("folderPrefix", props.folderPrefix);
 
     try {
-      const response = await axios.put(
-        IMAGE_ROUTES.UPDATE.replace(":id", props.imageId),
+      const response = await axios.post(
+        IMAGE_ROUTES.CREATE,
         formData,
         {
           headers: {
