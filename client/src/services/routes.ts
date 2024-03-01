@@ -51,6 +51,7 @@ export const DONATION_REQUEST_ITEMS_ROUTES = {
 
 // Image Related Routes //
 export const IMAGE_ROUTES = {
+  CREATE: `${PARENT_ROUTES.IMAGES}/`,
   UPDATE: `${PARENT_ROUTES.IMAGES}/:id`,
   RETRIEVE_BY_FILE_PATH: `${PARENT_ROUTES.IMAGES}/:filePath`,
 };

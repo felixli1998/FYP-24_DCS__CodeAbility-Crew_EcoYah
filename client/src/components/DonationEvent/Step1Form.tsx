@@ -3,16 +3,18 @@ import { ChangeEvent } from "react";
 
 // MUI Imports
 import { useTheme } from "@mui/system";
-import { Box, TextField, Button, Grid } from "@mui/material";
+import { Box, TextField, Button } from "@mui/material";
 
 // Icons
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 // Components
 import StaffTypography from "../Typography/StaffTypography";
+import Image from "../Image/Image";
 
 // Utils Imports
 import { FormDataType } from "../../utils/Types";
+import { folderPrefixNames } from "../../components/Image/Image";
 
 type Step1FormProps = {
   formData: FormDataType;
@@ -132,7 +134,7 @@ export default function Step1Form(props: Step1FormProps) {
           borderRadius: "4px",
         }}
       >
-        {imageId && (
+        {(imageId && imageId.includes(";base64,")) && (
           <img
             src={imageId}
             alt="donationImage"
@@ -142,8 +144,15 @@ export default function Step1Form(props: Step1FormProps) {
               maxHeight: "100%",
               objectFit: "contain",
             }}
-          />
-        )}
+          />)}
+          {(imageId && !imageId.includes(";base64,")) &&
+          (<Image
+            imageId={imageId}
+            type="rectangle"
+            width="300px"
+            height="200px"
+            folderPrefix={folderPrefixNames.EVENTS}
+          />)}
         <Button
           variant="outlined"
           sx={{ borderColor: "primary.dark", marginTop: 2 }}

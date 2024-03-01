@@ -32,10 +32,11 @@ import { useNavigate } from "react-router-dom";
 import { FormDataType } from "../../utils/Types";
 import DonationEventPreview from "../../components/DonationEvent/DonationEventPreview";
 import { createDonationEvent } from "../../services/donationEventApi";
+import { uploadImage } from "../../utils/UploadImage";
 
 export default function DonationEventForm() {
   const navigate = useNavigate();
-  const adminID = 4; // Hardcode for now
+  const adminID = Number(localStorage.getItem('admin-id')); 
   const steps = ["Step 1", "Step 2", "Step 3", "Preview"];
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<FormDataType>({
@@ -128,8 +129,21 @@ export default function DonationEventForm() {
     },
   });
 
-  const handleCreate = () => {
-    createItemMutateAsync({ formData: formData, adminID: adminID });
+  const handleCreate = async () => {
+    try {
+      // Uploads image to S3
+      // If the above fails, the photo will not be uploaded to S3
+      const imageId = await uploadImage("events", formData.imageId)
+      const updatedFormData = {
+        ...formData,
+        imageId: imageId[0],
+      };
+      setFormData(updatedFormData);
+      await createItemMutateAsync({ formData: updatedFormData, adminID: adminID });
+    } catch (error) {
+      // Handle errors during image upload or createItemMutateAsync
+      console.error("Error:", error);
+    }
   };
 
   const form: {

@@ -26,6 +26,7 @@ import {
   getDonationEventById,
   updateDonationEventById,
 } from "../../services/donationEventApi";
+import { uploadImage } from "../../utils/UploadImage";
 
 // Icons
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -119,6 +120,8 @@ export default function DonationEvent() {
       for (const key in donationEvent) {
         updateParams[key] = donationEvent[key];
       }
+      const imageId = await uploadImage("events", donationEvent.imageId)
+      updateParams["imageId"] = imageId[0];
       const response = await updateDonationEventMutateAsync({
         donationEventId: donationEvent.id,
         updateParams,
