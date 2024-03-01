@@ -1,5 +1,4 @@
 import { useEffect, useReducer, useState } from "react";
-import profilePic from "../../assets/ProfilePicture.png";
 // MUI
 import { Box, Button, Stack } from "@mui/material";
 // Components
@@ -8,9 +7,10 @@ import ProfileTextField from "../../components/EditProfile/ProfileTextField";
 import { useFeedbackNotification } from "../../components/useFeedbackNotification";
 // import TerminateModal from "../components/EditProfile/TerminateModal";
 import { makeHttpRequest } from "../../utils/Utility";
-import { USER_ROUTES } from "../../services/routes";
+import { IMAGE_ROUTES, USER_ROUTES } from "../../services/routes";
 import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../../utils/UploadImage";
+import { folderPrefixNames } from "../../components/Image/Image";
 
 type ErrorActionT = {
   type: "requiredField" | "invalidContact" | "reset" | "resetAll";
@@ -32,7 +32,7 @@ type UserStateT = {
   name: string;
   contactNum: string;
   email: string;
-  profilePic: string | File;
+  imageId: string;
 };
 
 export default function EditProfile() {
@@ -47,14 +47,14 @@ export default function EditProfile() {
     name: "",
     contactNum: "",
     email: "",
-    profilePic: "",
+    imageId: "",
   };
 
   const defaultErrorState: ErrorStateT = {
     name: { error: false, helperText: "" },
     contactNum: { error: false, helperText: "" },
     email: { error: false, helperText: "" },
-    profilePic: { error: false, helperText: "" },
+    imageId: { error: false, helperText: "" },
   };
 
   // TODO: Note to self, can I just use a regular useState and achieve the same outcome?
@@ -64,8 +64,8 @@ export default function EditProfile() {
         return { ...state, name: action.payload };
       case "contactNum":
         return { ...state, contactNum: action.payload };
-      case "profilePic":
-        return { ...state, profilePic: action.payload };
+      case "imageId":
+        return { ...state, imageId: action.payload };
       case "all":
         return { ...state, ...action.payload };
       default:
@@ -78,7 +78,7 @@ export default function EditProfile() {
       name: "name",
       contactNum: "contact number",
       email: "email",
-      profilePic: "profile picture",
+      imageId: "profile picture",
     };
 
     switch (action.type) {
@@ -114,6 +114,13 @@ export default function EditProfile() {
     defaultErrorState,
   );
 
+  // Doing this slightly dirtily for now instead of using the image component
+  const retrieveImage = (imageId: string) => {
+    const filepath = folderPrefixNames.PROFILEPICTURES + "/" + imageId;
+
+    return IMAGE_ROUTES.RETRIEVE_BY_FILE_PATH.replace(":filePath", filepath);
+  }
+
   const retrieveProfileInfo = async () => {
     try {
       const res: any = await makeHttpRequest(
@@ -123,14 +130,13 @@ export default function EditProfile() {
       const { action, data } = res.data;
 
       if (action) {
-        const { name, email, contactNum, imageUrl = profilePic } = data;
+        const { name, email, contactNum, imageId } = data;
         userDataDispatch({
           type: "all",
-          payload: { name, email, contactNum, profilePic: imageUrl },
+          payload: { name, email, contactNum, imageId: imageId },
         });
         // TODO: The profile pic receieved here is /static/media/ProfilePicture.7ed21e034b8cb055135a.png
         // It should be the same as when you are in /profile, which resolves to DefaultProfilePic.jpg
-        console.log(profilePic)
       } else {
         // TODO: Currently, we do not really have any robust error message
         displayNotification(
@@ -183,13 +189,21 @@ export default function EditProfile() {
       const reader = new FileReader();
       reader.onloadend = () => {
         userDataDispatch({
-          type: "profilePic",
+          type: "imageId",
           payload: reader.result as string,
         });
         setBase64ImageString(reader.result as string);
       };
+
       reader.readAsDataURL(file);
     }
+  };
+
+  // This is to check whether if this is an S3 image or a blob
+  const isS3Image = (imageId: string) => {
+    const dataUrlSubstring = "data:";
+
+    return !imageId.includes(dataUrlSubstring);
   };
 
   // Function to handle save changes
@@ -197,17 +211,20 @@ export default function EditProfile() {
     if (!validateChanges()) return;
 
     try {
-      // This means user changed profile picture
+      let payload: any = { ...userData };
+
       if (base64ImageString !== "") {
         const imageId = await uploadImage("profile-pictures", base64ImageString);
-        console.log("Save the resulting id to db", imageId[0]);
-        userDataDispatch({ type: "profilePic", payload: imageId[0] });
+
+        payload['imageId'] = imageId[0];
       }
+
       const res: any = await makeHttpRequest(
         "PUT",
         USER_ROUTES.UPDATE_USER,
-        userData,
+        payload,
       );
+
       if (res.data.action) {
         displayNotification(
           "success",
@@ -237,12 +254,6 @@ export default function EditProfile() {
     errorDataDispatch({ type: "reset", payload: field }); // Remove existing error message
   };
 
-  // // Function to handle terminate account
-  // const handleTerminateAccount = () => {
-  //   // console.log("Email:", userData.email);
-  //   return true;
-  // };
-
   return (
       <>
       <Box
@@ -267,7 +278,7 @@ export default function EditProfile() {
             }}
           >
             <ProfilePic
-              profilePic={userData.profilePic}
+              profilePic={isS3Image(userData.imageId) ? retrieveImage(userData.imageId) : userData.imageId}
               handlePhotoUpload={handlePhotoUpload}
             />
             <ProfileTextField
