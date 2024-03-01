@@ -90,7 +90,7 @@ export class ImageService {
 
   public isAcceptedImageType(imageData: Buffer): boolean {
     const supportedTypes = [
-      { magicNumber: "89504E47", type: "image/png" },
+      { magicNumber: "89504e47", type: "image/png" },
       { magicNumber: "47494638", type: "image/gif" },
       { magicNumber: "ffd8ffe0", type: "image/jpeg" },
       { magicNumber: "ffd8ffe1", type: "image/jpeg" },
@@ -98,9 +98,7 @@ export class ImageService {
       { magicNumber: "ffd8ffe3", type: "image/jpeg" },
       { magicNumber: "ffd8ffe8", type: "image/jpeg" },
     ];
-
-    const magicNumber = imageData.toString("hex", 0, 4).toUpperCase();
-
+    const magicNumber = imageData.toString("hex", 0, 4).toLowerCase();
     const matchedType = supportedTypes.find((type) =>
       magicNumber.startsWith(type.magicNumber),
     );
