@@ -62,7 +62,7 @@ router.post("/", function (req: Request, res: Response) {
 
     try {
       await Promise.all(promises);
-      generateResponse(res, 200, {
+      return generateResponse(res, 200, {
         success: true,
         message: "Files uploaded successfully",
         filename: uploadedFiles.map((file) => file.filename),

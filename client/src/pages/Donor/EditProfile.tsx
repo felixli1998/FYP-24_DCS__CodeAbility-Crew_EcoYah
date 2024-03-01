@@ -1,12 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
-import "../../styles/App.css";
-import { ThemeProvider } from "@mui/material";
-import { theme } from "../../styles/Palette";
 import profilePic from "../../assets/ProfilePicture.png";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-
+// MUI
+import { Box, Button, Stack } from "@mui/material";
 // Components
 import ProfilePic from "../../components/EditProfile/ProfilePic";
 import ProfileTextField from "../../components/EditProfile/ProfileTextField";
@@ -206,6 +201,7 @@ export default function EditProfile() {
       if (base64ImageString !== "") {
         uploadImage("profile-pictures", base64ImageString).then((imageId) => {
           console.log("Save the resulting id to db", imageId);
+          userDataDispatch({ type: "profilePic", payload: imageId });
         });
       }
       const res: any = await makeHttpRequest(
@@ -249,7 +245,7 @@ export default function EditProfile() {
   // };
 
   return (
-    <ThemeProvider theme={theme}>
+      <>
       <Box
         component="form"
         display="flex"
@@ -331,6 +327,6 @@ export default function EditProfile() {
         </Stack>
       </Box>
       <FeedbackNotification />
-    </ThemeProvider>
+      </>
   );
 }
