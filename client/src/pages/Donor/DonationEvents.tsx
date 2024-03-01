@@ -24,6 +24,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+import { green } from "@mui/material/colors";
 
 type itemType = {
   id: number;
@@ -311,7 +312,7 @@ export default function DonationEvents() {
                 variant="outlined"
                 id="searchBar"
                 color="success"
-                sx={{ marginBottom: 2 }}
+                size="small"
                 placeholder="Search e.g. Cabbage, Bread"
                 InputProps={{
                   endAdornment: (
@@ -384,12 +385,14 @@ export default function DonationEvents() {
                 </>
               )}
 
-              <Grid container spacing={3}>
+              <Grid container spacing={3} sx={{ marginBottom: 4}}>
                 {searchEvents.map((event: eventType) => (
-                  <Grid item sx={{ marginBottom: 2 }} key={event.id}>
+                  <Grid item key={event.id}>
                     <DonationEventCard
                       name={event.name}
-                      description={`Take part in this donation by donating ${event.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                        description={event.donationEventItems.map((eachItem) => 
+                        <Chip sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
+                        )}
                       imgSrc={event.imageId}
                       numJoined={event.numDonors}
                       timeLeft={event.timeLeft}
