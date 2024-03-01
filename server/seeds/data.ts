@@ -15,7 +15,7 @@ export const ADMIN_SEED_DATA: UserSeedDataT[] = [
     email: "layhoon@test.com",
     passwordInput: "1234",
     contactNum: "+6512345678",
-    imageURL: "DefaultProfilePicture.jpg",
+    imageURL: "LayHoonProfile.png",
     role: UserRole.STAFF,
   },
   {
@@ -23,7 +23,7 @@ export const ADMIN_SEED_DATA: UserSeedDataT[] = [
     email: "alex@test.com",
     passwordInput: "1234",
     contactNum: "+6512345678",
-    imageURL: "DefaultProfilePicture.jpg",
+    imageURL: "AlexProfile.png",
     role: UserRole.STAFF,
   },
   {
@@ -31,7 +31,7 @@ export const ADMIN_SEED_DATA: UserSeedDataT[] = [
     email: "siumei@test.com",
     passwordInput: "1234",
     contactNum: "+6512345678",
-    imageURL: "DefaultProfilePicture.jpg",
+    imageURL: "SiewMayProfile.png",
     role: UserRole.STAFF,
   },
   {
@@ -39,7 +39,7 @@ export const ADMIN_SEED_DATA: UserSeedDataT[] = [
     email: "aaron@test.com",
     passwordInput: "1234",
     contactNum: "+6512345678",
-    imageURL: "DefaultProfilePicture.jpg",
+    imageURL: "AaronProfile.jpg",
     role: UserRole.ADMIN,
   },
 ];

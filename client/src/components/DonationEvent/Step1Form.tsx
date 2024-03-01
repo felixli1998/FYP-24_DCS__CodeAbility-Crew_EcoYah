@@ -134,7 +134,7 @@ export default function Step1Form(props: Step1FormProps) {
           borderRadius: "4px",
         }}
       >
-        {(imageId && imageId.includes(";base64,")) ? (
+        {(imageId && imageId.includes(";base64,")) && (
           <img
             src={imageId}
             alt="donationImage"
@@ -144,15 +144,15 @@ export default function Step1Form(props: Step1FormProps) {
               maxHeight: "100%",
               objectFit: "contain",
             }}
-          />) :
+          />)}
+          {(imageId && !imageId.includes(";base64,")) &&
           (<Image
             imageId={imageId}
             type="rectangle"
             width="300px"
             height="200px"
             folderPrefix={folderPrefixNames.EVENTS}
-          />)
-        }
+          />)}
         <Button
           variant="outlined"
           sx={{ borderColor: "primary.dark", marginTop: 2 }}
