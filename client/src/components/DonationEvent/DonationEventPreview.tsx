@@ -53,7 +53,7 @@ export default function DonationEventPreview(props: DonationEventType) {
     <Box display="flex" justifyContent="center" sx={{ m: 5 }}>
       <Stack spacing={3}>
         {headerBar}
-        {action === "create" ? (
+        {action === "create" || imageId.includes(";base64,") ? (
           <Box
             component="img"
             sx={{
