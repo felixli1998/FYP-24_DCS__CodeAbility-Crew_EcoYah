@@ -143,7 +143,8 @@ export class DonationRequestService {
       await this.donationRequestRepository.retrieveById(id);
 
     try {
-      if (donationRequest) {
+      // if donationRequest.omitPoints is true, do not credit user points
+      if (donationRequest && !donationRequest.omitPoints) {
         const user_id = donationRequest.user.id;
         await this.userPointsService.creditUserPoints(user_id, totalPts);
       }
