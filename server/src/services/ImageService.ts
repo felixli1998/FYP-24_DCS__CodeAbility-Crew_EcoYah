@@ -66,9 +66,9 @@ export class ImageService {
     imageId: string,
     prefix?: string,
   ): Promise<string> {
-    if (!this.isAcceptedImageType(imageData)) {
-      throw new Error("Invalid image type");
-    }
+    // if (!this.isAcceptedImageType(imageData)) {
+    //   throw new Error("Invalid image type");
+    // }
     if (!this.checkFileSize(imageData)) {
       throw new Error("File size exceeds the limit of ");
     }
