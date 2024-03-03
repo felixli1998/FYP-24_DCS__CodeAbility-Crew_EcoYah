@@ -5,7 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import io from 'socket.io-client';
 
 import RedemptionToastNotification from './RedemptionToastNotification';
-import { WidthFull } from '@mui/icons-material';
 
 function RedemptionNotification() {
     const [notifications, setNotifications] = useState([]);

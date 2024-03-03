@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Button} from '@mui/material';
 
 const RedemptionToastNotification = (props) => {
-    console.log(props)
+    console.log("Hi look here", props)
     const data = props.toastProps.data;
     const handleCancel = () => {
         props.closeToast();
