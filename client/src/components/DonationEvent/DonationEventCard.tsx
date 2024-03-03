@@ -37,13 +37,13 @@ export default function DonationEventCard(props: DonationEventCardProps) {
         <Image
           imageId={props.imgSrc}
           width="100%"
-          height="100%"
+          height={275}
           folderPrefix={folderPrefixNames.EVENTS}
         />
       </CardMedia>
       <CardContent sx={{ paddingTop: 1}}>
-        <Grid item xs={8}>
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        <Grid item>
+          <Typography variant="body1" sx={{ fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis"  }}>
             {props.name}
           </Typography>
         </Grid>
