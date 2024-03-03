@@ -75,7 +75,7 @@ export default function SignIn() {
           setErrorDisplay(false);
           localStorage.setItem("ecoyah-email", selectedProfile);
           localStorage.setItem("admin-id", currentAdminId.toString());
-          navigate("/admin/home");
+          navigate("/admin/donation-events");
         } else {
           setErrorDisplay(true);
           setErrorMsg("Your PIN is incorrect. Please try again.");

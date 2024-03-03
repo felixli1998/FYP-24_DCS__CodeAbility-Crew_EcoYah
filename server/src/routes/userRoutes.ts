@@ -110,7 +110,7 @@ router.post("/", async (req, res) => {
 router.put("/update", async (req, res) => {
   try {
     const payload = req.body;
-    const allowedParams = ["name", "contactNum", "email"];
+    const allowedParams = ["name", "contactNum", "email", "imageId"];
     const sanitisedPayload = strongParams(payload, allowedParams);
     const { email = "" } = sanitisedPayload;
 
@@ -118,7 +118,7 @@ router.put("/update", async (req, res) => {
     const user = await userService.getUserByEmail(email);
     if (!user) {
       generateResponse(res, 200, { action: false, message: "User not found" });
-      return;
+      return
     }
     await userService.updateUser(email, sanitisedPayload);
     generateResponse(res, 200, {
@@ -126,6 +126,7 @@ router.put("/update", async (req, res) => {
       message: "User is updated successfully!",
     });
   } catch (error) {
+    console.log(error);
     generateResponse(res, 500, {
       action: false,
       message: "An error occured while updating user",

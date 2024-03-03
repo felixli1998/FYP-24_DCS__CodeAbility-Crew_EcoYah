@@ -60,7 +60,6 @@ function ResponsiveAppBar() {
       if (admin) {
         // Admin + Authenticated //
         const NavList = [
-          NavigationList.HOME,
           NavigationList.DONATION_EVENTS,
           NavigationList.DONATION_REQUEST,
         ];
@@ -141,7 +140,7 @@ function ResponsiveAppBar() {
     navActionLogicMap();
 
     if (isAdmin()) {
-      setHomePath(isAuthenticated() ? "/admin/home" : "/admin/sign-in");
+      setHomePath(isAuthenticated() ? "/admin/donation-events" : "/admin/sign-in");
     } else {
       setHomePath("/");
     }
