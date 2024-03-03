@@ -48,7 +48,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
           </Typography>
         </Grid>
 
-        <Grid mt={1}><Typography className="mb-2">Looking for: </Typography> {props.description}</Grid>
+        <Grid mt={1}>{props.description}</Grid>
 
         <Grid container alignItems="center" sx={{ marginTop: 2 }}>
           <Grid item xs={7} sx={{ display: "flex"}}>
