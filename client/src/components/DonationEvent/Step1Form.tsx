@@ -144,7 +144,7 @@ export default function Step1Form(props: Step1FormProps) {
               maxHeight: "100%",
               objectFit: "contain",
             }}
-          />)}
+          />)} 
           {(imageId && !imageId.includes(";base64,")) &&
           (<Image
             imageId={imageId}

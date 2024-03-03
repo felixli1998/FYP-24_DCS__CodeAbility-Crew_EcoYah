@@ -226,7 +226,6 @@ export default function DonationEvent() {
           </Box>
         }
         donationEvent={donationEvent}
-        action={"edit"}
       />
     ),
   };
@@ -282,7 +281,6 @@ export default function DonationEvent() {
             </Box>
           }
           donationEvent={donationEvent}
-          action={"preview"}
         />
       )}
       {/* Edit Dialog */}
