@@ -42,8 +42,8 @@ export default function DonationEventForm() {
   const [formData, setFormData] = useState<FormDataType>({
     name: "",
     imageId: "",
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: dayjs().startOf('day').toDate(),
+    endDate: dayjs().endOf('day').toDate(),
     isActive: false,
     donationEventItems: [],
     createdBy: 0,
@@ -73,7 +73,8 @@ export default function DonationEventForm() {
       case 2:
         return (
           dayjs(formData["startDate"]).isValid() &&
-          dayjs(formData["endDate"]).isValid()
+          dayjs(formData["endDate"]).isValid() && 
+          dayjs(formData["startDate"]).isBefore(formData["endDate"])
         );
       default:
         return false;
@@ -163,7 +164,7 @@ export default function DonationEventForm() {
         handleData={handleData}
       />
     ),
-    2: <Step3Form formData={formData} handleData={handleData} />,
+    2: <Step3Form formData={formData} handleData={handleData} showMissingFields={showMissingFields} />,
     3: (
       <DonationEventPreview
         headerBar={
