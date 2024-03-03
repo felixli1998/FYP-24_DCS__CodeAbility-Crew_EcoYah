@@ -16,6 +16,7 @@ import DonationEvent from "../pages/Admin/DonationEvent";
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
 import DonationRequests from "../pages/Admin/DonationRequests";
 import { DonationRequest } from "../pages/Donor/DonationRequest";
+import LongPolling from "../pages/LongPollingPage";
 
 type AppRoutesT = {
   path: string;
@@ -128,4 +129,10 @@ export const APP_ROUTES: AppRoutesT[] = [
     isAdmin: true,
     protected: true,
   },
+  {
+    path:"long-polling",
+    description: "Long polling tests",
+    element: <LongPolling />,
+    isAdmin: false,
+  }
 ];

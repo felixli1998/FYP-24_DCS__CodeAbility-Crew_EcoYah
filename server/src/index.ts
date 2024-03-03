@@ -1,7 +1,10 @@
 // External Imports
 import dotenv from "dotenv";
-import express from "express";
+import express, { Router, Request, Response } from "express";
 import cors from "cors";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
+
 
 // Internal Imports
 import generateSeedData from "../seeds/seed";
@@ -20,10 +23,23 @@ import eventRoutes from "./routes/eventTypeRoutes";
 import donationRequestRoutes from "./routes/donationRequestRoutes";
 import donationRequestItemRoutes from "./routes/donationRequestItemRoutes";
 import donationEventItemRoutes from "./routes/donationEventItemRoutes";
+import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
+
+
 
 dotenv.config();
 
 const app = express();
+const httpServer = createServer(app);
+const options = { 
+  pingTimeout: 5000,
+  pingInterval: 10000,
+  cors:{
+    origin: "*"
+  }
+};
+const io = new Server(httpServer, options);
+handleLongPolling(io);
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
@@ -58,6 +74,7 @@ app.use("/items", itemRoutes);
 app.use("/event-types", eventRoutes);
 app.use("/donation-requests", donationRequestRoutes);
 app.use("/donation-request-items", donationRequestItemRoutes);
+app.use("/longpolling", longPollingRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -76,6 +93,6 @@ app.post("/test", (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
+httpServer.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
 });
