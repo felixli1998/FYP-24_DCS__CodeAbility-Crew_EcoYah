@@ -28,6 +28,12 @@ export default function PinSignIn(props: PinSignInProps) {
   const [pin, setPin] = useState<string>("");
   const [showPin, setShowPin] = useState(false);
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') {
+      props.handleSignIn(pin);
+    }
+  };
+
   const handleChange = (newValue: string) => {
     setPin(newValue);
   };
@@ -38,6 +44,12 @@ export default function PinSignIn(props: PinSignInProps) {
 
   const validateChar = (value: any) => {
     return !isNaN(Number(value)) && value !== " ";
+  };
+
+  const maskPin = (pinValue: string) => {
+    // Replace each digit with a placeholder character (asterisk)
+    // setPin(pinValue);
+    return pinValue.replace(/[0-9]/g, '*');
   };
 
   function clearPinOnCancel() {
@@ -67,12 +79,31 @@ export default function PinSignIn(props: PinSignInProps) {
                   validateChar={validateChar}
                   TextFieldsProps={{
                     required: true,
-                    InputProps: {
+                    inputProps: {
                       style: { fontSize: "4.3rem" },
                       type: showPin ? "text" : "password",
+                      inputMode: 'numeric',
+                      pattern: "[0-9]*",
+                      onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => handleKeyDown(event as React.KeyboardEvent<HTMLDivElement>)
                     },
                   }}
                 />
+                {/* <MuiOtpInput
+                  value={showPin ? pin : maskPin(pin)}
+                  onChange={handleChange}
+                  length={4}
+                  autoFocus
+                  validateChar={validateChar}
+                  TextFieldsProps={{
+                    required: true,
+                    inputProps: {
+                      style: { fontSize: "4.3rem" },
+                      type: "text",
+                      inputMode: 'numeric',
+                      pattern: "[0-9]*"
+                    },
+                  }}
+                /> */}
               </Grid>
               <Grid item xs={12} sm={1}>
                 <IconButton
@@ -125,6 +156,9 @@ export default function PinSignIn(props: PinSignInProps) {
                     size="large"
                     sx={{ bgcolor: "success.dark" }}
                     onClick={() => props.handleSignIn(pin)}
+                    // onKeyDown={e => e.key === 'Enter' ? props.handleSignIn(pin): ''}
+                    onKeyDown={e => e.key === 'Enter' ? console.log('on key enter'):  console.log('on key OTHER')}
+
                   >
                     <Typography
                       variant="h5"
