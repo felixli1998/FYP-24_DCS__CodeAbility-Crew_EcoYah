@@ -56,7 +56,6 @@ export default function SignIn() {
 
   const navigate = useNavigate();
   const handleSignIn = async (pin: string) => {
-    console.log("PIN:", pin);
     const pinLength = pin.length;
 
     if (pinLength === 0) {

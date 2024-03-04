@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+// import Visibility from "@mui/icons-material/Visibility";
+// import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   Backdrop,
   Button,
@@ -9,11 +9,10 @@ import {
   CardActions,
   CardContent,
   Grid,
-  IconButton,
+  // IconButton,
   Typography,
 } from "@mui/material";
 import { MuiOtpInput } from "mui-one-time-password-input";
-import OtpInput from 'react18-input-otp';
 import { useState } from "react";
 import { theme } from "../styles/Palette";
 
@@ -27,7 +26,7 @@ interface PinSignInProps {
 
 export default function PinSignIn(props: PinSignInProps) {
   const [pin, setPin] = useState<string>("");
-  const [showPin, setShowPin] = useState(false);
+  // const [showPin, setShowPin] = useState(false);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
@@ -39,19 +38,12 @@ export default function PinSignIn(props: PinSignInProps) {
     setPin(newValue);
   };
 
-  const handleToggleShowPin = () => {
-    showPin ? setShowPin(false) : setShowPin(true);
-  };
+  // const handleToggleShowPin = () => {
+  //   showPin ? setShowPin(false) : setShowPin(true);
+  // };
 
   const validateChar = (value: any) => {
     return !isNaN(Number(value)) && value !== " ";
-  };
-
-  const maskPin = (pinValue: string) => {
-    // Replace each digit with a placeholder character (asterisk)
-    // setPin(pinValue);
-    console.log("pinValue:", pinValue);
-    return pinValue.replace(/[0-9]/g, '*');
   };
 
   function clearPinOnCancel() {
@@ -72,8 +64,8 @@ export default function PinSignIn(props: PinSignInProps) {
             </Typography>
 
             <Grid container sx={{ marginBottom: 2, alignItems: "center" }}>
-              <Grid item xs={12} sm={11}>
-                {/* <MuiOtpInput
+              {/* <Grid item xs={12} sm={11}> */}
+                <MuiOtpInput
                   value={pin}
                   onChange={handleChange}
                   length={4}
@@ -83,45 +75,16 @@ export default function PinSignIn(props: PinSignInProps) {
                     required: true,
                     inputProps: {
                       style: { fontSize: "4.3rem" },
-                      type: showPin ? "tel" : "password",
-                      inputMode: 'numeric',
+                      // type: showPin ? "tel" : "password",
+                      type: "tel",
+                      inputMode: "numeric",
                       pattern: "[0-9]*",
                       onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => handleKeyDown(event as React.KeyboardEvent<HTMLDivElement>)
                     },
                   }}
-                /> */}
-                {/* <OtpInput
-                  value={pin}
-                  onChange={handleChange}
-                  numInputs={4}
-                  isInputNum={true}
-                  isInputSecure={showPin ? true : false}
-                  separator={<span>&nbsp;</span>}
-                  shouldAutoFocus
-                  inputProps={{    
-                    style: { fontSize: "1.5rem" },
-                    type: showPin ? "tel" : "password",
-                    inputMode: 'numeric',
-                    pattern: "[0-9]*",
-                    onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => handleKeyDown(event as React.KeyboardEvent<HTMLDivElement>)
-                  }}
-                /> */}
-                <OtpInput
-                  value={pin}
-                  onChange={handleChange}
-                  numInputs={4}
-                  isInputNum={true}
-                  isInputSecure={showPin ? false : true}
-                  separator={<span>&nbsp;</span>}
-                  shouldAutoFocus={true}
-                  inputProps={{    
-                    style: { fontSize: "1.5rem" },
-                    inputMode: 'numeric',
-                    // onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => handleKeyDown(event as React.KeyboardEvent<HTMLDivElement>)
-                  }}
                 />
-              </Grid>
-              <Grid item xs={12} sm={1}>
+              {/* </Grid> */}
+              {/* <Grid item xs={12} sm={1}>
                 <IconButton
                   sx={{ width: 100, height: 100 }}
                   onClick={handleToggleShowPin}
@@ -132,7 +95,7 @@ export default function PinSignIn(props: PinSignInProps) {
                     <Visibility sx={{ fontSize: 60 }} />
                   )}
                 </IconButton>
-              </Grid>
+              </Grid> */}
             </Grid>
 
             {props.errorDisplay && (
