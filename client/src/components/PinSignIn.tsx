@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { MuiOtpInput } from "mui-one-time-password-input";
+import OtpInput from 'react18-input-otp';
 import { useState } from "react";
 import { theme } from "../styles/Palette";
 
@@ -49,6 +50,7 @@ export default function PinSignIn(props: PinSignInProps) {
   const maskPin = (pinValue: string) => {
     // Replace each digit with a placeholder character (asterisk)
     // setPin(pinValue);
+    console.log("pinValue:", pinValue);
     return pinValue.replace(/[0-9]/g, '*');
   };
 
@@ -71,7 +73,7 @@ export default function PinSignIn(props: PinSignInProps) {
 
             <Grid container sx={{ marginBottom: 2, alignItems: "center" }}>
               <Grid item xs={12} sm={11}>
-                <MuiOtpInput
+                {/* <MuiOtpInput
                   value={pin}
                   onChange={handleChange}
                   length={4}
@@ -81,29 +83,43 @@ export default function PinSignIn(props: PinSignInProps) {
                     required: true,
                     inputProps: {
                       style: { fontSize: "4.3rem" },
-                      type: showPin ? "text" : "password",
+                      type: showPin ? "tel" : "password",
                       inputMode: 'numeric',
                       pattern: "[0-9]*",
                       onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => handleKeyDown(event as React.KeyboardEvent<HTMLDivElement>)
                     },
                   }}
-                />
-                {/* <MuiOtpInput
-                  value={showPin ? pin : maskPin(pin)}
+                /> */}
+                {/* <OtpInput
+                  value={pin}
                   onChange={handleChange}
-                  length={4}
-                  autoFocus
-                  validateChar={validateChar}
-                  TextFieldsProps={{
-                    required: true,
-                    inputProps: {
-                      style: { fontSize: "4.3rem" },
-                      type: "text",
-                      inputMode: 'numeric',
-                      pattern: "[0-9]*"
-                    },
+                  numInputs={4}
+                  isInputNum={true}
+                  isInputSecure={showPin ? true : false}
+                  separator={<span>&nbsp;</span>}
+                  shouldAutoFocus
+                  inputProps={{    
+                    style: { fontSize: "1.5rem" },
+                    type: showPin ? "tel" : "password",
+                    inputMode: 'numeric',
+                    pattern: "[0-9]*",
+                    onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => handleKeyDown(event as React.KeyboardEvent<HTMLDivElement>)
                   }}
                 /> */}
+                <OtpInput
+                  value={pin}
+                  onChange={handleChange}
+                  numInputs={4}
+                  isInputNum={true}
+                  isInputSecure={showPin ? false : true}
+                  separator={<span>&nbsp;</span>}
+                  shouldAutoFocus={true}
+                  inputProps={{    
+                    style: { fontSize: "1.5rem" },
+                    inputMode: 'numeric',
+                    // onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => handleKeyDown(event as React.KeyboardEvent<HTMLDivElement>)
+                  }}
+                />
               </Grid>
               <Grid item xs={12} sm={1}>
                 <IconButton
@@ -156,9 +172,6 @@ export default function PinSignIn(props: PinSignInProps) {
                     size="large"
                     sx={{ bgcolor: "success.dark" }}
                     onClick={() => props.handleSignIn(pin)}
-                    // onKeyDown={e => e.key === 'Enter' ? props.handleSignIn(pin): ''}
-                    onKeyDown={e => e.key === 'Enter' ? console.log('on key enter'):  console.log('on key OTHER')}
-
                   >
                     <Typography
                       variant="h5"
