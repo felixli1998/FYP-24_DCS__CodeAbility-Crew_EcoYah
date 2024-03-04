@@ -120,8 +120,10 @@ export default function DonationEvent() {
       for (const key in donationEvent) {
         updateParams[key] = donationEvent[key];
       }
-      const imageId = await uploadImage("events", donationEvent.imageId)
-      updateParams["imageId"] = imageId[0];
+      if (donationEvent.imageId.includes(";base64,")) {
+        const imageId = await uploadImage("events", donationEvent.imageId)
+        updateParams["imageId"] = imageId[0];
+      }
       const response = await updateDonationEventMutateAsync({
         donationEventId: donationEvent.id,
         updateParams,
@@ -224,7 +226,6 @@ export default function DonationEvent() {
           </Box>
         }
         donationEvent={donationEvent}
-        action={"create"}
       />
     ),
   };
@@ -280,7 +281,6 @@ export default function DonationEvent() {
             </Box>
           }
           donationEvent={donationEvent}
-          action={"preview"}
         />
       )}
       {/* Edit Dialog */}
