@@ -121,7 +121,6 @@ export default function DonationEvents() {
   };
 
   const handleFilterClick = (eventTypeId: number) => {
-    console.log(eventTypeId);
     if (filters.includes(eventTypeId)) {
       setFilters(filters.filter((filter) => filter !== eventTypeId));
     } else {
@@ -134,8 +133,6 @@ export default function DonationEvents() {
     return events.filter((event: eventType) => {
       return event.donationEventItems.some(
         (eachItem: donationEventItemsType) => {
-          console.log(eachItem.item.eventType.id)
-          console.log(filters.includes(eachItem.item.eventType.id))
           return filters.includes(eachItem.item.eventType.id);
         },
       );
