@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from "dayjs/plugin/timezone";
 
 type DateTimePickerValueType = {
   label: string;
@@ -11,6 +13,8 @@ type DateTimePickerValueType = {
 };
 
 export default function DateTimePickerValue(props: DateTimePickerValueType) {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
   const [value, setValue] = useState<Dayjs | null>(null);
 
   const twelvePM = dayjs().set("hour", 12).startOf("hour");
@@ -24,7 +28,9 @@ export default function DateTimePickerValue(props: DateTimePickerValueType) {
 
     if (currentHour <= 12) {
       minTime = twelvePM;
-    } else if (currentHour >= 14) {
+    } else if (currentHour < 14) {
+      minTime = twoPM;
+    } else {
       minDate = dayjs().add(1, "day");
       minTime = dayjs().add(1, "day").set("hour", 12).startOf("hour");
     }
@@ -71,6 +77,7 @@ export default function DateTimePickerValue(props: DateTimePickerValueType) {
           },
         }}
         format="DD/MM/YYYY HH:mm"
+        timezone="Asia/Singapore"
       />
     </LocalizationProvider>
   );

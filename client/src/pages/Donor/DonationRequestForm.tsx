@@ -201,7 +201,7 @@ export default function DonationRequestForm() {
         handleCreateDonationRequest(donationRequest)
           .then((createStatus) => {
             if (createStatus) {
-              navigate("/");
+              navigate("/donation-requests");
             } else {
               setError(true);
             }
