@@ -2,19 +2,19 @@ import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 // API
+import { getUserByEmail } from "../../services/authenticationApi";
 import {
   getActiveDonationRequests,
   getCompletedDonationRequests,
 } from "../../services/donationRequestApi";
 
 // MUI
-import { Stack, Grid } from "@mui/material";
+import { Stack, Grid, Typography } from "@mui/material";
 
 // Components
-import StaffTypography from "../../components/Typography/StaffTypography";
 import ColorTabs from "../../components/Tabs/Tabs";
 import ContentCard from "../../components/Card/ContentCard";
-import { getUserByEmail } from "../../services/authenticationApi";
+import { useFeedbackNotification } from "../../components/useFeedbackNotification";
 
 const tabs = [
   {
@@ -53,6 +53,7 @@ export const getRewardAmount = (donationRequestItems: any) => {
 export const DonationRequest = () => {
   const [selectedTab, setSelectedTab] = useState<string>("active");
   const [user, setUser] = useState<any | null>(null);
+  const { displayNotification, FeedbackNotification } = useFeedbackNotification();
 
   const { data: donationRequestsData, refetch: donationRequestRefetch } =
     useQuery({
@@ -85,10 +86,12 @@ export const DonationRequest = () => {
   };
 
   useEffect(() => {
-    if (user) {
-      donationRequestRefetch();
-    }
-  }, [selectedTab, user, donationRequestRefetch]);
+    const message = sessionStorage.getItem("message");
+    if (message) {
+      displayNotification("success", message);
+      sessionStorage.removeItem("message");
+    } 
+  }, [sessionStorage.getItem("message")])
 
   useEffect(() => {
     // Fetch Active/Complete request
@@ -100,14 +103,19 @@ export const DonationRequest = () => {
     }
   }, [localStorage.getItem("ecoyah-email")]);
 
+  useEffect(() => {
+    if (user) {
+      donationRequestRefetch();
+    }
+  }, [selectedTab, user, donationRequestRefetch]);
+
   return (
     <>
+      <FeedbackNotification /> 
       <Stack spacing={2} sx={{ margin: { xs: "2rem 2rem", md: "2rem 4rem" } }}>
-        <StaffTypography
-          type="title"
-          size={1.5}
-          text={"My Donations"}
-        ></StaffTypography>
+        <Typography variant="h5" fontWeight="bold">
+          My Donation Requests
+        </Typography>
         <ColorTabs
           tabs={tabs}
           selectedTab={selectedTab}
@@ -127,7 +135,7 @@ export const DonationRequest = () => {
                         getDayLeft(donationRequest.donationEvent.endDate) === 0
                           ? "Expired"
                           : `${getDayLeft(
-                              donationRequest.donationEvent.endDate,
+                              donationRequest.donationEvent.endDate
                             )} day left`,
                       customChipStyle:
                         getDayLeft(donationRequest.donationEvent.endDate) === 0
@@ -138,16 +146,16 @@ export const DonationRequest = () => {
                         : getRewardAmount(donationRequest.donationRequestItems),
                       location: "Kunyah Cafe",
                       dropOffDateTime: `${new Date(
-                        donationRequest.dropOffDate,
+                        donationRequest.dropOffDate
                       ).toLocaleDateString()}, ${donationRequest.dropOffTime}`,
                       status: selectedTab,
                     }}
                     originalData={restructureDataToDonationRequestForm(
-                      donationRequest,
+                      donationRequest
                     )}
                   />
                 </Grid>
-              ),
+              )
             )}
         </Grid>
       </Stack>

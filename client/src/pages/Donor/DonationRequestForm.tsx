@@ -211,6 +211,7 @@ export default function DonationRequestForm() {
         handleCreateDonationRequest(donationRequest)
           .then((createStatus) => {
             if (createStatus) {
+              sessionStorage.setItem("message", "Your donation request is submitted successfully!");
               navigate("/donation-requests");
             } else {
               setFormError(true);
@@ -258,6 +259,7 @@ export default function DonationRequestForm() {
                 createStatus &&
                 updateStatus
               ) {
+                sessionStorage.setItem("message", "Your donation request is updated successfully!");
                 navigate("/donation-requests");
               } else {
                 setFormError(true);

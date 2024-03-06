@@ -83,7 +83,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
           ...prevItems[id],
           quantity: newQty,
           points: newQty * pointsPerUnit,
-          error: `The minimum quantity is ${foundItem.minQty}`,
+          error: `The minimum quantity to donate is ${foundItem.minQty}`,
         },
       }));
     } else {
@@ -107,7 +107,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
           ...prevItems[id],
           quantity: prevItems[id].quantity - 1,
           points: (prevItems[id].quantity - 1) * pointsPerUnit,
-          error: `The minimum quantity is ${foundItem.minQty}`,
+          error: `The minimum quantity to donate is ${foundItem.minQty}`,
         },
       }));
     } else {
