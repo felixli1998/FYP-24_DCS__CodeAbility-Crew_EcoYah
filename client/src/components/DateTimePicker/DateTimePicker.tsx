@@ -73,7 +73,8 @@ export default function DateTimePickerValue(props: DateTimePickerValueType) {
                 "Please choose a date and time") ||
               (props.validateForm &&
                 value!.hour() < 12 &&
-                "Please select a timing from 12pm - 2pm"),
+                "Please select a timing from 12pm - 2pm") ||
+              "As part of operational hours, the available timings for donation drop offs are from 12pm - 2pm",
           },
         }}
         format="DD/MM/YYYY HH:mm"
