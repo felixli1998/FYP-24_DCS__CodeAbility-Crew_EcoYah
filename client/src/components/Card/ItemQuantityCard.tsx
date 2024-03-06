@@ -1,11 +1,12 @@
 // React Imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 
 // MUI Imports
 import {
   FormControl,
   Card,
   CardContent,
+  TextField,
   Typography,
   CardActions,
   IconButton,
@@ -19,7 +20,7 @@ type ItemQuantityCardType = {
   label: Record<string, string | number>[];
   data: any;
   onItemQuantityChange: (
-    itemQuantity: Record<string, Record<string, string | number>>,
+    itemQuantity: Record<string, Record<string, string | number>>
   ) => void;
 };
 
@@ -40,7 +41,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
     const initialDonationRequestItems: DonationRequestItemType = {};
     props.label.forEach((eachLabel: Record<string, string | number>) => {
       const foundItem = props.data.find(
-        (item: any) => item.donationEventItem.id === eachLabel.id,
+        (item: any) => item.donationEventItem.id === eachLabel.id
       );
 
       const quantityToUse = foundItem ? foundItem.quantity : eachLabel.minQty;
@@ -54,14 +55,59 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
     setDonationRequestItems(initialDonationRequestItems);
   }, [props.label]);
 
-  const handleDeduction = (id: number, pointsPerUnit: number): void => {
+  const handleQtyChange = (
+    id: number,
+    pointsPerUnit: number,
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
+    const newQty = parseInt(event.target.value, 10);
     const foundItem = props.label.find((item) => item["id"] === id);
-    if (foundItem && foundItem.minQty === donationRequestItems[id].quantity) {
+    if (isNaN(newQty)) {
       setDonationRequestItems((prevItems) => ({
         ...prevItems,
         [id]: {
           ...prevItems[id],
-          error: "It has reached the minimum quantity",
+          quantity: newQty,
+          points: newQty * pointsPerUnit,
+          error: "Please enter a valid quantity",
+        },
+      }));
+    } else if (
+      foundItem &&
+      Number(foundItem.minQty) > newQty &&
+      event.target.value.trim() !== ""
+    ) {
+      setDonationRequestItems((prevItems) => ({
+        ...prevItems,
+        [id]: {
+          ...prevItems[id],
+          quantity: newQty,
+          points: newQty * pointsPerUnit,
+          error: `The minimum quantity is ${foundItem.minQty}`,
+        },
+      }));
+    } else {
+      setDonationRequestItems((prevItems) => ({
+        ...prevItems,
+        [id]: {
+          quantity: newQty,
+          points: newQty * pointsPerUnit,
+          error: "",
+        },
+      }));
+    }
+  };
+
+  const handleDeduction = (id: number, pointsPerUnit: number): void => {
+    const foundItem = props.label.find((item) => item["id"] === id);
+    if (foundItem && Number(foundItem.minQty) > donationRequestItems[id].quantity - 1) {
+      setDonationRequestItems((prevItems) => ({
+        ...prevItems,
+        [id]: {
+          ...prevItems[id],
+          quantity: prevItems[id].quantity - 1,
+          points: (prevItems[id].quantity - 1) * pointsPerUnit,
+          error: `The minimum quantity is ${foundItem.minQty}`,
         },
       }));
     } else {
@@ -77,14 +123,29 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
   };
 
   const handleAddition = (id: number, pointsPerUnit: number): void => {
-    setDonationRequestItems((prevItems) => ({
-      ...prevItems,
-      [id]: {
-        quantity: prevItems[id].quantity + 1,
-        points: (prevItems[id].quantity + 1) * pointsPerUnit,
-        error: "",
-      },
-    }));
+    const foundItem = props.label.find((item) => item["id"] === id);
+    if (
+      foundItem &&
+      Number(foundItem.minQty) > donationRequestItems[id].quantity + 1
+    ) {
+      setDonationRequestItems((prevItems) => ({
+        ...prevItems,
+        [id]: {
+          quantity: prevItems[id].quantity + 1,
+          points: (prevItems[id].quantity + 1) * pointsPerUnit,
+          error: `The minimum quantity is ${foundItem.minQty}`,
+        },
+      }));
+    } else {
+      setDonationRequestItems((prevItems) => ({
+        ...prevItems,
+        [id]: {
+          quantity: prevItems[id].quantity + 1,
+          points: (prevItems[id].quantity + 1) * pointsPerUnit,
+          error: "",
+        },
+      }));
+    }
   };
 
   // update the final state of quantity and points to parent component
@@ -96,7 +157,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
     <>
       {props.label.map(function (
         eachLabel: Record<string, string | number>,
-        index: number,
+        index: number
       ) {
         return (
           <FormControl
@@ -122,7 +183,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
                   component="div"
                   color="secondary.light"
                 >
-                  Earn {eachLabel.pointsPerUnit} cashback per {eachLabel.unit}{" "}
+                  Earn ${eachLabel.pointsPerUnit} cashback per {eachLabel.unit}{" "}
                   donated
                 </Typography>
                 <Typography
@@ -134,6 +195,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
                   <PaidOutlinedIcon
                     sx={{ color: "#EE8F0F", marginRight: "0.5rem" }}
                   />{" "}
+                  $
                   {donationRequestItems[eachLabel.id as number]
                     ? donationRequestItems[eachLabel.id as number].points
                     : (eachLabel.minQty as number) *
@@ -142,7 +204,7 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
               </CardContent>
               <CardActions
                 sx={{
-                  width: "8rem",
+                  width: "10rem",
                   border: "1px solid #D4D4D4",
                   borderRadius: "2rem",
                   justifyContent: "center",
@@ -153,22 +215,34 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
                   onClick={() =>
                     handleDeduction(
                       eachLabel.id as number,
-                      eachLabel.pointsPerUnit as number,
+                      eachLabel.pointsPerUnit as number
                     )
                   }
                 >
                   <RemoveIcon sx={{ color: "primary.main" }} />
                 </IconButton>
-                <Typography variant="subtitle1" component="div">
-                  {donationRequestItems[eachLabel.id as number]
-                    ? donationRequestItems[eachLabel.id as number].quantity
-                    : eachLabel.minQty}
-                </Typography>
+                <TextField
+                  type="number"
+                  variant="standard"
+                  value={
+                    donationRequestItems[eachLabel.id as number]
+                      ? donationRequestItems[eachLabel.id as number].quantity
+                      : eachLabel.minQty
+                  }
+                  onChange={(event) =>
+                    handleQtyChange(
+                      eachLabel.id as number,
+                      eachLabel.pointsPerUnit as number,
+                      event as ChangeEvent<HTMLInputElement>
+                    )
+                  }
+                  sx={{ ".MuiInput-input": { textAlign: "center" } }}
+                />
                 <IconButton
                   onClick={() =>
                     handleAddition(
                       eachLabel.id as number,
-                      eachLabel.pointsPerUnit as number,
+                      eachLabel.pointsPerUnit as number
                     )
                   }
                 >
@@ -177,9 +251,10 @@ export default function ItemQuantityCard(props: ItemQuantityCardType) {
               </CardActions>
             </Card>
             <FormHelperText>
-              {donationRequestItems[eachLabel.id as number]
+              {donationRequestItems[eachLabel.id as number] &&
+              donationRequestItems[eachLabel.id as number].error !== ""
                 ? donationRequestItems[eachLabel.id as number].error
-                : ""}
+                : `The minimum quantity to donate is ${eachLabel.minQty}`}
             </FormHelperText>
           </FormControl>
         );

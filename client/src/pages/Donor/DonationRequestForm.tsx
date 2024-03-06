@@ -71,7 +71,8 @@ export default function DonationRequestForm() {
     Record<string, string | number>[] | []
   >([]);
   const [validateForm, setValidateForm] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>(false);
+  const [itemError, setItemError] = useState<boolean>(false);
+  const [formError, setFormError] = useState<boolean>(false);
 
   const handleCheckBoxItems = (
     action: string,
@@ -152,27 +153,35 @@ export default function DonationRequestForm() {
   const handleItemQuantityChange = (
     updatedItemQuantity: Record<number, Record<string, number | string>>,
   ) => {
-    const donationRequestItems: Record<string, number>[] = [];
-    _.mapValues(updatedItemQuantity, function (value, key) {
-      if (donationRequest.oldDonationRequestItems) {
-        const existingItem = donationRequest.oldDonationRequestItems.find(
-          (item: any) => item.donationEventItem.id === Number(key),
-        );
+    const errors = Object.values(updatedItemQuantity).some(
+      (item) => item.error !== ""
+    );
+    if (errors) {
+      setItemError(true);
+    } else {
+      setItemError(false);
+      const donationRequestItems: Record<string, number>[] = [];
+      _.mapValues(updatedItemQuantity, function (value, key) {
+        if (donationRequest.oldDonationRequestItems) {
+          const existingItem = donationRequest.oldDonationRequestItems.find(
+            (item: any) => item.donationEventItem.id === Number(key)
+          );
 
-        if (existingItem) {
-          existingItem.quantity = Number(value.quantity);
-        } else {
-          donationRequestItems.push({
-            donationEventItemId: Number(key),
-            quantity: Number(value.quantity),
-          });
+          if (existingItem) {
+            existingItem.quantity = Number(value.quantity);
+          } else {
+            donationRequestItems.push({
+              donationEventItemId: Number(key),
+              quantity: Number(value.quantity),
+            });
+          }
         }
-      }
-    });
-    setDonationRequest((prevData) => ({
-      ...prevData,
-      newDonationRequestItems: donationRequestItems,
-    }));
+      });
+      setDonationRequest((prevData) => ({
+        ...prevData,
+        newDonationRequestItems: donationRequestItems,
+      }));
+    }
   };
 
   const handleDateTimeChange = (dateTime: Dayjs | null) => {
@@ -189,7 +198,6 @@ export default function DonationRequestForm() {
 
   const handleButtonChange = (status: boolean) => {
     setValidateForm(true);
-    console.log(donationRequest);
 
     if (action === "submit") {
       if (
@@ -197,6 +205,7 @@ export default function DonationRequestForm() {
         donationRequest.submittedBy !== 0 &&
         donationRequest.dropOffTime !== '' && 
         (donationRequest.dropOffTime >= "12:00" && donationRequest.dropOffTime <= "14:00") &&
+        !itemError && 
         donationRequest.newDonationRequestItems.length > 0
       ) {
         handleCreateDonationRequest(donationRequest)
@@ -204,11 +213,11 @@ export default function DonationRequestForm() {
             if (createStatus) {
               navigate("/donation-requests");
             } else {
-              setError(true);
+              setFormError(true);
             }
           })
           .catch(() => {
-            setError(true);
+            setFormError(true);
           });
       }
     } else {
@@ -216,7 +225,8 @@ export default function DonationRequestForm() {
         donationRequest.donationEventId !== 0 &&
         donationRequest.donationRequestId !== 0 &&
         donationRequest.submittedBy !== 0 &&
-        (donationRequest.dropOffTime >= "12:00" && donationRequest.dropOffTime <= "14:00")
+        (donationRequest.dropOffTime >= "12:00" && donationRequest.dropOffTime <= "14:00") &&
+        !itemError 
       ) {
         const deleteDonationRequestItemIds: number[] = [];
         donationRequest.oldDonationRequestItems?.forEach(
@@ -250,11 +260,11 @@ export default function DonationRequestForm() {
               ) {
                 navigate("/donation-requests");
               } else {
-                setError(true);
+                setFormError(true);
               }
             })
             .catch(() => {
-              setError(true);
+              setFormError(true);
             });
         }
       }
@@ -420,7 +430,7 @@ export default function DonationRequestForm() {
           ]}
           onCheckBoxChange={handleCheckBoxChange}
         />
-        {error && (
+        {formError && (
           <Alert severity="error">
             An error occurred while saving your donation request. Please refresh
             and try again.
