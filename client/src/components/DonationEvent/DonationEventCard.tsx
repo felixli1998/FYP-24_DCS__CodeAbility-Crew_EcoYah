@@ -63,7 +63,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
 
         <Grid container alignItems="center" sx={{ marginTop: 2 }}>
           <Grid item xs={7}>
-            <Typography color="text.secondary" whiteSpace="nowrap">
+            <Typography color="text.secondary">
               {props.numJoined > 0
                 ? `${props.numJoined} Donor${props.numJoined > 1 ? "s" : ""} Have Joined!`
                 : "Be the first to make a difference!"}

@@ -121,6 +121,7 @@ export default function DonationEvents() {
   };
 
   const handleFilterClick = (eventTypeId: number) => {
+    console.log(eventTypeId);
     if (filters.includes(eventTypeId)) {
       setFilters(filters.filter((filter) => filter !== eventTypeId));
     } else {
@@ -133,6 +134,8 @@ export default function DonationEvents() {
     return events.filter((event: eventType) => {
       return event.donationEventItems.some(
         (eachItem: donationEventItemsType) => {
+          console.log(eachItem.item.eventType.id)
+          console.log(filters.includes(eachItem.item.eventType.id))
           return filters.includes(eachItem.item.eventType.id);
         },
       );
@@ -312,7 +315,7 @@ export default function DonationEvents() {
                 id="searchBar"
                 color="success"
                 sx={{ marginBottom: 2 }}
-                placeholder="Search e.g. Cabbage, Bread"
+                placeholder="Search e.g. Bread, Clothing"
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -324,7 +327,7 @@ export default function DonationEvents() {
                 onChange={(e) => setSearch(e.target.value)}
               />
 
-              {eventOfTheWeek && (
+              {(search.length === 0 && eventOfTheWeek) && (
                 <>
                   <Typography
                     variant="h5"
@@ -384,21 +387,25 @@ export default function DonationEvents() {
                 </>
               )}
 
+              {searchEvents.length > 0 ? 
               <Grid container spacing={3}>
-                {searchEvents.map((event: eventType) => (
-                  <Grid item sx={{ marginBottom: 2 }} key={event.id}>
-                    <DonationEventCard
-                      name={event.name}
-                      description={`Take part in this donation by donating ${event.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
-                      imgSrc={event.imageId}
-                      numJoined={event.numDonors}
-                      timeLeft={event.timeLeft}
-                      handleDonateClick={() => handleDonateClick(event)}
-                      disableButton={userParticipatedEvents.includes(event.id)}
-                    />
-                  </Grid>
-                ))}
+                   {searchEvents.map((event: eventType) => (
+                      <Grid item sx={{ marginBottom: 2 }} key={event.id}>
+                        <DonationEventCard
+                          name={event.name}
+                          description={`Take part in this donation by donating ${event.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                          imgSrc={event.imageId}
+                          numJoined={event.numDonors}
+                          timeLeft={event.timeLeft}
+                          handleDonateClick={() => handleDonateClick(event)}
+                          disableButton={userParticipatedEvents.includes(event.id)}
+                        />
+                      </Grid>
+                    ))}
               </Grid>
+              :
+              <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: 'center' }}> No Donation Events Found </Typography> 
+              }
             </>
           )}
         </>
