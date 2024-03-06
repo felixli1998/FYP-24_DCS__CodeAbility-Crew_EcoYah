@@ -363,7 +363,7 @@ export default function DonationEvents() {
               ) : (
                 <>
                   <Typography
-                    variant="h6"
+                    variant="h5"
                     sx={{ fontWeight: "bold", marginY: 2 }}
                   >
                     Donation Categories
