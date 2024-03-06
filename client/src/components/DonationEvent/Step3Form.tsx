@@ -54,7 +54,7 @@ export default function Step3Form(props: Step3FormProps) {
                     helperText: ( showMissingFields &&
                       <StaffTypography
                         type='helperText'
-                        size={0.8}
+                        size={1.5}
                         text={"Start date cannot be later than End date!"}
                       />
                     ),
