@@ -29,9 +29,9 @@ const tabs = [
 
 export const getDayLeft = (date: string) => {
   const todayDate = new Date();
-  const endDate = new Date(date);
+  const dropOffDate = new Date(date);
   // Calculate the difference in milliseconds
-  const differenceMs = endDate.getTime() - todayDate.getTime();
+  const differenceMs = dropOffDate.getTime() - todayDate.getTime();
   // Convert milliseconds to days
   const remainingDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
   return remainingDays;
@@ -132,13 +132,15 @@ export const DonationRequest = () => {
                       image: donationRequest.donationEvent.imageId,
                       title: donationRequest.donationEvent.name,
                       chipLabel:
-                        getDayLeft(donationRequest.donationEvent.endDate) === 0
-                          ? "Expired"
+                        getDayLeft(donationRequest.dropOffDate) === 0
+                          ? "Overdue"
                           : `${getDayLeft(
-                              donationRequest.donationEvent.endDate
-                            )} day left`,
+                            donationRequest.dropOffDate
+                            )} ${getDayLeft(
+                              donationRequest.dropOffDate
+                              ) > 1 ? "Days" : "Day"} Left`,
                       customChipStyle:
-                        getDayLeft(donationRequest.donationEvent.endDate) === 0
+                        getDayLeft(donationRequest.dropOffDate) === 0
                           ? { backgroundColor: "#e0e0e0", color: "#9e9e9e" }
                           : {},
                       reward: donationRequest.omitPoints
