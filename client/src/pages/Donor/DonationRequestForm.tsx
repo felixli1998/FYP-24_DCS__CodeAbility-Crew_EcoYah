@@ -181,7 +181,7 @@ export default function DonationRequestForm() {
       const formattedTime = dayjs(dateTime).format("HH:mm");
       setDonationRequest((prevData) => ({
         ...prevData,
-        dropOffDate: dateTime.toDate(),
+        dropOffDate: dateTime.tz('Asia/Singapore').toDate(),
         dropOffTime: formattedTime,
       }));
     }
@@ -189,13 +189,14 @@ export default function DonationRequestForm() {
 
   const handleButtonChange = (status: boolean) => {
     setValidateForm(true);
+    console.log(donationRequest);
 
     if (action === "submit") {
       if (
         donationRequest.donationEventId !== 0 &&
         donationRequest.submittedBy !== 0 &&
         donationRequest.dropOffTime !== '' && 
-        donationRequest.dropOffTime !== "00:00" &&
+        (donationRequest.dropOffTime >= "12:00" && donationRequest.dropOffTime <= "14:00") &&
         donationRequest.newDonationRequestItems.length > 0
       ) {
         handleCreateDonationRequest(donationRequest)
@@ -215,7 +216,7 @@ export default function DonationRequestForm() {
         donationRequest.donationEventId !== 0 &&
         donationRequest.donationRequestId !== 0 &&
         donationRequest.submittedBy !== 0 &&
-        donationRequest.dropOffTime !== "00:00"
+        (donationRequest.dropOffTime >= "12:00" && donationRequest.dropOffTime <= "14:00")
       ) {
         const deleteDonationRequestItemIds: number[] = [];
         donationRequest.oldDonationRequestItems?.forEach(

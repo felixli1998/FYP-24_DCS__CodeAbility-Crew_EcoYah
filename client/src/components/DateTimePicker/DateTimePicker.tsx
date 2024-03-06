@@ -66,13 +66,13 @@ export default function DateTimePickerValue(props: DateTimePickerValueType) {
             InputLabelProps: { shrink: true },
             error:
               (props.validateForm && value === null) ||
-              (props.validateForm && value?.hour() === 0),
+              (props.validateForm && value!.hour() < 12),
             helperText:
               (props.validateForm &&
                 value === null &&
                 "Please choose a date and time") ||
               (props.validateForm &&
-                value?.hour() === 0 &&
+                value!.hour() < 12 &&
                 "Please select a timing from 12pm - 2pm"),
           },
         }}
