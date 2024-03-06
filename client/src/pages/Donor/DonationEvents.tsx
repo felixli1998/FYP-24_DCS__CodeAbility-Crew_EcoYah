@@ -312,7 +312,6 @@ export default function DonationEvents() {
                 variant="outlined"
                 id="searchBar"
                 color="success"
-                size="small"
                 placeholder="Search e.g. Cabbage, Bread"
                 InputProps={{
                   endAdornment: (
@@ -329,7 +328,7 @@ export default function DonationEvents() {
                 <>
                   <Typography
                     variant="h5"
-                    sx={{ fontWeight: "bold", marginBottom: 2 }}
+                    sx={{ fontWeight: "bold", my: 2 }}
                   >
                     Popular Donation of the Week
                   </Typography>
@@ -338,7 +337,9 @@ export default function DonationEvents() {
                     name={
                       eventOfTheWeek?.name || "No Donation Event of The Week"
                     }
-                    description={`Take part in this donation by donating ${eventOfTheWeek?.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                    description={eventOfTheWeek.donationEventItems.map((eachItem, i) => 
+                      <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
+                      )}
                     imgSrc={
                       eventOfTheWeek?.imageId || "https://picsum.photos/200/300"
                     }
@@ -390,8 +391,8 @@ export default function DonationEvents() {
                   <Grid item key={event.id}>
                     <DonationEventCard
                       name={event.name}
-                        description={event.donationEventItems.map((eachItem) => 
-                        <Chip sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
+                        description={event.donationEventItems.map((eachItem, i) => 
+                        <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
                         )}
                       imgSrc={event.imageId}
                       numJoined={event.numDonors}

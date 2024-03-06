@@ -43,7 +43,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
       </CardMedia>
       <CardContent sx={{ paddingTop: 1}}>
         <Grid item>
-          <Typography variant="body1" sx={{ fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis"  }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis"  }}>
             {props.name}
           </Typography>
         </Grid>

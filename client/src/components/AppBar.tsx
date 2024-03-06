@@ -151,7 +151,7 @@ function ResponsiveAppBar() {
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Link to={homePath}>
             <img
-              width={52}
+              width="20%"
               height="100%"
               srcSet={logo}
               src={logo}
