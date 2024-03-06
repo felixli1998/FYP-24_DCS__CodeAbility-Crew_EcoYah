@@ -4,8 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
   ManyToOne,
+  OneToOne,
+  JoinColumn,
 } from "typeorm";
 import { DonationRequest } from "./DonationRequest";
 import { UserPoints } from "./UserPoints";
@@ -25,13 +26,19 @@ export class TransactionHistory {
   @ManyToOne(() => UserPoints, (userPoints) => userPoints.transactionHistory)
   userPoints: UserPoints;
 
-  // TODO: Is this really essential to let them track how they earn this points. Perhaps can be useful in the FE history
-  @OneToMany(
+  @Column()
+  userPointsId: number; // A workaround to reduce the new of associating the entire object but ID only
+
+  @OneToOne(
     () => DonationRequest,
-    (donationRequest) => donationRequest.donationEvent,
+    (donationRequest) => donationRequest.transactionHistory,
     { nullable: true }
   )
-  donationRequests?: DonationRequest[];
+  @JoinColumn()
+  donationRequest: DonationRequest;
+
+  @Column()
+  donationRequestId: number;  // A workaround to reduce the new of associating the entire object but ID only
 
   @Column({
     comment: "The mutated point value"
