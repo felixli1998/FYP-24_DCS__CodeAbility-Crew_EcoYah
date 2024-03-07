@@ -1,83 +1,111 @@
-import { useEffect, useState } from 'react';
-import { Button } from '@mui/material';
-import { SpeechSynthesisUtteranceType, SpeechSynthesisType } from "../../utils/Types";
-
-const notificationStyle = {
-    fontSize: '50px',
-    padding: '10px',
-    minHeight: '33vh', // Set the minimum height here
-    color: 'white',
-    backgroundColor: 'green'
-};
+import { useState, useEffect } from "react";
+import { Alert, Box, Button } from "@mui/material";
+import StaffTypography from "../../components/Typography/StaffTypography";
+import {
+  SpeechSynthesisUtteranceType,
+  SpeechSynthesisType,
+} from "../../utils/Types";
 
 export default function RedemptionToastNotification(props: any) {
-    console.log("RedemptionToastNotification", props)
-    const data = props.toastProps.data;
-    
-    const successSound = require("../../assets/success.mp3");
-    const rejectSound = require("../../assets/reject.mp3");
-    const [utterance, setUtterance] = useState<SpeechSynthesisUtteranceType | null>(null);
+  const { data, onAccept, onReject } = props;
 
-    const handleAccept = () => {
-        props.closeToast();
-        const sound = new Audio(successSound);
-        sound.play();
+  const successSound = require("../../assets/success.mp3");
+  const rejectSound = require("../../assets/reject.mp3");
+  const [utterance, setUtterance] =
+    useState<SpeechSynthesisUtteranceType | null>(null);
 
-        const synth: SpeechSynthesisType = window.speechSynthesis;
-        if (utterance) {
-            utterance.text = "You have accepted.";
-            synth.speak(utterance);
-        }
+  const handleAccept = () => {
+    const sound = new Audio(successSound);
+    sound.autoplay = true;
+
+    const synth: SpeechSynthesisType = window.speechSynthesis;
+    if (utterance) {
+      utterance.text = "You have accepted.";
+      synth.speak(utterance);
+
+      setTimeout(() => {
+        onAccept();
+      }, utterance.text.length * 50);
     }
-    const handleReject = () => {
-        props.closeToast();
-        const sound = new Audio(rejectSound);
-        sound.play();
+  };
 
-        const synth: SpeechSynthesisType = window.speechSynthesis;
-        if (utterance) {
-            utterance.text = "You have rejected.";
-            synth.speak(utterance);
-        }
+  const handleReject = () => {
+    const sound = new Audio(rejectSound);
+    sound.autoplay = true;
+
+    const synth: SpeechSynthesisType = window.speechSynthesis;
+    if (utterance) {
+      utterance.text = "You have rejected.";
+      synth.speak(utterance);
+
+      setTimeout(() => {
+        onReject();
+      }, utterance.text.length * 50);
+    }
+  };
+
+  useEffect(() => {
+    const synth: SpeechSynthesisType = window.speechSynthesis;
+    const speechSynthesisUtterance = new SpeechSynthesisUtterance();
+    setUtterance(speechSynthesisUtterance);
+
+    return () => {
+      synth.cancel();
     };
+  }, []);
 
-    useEffect(() => {
-        const synth: SpeechSynthesisType = window.speechSynthesis;
-        const speechSynthesisUtterance = new SpeechSynthesisUtterance();
-        setUtterance(speechSynthesisUtterance);
+  return (
+    <>
+      <Alert
+        severity="info"
+        variant="filled"
+        sx={{ backgroundColor: "primary.dark", padding: "2rem" }}
+      >
+        <StaffTypography
+          type="title"
+          size={2.5}
+          text={`${data.name} wants to redeem $${data.points}.`}
+          customStyles={{ color: "white" }}
+        ></StaffTypography>
+        <Box display="flex-start">
+          <Button
+            variant="contained"
+            sx={{
+              fontSize: "1.25rem",
+              letterSpacing: "0.15rem",
+              width: "9rem",
+              height: "3.2rem",
+              backgroundColor: "white",
+              color: "primary.dark",
+              marginRight: "2rem",
+              "&:hover": {
+                backgroundColor: "white",
+              },
+            }}
+            onClick={handleAccept}
+          >
+            Accept
+          </Button>
 
-        return () => {
-            synth.cancel();
-        };
-    }, []);
-
-    
-    return (
-        <div style={notificationStyle}>
-            <div style={{ marginBottom: '10px' }}>
-                <strong>Cashback Request</strong>
-            </div>
-            <div style={{ marginBottom: '10px' }}>
-                User {data.id} wants to redeem ${data.points}.
-            </div>
-
-            <Button 
-                onClick={handleAccept} 
-                variant="contained" 
-                color="secondary" 
-                size="large"
-            >
-                Accept
-            </Button>
-
-            <Button 
-                onClick={handleReject} 
-                variant="contained" 
-                color="secondary" 
-                size="large"
-            >
-                Reject
-            </Button>
-        </div>
-    );
-};
+          <Button
+            variant="contained"
+            sx={{
+              fontSize: "1.25rem",
+              letterSpacing: "0.15rem",
+              width: "9rem",
+              height: "3.2rem",
+              backgroundColor: "error.main",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "error.main",
+              },
+            }}
+            onClick={handleReject}
+          >
+            Reject
+          </Button>
+        </Box>
+      </Alert>
+    </>
+  );
+}
