@@ -1,15 +1,13 @@
-//@ts-nocheck
 import { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import io from 'socket.io-client';
-import messageSound from "../../assets/message.mp3"; 
-
 import RedemptionToastNotification from './RedemptionToastNotification';
 
-function RedemptionNotification() {
-    const [utterance, setUtterance] = useState<any>(null);
-    const [notifications, setNotifications] = useState([]);
+export default function RedemptionNotification() {
+    const messageSound = require("../../assets/message.mp3");
+    const [notifications, setNotifications] = useState<any[]>([]);
+
     useEffect(() => {
         // Create a Socket.IO client instance and connect to the server
         const socket = io('http://localhost:8000',);
@@ -22,23 +20,16 @@ function RedemptionNotification() {
             const sound = new Audio(messageSound);
             sound.play();
 
-            // const synth = window.speechSynthesis;
-            // const utterance: any = new SpeechSynthesisUtterance();
-            // setUtterance(utterance);
-
-            // utterance.text = "You have a cashback request.";
-            // synth.speak(utterance);
         });
 
         // Clean up the socket connection when the component unmounts
         return () => {
             socket.disconnect();
-            // synth.cancel();
         };
-    }, []); // Empty dependency array to run the effect only once on component mount
+    }, []); 
 
     return (
-        <div>
+        <>
             <ToastContainer
                 style={{ 
                     width: '80vw',
@@ -46,8 +37,6 @@ function RedemptionNotification() {
                 autoClose={2000}
                 hideProgressBar
             />        
-        </div>
+        </>
     );
 }
-
-export default RedemptionNotification;

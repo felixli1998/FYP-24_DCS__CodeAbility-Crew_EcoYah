@@ -2,12 +2,22 @@ import { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import { SpeechSynthesisUtteranceType, SpeechSynthesisType } from "../../utils/Types";
 
-const RedemptionToastNotification = (props: any) => {
+const notificationStyle = {
+    fontSize: '50px',
+    padding: '10px',
+    minHeight: '33vh', // Set the minimum height here
+    color: 'white',
+    backgroundColor: 'green'
+};
+
+export default function RedemptionToastNotification(props: any) {
     console.log("RedemptionToastNotification", props)
+    const data = props.toastProps.data;
+    
     const successSound = require("../../assets/success.mp3");
     const rejectSound = require("../../assets/reject.mp3");
     const [utterance, setUtterance] = useState<SpeechSynthesisUtteranceType | null>(null);
-    const data = props.toastProps.data;
+
     const handleAccept = () => {
         props.closeToast();
         const sound = new Audio(successSound);
@@ -71,14 +81,3 @@ const RedemptionToastNotification = (props: any) => {
         </div>
     );
 };
-
-// Define the style object
-const notificationStyle = {
-    fontSize: '50px',
-    padding: '10px',
-    minHeight: '33vh', // Set the minimum height here
-    color: 'white',
-    backgroundColor: 'green'
-};
-
-export default RedemptionToastNotification;
