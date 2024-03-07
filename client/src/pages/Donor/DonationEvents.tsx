@@ -24,6 +24,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+import { green } from "@mui/material/colors";
 
 type itemType = {
   id: number;
@@ -311,7 +312,6 @@ export default function DonationEvents() {
                 variant="outlined"
                 id="searchBar"
                 color="success"
-                sx={{ marginBottom: 2 }}
                 placeholder="Search e.g. Cabbage, Bread"
                 InputProps={{
                   endAdornment: (
@@ -328,7 +328,7 @@ export default function DonationEvents() {
                 <>
                   <Typography
                     variant="h5"
-                    sx={{ fontWeight: "bold", marginBottom: 2 }}
+                    sx={{ fontWeight: "bold", my: 2 }}
                   >
                     Popular Donation of the Week
                   </Typography>
@@ -337,7 +337,9 @@ export default function DonationEvents() {
                     name={
                       eventOfTheWeek?.name || "No Donation Event of The Week"
                     }
-                    description={`Take part in this donation by donating ${eventOfTheWeek?.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                    description={eventOfTheWeek.donationEventItems.map((eachItem, i) => 
+                      <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
+                      )}
                     imgSrc={
                       eventOfTheWeek?.imageId || "https://picsum.photos/200/300"
                     }
@@ -361,7 +363,7 @@ export default function DonationEvents() {
               ) : (
                 <>
                   <Typography
-                    variant="h6"
+                    variant="h5"
                     sx={{ fontWeight: "bold", marginY: 2 }}
                   >
                     Donation Categories
@@ -384,12 +386,14 @@ export default function DonationEvents() {
                 </>
               )}
 
-              <Grid container spacing={3}>
+              <Grid container spacing={3} sx={{ marginBottom: 4}}>
                 {searchEvents.map((event: eventType) => (
-                  <Grid item sx={{ marginBottom: 2 }} key={event.id}>
+                  <Grid item key={event.id}>
                     <DonationEventCard
                       name={event.name}
-                      description={`Take part in this donation by donating ${event.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                        description={event.donationEventItems.map((eachItem, i) => 
+                        <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
+                        )}
                       imgSrc={event.imageId}
                       numJoined={event.numDonors}
                       timeLeft={event.timeLeft}
