@@ -24,7 +24,6 @@ import _ from "lodash";
 import { DonationEventItems } from "../../utils/Types";
 
 type DonationEventType = {
-  action: string;
   donationEvent: {
     name: string;
     donationEventItems: DonationEventItems[];
@@ -37,7 +36,7 @@ type DonationEventType = {
 };
 
 export default function DonationEventPreview(props: DonationEventType) {
-  const { donationEvent, headerBar, action } = props;
+  const { donationEvent, headerBar } = props;
   const { name, imageId, startDate, endDate, isActive, donationEventItems } =
     donationEvent;
 
@@ -53,7 +52,7 @@ export default function DonationEventPreview(props: DonationEventType) {
     <Box display="flex" justifyContent="center" sx={{ m: 5 }}>
       <Stack spacing={3}>
         {headerBar}
-        {action === "create" ? (
+        {imageId.includes(";base64,") ? (
           <Box
             component="img"
             sx={{

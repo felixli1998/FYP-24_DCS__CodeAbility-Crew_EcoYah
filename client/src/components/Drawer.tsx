@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import {
   Box,
   Drawer,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { NavigationListItemT } from "../utils/NavBar";
 
 type DrawerListProps = {
@@ -22,6 +22,12 @@ type DrawerListProps = {
 
 function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    // Only when there is a change in URL, we will close the drawer
+    setIsDrawerOpen(false);
+  }, [location.pathname])
 
   const BottomList = () => {
     return bottomDrawerList.map((actionItem, idx) => {
@@ -75,13 +81,14 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
       <List>
         {topDrawerList.map((navItem, index) => (
           <ListItem key={index} disablePadding>
-            <ListItemButton>
-              {navItem.path && (
-                <Link to={navItem.path}>
-                  <ListItemText primary={navItem.item} />
-                </Link>
-              )}
-            </ListItemButton>
+            {navItem.path && (
+              <ListItemButton
+                component={Link}
+                to={navItem.path}
+              >
+                <ListItemText primary={navItem.item} />
+              </ListItemButton>
+            )}
           </ListItem>
         ))}
       </List>

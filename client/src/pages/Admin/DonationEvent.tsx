@@ -120,8 +120,10 @@ export default function DonationEvent() {
       for (const key in donationEvent) {
         updateParams[key] = donationEvent[key];
       }
-      const imageId = await uploadImage("events", donationEvent.imageId)
-      updateParams["imageId"] = imageId[0];
+      if (donationEvent.imageId.includes(";base64,")) {
+        const imageId = await uploadImage("events", donationEvent.imageId)
+        updateParams["imageId"] = imageId[0];
+      }
       const response = await updateDonationEventMutateAsync({
         donationEventId: donationEvent.id,
         updateParams,
@@ -162,12 +164,26 @@ export default function DonationEvent() {
     switch (activeStep) {
       case 0:
         return donationEvent["name"] && donationEvent["imageId"];
-      case 1:
-        return donationEvent["donationEventItems"].length > 0;
+        case 1:
+          if (donationEvent["donationEventItems"].length === 0) {
+            return false;
+          }
+          for (const eventItem of donationEvent["donationEventItems"]) {
+            for (const [key, value] of Object.entries(eventItem)) {
+              if (
+                key !== "currentQty" &&
+                (!value || (typeof value === "number" && value <= 0))
+              ) {
+                return false;
+              }
+            }
+          }
+          return true;
       case 2:
         return (
           dayjs(donationEvent["startDate"]).isValid() &&
-          dayjs(donationEvent["endDate"]).isValid()
+          dayjs(donationEvent["endDate"]).isValid() && 
+          dayjs(donationEvent["startDate"]).isBefore(donationEvent["endDate"])
         );
       default:
         return false;
@@ -210,7 +226,7 @@ export default function DonationEvent() {
         handleData={handleData}
       />
     ),
-    2: <Step3Form formData={donationEvent} handleData={handleData} />,
+    2: <Step3Form formData={donationEvent} handleData={handleData} showMissingFields={showMissingFields} />,
     3: (
       <DonationEventPreview
         headerBar={
@@ -224,7 +240,6 @@ export default function DonationEvent() {
           </Box>
         }
         donationEvent={donationEvent}
-        action={"create"}
       />
     ),
   };
@@ -280,7 +295,6 @@ export default function DonationEvent() {
             </Box>
           }
           donationEvent={donationEvent}
-          action={"preview"}
         />
       )}
       {/* Edit Dialog */}

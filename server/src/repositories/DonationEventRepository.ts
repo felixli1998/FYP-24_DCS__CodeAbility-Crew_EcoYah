@@ -135,8 +135,6 @@ export class DonationEventRepository {
     }
 
     if (filters.eventType) {
-      console.log("^^^^^ IN FILTERS.EVENTTYPE IF ^^^^^^");
-
       queryBuilder
         .andWhere("donationEvent.eventType = :eventTypeId", {
           eventTypeId: filters.eventType,
