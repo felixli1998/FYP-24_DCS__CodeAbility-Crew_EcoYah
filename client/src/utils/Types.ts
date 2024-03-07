@@ -1,3 +1,15 @@
+export type DonationEvent = {
+  id: number;
+  name: string;
+  imageId: string;
+  startDate: string;
+  endDate: string;
+  donationEventItems: DonationEventItem[];
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type EventType = {
   id: number;
   name: string;
@@ -9,17 +21,20 @@ export type Item = {
   id: number;
   name: string;
   unit: string;
+  eventType: EventType;
   createdAt: string;
   updatedAt: string;
 };
 
-export type DonationEventItems = {
+export type DonationEventItemCreation = {
   minQty: number;
   targetQty: number;
+  currentQty: number;
   pointsPerUnit: number;
-  currentQty: number | null;
   item: Item;
 };
+
+export type DonationEventItem = DonationEventItemCreation & { id: number };
 
 export type FormDataType = {
   name: string;
@@ -27,7 +42,7 @@ export type FormDataType = {
   startDate: Date;
   endDate: Date;
   isActive: boolean;
-  donationEventItems: DonationEventItems[];
+  donationEventItems: DonationEventItem[];
   createdBy: number;
 };
 

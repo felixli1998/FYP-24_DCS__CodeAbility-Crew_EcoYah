@@ -21,12 +21,12 @@ import dayjs from "dayjs";
 import _ from "lodash";
 
 // Utils Imports
-import { DonationEventItems } from "../../utils/Types";
+import { DonationEventItem } from "../../utils/Types";
 
 type DonationEventType = {
   donationEvent: {
     name: string;
-    donationEventItems: DonationEventItems[];
+    donationEventItems: DonationEventItem[];
     imageId: string;
     isActive: boolean;
     startDate: Date;
@@ -139,7 +139,7 @@ export default function DonationEventPreview(props: DonationEventType) {
           <Divider />
           {donationEventItems &&
             donationEventItems.map(function (
-              donationEventItem: DonationEventItems,
+              donationEventItem: DonationEventItem,
               i: number,
             ) {
               return (

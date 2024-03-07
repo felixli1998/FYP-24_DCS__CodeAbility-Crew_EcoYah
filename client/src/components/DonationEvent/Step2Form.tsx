@@ -22,7 +22,11 @@ import {
   formatAndCapitalizeString,
   isValueExistsInObjectArray,
 } from "../../utils/Common";
-import { FormDataType, Item, DonationEventItems } from "../../utils/Types";
+import {
+  FormDataType,
+  Item,
+  DonationEventItemCreation,
+} from "../../utils/Types";
 import _ from "lodash";
 
 type Step2FormProps = {
@@ -32,7 +36,7 @@ type Step2FormProps = {
 };
 
 type InputField = {
-  key: keyof DonationEventItems;
+  key: keyof DonationEventItemCreation;
   label: string;
 };
 
@@ -119,7 +123,7 @@ export default function Step2Form(props: Step2FormProps) {
         ),
       );
     } else {
-      const newDonationEventItem: DonationEventItems = {
+      const newDonationEventItem: DonationEventItemCreation = {
         minQty: 0,
         targetQty: 0,
         pointsPerUnit: 0,
@@ -191,8 +195,8 @@ export default function Step2Form(props: Step2FormProps) {
 
   const handleItemFieldChange =
     (
-      itemKey: keyof DonationEventItems,
-      donationEventItem: DonationEventItems,
+      itemKey: keyof DonationEventItemCreation,
+      donationEventItem: DonationEventItemCreation,
     ) =>
     (event: ChangeEvent<HTMLInputElement>) => {
       const updatedDonationEventItems = donationEventItems.map((item) => {

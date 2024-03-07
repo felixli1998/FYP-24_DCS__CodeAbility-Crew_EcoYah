@@ -11,6 +11,8 @@ import {
   Typography,
   InputLabel,
   FormControl,
+  TextField,
+  InputAdornment,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -22,22 +24,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import Image from "../../components/Image/Image";
 import { folderPrefixNames } from "../../components/Image/Image";
-
-type DonationEvent = {
-  id: number;
-  name: string;
-  imageId: string;
-  startDate: string;
-  endDate: string;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-};
-
-type EventType = {
-  id: number;
-  name: string;
-};
+import SearchIcon from "@mui/icons-material/Search";
+import { DonationEvent, EventType } from "../../utils/Types";
 
 export default function DonationEventsAdmin() {
   const navigate = useNavigate();
@@ -48,6 +36,7 @@ export default function DonationEventsAdmin() {
   const [events, setEvents] = useState<DonationEvent[]>([]);
   const [page, setPage] = useState<number>(1);
   const [hasNext, setHasNext] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   function getData(eventStatus: string, eventTypeId: number, getMore: boolean) {
     let queryParams = "";
@@ -158,7 +147,8 @@ export default function DonationEventsAdmin() {
             ))}
           </Select>
         </FormControl>
-        <FormControl>
+
+        {/* <FormControl>
           <InputLabel>Event Type</InputLabel>
           <Select
             value={typeFilter}
@@ -176,7 +166,20 @@ export default function DonationEventsAdmin() {
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl> */}
+
+        <TextField
+          placeholder="Search e.g. Cabbage, Bread"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          sx={{ width: "20rem" }}
+        />
       </Box>
 
       <Grid
@@ -184,52 +187,64 @@ export default function DonationEventsAdmin() {
         container
         marginTop="2rem"
       >
-        {events.slice((page - 1) * 4, page * 4).map((event) => (
-          <Grid item xs={12} md={6} key={event.id} padding="1rem">
-            <Card>
-              <Image
-                imageId={event.imageId}
-                type="rectangle"
-                width="100%"
-                height="100%"
-                folderPrefix={folderPrefixNames.EVENTS}
-              />
-              <CardContent>
-                <Typography
-                  color="#C51818"
-                  fontWeight="bold"
-                  variant="h6"
-                  sx={{ letterSpacing: "0.15rem" }}
-                >
-                  {displayCountDown(event.endDate)}
-                  {new Date(event.startDate).toLocaleDateString("en-GB")} -{" "}
-                  {new Date(event.endDate).toLocaleDateString("en-GB")}
-                </Typography>
-                <Typography
-                  marginTop="0.5rem"
-                  fontWeight="bold"
-                  variant="h5"
-                  sx={{ letterSpacing: "0.18rem" }}
-                >
-                  {event.name}
-                </Typography>
-              </CardContent>
-              <CardActions sx={{ justifyContent: "flex-end" }}>
-                <Button
-                  onClick={() => handleDonationEventClick(event.id)}
-                  sx={{
-                    textDecoration: "underline",
-                    fontWeight: "bold",
-                    fontSize: "1.25rem",
-                    letterSpacing: "0.15rem",
-                  }}
-                >
-                  View More
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
+        {events
+          .filter(
+            (event) =>
+              event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              event.donationEventItems.some((eventItem) =>
+                eventItem.item.name
+                  .toLowerCase()
+                  .includes(searchQuery.toLowerCase()),
+              ),
+          )
+          .slice((page - 1) * 4, page * 4)
+          .map((event) => (
+            <Grid item xs={12} md={6} key={event.id} padding="1rem">
+              <Card>
+                <Image
+                  imageId={event.imageId}
+                  type="rectangle"
+                  width="100%"
+                  height="100%"
+                  folderPrefix={folderPrefixNames.EVENTS}
+                />
+                <CardContent>
+                  <Typography
+                    color="#C51818"
+                    fontWeight="bold"
+                    variant="h6"
+                    sx={{ letterSpacing: "0.15rem" }}
+                  >
+                    {displayCountDown(event.endDate)}
+                    {new Date(event.startDate).toLocaleDateString(
+                      "en-GB",
+                    )} - {new Date(event.endDate).toLocaleDateString("en-GB")}
+                  </Typography>
+                  <Typography
+                    marginTop="0.5rem"
+                    fontWeight="bold"
+                    variant="h5"
+                    sx={{ letterSpacing: "0.18rem" }}
+                  >
+                    {event.name}
+                  </Typography>
+                </CardContent>
+                <CardActions sx={{ justifyContent: "flex-end" }}>
+                  <Button
+                    onClick={() => handleDonationEventClick(event.id)}
+                    sx={{
+                      textDecoration: "underline",
+                      fontWeight: "bold",
+                      fontSize: "1.25rem",
+                      letterSpacing: "0.15rem",
+                    }}
+                  >
+                    View More
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
 
       <Pagination

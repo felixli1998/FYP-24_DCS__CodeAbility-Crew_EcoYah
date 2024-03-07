@@ -22,10 +22,8 @@ import {
 } from "../../services/routes";
 import axios from "axios";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  dataToDonationRequestFormType,
-  donationEventItemsType,
-} from "./DonationEvents";
+import { dataToDonationRequestFormType } from "./DonationEvents";
+import { DonationEventItem } from "../../utils/Types";
 
 type DonationRequestType = {
   donationRequestId?: number;
@@ -60,7 +58,7 @@ export default function DonationRequestForm() {
     oldDonationRequestItems: [],
     newDonationRequestItems: [],
   });
-  const [itemsInfo, setItemsInfo] = useState<donationEventItemsType[] | []>([]);
+  const [itemsInfo, setItemsInfo] = useState<DonationEventItem[] | []>([]);
   const [isCheckBoxItemsLoaded, setCheckBoxItemsLoaded] =
     useState<boolean>(false);
   const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
@@ -75,7 +73,7 @@ export default function DonationRequestForm() {
 
   const handleCheckBoxItems = (
     action: string,
-    donationEventItems: donationEventItemsType[],
+    donationEventItems: DonationEventItem[],
     oldDonationRequestItems?: any,
   ) => {
     const updatedCheckBoxItems: CheckBoxItemsType[] = [];
@@ -194,7 +192,7 @@ export default function DonationRequestForm() {
       if (
         donationRequest.donationEventId !== 0 &&
         donationRequest.submittedBy !== 0 &&
-        donationRequest.dropOffTime !== '' && 
+        donationRequest.dropOffTime !== "" &&
         donationRequest.dropOffTime !== "00:00" &&
         donationRequest.newDonationRequestItems.length > 0
       ) {
@@ -337,7 +335,7 @@ export default function DonationRequestForm() {
         axios
           .get(DONATION_EVENT_ROUTES.BY_ID.replace(":id", `/${formData.id}`))
           .then((resp) => {
-            const updatedDonationEventItems: donationEventItemsType[] = [];
+            const updatedDonationEventItems: DonationEventItem[] = [];
             resp.data.data.donationEventItems.forEach(
               (donationEventItem: any) => {
                 updatedDonationEventItems.push(donationEventItem);

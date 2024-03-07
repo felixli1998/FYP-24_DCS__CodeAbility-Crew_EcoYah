@@ -25,24 +25,11 @@ import {
   Alert,
 } from "@mui/material";
 import { green } from "@mui/material/colors";
-
-type itemType = {
-  id: number;
-  name: string;
-  unit: string;
-  eventType: { id: number };
-};
-
-export type donationEventItemsType = {
-  id: number;
-  item: itemType;
-  minQty: number;
-  pointsPerUnit: number;
-};
+import { DonationEventItem } from "../../utils/Types";
 
 type eventType = {
   id: number;
-  donationEventItems: donationEventItemsType[];
+  donationEventItems: DonationEventItem[];
   startDate: string;
   endDate: string;
   timeLeft: string;
@@ -56,7 +43,7 @@ type eventType = {
 
 export type dataToDonationRequestFormType = {
   id: number;
-  donationEventItems: donationEventItemsType[];
+  donationEventItems: DonationEventItem[];
   startDate: string;
   endDate: string;
   imageId: string;
@@ -132,11 +119,9 @@ export default function DonationEvents() {
   const filteredEvents = useMemo(() => {
     if (filters.length === 0) return events;
     return events.filter((event: eventType) => {
-      return event.donationEventItems.some(
-        (eachItem: donationEventItemsType) => {
-          return filters.includes(eachItem.item.eventType.id);
-        },
-      );
+      return event.donationEventItems.some((eachItem: DonationEventItem) => {
+        return filters.includes(eachItem.item.eventType.id);
+      });
     });
   }, [filters, events]);
 
@@ -147,7 +132,7 @@ export default function DonationEvents() {
       // Return events where searched text is in event name or items names
       return (
         event.name.toLowerCase().includes(search.toLowerCase()) ||
-        event.donationEventItems.some((eachItem: donationEventItemsType) => {
+        event.donationEventItems.some((eachItem: DonationEventItem) => {
           return eachItem.item.name
             .toLowerCase()
             .includes(search.toLowerCase());
@@ -157,8 +142,8 @@ export default function DonationEvents() {
   }, [search, filteredEvents]);
 
   // ------ dayjs ------
-  dayjs.extend(utc)
-  dayjs.extend(timezone)
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
   const dateNow = dayjs();
   const dateNowSG = dayjs.tz(dateNow, "Asia/Singapore");
   const currentDateInMs = dateNowSG.valueOf();
@@ -326,10 +311,7 @@ export default function DonationEvents() {
 
               {eventOfTheWeek && (
                 <>
-                  <Typography
-                    variant="h5"
-                    sx={{ fontWeight: "bold", my: 2 }}
-                  >
+                  <Typography variant="h5" sx={{ fontWeight: "bold", my: 2 }}>
                     Popular Donation of the Week
                   </Typography>
 
@@ -337,9 +319,19 @@ export default function DonationEvents() {
                     name={
                       eventOfTheWeek?.name || "No Donation Event of The Week"
                     }
-                    description={eventOfTheWeek.donationEventItems.map((eachItem, i) => 
-                      <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
-                      )}
+                    description={eventOfTheWeek.donationEventItems.map(
+                      (eachItem, i) => (
+                        <Chip
+                          key={i}
+                          sx={{
+                            marginRight: 1,
+                            backgroundColor: green[50],
+                            color: green[800],
+                          }}
+                          label={eachItem.item.name}
+                        />
+                      ),
+                    )}
                     imgSrc={
                       eventOfTheWeek?.imageId || "https://picsum.photos/200/300"
                     }
@@ -386,14 +378,24 @@ export default function DonationEvents() {
                 </>
               )}
 
-              <Grid container spacing={3} sx={{ marginBottom: 4}}>
+              <Grid container spacing={3} sx={{ marginBottom: 4 }}>
                 {searchEvents.map((event: eventType) => (
                   <Grid item key={event.id}>
                     <DonationEventCard
                       name={event.name}
-                        description={event.donationEventItems.map((eachItem, i) => 
-                        <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
-                        )}
+                      description={event.donationEventItems.map(
+                        (eachItem, i) => (
+                          <Chip
+                            key={i}
+                            sx={{
+                              marginRight: 1,
+                              backgroundColor: green[50],
+                              color: green[800],
+                            }}
+                            label={eachItem.item.name}
+                          />
+                        ),
+                      )}
                       imgSrc={event.imageId}
                       numJoined={event.numDonors}
                       timeLeft={event.timeLeft}
