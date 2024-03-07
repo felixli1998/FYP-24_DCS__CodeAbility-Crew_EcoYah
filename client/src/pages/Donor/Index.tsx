@@ -1,8 +1,11 @@
-import React from "react";
 import DonationEvents from "../../pages/Donor/DonationEvents";
+import TextToSpeech from "../../components/TextToSpeech";
 
-const Home: React.FC = () => {
-  return <DonationEvents />;
+export default function Home() {
+  return(
+    <>
+      <TextToSpeech text={'John has redeemed 5 dollars.'} play={true}/>
+      <DonationEvents />;
+    </>
+  ) 
 };
-
-export default Home;
