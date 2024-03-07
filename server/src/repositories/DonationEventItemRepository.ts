@@ -9,6 +9,10 @@ export class DonationEventItemRepository {
     );
   }
 
+  async updateDonationEventItemQty(id: DonationEventItem["id"], newQty: number) {
+    AppDataSource.getRepository(DonationEventItem).update(id, { currentQty: newQty });
+  }
+
   async updateDonationEventItem(
     id: DonationEventItem["id"],
     payload: Partial<DonationEventItem>,
