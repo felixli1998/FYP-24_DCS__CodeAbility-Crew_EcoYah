@@ -1,26 +1,67 @@
-//@ts-nocheck
-import React, { useEffect, useState } from 'react';
-import { Button} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Button } from '@mui/material';
+import { SpeechSynthesisUtteranceType, SpeechSynthesisType } from "../../utils/Types";
 
-const RedemptionToastNotification = (props) => {
-    console.log("Hi look here", props)
+const RedemptionToastNotification = (props: any) => {
+    console.log("RedemptionToastNotification", props)
+    const successSound = require("../../assets/success.mp3");
+    const rejectSound = require("../../assets/reject.mp3");
+    const [utterance, setUtterance] = useState<SpeechSynthesisUtteranceType | null>(null);
     const data = props.toastProps.data;
-    const handleCancel = () => {
+    const handleAccept = () => {
         props.closeToast();
-        console.log("Refund back the cashback points to the user!")
+        const sound = new Audio(successSound);
+        sound.play();
+
+        const synth: SpeechSynthesisType = window.speechSynthesis;
+        if (utterance) {
+            utterance.text = "You have accepted.";
+            synth.speak(utterance);
+        }
+    }
+    const handleReject = () => {
+        props.closeToast();
+        const sound = new Audio(rejectSound);
+        sound.play();
+
+        const synth: SpeechSynthesisType = window.speechSynthesis;
+        if (utterance) {
+            utterance.text = "You have rejected.";
+            synth.speak(utterance);
+        }
     };
 
+    useEffect(() => {
+        const synth: SpeechSynthesisType = window.speechSynthesis;
+        const speechSynthesisUtterance = new SpeechSynthesisUtterance();
+        setUtterance(speechSynthesisUtterance);
+
+        return () => {
+            synth.cancel();
+        };
+    }, []);
+
+    
     return (
         <div style={notificationStyle}>
             <div style={{ marginBottom: '10px' }}>
-                <strong>Cashback Redemption!</strong>
+                <strong>Cashback Request</strong>
             </div>
             <div style={{ marginBottom: '10px' }}>
-                User {data.id} redeemed {data.points} points.
+                User {data.id} wants to redeem ${data.points}.
             </div>
 
             <Button 
-                onClick={handleCancel} 
+                onClick={handleAccept} 
+                variant="contained" 
+                color="secondary" 
+                size="large"
+            >
+                Accept
+            </Button>
+
+            <Button 
+                onClick={handleReject} 
                 variant="contained" 
                 color="secondary" 
                 size="large"

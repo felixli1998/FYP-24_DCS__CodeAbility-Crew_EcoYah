@@ -10,6 +10,7 @@ export enum NavigationList {
   DONATION_EVENT_OVERVIEW = "Donation Event Overview",
   DONATION_REQUEST = "Donation Requests",
   DONATION_EVENTS = "Donation Events",
+  CASHBACK_REQUEST = "Cashback Requests",
 }
 
 export enum ActionList {

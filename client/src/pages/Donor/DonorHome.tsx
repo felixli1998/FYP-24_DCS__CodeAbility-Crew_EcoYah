@@ -23,8 +23,8 @@ export const DonorHome = () => {
     <div>
       <h1>Welcome to the Homepage</h1>
       <p>This is the homepage of an authenticated donor</p>
-
-      <Button variant="contained" onClick={stimulateCashback}>Stimulate Cashback</Button>
+      {/* TODO: Button should be in the Donor Cashback Redemption Page */}
+      <Button variant="contained" onClick={stimulateCashback}>Redeem Cashback</Button>
     </div>
   );
 };
