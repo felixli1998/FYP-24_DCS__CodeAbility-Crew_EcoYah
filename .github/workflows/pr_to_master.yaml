@@ -1,0 +1,96 @@
+name: PR to Master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-client:
+    runs-on: ubuntu-latest
+    env:
+      CI: false    # Set CI to false here
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm install
+
+      - name: Build client
+        run: |
+          cd client
+          npm run build
+
+      - name: Sync client build to AWS S3
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.AWS_S3_STATIC_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SOURCE_DIR: "client/build"
+
+  build-server:
+    runs-on: ubuntu-latest
+    env:
+      CI: false    # Set CI to false here
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install Node.js and npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Install server dependencies
+        run: |
+          cd server
+          npm install
+
+      - name: Build server
+        run: |
+          cd server
+          npm run build
+
+      - name: SSH into EC2 instance and stop running instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            pm2 stop ecoyah-backend
+
+      - name: SCP server build to EC2
+        env:
+          PRIVATE_KEY: ${{ secrets.EC2_PRIVATE_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          # Clear old files in the destination folder
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} 'rm -rf ~/app/dist/*'
+          # Copy new files to the destination folder
+          scp -o StrictHostKeyChecking=no -i private_key.pem -r server/dist/* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:~/app/dist
+          scp -o StrictHostKeyChecking=no -i private_key.pem  server/package.json* ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:~/app
+
+      - name: SSH into EC2 instance, npm i and start server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            cd app
+            npm install
+            pm2 start dist/src/index.js --name ecoyah-backend
