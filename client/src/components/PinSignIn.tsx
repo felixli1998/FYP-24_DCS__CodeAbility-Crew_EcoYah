@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@emotion/react";
 import LockRoundedIcon from "@mui/icons-material/LockRounded";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+// import Visibility from "@mui/icons-material/Visibility";
+// import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   Backdrop,
   Button,
@@ -9,7 +9,7 @@ import {
   CardActions,
   CardContent,
   Grid,
-  IconButton,
+  // IconButton,
   Typography,
 } from "@mui/material";
 import { MuiOtpInput } from "mui-one-time-password-input";
@@ -26,15 +26,21 @@ interface PinSignInProps {
 
 export default function PinSignIn(props: PinSignInProps) {
   const [pin, setPin] = useState<string>("");
-  const [showPin, setShowPin] = useState(false);
+  // const [showPin, setShowPin] = useState(false);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter') {
+      props.handleSignIn(pin);
+    }
+  };
 
   const handleChange = (newValue: string) => {
     setPin(newValue);
   };
 
-  const handleToggleShowPin = () => {
-    showPin ? setShowPin(false) : setShowPin(true);
-  };
+  // const handleToggleShowPin = () => {
+  //   showPin ? setShowPin(false) : setShowPin(true);
+  // };
 
   const validateChar = (value: any) => {
     return !isNaN(Number(value)) && value !== " ";
@@ -58,7 +64,7 @@ export default function PinSignIn(props: PinSignInProps) {
             </Typography>
 
             <Grid container sx={{ marginBottom: 2, alignItems: "center" }}>
-              <Grid item xs={12} sm={11}>
+              {/* <Grid item xs={12} sm={11}> */}
                 <MuiOtpInput
                   value={pin}
                   onChange={handleChange}
@@ -67,14 +73,18 @@ export default function PinSignIn(props: PinSignInProps) {
                   validateChar={validateChar}
                   TextFieldsProps={{
                     required: true,
-                    InputProps: {
+                    inputProps: {
                       style: { fontSize: "4.3rem" },
-                      type: showPin ? "text" : "password",
+                      // type: showPin ? "tel" : "password",
+                      type: "tel",
+                      inputMode: "numeric",
+                      pattern: "[0-9]*",
+                      onKeyDown: (event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => handleKeyDown(event as React.KeyboardEvent<HTMLDivElement>)
                     },
                   }}
                 />
-              </Grid>
-              <Grid item xs={12} sm={1}>
+              {/* </Grid> */}
+              {/* <Grid item xs={12} sm={1}>
                 <IconButton
                   sx={{ width: 100, height: 100 }}
                   onClick={handleToggleShowPin}
@@ -85,7 +95,7 @@ export default function PinSignIn(props: PinSignInProps) {
                     <Visibility sx={{ fontSize: 60 }} />
                   )}
                 </IconButton>
-              </Grid>
+              </Grid> */}
             </Grid>
 
             {props.errorDisplay && (

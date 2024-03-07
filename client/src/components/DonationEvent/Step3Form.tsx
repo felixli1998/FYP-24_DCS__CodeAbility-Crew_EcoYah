@@ -11,16 +11,18 @@ import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { FormDataType } from "../../utils/Types";
+import { useState } from "react";
 
 type Step3FormProps = {
   formData: FormDataType;
   handleData: (key: string, value: any) => void;
+  showMissingFields: boolean;
 };
 
 export default function Step3Form(props: Step3FormProps) {
   dayjs.extend(utc);
   dayjs.extend(timezone);
-  const { formData, handleData } = props;
+  const { formData, handleData, showMissingFields } = props;
   const { startDate, endDate, isActive } = formData;
   const datePickerFields = ["Start Date", "End Date"];
 
@@ -49,15 +51,15 @@ export default function Step3Form(props: Step3FormProps) {
                 slotProps={{
                   textField: {
                     placeholder: "DD/MM/YYYY",
-                    // helperText: (
-                    //   <StaffTypography
-                    //     type='helperText'
-                    //     size={1.5}
-                    //     text={displayErrorMsg(i)}
-                    //   />
-                    // ),
+                    helperText: ( showMissingFields &&
+                      <StaffTypography
+                        type='helperText'
+                        size={1.5}
+                        text={"Start date cannot be later than End date!"}
+                      />
+                    ),
                     InputLabelProps: { shrink: true },
-                    //   error: displayError(i),
+                    error: showMissingFields,
                   },
                 }}
                 format="DD/MM/YYYY"
