@@ -141,6 +141,7 @@ interface RewardProps {
 }
 
 const Reward: React.FC<RewardProps> = ({ points }) => {
+  const navigate = useNavigate();
   return (
     <Card
       sx={{
@@ -166,7 +167,8 @@ const Reward: React.FC<RewardProps> = ({ points }) => {
             <PaidOutlinedIcon sx={{ marginRight: 0.5 }} /> {points}
           </Typography>
         </CardContent>
-        <Box sx={{ display: "flex", alignItems: "center", pl: 2, pb: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", pl: 2, pb: 2,
+             cursor: "pointer", "&:hover": { textDecoration: "underline" } }} onClick={() => navigate("/cashback")}>
           <Typography variant="body1" fontWeight={600} component="div">
             View history
           </Typography>
