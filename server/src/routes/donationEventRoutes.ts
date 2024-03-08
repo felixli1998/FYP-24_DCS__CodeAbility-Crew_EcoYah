@@ -112,9 +112,6 @@ router.post("/create", async (req, res) => {
       "donationEventItems",
     ];
     const filteredEventParams = strongParams(params, allowedEventParams);
-    console.log("************ filteredEventParams[START] ************");
-    console.log(filteredEventParams);
-    console.log("************ filteredEventParams[END] ************");
 
     // create new DonationEvent object to avoid typing errors
     const newDonationEvent = new DonationEvent();
