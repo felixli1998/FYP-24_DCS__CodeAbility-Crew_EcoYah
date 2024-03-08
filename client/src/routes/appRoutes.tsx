@@ -7,6 +7,7 @@ import EditProfile from "../pages/Donor/EditProfile";
 import ImageComponentExample from "../pages/Donor/ImageComponentExample";
 import { DonorHome } from "../pages/Donor/DonorHome";
 import DonationRequestForm from "../pages/Donor/DonationRequestForm";
+import Cashback from "../pages/Donor/Cashback";
 
 // Admin routes //
 import AdminHome from "../pages/Admin/AdminHome";
@@ -126,6 +127,13 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "View all donation events for the admin",
     element: <DonationEventsAdmin />,
     isAdmin: true,
+    protected: true,
+  },
+  {
+    path: "cashback",
+    description: "Cashback page for the donor",
+    element: <Cashback />,
+    isAdmin: false,
     protected: true,
   },
 ];
