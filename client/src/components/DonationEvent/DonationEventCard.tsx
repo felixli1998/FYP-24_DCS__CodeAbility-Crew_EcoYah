@@ -54,9 +54,7 @@ export default function DonationEventCard(props: DonationEventCardProps) {
           <Grid item xs={7} sx={{display: 'flex'}}>
             <Person color="disabled" sx={{ marginRight: 0.5}}/>
             <Typography color="text.disabled">
-              {props.numJoined > 0
-                ? `${props.numJoined} Donor${props.numJoined > 1 ? "s" : ""} Have Joined!`
-                : "Be the first to make a difference!"}
+              {props.numJoined} Donor{props.numJoined > 1 ? "s" : ""} {props.numJoined > 1 ? "Have" : "Has"} Joined!
             </Typography>
           </Grid>
           <Grid
@@ -66,8 +64,8 @@ export default function DonationEventCard(props: DonationEventCardProps) {
             justifyContent="flex-end"
             alignItems="center"
           >
-            <AccessTimeIcon sx={{ color: "text.secondary", marginRight: 1 }} />
-            <Typography color="text.secondary">{props.timeLeft}</Typography>
+            <AccessTimeIcon sx={{ color: "text.disabled", marginRight: 1 }} />
+            <Typography color="text.disabled">{props.timeLeft}</Typography>
           </Grid>
         </Grid>
         <Grid>
