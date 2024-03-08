@@ -10,10 +10,12 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
+import Person from "@mui/icons-material/Person";
+import { green } from "@mui/material/colors";
 
 type DonationEventCardProps = {
   name: string;
-  description: string;
+  description: any;
   imgSrc: string;
   numJoined: number;
   timeLeft: string;
@@ -30,40 +32,28 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 export default function DonationEventCard(props: DonationEventCardProps) {
   return (
-    <StyledCard sx={{ borderRadius: "25px" }} elevation={2}>
-      <CardMedia sx={{ paddingX: 2, paddingTop: 2, marginBottom: 0 }}>
+    <StyledCard sx={{ borderRadius: "8px", border: 1, borderColor: "lightgray" }} elevation={0}>
+      <CardMedia>
         <Image
           imageId={props.imgSrc}
-          type="rectangle"
           width="100%"
-          height="100%"
+          height={275}
           folderPrefix={folderPrefixNames.EVENTS}
         />
       </CardMedia>
-      <CardContent>
-        <Grid container alignItems="center">
-          <Grid item xs={8}>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              {props.name}
-            </Typography>
-          </Grid>
-          <Grid item xs={4} container justifyContent="flex-end">
-            <Button
-              variant="contained"
-              size="medium"
-              disabled={props.disableButton}
-              onClick={() => props.handleDonateClick()}
-            >
-              Donate
-            </Button>
-          </Grid>
+      <CardContent sx={{ paddingTop: 1}}>
+        <Grid item>
+          <Typography variant="h6" sx={{ fontWeight: "bold", overflow: "hidden", textOverflow: "ellipsis"  }}>
+            {props.name}
+          </Typography>
         </Grid>
 
-        <Typography mt={2}>{props.description}</Typography>
+        <Grid mt={1}>{props.description}</Grid>
 
         <Grid container alignItems="center" sx={{ marginTop: 2 }}>
-          <Grid item xs={7}>
-            <Typography color="text.secondary">
+          <Grid item xs={7} sx={{display: 'flex'}}>
+            <Person color="disabled" sx={{ marginRight: 0.5}}/>
+            <Typography color="text.disabled">
               {props.numJoined > 0
                 ? `${props.numJoined} Donor${props.numJoined > 1 ? "s" : ""} Have Joined!`
                 : "Be the first to make a difference!"}
@@ -80,6 +70,18 @@ export default function DonationEventCard(props: DonationEventCardProps) {
             <Typography color="text.secondary">{props.timeLeft}</Typography>
           </Grid>
         </Grid>
+        <Grid>
+            <Button
+              variant="contained"
+              size="large"
+              fullWidth
+              sx={{ marginTop: 2}}
+              disabled={props.disableButton}
+              onClick={() => props.handleDonateClick()}
+            >
+              Donate
+            </Button>
+          </Grid>
       </CardContent>
     </StyledCard>
   );
