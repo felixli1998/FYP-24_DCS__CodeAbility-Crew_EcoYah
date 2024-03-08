@@ -45,7 +45,7 @@ router.post("/request", async function (req, res) {
                 points: pointsToBeDeducted,
             }
         };
-
+        // TODO: Log the request into database
         sendNotificationToConnections(data)
 
         return generateResponse(res, 200, {
@@ -66,7 +66,9 @@ router.post("/accept-request", async function (req, res) {
     // Location is for logging purposes
     const location = req.body.location;
     try{
+        // TODO: First, verify if the request has been completed in the database. If yes, throw error.
         const _ = await userPointsService.deductUserPoints(userId, pointsToBeDeducted);
+        // TODO: Update the request status in the database
         return generateResponse(res, 200,  {
             message: "Points deducted successfully."
         })
@@ -78,6 +80,8 @@ router.post("/accept-request", async function (req, res) {
 });
 
 router.post("/reject-request", async function (req, res) {
+    // TODO: First, verify if the request has been completed in the database. If yes, throw error.
+    // TODO: Update the request status in the database
     const userId = parseInt(req.body.userId);
     const pointsToBeDeducted = parseInt(req.body.points);
     // Location is for logging purposes
