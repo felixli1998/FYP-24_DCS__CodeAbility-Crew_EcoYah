@@ -26,9 +26,7 @@ router.post("/request", async function (req, res) {
     const userId = parseInt(req.body.userId);
     const pointsToBeDeducted = parseInt(req.body.points);
     try{
-        console.log("x1", req)
         const currentPoints = await userPointsService.getUserPoints(userId);
-        console.log("x2")
         if (!currentPoints) {
             return generateResponse(res, 400, {
                 message: "User does not have a points account",
