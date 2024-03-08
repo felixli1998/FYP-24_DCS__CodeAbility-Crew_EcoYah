@@ -2,12 +2,10 @@ import { useState, useEffect } from "react";
 import "../../styles/App.css";
 import {
     Box,
-    Alert,
     Stack,
     Container,
+    Grid,
     Typography,
-    FormHelperText,
-    Link,
   } from "@mui/material";
 
 import ColorTabs from "../../components/Tabs/Tabs";
@@ -48,9 +46,19 @@ export default function Cashback(){
             tabs={tabs}
             selectedTab={selectedTab}
             toggleTab={(tabValue) => setSelectedTab(tabValue)}
-            />
+          />
 
-          <Typography sx={{ fontSize: 13, textAlign: "center" }}>- You have reached the end of your cashback history -</Typography>
+          <Grid container>
+            <Grid item xs={9}>
+              <Stack>
+                <Typography sx={{ fontWeight: 'medium' }}>Donation Title</Typography>
+                <Typography color="text.disabled">Date Time</Typography>
+              </Stack>
+            </Grid>
+            <Grid item xs={3} sx={{ color: "#EE8F0F", textAlign: "end", alignSelf: "center"}}>+ $50</Grid>
+          </Grid>
+
+          <Typography sx={{ fontSize: { xs: 12, md: 20 }, textAlign: "center", marginTop: "1rem" }}>- You have reached the end of your cashback history -</Typography>
         </Stack>
       </>
     )
