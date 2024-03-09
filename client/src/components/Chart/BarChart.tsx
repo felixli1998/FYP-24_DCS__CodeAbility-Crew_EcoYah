@@ -20,10 +20,10 @@ export default function BarCharts(props: BarChartsType) {
     "Page G",
   ];
   return (
-    <Box
-      sx={{ backgroundColor: "white", borderRadius: "1rem", padding: "1rem" }}
-    >
-      <Typography variant="h6">{title}</Typography>
+    <Box sx={{ backgroundColor: "white", padding: "1rem" }}>
+      <Typography variant="h6" fontWeight="bold">
+        {title}
+      </Typography>
       <BarChart
         width={500}
         height={300}
