@@ -4,7 +4,9 @@ import express, { Router, Request, Response } from "express";
 import cors from "cors";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-
+import cron from "node-cron";
+import { scheduledMethods } from "./cron/index";
+import { scheduleCronTask } from "./cron/utils";
 
 // Internal Imports
 import generateSeedData from "../seeds/seed";
@@ -25,13 +27,11 @@ import donationRequestItemRoutes from "./routes/donationRequestItemRoutes";
 import donationEventItemRoutes from "./routes/donationEventItemRoutes";
 import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
 
-
-
 dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
-const options = { 
+const options = {
   pingTimeout: 5000,
   pingInterval: 10000,
   cors:{
@@ -60,7 +60,14 @@ const runSeedFile = (): boolean => {
 // Database
 AppDataSource.initialize()
   .then(() => {
+    /* Handling Seed data */
     if (runSeedFile()) generateSeedData();
+
+    /* Handling CRON Jobs */
+    scheduledMethods.forEach((scheduleMethod) => {
+      console.log(`Starting CRON jobs: ${scheduleMethod.description}`);
+      scheduleCronTask(cron, scheduleMethod.method, scheduleMethod.scheduleInHrs);
+    })
   })
   .catch((error) => console.log(error));
 
