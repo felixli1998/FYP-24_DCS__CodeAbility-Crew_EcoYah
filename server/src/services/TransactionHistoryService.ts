@@ -40,8 +40,8 @@ export class TransactionHistoryService {
     const newTransactionHistory = new TransactionHistory();
 
     newTransactionHistory.action = Action.CREDITED;
-    newTransactionHistory.userPointsId = userPointsID; // Testing
-    newTransactionHistory.donationRequestId = donationRequestID; // Testing
+    newTransactionHistory.userPointsId = userPointsID;
+    newTransactionHistory.donationRequestId = donationRequestID;
     newTransactionHistory.points = amount;
 
     const createdHistory = await this.transactionHistoryRepository.createTransactionHistory(newTransactionHistory);
@@ -49,7 +49,11 @@ export class TransactionHistoryService {
     return createdHistory;
   }
 
-  private async handleExpiredHistory(amount: TransactionHistory["points"]) {}
+  private async handleExpiredHistory(amount: TransactionHistory["points"]) {
+    // do something here ...
+  }
 
-  private async handleRedeemedHistory(amount: TransactionHistory["points"]) {}
+  private async handleRedeemedHistory(amount: TransactionHistory["points"]) {
+    // do something here ...
+  }
 }

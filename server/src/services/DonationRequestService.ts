@@ -152,10 +152,11 @@ export class DonationRequestService {
 
     try {
       // if donationRequest.omitPoints is true, do not credit user points
-      if (donationRequest && !donationRequest.omitPoints) {
+      if (donationRequest) {
         const user_id = donationRequest.user.id;
-        await this.userPointsService.creditUserPoints(user_id, totalPts);
-        await this.transactionHistoryService.createTransactionHistory(Action.CREDITED, totalPts, user_id, id);
+        if(!donationRequest.omitPoints) await this.userPointsService.creditUserPoints(user_id, totalPts);
+
+        await this.transactionHistoryService.createTransactionHistory(Action.CREDITED, donationRequest.omitPoints ? 0 : totalPts, user_id, id);
       }
     } catch (error) {
       throw new Error("Failed to credit user points");
