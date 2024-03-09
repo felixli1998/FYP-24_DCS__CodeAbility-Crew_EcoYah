@@ -312,7 +312,8 @@ export default function DonationEvents() {
                 variant="outlined"
                 id="searchBar"
                 color="success"
-                placeholder="Search e.g. Cabbage, Bread"
+                sx={{ marginBottom: 2 }}
+                placeholder="Search e.g. Bread, Clothing"
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -324,7 +325,7 @@ export default function DonationEvents() {
                 onChange={(e) => setSearch(e.target.value)}
               />
 
-              {eventOfTheWeek && (
+              {(search.length === 0 && eventOfTheWeek) && (
                 <>
                   <Typography
                     variant="h5"
@@ -386,23 +387,25 @@ export default function DonationEvents() {
                 </>
               )}
 
-              <Grid container spacing={3} sx={{ marginBottom: 4}}>
-                {searchEvents.map((event: eventType) => (
-                  <Grid item key={event.id}>
-                    <DonationEventCard
-                      name={event.name}
-                        description={event.donationEventItems.map((eachItem, i) => 
-                        <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
-                        )}
-                      imgSrc={event.imageId}
-                      numJoined={event.numDonors}
-                      timeLeft={event.timeLeft}
-                      handleDonateClick={() => handleDonateClick(event)}
-                      disableButton={userParticipatedEvents.includes(event.id)}
-                    />
-                  </Grid>
-                ))}
+              {searchEvents.length > 0 ? 
+              <Grid container spacing={3}>
+                   {searchEvents.map((event: eventType) => (
+                      <Grid item sx={{ marginBottom: 2 }} key={event.id}>
+                        <DonationEventCard
+                          name={event.name}
+                          description={`Take part in this donation by donating ${event.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                          imgSrc={event.imageId}
+                          numJoined={event.numDonors}
+                          timeLeft={event.timeLeft}
+                          handleDonateClick={() => handleDonateClick(event)}
+                          disableButton={userParticipatedEvents.includes(event.id)}
+                        />
+                      </Grid>
+                    ))}
               </Grid>
+              :
+              <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: 'center' }}> No Donation Events Found </Typography> 
+              }
             </>
           )}
         </>

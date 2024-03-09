@@ -66,9 +66,6 @@ router.get("/all", async (req, res) => {
     name: req.query["name"] as string,
     isActive: req.query["isActive"] as string,
   };
-  console.log("******* FILTERS [START]: ********");
-  console.log(filters);
-  console.log("******* FILTERS [END]: ********");
 
   try {
     const { data, pagination } =
@@ -120,8 +117,14 @@ router.post("/create", async (req, res) => {
     const newDonationEvent = new DonationEvent();
     newDonationEvent.name = filteredEventParams.name;
     newDonationEvent.imageId = filteredEventParams.imageId;
-    newDonationEvent.startDate = filteredEventParams.startDate;
-    newDonationEvent.endDate = filteredEventParams.endDate;
+    
+    // Default startDate's time to 00:00:00
+    newDonationEvent.startDate = new Date(filteredEventParams.startDate);
+    newDonationEvent.startDate.setHours(0, 0, 0, 0);
+
+    // Default endDate's time 23:59:59
+    newDonationEvent.endDate = new Date(filteredEventParams.endDate);
+    newDonationEvent.endDate.setHours(23, 59, 59, 999);
     newDonationEvent.isActive = filteredEventParams.isActive;
 
     // get the existing User by Id

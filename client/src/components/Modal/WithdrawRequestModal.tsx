@@ -16,6 +16,7 @@ export default function WithdrawRequestModal(props: {
     width: 400,
     bgcolor: "background.paper",
     boxShadow: 24,
+    borderRadius: 1,
     pt: 2,
     px: 4,
     pb: 3,
@@ -43,6 +44,7 @@ export default function WithdrawRequestModal(props: {
                       queryKey: ["/get-donation-requests"],
                     });
                     props.handleClose();
+                    sessionStorage.setItem("message", "Your donation request is withdrawn successfully!");
                   })
                   .catch((err) => console.log(err))
               }
