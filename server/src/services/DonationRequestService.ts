@@ -157,6 +157,7 @@ export class DonationRequestService {
         if(!donationRequest.omitPoints) await this.userPointsService.creditUserPoints(user_id, totalPts);
 
         await this.transactionHistoryService.createTransactionHistory(Action.CREDITED, donationRequest.omitPoints ? 0 : totalPts, user_id, id);
+        await this.updateDonationEventItemQty(id);
       }
     } catch (error) {
       throw new Error("Failed to credit user points");
@@ -213,5 +214,25 @@ export class DonationRequestService {
     }
 
     return totalPts;
+  }
+
+  private async updateDonationEventItemQty(id: DonationRequest["id"]) {
+    const donationRequestItems = await this.donationRequestItemRepository.retrieveByDonationRequestId(id);
+
+    const payload = donationRequestItems.map((item) => {
+      return {
+        donationEventItemId: item.donationEventItem.id,
+        newQty: item.donationEventItem.currentQty + item.quantity,
+      };
+    });
+
+    await Promise.all(
+      payload.map(async (item) => {
+        await this.donationEventItemRepository.updateDonationEventItemQty(
+          item.donationEventItemId,
+          item.newQty,
+        );
+      }),
+    );
   }
 }
