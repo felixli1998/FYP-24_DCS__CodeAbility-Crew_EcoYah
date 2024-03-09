@@ -281,9 +281,6 @@ router.get("/retrieve-donation-request-count-by-event-id", async (req, res) => {
   const filteredParams = strongParams(params, ["donationEventId"]);
   const { donationEventId } = filteredParams;
 
-  console.log("----------------donationEventId: ", donationEventId);
-  console.log(typeof donationEventId);
-
   if (
     donationEventId === undefined ||
     donationEventId === null ||
