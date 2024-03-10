@@ -44,6 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: false    # Set CI to false here
+      REACT_APP_BACKEND_URL: ${{ secrets.REACT_APP_BACKEND_URL }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
