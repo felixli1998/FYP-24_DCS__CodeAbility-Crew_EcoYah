@@ -39,7 +39,9 @@ export class TransactionHistory {
   @JoinColumn()
   donationRequest: DonationRequest;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   donationRequestId: number;  // A workaround to reduce the new of associating the entire object but ID only
 
   @Column({
