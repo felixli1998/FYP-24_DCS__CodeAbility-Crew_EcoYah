@@ -56,4 +56,8 @@ export class TransactionHistoryService {
   private async handleRedeemedHistory(amount: TransactionHistory["points"]) {
     // do something here ...
   }
+  
+  async getExpiringDateForEachUser() {
+    return await this.transactionHistoryRepository.getExpiringDateForEachUser();
+  }
 }

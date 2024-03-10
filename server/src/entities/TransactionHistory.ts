@@ -17,6 +17,8 @@ export enum Action {
   REDEEMED = "redeemed"
 }
 
+export const EXPIRY_DATE = 6; // in months
+
 @Entity()
 export class TransactionHistory {
   @PrimaryGeneratedColumn()
