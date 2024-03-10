@@ -66,7 +66,7 @@ AppDataSource.initialize()
     /* Handling CRON Jobs */
     scheduledMethods.forEach((scheduleMethod) => {
       console.log(`Starting CRON jobs: ${scheduleMethod.description}`);
-      scheduleCronTask(cron, scheduleMethod.method, scheduleMethod.scheduleInHrs);
+      scheduleCronTask(cron, scheduleMethod.method, scheduleMethod.unixFormat);
     })
   })
   .catch((error) => console.log(error));

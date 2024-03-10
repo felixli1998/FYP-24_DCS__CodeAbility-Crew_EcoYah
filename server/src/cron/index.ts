@@ -5,5 +5,5 @@ const testMethod = () => {
 }
 
 export const scheduledMethods = [
-  { method: testMethod, scheduleInHrs: 0.01, description: "This is simply a test method to illustrate the CRON" }
+  { method: testMethod, unixFormat: "*/15 * * * * *", description: "This is simple log method that runs every 15 seconds" }
 ]
