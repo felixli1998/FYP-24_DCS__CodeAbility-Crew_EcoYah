@@ -25,6 +25,8 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.2",
     "react-scripts": "5.0.1",
+    "react-toastify": "^10.0.4",
+    "react18-input-otp": "^1.1.4",
     "slugify": "^1.6.6",
     "socket.io-client": "^4.7.4",
     "typescript": "^4.9.5",
