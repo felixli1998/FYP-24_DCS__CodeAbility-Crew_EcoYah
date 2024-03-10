@@ -6,19 +6,27 @@ import { DonationRequestItemRepository } from "../repositories/DonationRequestIt
 import { DonationEventItemRepository } from "../repositories/DonationEventItemRepository";
 import { UserPointsService } from "./UserPointsService";
 import { UserPointsRepository } from "../repositories/UserPointsRepository";
+import { TransactionHistoryRepository } from "../repositories/TransactionHistoryRepository";
+import { TransactionHistoryService } from "./TransactionHistoryService";
+import { Action } from "../entities/TransactionHistory";
 
 export class DonationRequestService {
   private donationRequestRepository: DonationRequestRepository;
   private donationRequestItemRepository: DonationRequestItemRepository;
   private donationEventItemRepository: DonationEventItemRepository;
   private userPointsService: UserPointsService;
+  private transactionHistoryService: TransactionHistoryService;
 
   constructor(donationRequestRepository: DonationRequestRepository) {
     this.donationRequestRepository = donationRequestRepository;
     this.donationRequestItemRepository = new DonationRequestItemRepository();
     this.donationEventItemRepository = new DonationEventItemRepository();
+
     const userPointsRepository = new UserPointsRepository();
     this.userPointsService = new UserPointsService(userPointsRepository);
+
+    const transactionHistoryRepository = new TransactionHistoryRepository();
+    this.transactionHistoryService = new TransactionHistoryService(transactionHistoryRepository);
   }
 
   async getActiveDonationRequestFromUser(user_id: number, page: number = 1) {
@@ -144,9 +152,11 @@ export class DonationRequestService {
 
     try {
       // if donationRequest.omitPoints is true, do not credit user points
-      if (donationRequest && !donationRequest.omitPoints) {
+      if (donationRequest) {
         const user_id = donationRequest.user.id;
-        await this.userPointsService.creditUserPoints(user_id, totalPts);
+        if(!donationRequest.omitPoints) await this.userPointsService.creditUserPoints(user_id, totalPts);
+
+        await this.transactionHistoryService.createTransactionHistory(Action.CREDITED, donationRequest.omitPoints ? 0 : totalPts, user_id, id);
         await this.updateDonationEventItemQty(id);
       }
     } catch (error) {

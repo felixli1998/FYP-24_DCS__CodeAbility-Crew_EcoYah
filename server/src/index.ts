@@ -25,6 +25,7 @@ import eventRoutes from "./routes/eventTypeRoutes";
 import donationRequestRoutes from "./routes/donationRequestRoutes";
 import donationRequestItemRoutes from "./routes/donationRequestItemRoutes";
 import donationEventItemRoutes from "./routes/donationEventItemRoutes";
+import transactionHistoryRoutes from "./routes/transactionHistoryRoutes";
 import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
 
 dotenv.config();
@@ -81,6 +82,7 @@ app.use("/items", itemRoutes);
 app.use("/event-types", eventRoutes);
 app.use("/donation-requests", donationRequestRoutes);
 app.use("/donation-request-items", donationRequestItemRoutes);
+app.use("/transaction-history", transactionHistoryRoutes);
 app.use("/longpolling", longPollingRoute);
 
 app.get("/", (req, res) => {
