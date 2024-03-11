@@ -23,6 +23,7 @@ import eventRoutes from "./routes/eventTypeRoutes";
 import donationRequestRoutes from "./routes/donationRequestRoutes";
 import donationRequestItemRoutes from "./routes/donationRequestItemRoutes";
 import donationEventItemRoutes from "./routes/donationEventItemRoutes";
+import transactionHistoryRoutes from "./routes/transactionHistoryRoutes";
 import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
 
 
@@ -31,7 +32,7 @@ dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
-const options = { 
+const options = {
   pingTimeout: 5000,
   pingInterval: 10000,
   cors:{
@@ -74,6 +75,7 @@ app.use("/items", itemRoutes);
 app.use("/event-types", eventRoutes);
 app.use("/donation-requests", donationRequestRoutes);
 app.use("/donation-request-items", donationRequestItemRoutes);
+app.use("/transaction-history", transactionHistoryRoutes);
 app.use("/longpolling", longPollingRoute);
 
 app.get("/", (req, res) => {

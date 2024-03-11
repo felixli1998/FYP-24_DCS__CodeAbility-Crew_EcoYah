@@ -20,12 +20,13 @@ export class TransactionHistoryService {
           throw new Error("Donation Request ID required");
         }
 
-        const history = await this.handleCreditHistory(amount, userPointsID, donationRequestID);
+        const creditHistory = await this.handleCreditHistory(amount, userPointsID, donationRequestID);
 
-        return history;
+        return creditHistory;
       case Action.EXPIRED:
-        // do something
-        break;
+        const expiredHistory = await this.handleExpiredHistory(amount, userPointsID);
+
+        return expiredHistory;
       case Action.REDEEMED:
         // do something
         break;
@@ -49,11 +50,24 @@ export class TransactionHistoryService {
     return createdHistory;
   }
 
-  private async handleExpiredHistory(amount: TransactionHistory["points"]) {
+  private async handleExpiredHistory(amount: TransactionHistory["points"], userPointsID: UserPoints["id"]) {
     // do something here ...
+    const newTransactionHistory = new TransactionHistory();
+
+    newTransactionHistory.action = Action.EXPIRED;
+    newTransactionHistory.userPointsId = userPointsID;
+    newTransactionHistory.points = amount;
+
+    const createdHistory = await this.transactionHistoryRepository.createTransactionHistory(newTransactionHistory);
+
+    return createdHistory;
   }
 
   private async handleRedeemedHistory(amount: TransactionHistory["points"]) {
     // do something here ...
+  }
+
+  async getExpiringDateForEachUser() {
+    return await this.transactionHistoryRepository.getExpiringDateForEachUser();
   }
 }
