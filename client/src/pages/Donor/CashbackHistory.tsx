@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import "../../styles/App.css";
 import {
     Box,
@@ -18,7 +19,7 @@ const tabs = [
     },
     {
       label: "Earned",
-      value: "earned",
+      value: "credited",
     },
     {
       label: "Redeemed",
@@ -31,7 +32,7 @@ const tabs = [
   ];
 
 
-export default function Cashback(){
+export default function CashbackHistory(){
   const [selectedTab, setSelectedTab] = useState<string>("all");
   const [transactions, setTransactions] = useState<any[]>([]);
 

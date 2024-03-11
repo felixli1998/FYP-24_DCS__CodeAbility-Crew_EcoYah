@@ -168,7 +168,7 @@ const Reward: React.FC<RewardProps> = ({ points }) => {
           </Typography>
         </CardContent>
         <Box sx={{ display: "flex", alignItems: "center", pl: 2, pb: 2,
-             cursor: "pointer", "&:hover": { textDecoration: "underline" } }} onClick={() => navigate("/cashback")}>
+             cursor: "pointer", "&:hover": { textDecoration: "underline" } }} onClick={() => navigate("/cashback-history")}>
           <Typography variant="body1" fontWeight={600} component="div">
             View history
           </Typography>
