@@ -18,13 +18,13 @@ export class DashboardRepository {
       })
       .groupBy("DR.donation_event_id, DE.name")
       .orderBy("donation_request_count", "DESC")
-      .getRawMany();
+      .getRawOne();
 
-    const camelCaseResult = result.map((value) => ({
-      donationEventId: value.donation_event_id,
-      donationEventName: value.donation_event_name,
-      donationRequestCount: Number(value.donation_request_count),
-    }));
+    const camelCaseResult = {
+      donationEventId: result?.donation_event_id,
+      donationEventName: result?.donation_event_name,
+      donationRequestCount: Number(result?.donation_request_count),
+    };
 
     return camelCaseResult;
   }
@@ -33,7 +33,7 @@ export class DashboardRepository {
     const result = await AppDataSource.getRepository(DonationRequest)
       .createQueryBuilder("DR")
       .select(
-        "DRI.donation_event_item_id, COUNT(DR.id) as donation_request_count"
+        "DRI.donation_event_item_id, COUNT(DR.id) as donation_request_count",
       )
       .addSelect("I.name as donation_event_item_name")
       .leftJoin(DonationRequestItem, "DRI", "DRI.donation_request_id = DR.id")
@@ -44,13 +44,13 @@ export class DashboardRepository {
       })
       .groupBy("DRI.donation_event_item_id, I.name")
       .orderBy("donation_request_count", "DESC")
-      .getRawMany();
+      .getRawOne();
 
-    const camelCaseResult = result.map((value) => ({
-      donationEventItemId: value.donation_event_item_id,
-      donationEventItemName: value.donation_event_item_name,
-      donationRequestCount: Number(value.donation_request_count),
-    }));
+    const camelCaseResult = {
+      donationEventItemId: result?.donation_event_item_id,
+      donationEventItemName: result?.donation_event_item_name,
+      donationRequestCount: Number(result?.donation_request_count),
+    };
 
     return camelCaseResult;
   }

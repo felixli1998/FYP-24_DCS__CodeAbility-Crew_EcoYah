@@ -9,6 +9,7 @@ export const PARENT_ROUTES = {
   DONATION_REQUEST_ITEMS: `${BASE_URL}/donation-request-items`,
   IMAGES: `${BASE_URL}/images`,
   LOGIN: `${BASE_URL}/login`,
+  DASHBOARD: `${BASE_URL}/dashboard`,
 };
 
 // User Related Routes //
@@ -59,4 +60,10 @@ export const IMAGE_ROUTES = {
 // Event Type-related routes //
 export const EVENT_TYPE_ROUTES = {
   GET_ALL: `${BASE_URL}/event-types/event-types`,
+};
+
+// Dashboard-related routes //
+export const DASHBOARD_ROUTES = {
+  GET_POPULAR_EVENT: `${PARENT_ROUTES.DASHBOARD}/getPopularEventToDate`,
+  GET_POPULAR_ITEM: `${PARENT_ROUTES.DASHBOARD}/getPopularItemToDate`,
 };
