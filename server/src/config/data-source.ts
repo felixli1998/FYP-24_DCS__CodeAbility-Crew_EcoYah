@@ -10,6 +10,7 @@ import { DonationEvent } from "../entities/DonationEvent";
 import { DonationEventItem } from "../entities/DonationEventItem";
 import { DonationRequest } from "../entities/DonationRequest";
 import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { TransactionHistory } from "../entities/TransactionHistory";
 
 // Subscribers
 import { DonationRequestSubscriber } from '../subscriber/DonationRequest';
@@ -42,6 +43,7 @@ export const AppDataSource = new DataSource({
     DonationEventItem,
     DonationRequest,
     DonationRequestItem,
+    TransactionHistory
   ],
   synchronize: true,
   logging: true,

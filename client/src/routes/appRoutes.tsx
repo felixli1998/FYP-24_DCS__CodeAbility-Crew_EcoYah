@@ -17,6 +17,8 @@ import DonationEvent from "../pages/Admin/DonationEvent";
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
 import DonationRequests from "../pages/Admin/DonationRequests";
 import { DonationRequest } from "../pages/Donor/DonationRequest";
+import LongPolling from "../pages/LongPollingPage";
+import CashbackRequests from "../pages/Admin/CashbackRequests";
 
 type AppRoutesT = {
   path: string;
@@ -128,6 +130,18 @@ export const APP_ROUTES: AppRoutesT[] = [
     element: <DonationEventsAdmin />,
     isAdmin: true,
     protected: true,
+  },
+  {
+    path:"long-polling",
+    description: "Long polling tests",
+    element: <LongPolling />,
+    isAdmin: false,
+  }, 
+  {
+    path:"cashback-requests",
+    description: "View all Cashback Requests for the admin",
+    element: <CashbackRequests />,
+    isAdmin: true,
   },
   {
     path: "cashback",
