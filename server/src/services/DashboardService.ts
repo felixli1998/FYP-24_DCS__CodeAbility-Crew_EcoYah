@@ -14,4 +14,8 @@ export class DashboardService {
   async getPopularItemToDate() {
     return this.dashboardRepository.getPopularItemToDate();
   }
+
+  async getPreferredDropOff() {
+    return this.dashboardRepository.getPreferredDropOff();
+  }
 }

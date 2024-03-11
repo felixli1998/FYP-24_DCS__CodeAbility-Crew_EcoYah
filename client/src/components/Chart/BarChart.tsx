@@ -28,8 +28,9 @@ export default function BarCharts(props: BarChartsType) {
         width={500}
         height={300}
         series={[
-          { data: pData, label: "pv", id: "pvId", stack: "total" },
-          { data: uData, label: "uv", id: "uvId", stack: "total" },
+          { data: pData, label: "pv", id: "morning", stack: "total" },
+          { data: uData, label: "uv", id: "afternoon", stack: "total" },
+          { data: uData, label: "uv", id: "evening", stack: "total" },
         ]}
         xAxis={[{ data: xLabels, scaleType: "band" }]}
       />

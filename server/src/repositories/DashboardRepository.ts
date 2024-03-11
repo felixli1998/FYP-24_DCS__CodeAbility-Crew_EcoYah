@@ -54,4 +54,19 @@ export class DashboardRepository {
 
     return camelCaseResult;
   }
+
+  async getPreferredDropOff() {
+    const result = await AppDataSource.getRepository(DonationRequest)
+      .createQueryBuilder("DR")
+      .select([
+        "CASE WHEN EXTRACT(DOW FROM DR.dropOffDate) BETWEEN 1 AND 5 THEN 'Monday - Friday' ELSE 'Weekend' END as dayOfWeek",
+        "CASE WHEN EXTRACT(HOUR FROM DR.dropOffTime) BETWEEN 0 AND 11 THEN 'Morning' ELSE 'Afternoon' END as timeOfDay",
+        "COUNT(DR.id) as count",
+      ])
+      .groupBy("dayOfWeek, timeOfDay")
+      .orderBy("dayOfWeek, timeOfDay")
+      .getRawMany();
+
+    return result;
+  }
 }

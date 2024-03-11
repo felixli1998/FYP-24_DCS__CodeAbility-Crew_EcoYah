@@ -29,4 +29,13 @@ router.get("/getPopularItemToDate", async (req, res) => {
   }
 });
 
+router.get("/getPreferredDropOff", async (req, res) => {
+  try {
+    const result = await dashboardService.getPreferredDropOff();
+    return generateResponse(res, 200, { data: result });
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong");
+  }
+});
+
 export default router;
