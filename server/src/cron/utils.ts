@@ -1,3 +1,13 @@
-export const scheduleCronTask = (cron: { schedule: (arg0: string, arg1: () => any) => void; }, method: () => void, unixFormat: string) => {
-  return cron.schedule(unixFormat, () => method());
+export const scheduleCronTask = (
+  cron: typeof import("node-cron"),
+  method: () => void,
+  unixFormat: string,
+) => {
+  return (
+    cron.schedule(unixFormat, () => method()),
+    {
+      /* Based on IANA timezone values */
+      timezone: "Asia/Singapore",
+    }
+  );
 };
