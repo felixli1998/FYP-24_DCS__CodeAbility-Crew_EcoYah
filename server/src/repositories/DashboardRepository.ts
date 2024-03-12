@@ -68,7 +68,7 @@ export class DashboardRepository {
       .getRawMany();
 
     const camelCaseResult = result.map((value) => ({
-      dayOfWeek: value.day_of_week,
+      dayOfWeek: value.day_of_week.trim(),
       timeOfDay: value.time_of_day,
       donationRequestCount: Number(value.donation_request_count),
     }));

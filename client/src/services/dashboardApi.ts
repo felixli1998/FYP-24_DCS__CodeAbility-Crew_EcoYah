@@ -18,3 +18,12 @@ export const getPopularItemToDate = async () => {
     throw new Error("Failed to fetch popular item");
   }
 };
+
+export const getPreferredDropOff = async () => {
+  try {
+    const res = await axios.get(DASHBOARD_ROUTES.GET_PREFERRED_DROP_OFF);
+    return res.data.data.data;
+  } catch (error) {
+    throw new Error("Failed to fetch preferred drop off data");
+  }
+};
