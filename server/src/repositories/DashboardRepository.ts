@@ -59,14 +59,20 @@ export class DashboardRepository {
     const result = await AppDataSource.getRepository(DonationRequest)
       .createQueryBuilder("DR")
       .select([
-        "CASE WHEN EXTRACT(DOW FROM DR.dropOffDate) BETWEEN 1 AND 5 THEN 'Monday - Friday' ELSE 'Weekend' END as dayOfWeek",
-        "CASE WHEN EXTRACT(HOUR FROM DR.dropOffTime) BETWEEN 0 AND 11 THEN 'Morning' ELSE 'Afternoon' END as timeOfDay",
-        "COUNT(DR.id) as count",
+        "to_char(DR.drop_off_date, 'Day') as day_of_week",
+        "CASE WHEN TO_TIMESTAMP(DR.drop_off_time, 'HH24:MI')::TIME BETWEEN '00:00' AND '11:59' THEN 'Morning' ELSE 'Afternoon' END as time_of_day",
+        "COUNT(DR.id) as donation_request_count",
       ])
-      .groupBy("dayOfWeek, timeOfDay")
-      .orderBy("dayOfWeek, timeOfDay")
+      .groupBy("day_of_week, time_of_day")
+      .orderBy("day_of_week, time_of_day")
       .getRawMany();
 
-    return result;
+    const camelCaseResult = result.map((value) => ({
+      dayOfWeek: value.day_of_week,
+      timeOfDay: value.time_of_day,
+      donationRequestCount: Number(value.donation_request_count),
+    }));
+
+    return camelCaseResult;
   }
 }
