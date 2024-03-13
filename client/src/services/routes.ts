@@ -60,3 +60,8 @@ export const IMAGE_ROUTES = {
 export const EVENT_TYPE_ROUTES = {
   GET_ALL: `${BASE_URL}/event-types/event-types`,
 };
+
+// Transaction History Routes //
+export const TRANSACTION_HISTORY_ROUTES = {
+  GET_TRANS_HISTORY_BY_ACTION: `${BASE_URL}/transaction-history/get-transaction-history`,
+}
