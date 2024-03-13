@@ -135,17 +135,18 @@ export class DashboardRepository {
     const result = await AppDataSource.getRepository(DonationRequest)
       .createQueryBuilder("DR")
       .select(
-        "DEI.id as donation_event_item_id, DR.status, COUNT(DR.id) as donation_request_count",
+        "DRI.donation_event_item_id, DR.status, COUNT(DR.id) as donation_request_count",
       )
       .addSelect("I.name as donation_event_item_name")
       .leftJoin(DonationEvent, "DE", "DE.id = DR.donation_event_id")
-      .leftJoin(DonationEventItem, "DEI", "DEI.donation_event_id = DE.id")
+      .leftJoin(DonationRequestItem, "DRI", "DRI.donation_request_id = DR.id")
+      .leftJoin(DonationEventItem, "DEI", "DEI.id = DRI.donation_event_item_id")
       .leftJoin(Item, "I", "I.id = DEI.item_id")
       .where("DE.start_date BETWEEN :startDate AND :endDate", {
         startDate,
         endDate,
       })
-      .groupBy("donation_event_item_id, I.name, DR.status")
+      .groupBy("DRI.donation_event_item_id, I.name, DR.status")
       .getRawMany();
 
     const camelCaseResult = result.map((entry) => ({
