@@ -11,7 +11,7 @@ const router = express.Router();
 const dashboardRepository = new DashboardRepository();
 const dashboardService = new DashboardService(dashboardRepository);
 
-router.get("/getPopularEventToDate", async (req, res) => {
+router.get("/get-popular-event", async (req, res) => {
   try {
     const result = await dashboardService.getPopularEventToDate();
     return generateResponse(res, 200, { data: result });
@@ -20,7 +20,7 @@ router.get("/getPopularEventToDate", async (req, res) => {
   }
 });
 
-router.get("/getPopularItemToDate", async (req, res) => {
+router.get("/get-popular-item", async (req, res) => {
   try {
     const result = await dashboardService.getPopularItemToDate();
     return generateResponse(res, 200, { data: result });
@@ -29,7 +29,7 @@ router.get("/getPopularItemToDate", async (req, res) => {
   }
 });
 
-router.get("/getPreferredDropOff", async (req, res) => {
+router.get("/get-preferred-drop-off", async (req, res) => {
   try {
     const result = await dashboardService.getPreferredDropOff();
     return generateResponse(res, 200, { data: result });

@@ -64,7 +64,7 @@ export const EVENT_TYPE_ROUTES = {
 
 // Dashboard-related routes //
 export const DASHBOARD_ROUTES = {
-  GET_POPULAR_EVENT: `${PARENT_ROUTES.DASHBOARD}/getPopularEventToDate`,
-  GET_POPULAR_ITEM: `${PARENT_ROUTES.DASHBOARD}/getPopularItemToDate`,
-  GET_PREFERRED_DROP_OFF: `${PARENT_ROUTES.DASHBOARD}/getPreferredDropOff`,
+  GET_POPULAR_EVENT: `${PARENT_ROUTES.DASHBOARD}/get-popular-event`,
+  GET_POPULAR_ITEM: `${PARENT_ROUTES.DASHBOARD}/get-popular-item`,
+  GET_PREFERRED_DROP_OFF: `${PARENT_ROUTES.DASHBOARD}/get-preferred-drop-off`,
 };

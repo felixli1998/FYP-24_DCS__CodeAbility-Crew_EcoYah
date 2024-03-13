@@ -21,11 +21,10 @@ export default function Dashboard() {
   const [popularItem, setPopularItem] = useState<
     Record<string, string | number>
   >({});
-  const [preferredDropOff, setPreferredDropOff] = useState<
-    Record<string, string | number>[]
-  >([]);
   const [dayOfWeek, setDayOfWeek] = useState<string[]>([]);
-  const [timeOfDay, setTimeOfWeek] = useState<string[]>([]);
+  const [seriesDropOffData, setSeriesDropOffData] = useState<
+    Record<string, number[]>
+  >({});
 
   const fetchData = async () => {
     try {
@@ -39,18 +38,15 @@ export default function Dashboard() {
 
       const preferredDropOffData = await getPreferredDropOff();
       console.log("Preferred Drop Off Data:", preferredDropOffData);
-      setPreferredDropOff(preferredDropOffData);
-
-      const dayOfWeekArray = preferredDropOffData.map(
-        (object: Record<string, string | number>) => object.dayOfWeek,
-      );
-      setDayOfWeek(dayOfWeekArray);
+      setDayOfWeek(preferredDropOffData.dayOfWeekArray);
+      setSeriesDropOffData({
+        Morning: preferredDropOffData.morningData,
+        Afternoon: preferredDropOffData.afternoonData,
+      });
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
-  console.log(dayOfWeek);
 
   useEffect(() => {
     fetchData();
@@ -91,6 +87,7 @@ export default function Dashboard() {
           <BarCharts
             title={"Most Popular Event of the Month"}
             xLabels={["1", "2", "3"]}
+            seriesLabels={{ "1": [1, 2, 3] }}
           />
         </Grid>
         <Grid item md={6}>
@@ -105,6 +102,7 @@ export default function Dashboard() {
           <BarCharts
             title={"Preferred Drop-Off Day and Time"}
             xLabels={dayOfWeek}
+            seriesLabels={seriesDropOffData}
           />
         </Grid>
       </Grid>

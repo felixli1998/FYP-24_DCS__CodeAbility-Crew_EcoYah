@@ -25,7 +25,7 @@ export default function LineCharts(props: LineChartsType) {
         {title}
       </Typography>
       <LineChart
-        width={500}
+        sx={{ width: { xs: 500, md: 600 } }}
         height={300}
         series={[
           { data: pData, label: "pv" },

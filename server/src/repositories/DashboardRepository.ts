@@ -63,16 +63,48 @@ export class DashboardRepository {
         "CASE WHEN TO_TIMESTAMP(DR.drop_off_time, 'HH24:MI')::TIME BETWEEN '00:00' AND '11:59' THEN 'Morning' ELSE 'Afternoon' END as time_of_day",
         "COUNT(DR.id) as donation_request_count",
       ])
-      .groupBy("day_of_week, time_of_day")
-      .orderBy("day_of_week, time_of_day")
+      .groupBy("day_of_week, time_of_day, EXTRACT(DOW FROM DR.drop_off_date)")
+      .orderBy("EXTRACT(DOW FROM DR.drop_off_date)", "ASC")
       .getRawMany();
 
-    const camelCaseResult = result.map((value) => ({
-      dayOfWeek: value.day_of_week.trim(),
-      timeOfDay: value.time_of_day,
-      donationRequestCount: Number(value.donation_request_count),
+    const camelCaseResult = result.map((entry) => ({
+      dayOfWeek: entry.day_of_week.trim(),
+      timeOfDay: entry.time_of_day,
+      donationRequestCount: Number(entry.donation_request_count),
     }));
 
-    return camelCaseResult;
+    const uniqueDayOfWeek = Array.from(
+      new Set(camelCaseResult.map((entry) => entry.dayOfWeek)),
+    );
+    const uniqueTimeOfDay = Array.from(
+      new Set(camelCaseResult.map((entry) => entry.timeOfDay)),
+    );
+
+    const morningData = camelCaseResult.filter(
+      (entry) => entry.timeOfDay === "Morning",
+    );
+    const afternoonData = camelCaseResult.filter(
+      (entry) => entry.timeOfDay === "Afternoon",
+    );
+
+    const groupMorningData = uniqueDayOfWeek.map((dayOfWeek) => {
+      const entry = morningData.find((entry) => entry.dayOfWeek === dayOfWeek);
+      return entry ? entry.donationRequestCount : 0;
+    });
+
+    const groupAfternoonData = uniqueDayOfWeek.map((dayOfWeek) => {
+      const entry = afternoonData.find(
+        (entry) => entry.dayOfWeek === dayOfWeek,
+      );
+      return entry ? entry.donationRequestCount : 0;
+    });
+
+    return {
+      preferredDropOffData: camelCaseResult,
+      dayOfWeekArray: uniqueDayOfWeek,
+      timeOfDayArray: uniqueTimeOfDay,
+      morningData: groupMorningData,
+      afternoonData: groupAfternoonData,
+    };
   }
 }

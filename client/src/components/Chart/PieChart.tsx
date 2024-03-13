@@ -36,6 +36,7 @@ export default function PieCharts(props: PieChartsType) {
             fill: "white",
             fontWeight: "bold",
           },
+          width: { xs: 400, md: 600 },
         }}
         {...size}
       />
