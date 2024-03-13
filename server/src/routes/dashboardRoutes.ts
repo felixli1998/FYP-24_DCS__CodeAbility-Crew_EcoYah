@@ -41,6 +41,18 @@ router.get("/get-events-by-month/:month", async (req, res) => {
   }
 });
 
+router.get("/get-items-by-month/:month", async (req, res) => {
+  try {
+    const month = req.params.month;
+    if (!month) return generateResponse(res, 400, "Invalid Month");
+
+    const result = await dashboardService.getItemsByMonth(month);
+    return generateResponse(res, 200, { data: result });
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong");
+  }
+});
+
 router.get("/get-preferred-drop-off", async (req, res) => {
   try {
     const result = await dashboardService.getPreferredDropOff();

@@ -38,7 +38,7 @@ export class DashboardRepository {
       .addSelect("I.name as donation_event_item_name")
       .leftJoin(DonationRequestItem, "DRI", "DRI.donation_request_id = DR.id")
       .leftJoin(DonationEventItem, "DEI", "DEI.id = DRI.donation_event_item_id")
-      .leftJoin(Item, "I", "I.id = DEI.id")
+      .leftJoin(Item, "I", "I.id = DEI.item_id")
       .where("DR.status IN (:...status)", {
         status: [Status.SUBMITTED, Status.COMPLETED],
       })
@@ -119,6 +119,78 @@ export class DashboardRepository {
     return {
       eventsByMonth: camelCaseResult, // for cross-checking
       eventsArray: uniqueEvents,
+      submittedData: groupSubmittedData,
+      completedData: groupCompletedData,
+      withdrawnData: groupWithdrawnData,
+    };
+  }
+
+  async getItemsByMonth(month: string) {
+    const monthNumber = parseInt(month, 10);
+    const currentYear = new Date().getFullYear();
+
+    const startDate = new Date(Date.UTC(currentYear, monthNumber - 1, 1));
+    const endDate = new Date(Date.UTC(currentYear, monthNumber, 0, 23, 59, 59));
+
+    const result = await AppDataSource.getRepository(DonationRequest)
+      .createQueryBuilder("DR")
+      .select(
+        "DEI.id as donation_event_item_id, DR.status, COUNT(DR.id) as donation_request_count",
+      )
+      .addSelect("I.name as donation_event_item_name")
+      .leftJoin(DonationEvent, "DE", "DE.id = DR.donation_event_id")
+      .leftJoin(DonationEventItem, "DEI", "DEI.donation_event_id = DE.id")
+      .leftJoin(Item, "I", "I.id = DEI.item_id")
+      .where("DE.start_date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .groupBy("donation_event_item_id, I.name, DR.status")
+      .getRawMany();
+
+    const camelCaseResult = result.map((entry) => ({
+      donationEventItemId: entry.donation_event_item_id,
+      donationEventItemName: entry.donation_event_item_name,
+      status: entry.status,
+      donationRequestCount: Number(entry.donation_request_count),
+    }));
+
+    const uniqueItems = Array.from(
+      new Set(camelCaseResult.map((entry) => entry.donationEventItemName)),
+    );
+
+    const submittedData = camelCaseResult.filter(
+      (entry) => entry.status === Status.SUBMITTED,
+    );
+    const completedData = camelCaseResult.filter(
+      (entry) => entry.status === Status.COMPLETED,
+    );
+    const withdrawnData = camelCaseResult.filter(
+      (entry) => entry.status === Status.WITHDRAWN,
+    );
+
+    const groupSubmittedData = uniqueItems.map((event) => {
+      const entry = submittedData.find(
+        (entry) => entry.donationEventItemName === event,
+      );
+      return entry ? entry.donationRequestCount : 0;
+    });
+    const groupCompletedData = uniqueItems.map((event) => {
+      const entry = completedData.find(
+        (entry) => entry.donationEventItemName === event,
+      );
+      return entry ? entry.donationRequestCount : 0;
+    });
+    const groupWithdrawnData = uniqueItems.map((event) => {
+      const entry = withdrawnData.find(
+        (entry) => entry.donationEventItemName === event,
+      );
+      return entry ? entry.donationRequestCount : 0;
+    });
+
+    return {
+      itemsByMonth: camelCaseResult, // for cross-checking
+      itemsArray: uniqueItems,
       submittedData: groupSubmittedData,
       completedData: groupCompletedData,
       withdrawnData: groupWithdrawnData,

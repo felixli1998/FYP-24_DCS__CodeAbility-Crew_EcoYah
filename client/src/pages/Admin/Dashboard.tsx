@@ -10,6 +10,7 @@ import LineCharts from "../../components/Chart/LineChart";
 // APIs
 import {
   getEventsByMonth,
+  getItemsByMonth,
   getPopularEventToDate,
   getPopularItemToDate,
   getPreferredDropOff,
@@ -24,19 +25,31 @@ export default function Dashboard() {
     Record<string, string | number>
   >({});
 
-  const [select, setSelect] = useState<string>("01");
+  const [eventsSelect, setEventsSelect] = useState<string>("01");
   const [eventsName, setEventsName] = useState<string[]>([]);
   const [eventsByMonthData, setEventsByMonthData] = useState<
+    Record<string, number[]>
+  >({});
+
+  const [itemsSelect, setItemsSelect] = useState<string>("01");
+  const [itemsName, setItemsName] = useState<string[]>([]);
+  const [itemsByMonthData, setItemsByMonthData] = useState<
     Record<string, number[]>
   >({});
 
   const [dayOfWeek, setDayOfWeek] = useState<string[]>([]);
   const [dropOffData, setDropOffData] = useState<Record<string, number[]>>({});
 
-  const handleChange = (value: string) => {
-    setSelect(value);
+  const handleEventsChange = (value: string) => {
+    setEventsSelect(value);
     setEventsName([]);
     setEventsByMonthData({});
+  };
+
+  const handleItemsChange = (value: string) => {
+    setItemsSelect(value);
+    setItemsName([]);
+    setItemsByMonthData({});
   };
 
   const fetchStaticData = async () => {
@@ -63,7 +76,7 @@ export default function Dashboard() {
 
   const fetchDynamicData = async () => {
     try {
-      const eventsByMonthData = await getEventsByMonth(select);
+      const eventsByMonthData = await getEventsByMonth(eventsSelect);
       console.log("Events By Month Data:", eventsByMonthData);
       if (eventsByMonthData.eventsArray.length >= 1) {
         setEventsName(eventsByMonthData.eventsArray);
@@ -71,6 +84,17 @@ export default function Dashboard() {
           Submitted: eventsByMonthData.submittedData,
           Completed: eventsByMonthData.completedData,
           Withdrawn: eventsByMonthData.withdrawnData,
+        });
+      }
+
+      const itemsByMonthData = await getItemsByMonth(itemsSelect);
+      console.log("Items By Month Data:", itemsByMonthData);
+      if (itemsByMonthData.itemsArray.length >= 1) {
+        setItemsName(itemsByMonthData.itemsArray);
+        setItemsByMonthData({
+          Submitted: itemsByMonthData.submittedData,
+          Completed: itemsByMonthData.completedData,
+          Withdrawn: itemsByMonthData.withdrawnData,
         });
       }
     } catch (error) {
@@ -84,7 +108,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchDynamicData();
-  }, [select]);
+  }, [eventsSelect, itemsSelect]);
 
   return (
     <Box sx={{ backgroundColor: "#efebeb", padding: "1rem" }}>
@@ -118,22 +142,33 @@ export default function Dashboard() {
       </Grid>
       <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
         <Grid item md={6}>
+          <PieCharts title={"Donation Requests"} />
+        </Grid>
+        <Grid item md={6}>
+          <PieCharts title={"Donation Requests"} />
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
+        <Grid item md={6}>
           <BarCharts
             title={"Donation Events By Month"}
             filter={true}
-            selected={handleChange}
+            selected={handleEventsChange}
             xLabels={eventsName}
             seriesLabels={eventsByMonthData}
           />
         </Grid>
         <Grid item md={6}>
-          <PieCharts title={"Most Popular Item of the Month"} />
+          <BarCharts
+            title={"Donation Items By Month"}
+            filter={true}
+            selected={handleItemsChange}
+            xLabels={itemsName}
+            seriesLabels={itemsByMonthData}
+          />
         </Grid>
       </Grid>
       <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
-        <Grid item md={6}>
-          <PieCharts title={"Donation Requests"} />
-        </Grid>
         <Grid item md={6}>
           <BarCharts
             title={"Preferred Drop-Off Day and Time"}
@@ -142,8 +177,10 @@ export default function Dashboard() {
             seriesLabels={dropOffData}
           />
         </Grid>
+        <Grid item md={6}>
+          <LineCharts title={"Cashback"} />
+        </Grid>
       </Grid>
-      <LineCharts title={"Cashback"} />
     </Box>
   );
 }

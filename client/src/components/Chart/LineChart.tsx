@@ -21,7 +21,7 @@ export default function LineCharts(props: LineChartsType) {
   ];
   return (
     <Box sx={{ backgroundColor: "white", padding: "1rem" }}>
-      <Typography variant="h6" fontWeight="bold">
+      <Typography variant="h6" fontWeight="bold" sx={{ mb: "2rem" }}>
         {title}
       </Typography>
       <LineChart

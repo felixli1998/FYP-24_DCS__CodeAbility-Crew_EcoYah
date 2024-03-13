@@ -30,6 +30,17 @@ export const getEventsByMonth = async (month: string) => {
   }
 };
 
+export const getItemsByMonth = async (month: string) => {
+  try {
+    const res = await axios.get(
+      DASHBOARD_ROUTES.GET_ITEMS_BY_MONTH.replace(":month", month),
+    );
+    return res.data.data.data;
+  } catch (error) {
+    throw new Error("Failed to fetch items by month");
+  }
+};
+
 export const getPreferredDropOff = async () => {
   try {
     const res = await axios.get(DASHBOARD_ROUTES.GET_PREFERRED_DROP_OFF);
