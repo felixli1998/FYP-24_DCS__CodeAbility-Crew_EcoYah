@@ -134,6 +134,7 @@ export class DonationRequestRepository {
         "donationRequestItems",
         "donationRequestItems.donationEventItem",
         "user",
+        "user.userPoints",
       ],
     });
   }
@@ -150,7 +151,10 @@ export class DonationRequestRepository {
     };
     return await AppDataSource.getRepository(DonationRequest).find({
       select: selectOptions,
-      where: { user: { id: user_id }, status: In([Status.SUBMITTED, Status.COMPLETED]) },
+      where: {
+        user: { id: user_id },
+        status: In([Status.SUBMITTED, Status.COMPLETED]),
+      },
       relations: ["user", "donationEvent"],
     });
   }
