@@ -100,16 +100,23 @@ export default function CashbackHistory(){
           toggleTab={(tabValue) => setSelectedTab(tabValue)}
         />
 
-        <Grid container>
-          <Grid item xs={9}>
-            <Stack>
-              <Typography sx={{ fontWeight: 'medium' }}>Donation Title</Typography>
-              <Typography color="text.disabled">Date Time</Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={3} sx={{ color: "#EE8F0F", textAlign: "end", alignSelf: "center"}}>+ $50</Grid>
-        </Grid>
-        <Divider/>
+        { transactionHistoryData &&
+          transactionHistoryData.map((transaction: any, key: number) => (
+            <>
+              <Grid container key={transaction.id}>
+                <Grid item xs={9}>
+                  <Stack>
+                    <Typography sx={{ fontWeight: 'medium' }}>{transaction.action === "credited" ? transaction.donationEvent : (transaction.action === "expired" ? "Expired": "Redeemed" )}</Typography>
+                    <Typography color="text.disabled">{transaction.createdAt}</Typography>
+                  </Stack>
+                </Grid>
+                <Grid item xs={3} sx={{ color: "#EE8F0F", textAlign: "end", alignSelf: "center"}}>{transaction.action === "credited" ? "+" : "-" } ${transaction.points}</Grid>
+              </Grid>
+              <Divider/>
+            </>
+          )
+        
+        )}
 
         <Typography sx={{ fontSize: { xs: 12, md: 20 }, textAlign: "center", marginTop: "1rem" }}>- You have reached the end of your cashback history -</Typography>
       </Stack>
