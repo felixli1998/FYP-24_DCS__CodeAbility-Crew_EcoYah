@@ -1,7 +1,7 @@
 import axios from "axios";
 import { DASHBOARD_ROUTES } from "./routes";
 
-export const getPopularEventToDate = async () => {
+export const getPopularEvent = async () => {
   try {
     const res = await axios.get(DASHBOARD_ROUTES.GET_POPULAR_EVENT);
     return res.data.data.data;
@@ -10,12 +10,21 @@ export const getPopularEventToDate = async () => {
   }
 };
 
-export const getPopularItemToDate = async () => {
+export const getPopularItem = async () => {
   try {
     const res = await axios.get(DASHBOARD_ROUTES.GET_POPULAR_ITEM);
     return res.data.data.data;
   } catch (error) {
     throw new Error("Failed to fetch popular item");
+  }
+};
+
+export const getDonationRequests = async () => {
+  try {
+    const res = await axios.get(DASHBOARD_ROUTES.GET_DONATION_REQUESTS);
+    return res.data.data.data;
+  } catch (error) {
+    throw new Error("Failed to fetch donation requests");
   }
 };
 

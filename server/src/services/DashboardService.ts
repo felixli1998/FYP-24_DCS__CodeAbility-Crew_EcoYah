@@ -7,12 +7,16 @@ export class DashboardService {
     this.dashboardRepository = dashboardRepository;
   }
 
-  async getPopularEventToDate() {
-    return this.dashboardRepository.getPopularEventToDate();
+  async getPopularEvent() {
+    return this.dashboardRepository.getPopularEvent();
   }
 
-  async getPopularItemToDate() {
-    return this.dashboardRepository.getPopularItemToDate();
+  async getPopularItem() {
+    return this.dashboardRepository.getPopularItem();
+  }
+
+  async getDonationRequests() {
+    return this.dashboardRepository.getDonationRequests();
   }
 
   async getEventsByMonth(month: string) {

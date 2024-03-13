@@ -9,12 +9,15 @@ import PieCharts from "../../components/Chart/PieChart";
 import LineCharts from "../../components/Chart/LineChart";
 // APIs
 import {
+  getDonationRequests,
   getEventsByMonth,
   getItemsByMonth,
-  getPopularEventToDate,
-  getPopularItemToDate,
+  getPopularEvent,
+  getPopularItem,
   getPreferredDropOff,
 } from "../../services/dashboardApi";
+// Utils
+import { PieChartType } from "../../utils/Types";
 
 export default function Dashboard() {
   const [popularEvent, setPopularEvent] = useState<
@@ -24,6 +27,14 @@ export default function Dashboard() {
   const [popularItem, setPopularItem] = useState<
     Record<string, string | number>
   >({});
+
+  const [donationRequests, setDonationRequests] = useState<PieChartType[]>([
+    {
+      id: 0,
+      value: 0,
+      label: "",
+    },
+  ]);
 
   const [eventsSelect, setEventsSelect] = useState<string>("01");
   const [eventsName, setEventsName] = useState<string[]>([]);
@@ -54,13 +65,17 @@ export default function Dashboard() {
 
   const fetchStaticData = async () => {
     try {
-      const popularEventData = await getPopularEventToDate();
+      const popularEventData = await getPopularEvent();
       console.log("Popular Event Data:", popularEventData);
       setPopularEvent(popularEventData);
 
-      const popularItemData = await getPopularItemToDate();
+      const popularItemData = await getPopularItem();
       console.log("Popular Item Data:", popularItemData);
       setPopularItem(popularItemData);
+
+      const donationRequestsData = await getDonationRequests();
+      console.log("Donation Requests Data:", donationRequestsData);
+      setDonationRequests(donationRequestsData);
 
       const preferredDropOffData = await getPreferredDropOff();
       console.log("Preferred Drop Off Data:", preferredDropOffData);
@@ -125,33 +140,29 @@ export default function Dashboard() {
         Executive Dashboard
       </Typography>
       <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
-        <Grid item md={6}>
+        <Grid item md={4}>
           <DashboardCard
-            title={"Most Popular Event To Date"}
+            title={"Most Popular Event"}
             name={popularEvent.donationEventName as string}
             count={popularEvent.donationRequestCount as number}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={4}>
           <DashboardCard
-            title={"Most Popular Item To Date"}
+            title={"Most Popular Item"}
             name={popularItem.donationEventItemName as string}
             count={popularItem.donationRequestCount as number}
           />
         </Grid>
-      </Grid>
-      <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
-        <Grid item md={6}>
-          <PieCharts title={"Donation Requests"} />
-        </Grid>
-        <Grid item md={6}>
-          <PieCharts title={"Donation Requests"} />
+        <Grid item md={4}>
+          <PieCharts title={"Donation Requests"} data={donationRequests} />
         </Grid>
       </Grid>
       <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
         <Grid item md={6}>
           <BarCharts
             title={"Donation Events By Month"}
+            colors={"palette"}
             filter={true}
             selected={handleEventsChange}
             xLabels={eventsName}
@@ -161,6 +172,7 @@ export default function Dashboard() {
         <Grid item md={6}>
           <BarCharts
             title={"Donation Items By Month"}
+            colors={"palette"}
             filter={true}
             selected={handleItemsChange}
             xLabels={itemsName}
@@ -172,6 +184,7 @@ export default function Dashboard() {
         <Grid item md={6}>
           <BarCharts
             title={"Preferred Drop-Off Day and Time"}
+            colors={"default"}
             filter={false}
             xLabels={dayOfWeek}
             seriesLabels={dropOffData}

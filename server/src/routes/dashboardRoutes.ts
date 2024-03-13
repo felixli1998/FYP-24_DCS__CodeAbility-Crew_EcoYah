@@ -3,7 +3,6 @@ import express from "express";
 
 // Internal Imports
 import { generateResponse } from "../common/methods";
-
 import { DashboardService } from "../services/DashboardService";
 import { DashboardRepository } from "../repositories/DashboardRepository";
 
@@ -13,7 +12,7 @@ const dashboardService = new DashboardService(dashboardRepository);
 
 router.get("/get-popular-event", async (req, res) => {
   try {
-    const result = await dashboardService.getPopularEventToDate();
+    const result = await dashboardService.getPopularEvent();
     return generateResponse(res, 200, { data: result });
   } catch (error) {
     return generateResponse(res, 500, "Something went wrong");
@@ -22,7 +21,16 @@ router.get("/get-popular-event", async (req, res) => {
 
 router.get("/get-popular-item", async (req, res) => {
   try {
-    const result = await dashboardService.getPopularItemToDate();
+    const result = await dashboardService.getPopularItem();
+    return generateResponse(res, 200, { data: result });
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong");
+  }
+});
+
+router.get("/get-donation-requests", async (req, res) => {
+  try {
+    const result = await dashboardService.getDonationRequests();
     return generateResponse(res, 200, { data: result });
   } catch (error) {
     return generateResponse(res, 500, "Something went wrong");

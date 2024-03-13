@@ -10,8 +10,8 @@ type DashboardCardType = {
 export default function DashboardCard(props: DashboardCardType) {
   const { title, name, count } = props;
   return (
-    <Box sx={{ backgroundColor: "white", padding: "1rem" }}>
-      <Typography variant="h6" fontWeight="bold" sx={{ mb: "1rem" }}>
+    <Box sx={{ backgroundColor: "white", padding: "1rem", height: 265 }}>
+      <Typography variant="h6" fontWeight="bold" sx={{ mb: "2rem" }}>
         {title}
       </Typography>
       <Typography

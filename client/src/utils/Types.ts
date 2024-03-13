@@ -75,3 +75,9 @@ export type SpeechSynthesisType = {
   addEventListener(type: string, listener: EventListener): void;
   removeEventListener(type: string, listener: EventListener): void;
 };
+
+export type PieChartType = {
+  id: number;
+  value: number;
+  label: string;
+};

@@ -7,7 +7,7 @@ import { DonationEventItem } from "../entities/DonationEventItem";
 import { Item } from "../entities/Item";
 
 export class DashboardRepository {
-  async getPopularEventToDate() {
+  async getPopularEvent() {
     const result = await AppDataSource.getRepository(DonationRequest)
       .createQueryBuilder("DR")
       .select("DR.donation_event_id, COUNT(DR.id) as donation_request_count")
@@ -29,7 +29,7 @@ export class DashboardRepository {
     return camelCaseResult;
   }
 
-  async getPopularItemToDate() {
+  async getPopularItem() {
     const result = await AppDataSource.getRepository(DonationRequest)
       .createQueryBuilder("DR")
       .select(
@@ -51,6 +51,22 @@ export class DashboardRepository {
       donationEventItemName: result?.donation_event_item_name,
       donationRequestCount: Number(result?.donation_request_count),
     };
+
+    return camelCaseResult;
+  }
+
+  async getDonationRequests() {
+    const result = await AppDataSource.getRepository(DonationRequest)
+      .createQueryBuilder("DR")
+      .select("COUNT(DR.id) as donation_request_count, DR.status")
+      .groupBy("DR.status")
+      .getRawMany();
+
+    const camelCaseResult = result.map((entry, i) => ({
+      id: i,
+      value: Number(entry.donation_request_count),
+      label: entry.status[0].toUpperCase() + entry.status.slice(1),
+    }));
 
     return camelCaseResult;
   }
