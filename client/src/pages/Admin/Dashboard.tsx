@@ -85,7 +85,8 @@ export default function Dashboard() {
       <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
         <Grid item md={6}>
           <BarCharts
-            title={"Most Popular Event of the Month"}
+            title={"Donation Events By Month"}
+            filter={true}
             xLabels={["1", "2", "3"]}
             seriesLabels={{ "1": [1, 2, 3] }}
           />
@@ -101,6 +102,7 @@ export default function Dashboard() {
         <Grid item md={6}>
           <BarCharts
             title={"Preferred Drop-Off Day and Time"}
+            filter={false}
             xLabels={dayOfWeek}
             seriesLabels={seriesDropOffData}
           />

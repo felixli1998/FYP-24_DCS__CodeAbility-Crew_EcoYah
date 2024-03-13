@@ -1,9 +1,16 @@
+// React
+import { useState } from "react";
 // MUI
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
+// Components
+import BasicSelect from "../Select/Select";
+// Utils
+import { months } from "../../utils/Months";
 
 type BarChartsType = {
   title: string;
+  filter: boolean;
   xLabels: string[];
   seriesLabels: Record<string, number[]>;
 };
@@ -16,7 +23,12 @@ type SeriesArray = {
 };
 
 export default function BarCharts(props: BarChartsType) {
-  const { title, xLabels, seriesLabels } = props;
+  const { title, filter, xLabels, seriesLabels } = props;
+  const [select, setSelect] = useState<string>("01");
+
+  const handleChange = (value: string) => {
+    setSelect(value);
+  };
 
   const displaySeries = () => {
     const seriesArray: SeriesArray[] = [];
@@ -28,9 +40,26 @@ export default function BarCharts(props: BarChartsType) {
 
   return (
     <Box sx={{ backgroundColor: "white", padding: "1rem" }}>
-      <Typography variant="h6" fontWeight="bold">
-        {title}
-      </Typography>
+      <Grid container spacing={2} alignItems="center" sx={{ mb: "2rem" }}>
+        <Grid item md={6}>
+          <Typography variant="h6" fontWeight="bold">
+            {title}
+          </Typography>
+        </Grid>
+        <Grid item md={6}>
+          {filter && (
+            <BasicSelect
+              name="Month"
+              labelId="Month"
+              label="Month"
+              selectId="Month"
+              menuItems={months}
+              selectValue={select}
+              onChange={handleChange}
+            />
+          )}
+        </Grid>
+      </Grid>
       <BarChart
         sx={{ width: { xs: 500, md: 600 } }}
         height={300}

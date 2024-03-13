@@ -55,6 +55,30 @@ export class DashboardRepository {
     return camelCaseResult;
   }
 
+  async getEventsByMonth(month: string) {
+    const monthNumber = parseInt(month, 10);
+    const currentYear = new Date().getFullYear();
+
+    const startDate = new Date(Date.UTC(currentYear, monthNumber - 1, 1));
+    const endDate = new Date(Date.UTC(currentYear, monthNumber, 0, 23, 59, 59));
+
+    const result = await AppDataSource.getRepository(DonationRequest)
+      .createQueryBuilder("DR")
+      .select(
+        "DR.donation_event_id, DR.status, COUNT(DR.id) as donation_request_count",
+      )
+      .addSelect("DE.name as donation_event_name")
+      .innerJoin(DonationEvent, "DE", "DE.id = DR.donation_event_id")
+      .where("DE.start_date BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .groupBy("DR.donation_event_id, donation_event_name, DR.status")
+      .getRawMany();
+
+    return result;
+  }
+
   async getPreferredDropOff() {
     const result = await AppDataSource.getRepository(DonationRequest)
       .createQueryBuilder("DR")

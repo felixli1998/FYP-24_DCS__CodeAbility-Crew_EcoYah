@@ -15,6 +15,10 @@ export class DashboardService {
     return this.dashboardRepository.getPopularItemToDate();
   }
 
+  async getEventsByMonth(month: string) {
+    return this.dashboardRepository.getEventsByMonth(month);
+  }
+
   async getPreferredDropOff() {
     return this.dashboardRepository.getPreferredDropOff();
   }
