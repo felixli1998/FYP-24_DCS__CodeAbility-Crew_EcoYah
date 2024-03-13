@@ -6,8 +6,11 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from "typeorm";
+
 import { User } from "./User";
+import { TransactionHistory } from "./TransactionHistory";
 
 @Entity()
 export class UserPoints {
@@ -21,6 +24,9 @@ export class UserPoints {
     comment: "The user points",
   })
   points: number;
+
+  @OneToMany(() => TransactionHistory, (transactionHistory) => transactionHistory.userPoints)
+  transactionHistory: TransactionHistory[];
 
   @OneToOne(() => User, (user) => user.userPoints, { cascade: ["insert"] })
   @JoinColumn()
