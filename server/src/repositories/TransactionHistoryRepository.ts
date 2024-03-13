@@ -15,7 +15,7 @@ export class TransactionHistoryRepository {
   */
   async getTransactionHistoryByAction(userId: string, action?: TransactionHistory["action"]) {
     // TODO: Refactor it to relate to user id in userPoints
-    let whereCondition: any = { userPoints : {id: userId }};
+    let whereCondition: any = { userPoints : { user: {id: userId }}};
 
     // TO DOUBLE CHECK AFTER "STATUS" IS ADDED TO THE TRANSACTION HISTORY TABLE
     if (action){
@@ -24,6 +24,8 @@ export class TransactionHistoryRepository {
         whereCondition.status = "accepted";
       }
     } 
+
+    console.log("**** whereCondition ****", whereCondition);
 
     // TODO: Attach donation request information for "All" and "Credited" action
     return await AppDataSource.getRepository(TransactionHistory).find({
