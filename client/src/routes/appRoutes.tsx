@@ -7,6 +7,7 @@ import EditProfile from "../pages/Donor/EditProfile";
 import ImageComponentExample from "../pages/Donor/ImageComponentExample";
 import { DonorHome } from "../pages/Donor/DonorHome";
 import DonationRequestForm from "../pages/Donor/DonationRequestForm";
+import CashbackRedemption from "../pages/Donor/CashbackRedemption";
 
 // Admin routes //
 import AdminHome from "../pages/Admin/AdminHome";
@@ -131,15 +132,21 @@ export const APP_ROUTES: AppRoutesT[] = [
     protected: true,
   },
   {
-    path:"long-polling",
+    path: "long-polling",
     description: "Long polling tests",
     element: <LongPolling />,
     isAdmin: false,
-  }, 
+  },
   {
-    path:"cashback-requests",
+    path: "cashback-requests",
     description: "View all Cashback Requests for the admin",
     element: <CashbackRequests />,
     isAdmin: true,
-  }
+  },
+  {
+    path: "cashback-redemption",
+    description: "Donor redeem cashback form page.",
+    element: <CashbackRedemption />,
+    isAdmin: false,
+  },
 ];
