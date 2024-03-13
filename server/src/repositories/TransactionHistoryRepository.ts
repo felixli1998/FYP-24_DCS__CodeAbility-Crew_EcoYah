@@ -1,3 +1,4 @@
+import { In } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import {
   Action,
@@ -35,31 +36,53 @@ export class TransactionHistoryRepository {
     return result;
   }
 
-  /* Fetches transaction history by action (optional): 
-      - If "action == NULL", return all transaction history regardless of action and status
+  /* 
+    Fetches transaction history (by action): 
+      - If "action == NULL", return ALL transaction history regardless of action and status
       - If "action == 'credited'", return all transaction history with action "credited"
-      - If "action == 'redeemed'", return all transaction history with action "redeemed" and status "accepted"
+      - If "action == 'redeemed'", return all transaction history with action "redeemed" with status "accepted" or action "expired"
   */
   async getTransactionHistoryByAction(userId: string, action?: TransactionHistory["action"]) {
-    // TODO: Refactor it to relate to user id in userPoints
     let whereCondition: any = { userPoints : { user: {id: userId }}};
+    let relations: string[] = ["donationRequest.donationEvent"];
 
-    // TO DOUBLE CHECK AFTER "STATUS" IS ADDED TO THE TRANSACTION HISTORY TABLE
+    // TODO: AFTER "STATUS" IS ADDED TO THE TRANSACTION HISTORY TABLE
     if (action){
-      whereCondition.action = action;
-      if(action === "redeemed"){
-        whereCondition.status = "accepted";
+      if(action == "credited") {
+        whereCondition.action = In([Action.CREDITED]);
+        relations = ["donationRequest.donationEvent"];
       }
-    } 
+      if(action == "redeemed"){
+        whereCondition.action = In([Action.REDEEMED, Action.EXPIRED]);
+        // whereCondition.status = In([Status.ACCEPTED, Status.SYSTEM]);
+        relations = [];
+      }
+    }
 
-    console.log("**** whereCondition ****", whereCondition);
-
-    // TODO: Attach donation request information for "All" and "Credited" action
-    return await AppDataSource.getRepository(TransactionHistory).find({
+    const transactionHistory = await AppDataSource.getRepository(TransactionHistory).find({
         where: whereCondition,
+        relations: relations,
         order: {
           createdAt: "DESC",
         }
     });
+
+    const transactionHistoryWithNamesOnly: any = transactionHistory.map(transaction => {
+      console.log(transaction);
+      const { donationRequest } = transaction;
+      if (donationRequest && donationRequest.donationEvent) {
+          return {
+              id: transaction.id,
+              points: transaction.points,
+              action: transaction.action,
+              createdAt: transaction.createdAt,
+              updatedAt: transaction.updatedAt,
+              donationEvent: donationRequest.donationEvent.name
+          };
+      }
+      return transaction;
+    });
+
+    return transactionHistoryWithNamesOnly;
   }
 }
