@@ -23,7 +23,7 @@ export default function DashboardCard(props: DashboardCardType) {
         {name}
       </Typography>
       <Typography
-        variant="h3"
+        variant="h2"
         fontWeight="bold"
         color="primary.main"
         textAlign="center"

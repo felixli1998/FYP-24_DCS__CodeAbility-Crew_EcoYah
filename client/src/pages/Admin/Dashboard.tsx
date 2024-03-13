@@ -191,7 +191,7 @@ export default function Dashboard() {
           />
         </Grid>
         <Grid item md={6}>
-          <LineCharts title={"Cashback"} />
+          <LineCharts title={"Cashback Status"} />
         </Grid>
       </Grid>
     </Box>
