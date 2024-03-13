@@ -22,7 +22,7 @@ export default function PieCharts(props: PieChartsType) {
 
   return (
     <Box sx={{ backgroundColor: "white", padding: "1rem" }}>
-      <Typography variant="h6" fontWeight="bold">
+      <Typography variant="h6" fontWeight="bold" sx={{ mb: "2rem" }}>
         {title}
       </Typography>
       <PieChart
@@ -40,7 +40,7 @@ export default function PieCharts(props: PieChartsType) {
           },
           width: { xs: 400, md: 600 },
         }}
-        height={200}
+        height={180}
       />
     </Box>
   );

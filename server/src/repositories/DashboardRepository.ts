@@ -18,6 +18,7 @@ export class DashboardRepository {
       })
       .groupBy("DR.donation_event_id, DE.name")
       .orderBy("donation_request_count", "DESC")
+      .cache(`get-popular-event`, 60000)
       .getRawOne();
 
     const camelCaseResult = {
@@ -44,6 +45,7 @@ export class DashboardRepository {
       })
       .groupBy("DRI.donation_event_item_id, I.name")
       .orderBy("donation_request_count", "DESC")
+      .cache(`get-popular-item`, 60000)
       .getRawOne();
 
     const camelCaseResult = {
@@ -60,6 +62,7 @@ export class DashboardRepository {
       .createQueryBuilder("DR")
       .select("COUNT(DR.id) as donation_request_count, DR.status")
       .groupBy("DR.status")
+      .cache(`get-donation-requests`, 60000)
       .getRawMany();
 
     const camelCaseResult = result.map((entry, i) => ({
@@ -90,6 +93,7 @@ export class DashboardRepository {
         endDate,
       })
       .groupBy("DR.donation_event_id, donation_event_name, DR.status")
+      .cache(`get-events-by-${month}`, 60000)
       .getRawMany();
 
     const camelCaseResult = result.map((entry) => ({
@@ -163,6 +167,7 @@ export class DashboardRepository {
         endDate,
       })
       .groupBy("DRI.donation_event_item_id, I.name, DR.status")
+      .cache(`get-items-by-${month}`, 60000)
       .getRawMany();
 
     const camelCaseResult = result.map((entry) => ({
@@ -224,6 +229,7 @@ export class DashboardRepository {
       ])
       .groupBy("day_of_week, time_of_day, EXTRACT(DOW FROM DR.drop_off_date)")
       .orderBy("EXTRACT(DOW FROM DR.drop_off_date)", "ASC")
+      .cache(`get-preferred-drop-off`, 60000)
       .getRawMany();
 
     const camelCaseResult = result.map((entry) => ({
