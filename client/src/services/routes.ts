@@ -66,5 +66,6 @@ export const EVENT_TYPE_ROUTES = {
 export const DASHBOARD_ROUTES = {
   GET_POPULAR_EVENT: `${PARENT_ROUTES.DASHBOARD}/get-popular-event`,
   GET_POPULAR_ITEM: `${PARENT_ROUTES.DASHBOARD}/get-popular-item`,
+  GET_EVENTS_BY_MONTH: `${PARENT_ROUTES.DASHBOARD}/get-events-by-month/:month`,
   GET_PREFERRED_DROP_OFF: `${PARENT_ROUTES.DASHBOARD}/get-preferred-drop-off`,
 };

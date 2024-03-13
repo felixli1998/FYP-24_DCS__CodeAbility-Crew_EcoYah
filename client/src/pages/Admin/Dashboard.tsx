@@ -9,6 +9,7 @@ import PieCharts from "../../components/Chart/PieChart";
 import LineCharts from "../../components/Chart/LineChart";
 // APIs
 import {
+  getEventsByMonth,
   getPopularEventToDate,
   getPopularItemToDate,
   getPreferredDropOff,
@@ -18,15 +19,27 @@ export default function Dashboard() {
   const [popularEvent, setPopularEvent] = useState<
     Record<string, string | number>
   >({});
+
   const [popularItem, setPopularItem] = useState<
     Record<string, string | number>
   >({});
-  const [dayOfWeek, setDayOfWeek] = useState<string[]>([]);
-  const [seriesDropOffData, setSeriesDropOffData] = useState<
+
+  const [select, setSelect] = useState<string>("01");
+  const [eventsName, setEventsName] = useState<string[]>([]);
+  const [eventsByMonthData, setEventsByMonthData] = useState<
     Record<string, number[]>
   >({});
 
-  const fetchData = async () => {
+  const [dayOfWeek, setDayOfWeek] = useState<string[]>([]);
+  const [dropOffData, setDropOffData] = useState<Record<string, number[]>>({});
+
+  const handleChange = (value: string) => {
+    setSelect(value);
+    setEventsName([]);
+    setEventsByMonthData({});
+  };
+
+  const fetchStaticData = async () => {
     try {
       const popularEventData = await getPopularEventToDate();
       console.log("Popular Event Data:", popularEventData);
@@ -39,7 +52,7 @@ export default function Dashboard() {
       const preferredDropOffData = await getPreferredDropOff();
       console.log("Preferred Drop Off Data:", preferredDropOffData);
       setDayOfWeek(preferredDropOffData.dayOfWeekArray);
-      setSeriesDropOffData({
+      setDropOffData({
         Morning: preferredDropOffData.morningData,
         Afternoon: preferredDropOffData.afternoonData,
       });
@@ -48,9 +61,30 @@ export default function Dashboard() {
     }
   };
 
+  const fetchDynamicData = async () => {
+    try {
+      const eventsByMonthData = await getEventsByMonth(select);
+      console.log("Events By Month Data:", eventsByMonthData);
+      if (eventsByMonthData.eventsArray.length >= 1) {
+        setEventsName(eventsByMonthData.eventsArray);
+        setEventsByMonthData({
+          Submitted: eventsByMonthData.submittedData,
+          Completed: eventsByMonthData.completedData,
+          Withdrawn: eventsByMonthData.withdrawnData,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchData();
+    fetchStaticData();
   }, []);
+
+  useEffect(() => {
+    fetchDynamicData();
+  }, [select]);
 
   return (
     <Box sx={{ backgroundColor: "#efebeb", padding: "1rem" }}>
@@ -87,8 +121,9 @@ export default function Dashboard() {
           <BarCharts
             title={"Donation Events By Month"}
             filter={true}
-            xLabels={["1", "2", "3"]}
-            seriesLabels={{ "1": [1, 2, 3] }}
+            selected={handleChange}
+            xLabels={eventsName}
+            seriesLabels={eventsByMonthData}
           />
         </Grid>
         <Grid item md={6}>
@@ -104,7 +139,7 @@ export default function Dashboard() {
             title={"Preferred Drop-Off Day and Time"}
             filter={false}
             xLabels={dayOfWeek}
-            seriesLabels={seriesDropOffData}
+            seriesLabels={dropOffData}
           />
         </Grid>
       </Grid>

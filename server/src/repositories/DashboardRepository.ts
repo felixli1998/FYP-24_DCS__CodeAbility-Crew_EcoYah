@@ -1,4 +1,4 @@
-// Internal imports
+// Internal Imports
 import { AppDataSource } from "../config/data-source";
 import { DonationRequest, Status } from "../entities/DonationRequest";
 import { DonationRequestItem } from "../entities/DonationRequestItem";
@@ -76,7 +76,53 @@ export class DashboardRepository {
       .groupBy("DR.donation_event_id, donation_event_name, DR.status")
       .getRawMany();
 
-    return result;
+    const camelCaseResult = result.map((entry) => ({
+      donationEventId: entry.donation_event_id,
+      donationEventName: entry.donation_event_name,
+      status: entry.status,
+      donationRequestCount: Number(entry.donation_request_count),
+    }));
+
+    const uniqueEvents = Array.from(
+      new Set(camelCaseResult.map((entry) => entry.donationEventName)),
+    );
+
+    const submittedData = camelCaseResult.filter(
+      (entry) => entry.status === Status.SUBMITTED,
+    );
+    const completedData = camelCaseResult.filter(
+      (entry) => entry.status === Status.COMPLETED,
+    );
+    const withdrawnData = camelCaseResult.filter(
+      (entry) => entry.status === Status.WITHDRAWN,
+    );
+
+    const groupSubmittedData = uniqueEvents.map((event) => {
+      const entry = submittedData.find(
+        (entry) => entry.donationEventName === event,
+      );
+      return entry ? entry.donationRequestCount : 0;
+    });
+    const groupCompletedData = uniqueEvents.map((event) => {
+      const entry = completedData.find(
+        (entry) => entry.donationEventName === event,
+      );
+      return entry ? entry.donationRequestCount : 0;
+    });
+    const groupWithdrawnData = uniqueEvents.map((event) => {
+      const entry = withdrawnData.find(
+        (entry) => entry.donationEventName === event,
+      );
+      return entry ? entry.donationRequestCount : 0;
+    });
+
+    return {
+      eventsByMonth: camelCaseResult, // for cross-checking
+      eventsArray: uniqueEvents,
+      submittedData: groupSubmittedData,
+      completedData: groupCompletedData,
+      withdrawnData: groupWithdrawnData,
+    };
   }
 
   async getPreferredDropOff() {
@@ -124,7 +170,7 @@ export class DashboardRepository {
     });
 
     return {
-      preferredDropOffData: camelCaseResult,
+      preferredDropOffData: camelCaseResult, // for cross-checking
       dayOfWeekArray: uniqueDayOfWeek,
       timeOfDayArray: uniqueTimeOfDay,
       morningData: groupMorningData,

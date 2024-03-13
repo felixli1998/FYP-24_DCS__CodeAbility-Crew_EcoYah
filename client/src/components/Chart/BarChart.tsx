@@ -11,6 +11,7 @@ import { months } from "../../utils/Months";
 type BarChartsType = {
   title: string;
   filter: boolean;
+  selected?: (value: string) => void;
   xLabels: string[];
   seriesLabels: Record<string, number[]>;
 };
@@ -23,11 +24,12 @@ type SeriesArray = {
 };
 
 export default function BarCharts(props: BarChartsType) {
-  const { title, filter, xLabels, seriesLabels } = props;
+  const { title, filter, selected, xLabels, seriesLabels } = props;
   const [select, setSelect] = useState<string>("01");
 
   const handleChange = (value: string) => {
     setSelect(value);
+    selected!(value);
   };
 
   const displaySeries = () => {
@@ -60,12 +62,14 @@ export default function BarCharts(props: BarChartsType) {
           )}
         </Grid>
       </Grid>
-      <BarChart
-        sx={{ width: { xs: 500, md: 600 } }}
-        height={300}
-        series={displaySeries()}
-        xAxis={[{ data: xLabels, scaleType: "band" }]}
-      />
+      {Object.keys(seriesLabels).length >= 1 && (
+        <BarChart
+          sx={{ width: { xs: 500, md: 600 } }}
+          height={300}
+          series={displaySeries()}
+          xAxis={[{ data: xLabels, scaleType: "band" }]}
+        />
+      )}
     </Box>
   );
 }
