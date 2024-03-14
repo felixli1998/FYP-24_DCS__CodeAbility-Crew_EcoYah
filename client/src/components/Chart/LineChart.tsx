@@ -1,6 +1,8 @@
 // MUI
 import { Box, Typography } from "@mui/material";
 import { axisClasses, LineChart } from "@mui/x-charts";
+// Components
+import NoDataCard from "../Card/NoDataCard";
 // Utils
 import { displaySeries, getChartStyles } from "../../utils/Common";
 
@@ -20,16 +22,20 @@ export default function LineCharts(props: LineChartsType) {
       <Typography variant="h6" fontWeight="bold" sx={{ mb: "2rem" }}>
         {title}
       </Typography>
-      <LineChart
-        sx={{
-          width: { xs: 500, md: 600 },
-          ...getChartStyles(axisClasses, seriesLabels),
-        }}
-        height={300}
-        series={displaySeries(seriesLabels)}
-        xAxis={[{ label: xAxis, scaleType: "point", data: xLabels }]}
-        yAxis={[{ label: yAxis }]}
-      />
+      {Object.keys(seriesLabels).length >= 1 ? (
+        <LineChart
+          sx={{
+            width: { xs: 500, md: 600 },
+            ...getChartStyles(axisClasses, seriesLabels),
+          }}
+          height={300}
+          series={displaySeries(seriesLabels)}
+          xAxis={[{ label: xAxis, scaleType: "point", data: xLabels }]}
+          yAxis={[{ label: yAxis }]}
+        />
+      ) : (
+        <NoDataCard />
+      )}
     </Box>
   );
 }

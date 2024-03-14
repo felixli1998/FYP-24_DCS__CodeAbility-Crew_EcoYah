@@ -5,8 +5,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { axisClasses, BarChart } from "@mui/x-charts";
 // Components
 import BasicSelect from "../Select/Select";
-// Assets
-import NoDataAvailable from "../../assets/NoDataAvailable.jpg";
+import NoDataCard from "../Card/NoDataCard";
 // Utils
 import { displaySeries, getChartStyles } from "../../utils/Common";
 import { months } from "../../utils/Months";
@@ -80,23 +79,7 @@ export default function BarCharts(props: BarChartsType) {
           yAxis={[{ label: yAxis }]}
         />
       ) : (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Box
-            component="img"
-            alt="No Data Available"
-            src={NoDataAvailable}
-            sx={{ width: 283, height: 283 }}
-          />
-          <Typography variant="h6" fontWeight="bold">
-            No Data Available
-          </Typography>
-        </Box>
+        <NoDataCard />
       )}
     </Box>
   );

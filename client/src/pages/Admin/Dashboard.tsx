@@ -1,7 +1,7 @@
 // React
 import { useState, useEffect } from "react";
 // MUI
-import { Box, Grid, Typography } from "@mui/material";
+import { Alert, Box, Grid, Typography } from "@mui/material";
 // Components
 import DashboardCard from "../../components/Card/DashboardCard";
 import BarCharts from "../../components/Chart/BarChart";
@@ -29,13 +29,9 @@ export default function Dashboard() {
     Record<string, string | number>
   >({});
 
-  const [donationRequests, setDonationRequests] = useState<PieChartType[]>([
-    {
-      id: 0,
-      value: 0,
-      label: "",
-    },
-  ]);
+  const [donationRequests, setDonationRequests] = useState<PieChartType[] | []>(
+    [],
+  );
 
   const [eventsSelect, setEventsSelect] = useState<string>("01");
   const [eventsName, setEventsName] = useState<string[]>([]);
@@ -56,6 +52,8 @@ export default function Dashboard() {
   const [cashbackData, setCashbackData] = useState<Record<string, number[]>>(
     {},
   );
+
+  const [error, setError] = useState<boolean>(false);
 
   const handleEventsChange = (value: string) => {
     setEventsSelect(value);
@@ -96,6 +94,7 @@ export default function Dashboard() {
       });
     } catch (error) {
       console.error("Error fetching data:", error);
+      setError(true);
     }
   };
 
@@ -122,6 +121,7 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error("Error fetching data:", error);
+      setError(true);
     }
   };
 
@@ -135,6 +135,11 @@ export default function Dashboard() {
 
   return (
     <Box sx={{ backgroundColor: "#efebeb", padding: "1rem" }}>
+      {error && (
+        <Alert variant="filled" severity="error" sx={{ mb: "1rem" }}>
+          An error occurred while loading the dashboard. Please try again later!
+        </Alert>
+      )}
       <Typography
         variant="h4"
         color="primary.dark"
