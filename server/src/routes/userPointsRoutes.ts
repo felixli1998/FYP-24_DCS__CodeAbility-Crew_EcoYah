@@ -1,5 +1,5 @@
 import express from "express";
-import { generateResponse, strongParams } from "../common/methods";
+import { generateResponse } from "../common/methods";
 import { UserPointsRepository } from "../repositories/UserPointsRepository";
 import { UserPointsService } from "../services/UserPointsService";
 import { ISocketNotification, sendNotificationToConnections } from "../services/WebSocket";
@@ -42,6 +42,7 @@ router.post("/request", async function (req, res) {
             location: "default",
             notificationData: {
                 userId: userId,
+                name: currentPoints.user.name,
                 points: pointsToBeDeducted,
             }
         };
