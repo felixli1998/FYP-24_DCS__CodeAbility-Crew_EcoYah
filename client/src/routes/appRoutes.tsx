@@ -8,6 +8,7 @@ import ImageComponentExample from "../pages/Donor/ImageComponentExample";
 import { DonorHome } from "../pages/Donor/DonorHome";
 import DonationRequestForm from "../pages/Donor/DonationRequestForm";
 import Faq from "../pages/Donor/Faq";
+import AboutUs from "../pages/Donor/AboutUs";
 
 // Admin routes //
 import AdminHome from "../pages/Admin/AdminHome";
@@ -147,6 +148,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     path: "faq",
     description: "View all FAQ Related for the donor",
     element: <Faq />,
+    isAdmin: false,
+  },
+  {
+    path: "about-us",
+    description: "View all about kunyah Related for the donor",
+    element: <AboutUs />,
     isAdmin: false,
   },
 ];
