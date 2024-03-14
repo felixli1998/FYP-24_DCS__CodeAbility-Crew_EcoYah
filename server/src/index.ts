@@ -4,7 +4,9 @@ import express, { Router, Request, Response } from "express";
 import cors from "cors";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-
+import cron from "node-cron";
+import { scheduledMethods } from "./cron/index";
+import { scheduleCronTask } from "./cron/utils";
 
 // Internal Imports
 import generateSeedData from "../seeds/seed";
@@ -23,23 +25,28 @@ import eventRoutes from "./routes/eventTypeRoutes";
 import donationRequestRoutes from "./routes/donationRequestRoutes";
 import donationRequestItemRoutes from "./routes/donationRequestItemRoutes";
 import donationEventItemRoutes from "./routes/donationEventItemRoutes";
-import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
-
-
+import userPointsRoutes from "./routes/userPointsRoutes";
+import { createLongPollingConnection } from "./services/WebSocket";
+import transactionHistoryRoutes from "./routes/transactionHistoryRoutes";
+// import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
 
 dotenv.config();
 
 const app = express();
 const httpServer = createServer(app);
-const options = { 
+const options = {
   pingTimeout: 5000,
   pingInterval: 10000,
   cors:{
     origin: "*"
   }
 };
+
+// Create long polling connection
+let location = "default";
 const io = new Server(httpServer, options);
-handleLongPolling(io);
+createLongPollingConnection(io, location);
+
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
@@ -60,7 +67,14 @@ const runSeedFile = (): boolean => {
 // Database
 AppDataSource.initialize()
   .then(() => {
+    /* Handling Seed data */
     if (runSeedFile()) generateSeedData();
+
+    /* Handling CRON Jobs */
+    scheduledMethods.forEach((scheduleMethod) => {
+      console.log(`Starting CRON jobs: ${scheduleMethod.description}`);
+      scheduleCronTask(cron, scheduleMethod.method, scheduleMethod.unixFormat);
+    })
   })
   .catch((error) => console.log(error));
 
@@ -74,7 +88,9 @@ app.use("/items", itemRoutes);
 app.use("/event-types", eventRoutes);
 app.use("/donation-requests", donationRequestRoutes);
 app.use("/donation-request-items", donationRequestItemRoutes);
-app.use("/longpolling", longPollingRoute);
+app.use("/points", userPointsRoutes)
+app.use("/transaction-history", transactionHistoryRoutes);
+// app.use("/longpolling", longPollingRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

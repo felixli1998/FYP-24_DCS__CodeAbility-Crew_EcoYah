@@ -17,6 +17,8 @@ export enum Action {
   REDEEMED = "redeemed"
 }
 
+export const EXPIRY_DATE = 6; // in months
+
 @Entity()
 export class TransactionHistory {
   @PrimaryGeneratedColumn()
@@ -37,7 +39,9 @@ export class TransactionHistory {
   @JoinColumn()
   donationRequest: DonationRequest;
 
-  @Column()
+  @Column({
+    nullable: true
+  })
   donationRequestId: number;  // A workaround to reduce the new of associating the entire object but ID only
 
   @Column({
