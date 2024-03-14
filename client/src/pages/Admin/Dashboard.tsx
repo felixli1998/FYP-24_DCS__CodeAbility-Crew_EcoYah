@@ -170,6 +170,8 @@ export default function Dashboard() {
         <Grid item xs={12} md={6}>
           <BarCharts
             title={"Donation Events By Month"}
+            yAxis={"Donation Request Count"}
+            xAxis={"Donation Events"}
             colors={"palette"}
             filter={true}
             selected={handleEventsChange}
@@ -180,6 +182,8 @@ export default function Dashboard() {
         <Grid item xs={12} md={6}>
           <BarCharts
             title={"Donation Items By Month"}
+            yAxis={"Donation Request Count"}
+            xAxis={"Donation Items"}
             colors={"palette"}
             filter={true}
             selected={handleItemsChange}
@@ -192,6 +196,8 @@ export default function Dashboard() {
         <Grid item xs={12} md={6}>
           <BarCharts
             title={"Preferred Drop-Off Day and Time"}
+            yAxis={"Donation Request Count"}
+            xAxis={"Day of Week"}
             colors={"default"}
             filter={false}
             xLabels={dayOfWeek}
@@ -201,6 +207,8 @@ export default function Dashboard() {
         <Grid item xs={12} md={6}>
           <LineCharts
             title={"Cashback Status"}
+            yAxis={"Cashback"}
+            xAxis={"Month of Year"}
             xLabels={months}
             seriesLabels={cashbackData}
           />

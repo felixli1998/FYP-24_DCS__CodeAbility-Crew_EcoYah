@@ -1,17 +1,19 @@
 // MUI
 import { Box, Typography } from "@mui/material";
-import { LineChart } from "@mui/x-charts/LineChart";
+import { axisClasses, LineChart } from "@mui/x-charts";
 // Utils
-import { displaySeries } from "../../utils/Common";
+import { displaySeries, getChartStyles } from "../../utils/Common";
 
 type LineChartsType = {
   title: string;
+  yAxis: string;
+  xAxis: string;
   xLabels: string[];
   seriesLabels: Record<string, number[]>;
 };
 
 export default function LineCharts(props: LineChartsType) {
-  const { title, xLabels, seriesLabels } = props;
+  const { title, yAxis, xAxis, xLabels, seriesLabels } = props;
 
   return (
     <Box sx={{ backgroundColor: "white", padding: "1rem" }}>
@@ -19,10 +21,14 @@ export default function LineCharts(props: LineChartsType) {
         {title}
       </Typography>
       <LineChart
-        sx={{ width: { xs: 500, md: 600 } }}
+        sx={{
+          width: { xs: 500, md: 600 },
+          ...getChartStyles(axisClasses, seriesLabels),
+        }}
         height={300}
         series={displaySeries(seriesLabels)}
-        xAxis={[{ scaleType: "point", data: xLabels }]}
+        xAxis={[{ label: xAxis, scaleType: "point", data: xLabels }]}
+        yAxis={[{ label: yAxis }]}
       />
     </Box>
   );

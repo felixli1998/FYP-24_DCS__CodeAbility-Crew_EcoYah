@@ -2,17 +2,19 @@
 import { useState } from "react";
 // MUI
 import { Box, Grid, Typography } from "@mui/material";
-import { BarChart } from "@mui/x-charts/BarChart";
+import { axisClasses, BarChart } from "@mui/x-charts";
 // Components
 import BasicSelect from "../Select/Select";
 // Assets
 import NoDataAvailable from "../../assets/NoDataAvailable.jpg";
 // Utils
-import { displaySeries } from "../../utils/Common";
+import { displaySeries, getChartStyles } from "../../utils/Common";
 import { months } from "../../utils/Months";
 
 type BarChartsType = {
   title: string;
+  yAxis: string;
+  xAxis: string;
   colors: string;
   filter: boolean;
   selected?: (value: string) => void;
@@ -21,7 +23,16 @@ type BarChartsType = {
 };
 
 export default function BarCharts(props: BarChartsType) {
-  const { title, colors, filter, selected, xLabels, seriesLabels } = props;
+  const {
+    title,
+    yAxis,
+    xAxis,
+    colors,
+    filter,
+    selected,
+    xLabels,
+    seriesLabels,
+  } = props;
   const [select, setSelect] = useState<string>("01");
 
   const colorsRepo: Record<string, string[]> = {
@@ -59,10 +70,14 @@ export default function BarCharts(props: BarChartsType) {
       {Object.keys(seriesLabels).length >= 1 ? (
         <BarChart
           colors={colorsRepo[colors]}
-          sx={{ width: { xs: 500, md: 600 } }}
+          sx={{
+            width: { xs: 500, md: 600 },
+            ...getChartStyles(axisClasses, seriesLabels),
+          }}
           height={315}
           series={displaySeries(seriesLabels)}
-          xAxis={[{ data: xLabels, scaleType: "band" }]}
+          xAxis={[{ label: xAxis, data: xLabels, scaleType: "band" }]}
+          yAxis={[{ label: yAxis }]}
         />
       ) : (
         <Box
