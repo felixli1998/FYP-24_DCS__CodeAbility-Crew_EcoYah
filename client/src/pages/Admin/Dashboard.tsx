@@ -148,26 +148,26 @@ export default function Dashboard() {
         Executive Dashboard
       </Typography>
       <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
-        <Grid item md={4}>
+        <Grid item xs={12} md={4}>
           <DashboardCard
             title={"Most Popular Event"}
             name={popularEvent.donationEventName as string}
             count={popularEvent.donationRequestCount as number}
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item xs={12} md={4}>
           <DashboardCard
             title={"Most Popular Item"}
             name={popularItem.donationEventItemName as string}
             count={popularItem.donationRequestCount as number}
           />
         </Grid>
-        <Grid item md={4}>
+        <Grid item xs={12} md={4}>
           <PieCharts title={"Donation Requests"} data={donationRequests} />
         </Grid>
       </Grid>
       <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <BarCharts
             title={"Donation Events By Month"}
             colors={"palette"}
@@ -177,7 +177,7 @@ export default function Dashboard() {
             seriesLabels={eventsByMonthData}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <BarCharts
             title={"Donation Items By Month"}
             colors={"palette"}
@@ -189,7 +189,7 @@ export default function Dashboard() {
         </Grid>
       </Grid>
       <Grid container spacing={2} sx={{ marginBottom: "1rem" }}>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <BarCharts
             title={"Preferred Drop-Off Day and Time"}
             colors={"default"}
@@ -198,7 +198,7 @@ export default function Dashboard() {
             seriesLabels={dropOffData}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item xs={12} md={6}>
           <LineCharts
             title={"Cashback Status"}
             xLabels={months}
