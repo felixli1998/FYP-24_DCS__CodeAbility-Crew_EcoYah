@@ -1,5 +1,6 @@
 # Custom
 uploaded_images/
+*.postman_collection.json
 
 # Logs
 logs

@@ -1,10 +1,34 @@
 import { useState, useEffect } from "react";
-import RedemptionToastNotification from "./RedemptionToastNotification";
 import io from "socket.io-client";
+import axios from "axios";
+
+import RedemptionToastNotification from "./RedemptionToastNotification";
+import { BASE_URL, USER_POINTS_ROUTES } from "../../services/routes";
 
 export default function RedemptionNotification() {
   const messageSound = require("../../assets/message.mp3");
   const [notifications, setNotifications] = useState<any[]>([]);
+
+  const acceptCashbackRequest = (notification: any) => {
+    axios.post(USER_POINTS_ROUTES.ACCEPT_REQUEST, {
+      userId: notification.userId,
+      points: notification.points,
+      // Location for future use
+      location: "default",
+    })
+    // Make a call to actually deduct
+    removeNotification(notification);
+  };
+
+  const rejectCashbackRequest = (notification: any) => {
+    axios.post(USER_POINTS_ROUTES.REJECT_REQUEST, {
+      userId: notification.userId,
+      points: notification.points,
+      // Location for future use
+      location: "default",
+    });
+    removeNotification(notification);
+  };
 
   const removeNotification = (notificationToRemove: any) => {
     setNotifications((prevNotifications) =>
@@ -16,7 +40,7 @@ export default function RedemptionNotification() {
 
   useEffect(() => {
     // Create a Socket.IO client instance and connect to the server
-    const socket = io("http://localhost:8000");
+    const socket = io(BASE_URL);
 
     // Listen for 'notification' event from the server and update state
     socket.on("notification", (data) => {
@@ -37,8 +61,8 @@ export default function RedemptionNotification() {
         <RedemptionToastNotification
           key={index}
           data={notification}
-          onAccept={() => removeNotification(notification)}
-          onReject={() => removeNotification(notification)}
+          onAccept={() => acceptCashbackRequest(notification)}
+          onReject={() => rejectCashbackRequest(notification)}
         />
       ))}
     </>

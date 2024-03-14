@@ -1,8 +1,9 @@
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+export const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
 // Parent Routes
 export const PARENT_ROUTES = {
   USERS: `${BASE_URL}/users`,
+  USERS_POINTS: `${BASE_URL}/points`,
   ITEMS: `${BASE_URL}/items`,
   DONATION_EVENTS: `${BASE_URL}/donation-events`,
   DONATION_REQUESTS: `${BASE_URL}/donation-requests`,
@@ -20,7 +21,15 @@ export const USER_ROUTES = {
   GET_ACCOUNT_TYPE: `${PARENT_ROUTES.USERS}/get-account-type`,
 };
 
-// Item Routes
+// User Points Routes 
+export const USER_POINTS_ROUTES = {
+  GET_USER_POINTS: `${PARENT_ROUTES.USERS_POINTS}/:id`,
+  MAKE_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/request`,
+  ACCEPT_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/accept-request`,
+  REJECT_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/reject-request`,
+};
+
+// Item Routes 
 export const ITEM_ROUTES = {
   CREATE_ITEM: `${PARENT_ROUTES.ITEMS}/create`,
   RETRIEVE_ALL_ITEMS: `${PARENT_ROUTES.ITEMS}/all`,
