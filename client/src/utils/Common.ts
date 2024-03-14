@@ -1,5 +1,6 @@
 // === Common reusable functions ===
 import _ from "lodash";
+import { SeriesArray } from "./Types";
 
 // === Sanitisation Related ===
 // Remove Leading & Trailing Spaces, Capitalise word's first letter, and 1 space between words
@@ -24,4 +25,13 @@ export const isValueExistsInObjectArray = (
     return object[key] === target;
   });
   return isTargetExistsInObjectArray;
+};
+
+// ==== Dashboard Related ====
+export const displaySeries = (seriesLabels: Record<string, number[]>) => {
+  const seriesArray: SeriesArray[] = [];
+  for (const [key, value] of Object.entries(seriesLabels)) {
+    seriesArray.push({ data: value, label: key, id: key, stack: "total" });
+  }
+  return seriesArray;
 };

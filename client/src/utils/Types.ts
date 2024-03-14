@@ -81,3 +81,10 @@ export type PieChartType = {
   value: number;
   label: string;
 };
+
+export type SeriesArray = {
+  data: number[];
+  label: string;
+  id: string;
+  stack: string;
+};

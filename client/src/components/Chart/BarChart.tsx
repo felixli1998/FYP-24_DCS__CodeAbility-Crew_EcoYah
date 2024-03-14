@@ -8,6 +8,7 @@ import BasicSelect from "../Select/Select";
 // Assets
 import NoDataAvailable from "../../assets/NoDataAvailable.jpg";
 // Utils
+import { displaySeries } from "../../utils/Common";
 import { months } from "../../utils/Months";
 
 type BarChartsType = {
@@ -17,13 +18,6 @@ type BarChartsType = {
   selected?: (value: string) => void;
   xLabels: string[];
   seriesLabels: Record<string, number[]>;
-};
-
-type SeriesArray = {
-  data: number[];
-  label: string;
-  id: string;
-  stack: string;
 };
 
 export default function BarCharts(props: BarChartsType) {
@@ -38,14 +32,6 @@ export default function BarCharts(props: BarChartsType) {
   const handleChange = (value: string) => {
     setSelect(value);
     selected!(value);
-  };
-
-  const displaySeries = () => {
-    const seriesArray: SeriesArray[] = [];
-    for (const [key, value] of Object.entries(seriesLabels)) {
-      seriesArray.push({ data: value, label: key, id: key, stack: "total" });
-    }
-    return seriesArray;
   };
 
   return (
@@ -74,8 +60,8 @@ export default function BarCharts(props: BarChartsType) {
         <BarChart
           colors={colorsRepo[colors]}
           sx={{ width: { xs: 500, md: 600 } }}
-          height={300}
-          series={displaySeries()}
+          height={315}
+          series={displaySeries(seriesLabels)}
           xAxis={[{ data: xLabels, scaleType: "band" }]}
         />
       ) : (
@@ -90,7 +76,7 @@ export default function BarCharts(props: BarChartsType) {
             component="img"
             alt="No Data Available"
             src={NoDataAvailable}
-            sx={{ width: 268, height: 268 }}
+            sx={{ width: 283, height: 283 }}
           />
           <Typography variant="h6" fontWeight="bold">
             No Data Available

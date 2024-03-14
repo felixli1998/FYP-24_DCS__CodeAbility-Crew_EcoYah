@@ -9,6 +9,7 @@ import PieCharts from "../../components/Chart/PieChart";
 import LineCharts from "../../components/Chart/LineChart";
 // APIs
 import {
+  getCashbackStatus,
   getDonationRequests,
   getEventsByMonth,
   getItemsByMonth,
@@ -51,6 +52,11 @@ export default function Dashboard() {
   const [dayOfWeek, setDayOfWeek] = useState<string[]>([]);
   const [dropOffData, setDropOffData] = useState<Record<string, number[]>>({});
 
+  const [months, setMonths] = useState<string[]>([]);
+  const [cashbackData, setCashbackData] = useState<Record<string, number[]>>(
+    {},
+  );
+
   const handleEventsChange = (value: string) => {
     setEventsSelect(value);
     setEventsName([]);
@@ -66,23 +72,27 @@ export default function Dashboard() {
   const fetchStaticData = async () => {
     try {
       const popularEventData = await getPopularEvent();
-      console.log("Popular Event Data:", popularEventData);
       setPopularEvent(popularEventData);
 
       const popularItemData = await getPopularItem();
-      console.log("Popular Item Data:", popularItemData);
       setPopularItem(popularItemData);
 
       const donationRequestsData = await getDonationRequests();
-      console.log("Donation Requests Data:", donationRequestsData);
       setDonationRequests(donationRequestsData);
 
       const preferredDropOffData = await getPreferredDropOff();
-      console.log("Preferred Drop Off Data:", preferredDropOffData);
       setDayOfWeek(preferredDropOffData.dayOfWeekArray);
       setDropOffData({
         Morning: preferredDropOffData.morningData,
         Afternoon: preferredDropOffData.afternoonData,
+      });
+
+      const cashbackStatusData = await getCashbackStatus();
+      setMonths(cashbackStatusData.monthsArray);
+      setCashbackData({
+        Expired: cashbackStatusData.expiredData,
+        Credited: cashbackStatusData.creditedData,
+        Redeemed: cashbackStatusData.redeemedData,
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -92,7 +102,6 @@ export default function Dashboard() {
   const fetchDynamicData = async () => {
     try {
       const eventsByMonthData = await getEventsByMonth(eventsSelect);
-      console.log("Events By Month Data:", eventsByMonthData);
       if (eventsByMonthData.eventsArray.length >= 1) {
         setEventsName(eventsByMonthData.eventsArray);
         setEventsByMonthData({
@@ -103,7 +112,6 @@ export default function Dashboard() {
       }
 
       const itemsByMonthData = await getItemsByMonth(itemsSelect);
-      console.log("Items By Month Data:", itemsByMonthData);
       if (itemsByMonthData.itemsArray.length >= 1) {
         setItemsName(itemsByMonthData.itemsArray);
         setItemsByMonthData({
@@ -191,7 +199,11 @@ export default function Dashboard() {
           />
         </Grid>
         <Grid item md={6}>
-          <LineCharts title={"Cashback Status"} />
+          <LineCharts
+            title={"Cashback Status"}
+            xLabels={months}
+            seriesLabels={cashbackData}
+          />
         </Grid>
       </Grid>
     </Box>

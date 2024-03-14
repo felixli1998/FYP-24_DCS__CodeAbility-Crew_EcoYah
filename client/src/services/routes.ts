@@ -12,7 +12,7 @@ export const PARENT_ROUTES = {
   DASHBOARD: `${BASE_URL}/dashboard`,
 };
 
-// User Related Routes //
+// User Routes
 export const USER_ROUTES = {
   RETRIEVE_BY_EMAIL: `${PARENT_ROUTES.USERS}/:email`,
   ADMIN_LOGIN: `${PARENT_ROUTES.USERS}/allAdmins`,
@@ -20,21 +20,26 @@ export const USER_ROUTES = {
   GET_ACCOUNT_TYPE: `${PARENT_ROUTES.USERS}/get-account-type`,
 };
 
-// ITEM Related Routes //
+// Item Routes
 export const ITEM_ROUTES = {
   CREATE_ITEM: `${PARENT_ROUTES.ITEMS}/create`,
   RETRIEVE_ALL_ITEMS: `${PARENT_ROUTES.ITEMS}/all`,
   RETRIEVE_ITEMS_BY_EVENT_TYPE_ID: `${PARENT_ROUTES.ITEMS}/:eventId`,
 };
 
-// Donation Event-related routes //
+// Event Type Routes
+export const EVENT_TYPE_ROUTES = {
+  GET_ALL: `${BASE_URL}/event-types/event-types`,
+};
+
+// Donation Event Routes
 export const DONATION_EVENT_ROUTES = {
   GET_ALL: `${PARENT_ROUTES.DONATION_EVENTS}/all`,
   CREATE_EVENT: `${PARENT_ROUTES.DONATION_EVENTS}/create`,
   BY_ID: `${PARENT_ROUTES.DONATION_EVENTS}/:id`,
 };
 
-// Donation Request Routes //
+// Donation Request Routes
 export const DONATION_REQUEST_ROUTES = {
   RETRIEVE_ACTIVE_DONATION_REQUESTS: `${PARENT_ROUTES.DONATION_REQUESTS}/active-donation-requests`,
   RETRIEVE_COMPLETED_DONATION_REQUESTS: `${PARENT_ROUTES.DONATION_REQUESTS}/completed-donation-requests`,
@@ -45,24 +50,19 @@ export const DONATION_REQUEST_ROUTES = {
   UPDATE: `${PARENT_ROUTES.DONATION_REQUESTS}/update`,
 };
 
-// Donation Request Items Routes //
+// Donation Request Items Routes
 export const DONATION_REQUEST_ITEMS_ROUTES = {
   DELETE: `${PARENT_ROUTES.DONATION_REQUEST_ITEMS}/delete`,
 };
 
-// Image Related Routes //
+// Image Routes
 export const IMAGE_ROUTES = {
   CREATE: `${PARENT_ROUTES.IMAGES}/`,
   UPDATE: `${PARENT_ROUTES.IMAGES}/:id`,
   RETRIEVE_BY_FILE_PATH: `${PARENT_ROUTES.IMAGES}/:filePath`,
 };
 
-// Event Type-related routes //
-export const EVENT_TYPE_ROUTES = {
-  GET_ALL: `${BASE_URL}/event-types/event-types`,
-};
-
-// Dashboard-related routes //
+// Dashboard Routes
 export const DASHBOARD_ROUTES = {
   GET_POPULAR_EVENT: `${PARENT_ROUTES.DASHBOARD}/get-popular-event`,
   GET_POPULAR_ITEM: `${PARENT_ROUTES.DASHBOARD}/get-popular-item`,
@@ -70,4 +70,5 @@ export const DASHBOARD_ROUTES = {
   GET_EVENTS_BY_MONTH: `${PARENT_ROUTES.DASHBOARD}/get-events-by-month/:month`,
   GET_ITEMS_BY_MONTH: `${PARENT_ROUTES.DASHBOARD}/get-items-by-month/:month`,
   GET_PREFERRED_DROP_OFF: `${PARENT_ROUTES.DASHBOARD}/get-preferred-drop-off`,
+  GET_CASHBACK_STATUS: `${PARENT_ROUTES.DASHBOARD}/get-cashback-status`,
 };

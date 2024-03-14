@@ -225,7 +225,10 @@ export class DashboardRepository {
       .createQueryBuilder("DR")
       .select([
         "to_char(DR.drop_off_date, 'Day') as day_of_week",
-        "CASE WHEN TO_TIMESTAMP(DR.drop_off_time, 'HH24:MI')::TIME BETWEEN '00:00' AND '11:59' THEN 'Morning' ELSE 'Afternoon' END as time_of_day",
+        `CASE WHEN TO_TIMESTAMP(DR.drop_off_time, 'HH24:MI')::TIME 
+          BETWEEN '00:00' AND '11:59' 
+          THEN 'Morning' ELSE 'Afternoon' 
+          END as time_of_day`,
         "COUNT(DR.id) as donation_request_count",
       ])
       .groupBy("day_of_week, time_of_day, EXTRACT(DOW FROM DR.drop_off_date)")
@@ -288,6 +291,7 @@ export class DashboardRepository {
       ])
       .groupBy("month, TH.action, EXTRACT(MONTH FROM TH.updated_at)")
       .orderBy("EXTRACT(MONTH FROM TH.updated_at)", "ASC")
+      .cache(`get-cashback-status`, 60000)
       .getRawMany();
 
     const camelCaseResult = result.map((entry) => ({
@@ -296,6 +300,39 @@ export class DashboardRepository {
       totalPoints: Number(entry.total_points),
     }));
 
-    return camelCaseResult;
+    const uniqueMonth = Array.from(
+      new Set(camelCaseResult.map((entry) => entry.month)),
+    );
+
+    const expiredData = camelCaseResult.filter(
+      (entry) => entry.action === "expired",
+    );
+    const creditedData = camelCaseResult.filter(
+      (entry) => entry.action === "credited",
+    );
+    const redeemedData = camelCaseResult.filter(
+      (entry) => entry.action === "redeemed",
+    );
+
+    const groupExpiredData = uniqueMonth.map((month) => {
+      const entry = expiredData.find((entry) => entry.month === month);
+      return entry ? entry.totalPoints : 0;
+    });
+    const groupCreditedData = uniqueMonth.map((month) => {
+      const entry = creditedData.find((entry) => entry.month === month);
+      return entry ? entry.totalPoints : 0;
+    });
+    const groupRedeemedData = uniqueMonth.map((month) => {
+      const entry = redeemedData.find((entry) => entry.month === month);
+      return entry ? entry.totalPoints : 0;
+    });
+
+    return {
+      getCashbackStatus: camelCaseResult, // for cross-checking
+      monthsArray: uniqueMonth,
+      expiredData: groupExpiredData,
+      creditedData: groupCreditedData,
+      redeemedData: groupRedeemedData,
+    };
   }
 }

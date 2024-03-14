@@ -58,3 +58,12 @@ export const getPreferredDropOff = async () => {
     throw new Error("Failed to fetch preferred drop off data");
   }
 };
+
+export const getCashbackStatus = async () => {
+  try {
+    const res = await axios.get(DASHBOARD_ROUTES.GET_CASHBACK_STATUS);
+    return res.data.data.data;
+  } catch (error) {
+    throw new Error("Failed to fetch cashback status data");
+  }
+};
