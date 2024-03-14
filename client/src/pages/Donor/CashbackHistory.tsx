@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import "../../styles/App.css";
 import {
-    Box,
+    Chip,
     Divider ,
     Stack,
     Container,
@@ -106,7 +106,17 @@ export default function CashbackHistory(){
               <Grid container key={transaction.id}>
                 <Grid item xs={9}>
                   <Stack>
-                    <Typography sx={{ fontWeight: 'medium' }}>{transaction.action === "credited" ? transaction.donationEvent : (transaction.action === "expired" ? "Expired": "Redeemed" )}</Typography>
+                    <Typography sx={{ fontWeight: 'medium'}}>
+                      {transaction.action === "credited" ? transaction.donationEvent : 
+                            (transaction.action === "expired" ? "Expired" : "Redeemed" )}
+                      {(transaction.status === "rejected" || transaction.status === "pending") &&
+                        <Chip 
+                          sx={{marginLeft: 2}}
+                          label={transaction.status === "pending" ? "Pending" : (transaction.status === "rejected" && "Rejected")}
+                          color={transaction.status === "pending" ? "warning" : (transaction.status === "rejected" && "error") || undefined}
+                        />
+                      }
+                    </Typography>
                     <Typography color="text.disabled">
                       {new Date(transaction.createdAt).toLocaleString("en-US", {
                         year: "numeric",
@@ -114,12 +124,14 @@ export default function CashbackHistory(){
                         day: "2-digit",
                         hour: "2-digit",
                         minute: "2-digit",
-                        hour12: false, // Use 24-hour format
+                        hour12: false, // 24-hour format
                       })}
                     </Typography>
                   </Stack>
                 </Grid>
-                <Grid item xs={3} sx={{ color: "#EE8F0F", textAlign: "end", alignSelf: "center"}}>{transaction.action === "credited" ? "+" : "-" } ${transaction.points}</Grid>
+                <Grid item xs={3} sx={{ color: "#EE8F0F", textAlign: "end", alignSelf: "center"}}>
+                  {transaction.action === "credited" || transaction.status === "rejected" ? "+" : "-" } ${transaction.points}
+                </Grid>
               </Grid>
               <Divider/>
             </>
