@@ -25,8 +25,10 @@ import eventRoutes from "./routes/eventTypeRoutes";
 import donationRequestRoutes from "./routes/donationRequestRoutes";
 import donationRequestItemRoutes from "./routes/donationRequestItemRoutes";
 import donationEventItemRoutes from "./routes/donationEventItemRoutes";
+import userPointsRoutes from "./routes/userPointsRoutes";
+import { createLongPollingConnection } from "./services/WebSocket";
 import transactionHistoryRoutes from "./routes/transactionHistoryRoutes";
-import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
+// import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
 
 dotenv.config();
 
@@ -39,8 +41,12 @@ const options = {
     origin: "*"
   }
 };
+
+// Create long polling connection
+let location = "default";
 const io = new Server(httpServer, options);
-handleLongPolling(io);
+createLongPollingConnection(io, location);
+
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
@@ -82,8 +88,9 @@ app.use("/items", itemRoutes);
 app.use("/event-types", eventRoutes);
 app.use("/donation-requests", donationRequestRoutes);
 app.use("/donation-request-items", donationRequestItemRoutes);
+app.use("/points", userPointsRoutes)
 app.use("/transaction-history", transactionHistoryRoutes);
-app.use("/longpolling", longPollingRoute);
+// app.use("/longpolling", longPollingRoute);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
