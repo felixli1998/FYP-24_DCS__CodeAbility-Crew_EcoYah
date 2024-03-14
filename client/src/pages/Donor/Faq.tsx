@@ -57,7 +57,7 @@ export default function Faq() {
         {questionsAndAnswers.map((item, index) => (
           <Box key={index}>
             <Typography
-              variant="body2"
+              variant="body1"
               sx={{ fontWeight: "bold", marginBottom: 2 }}
             >
               {item.question}
