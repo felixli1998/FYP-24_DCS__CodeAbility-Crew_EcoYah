@@ -70,4 +70,13 @@ router.get("/get-preferred-drop-off", async (req, res) => {
   }
 });
 
+router.get("/get-cashback-status", async (req, res) => {
+  try {
+    const result = await dashboardService.getCashbackStatus();
+    return generateResponse(res, 200, { data: result });
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong");
+  }
+});
+
 export default router;

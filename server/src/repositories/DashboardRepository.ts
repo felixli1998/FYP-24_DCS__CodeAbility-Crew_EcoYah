@@ -5,6 +5,7 @@ import { DonationRequestItem } from "../entities/DonationRequestItem";
 import { DonationEvent } from "../entities/DonationEvent";
 import { DonationEventItem } from "../entities/DonationEventItem";
 import { Item } from "../entities/Item";
+import { TransactionHistory } from "../entities/TransactionHistory";
 
 export class DashboardRepository {
   async getPopularEvent() {
@@ -271,5 +272,30 @@ export class DashboardRepository {
       morningData: groupMorningData,
       afternoonData: groupAfternoonData,
     };
+  }
+
+  async getCashbackStatus() {
+    const result = await AppDataSource.getRepository(TransactionHistory)
+      .createQueryBuilder("TH")
+      .select([
+        "TO_CHAR(TH.updated_at, 'Month') as month",
+        "TH.action as action",
+        `SUM(CASE 
+          WHEN TH.action = 'expired' THEN TH.points 
+          WHEN TH.action = 'credited' THEN TH.points 
+          WHEN TH.action = 'redeemed' THEN TH.points 
+          ELSE 0 END) as total_points`,
+      ])
+      .groupBy("month, TH.action, EXTRACT(MONTH FROM TH.updated_at)")
+      .orderBy("EXTRACT(MONTH FROM TH.updated_at)", "ASC")
+      .getRawMany();
+
+    const camelCaseResult = result.map((entry) => ({
+      month: entry.month.trim(),
+      action: entry.action,
+      totalPoints: Number(entry.total_points),
+    }));
+
+    return camelCaseResult;
   }
 }

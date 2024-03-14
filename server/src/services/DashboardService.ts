@@ -30,4 +30,8 @@ export class DashboardService {
   async getPreferredDropOff() {
     return this.dashboardRepository.getPreferredDropOff();
   }
+
+  async getCashbackStatus() {
+    return this.dashboardRepository.getCashbackStatus();
+  }
 }
