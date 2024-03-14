@@ -5,6 +5,8 @@ import { Box, Grid, Typography } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 // Components
 import BasicSelect from "../Select/Select";
+// Assets
+import NoDataAvailable from "../../assets/NoDataAvailable.jpg";
 // Utils
 import { months } from "../../utils/Months";
 
@@ -48,7 +50,7 @@ export default function BarCharts(props: BarChartsType) {
 
   return (
     <Box sx={{ backgroundColor: "white", padding: "1rem" }}>
-      <Grid container spacing={2} alignItems="center" sx={{ mb: "2rem" }}>
+      <Grid container spacing={2} alignItems="center" sx={{ mb: "1rem" }}>
         <Grid item md={6}>
           <Typography variant="h6" fontWeight="bold">
             {title}
@@ -68,7 +70,7 @@ export default function BarCharts(props: BarChartsType) {
           )}
         </Grid>
       </Grid>
-      {Object.keys(seriesLabels).length >= 1 && (
+      {Object.keys(seriesLabels).length >= 1 ? (
         <BarChart
           colors={colorsRepo[colors]}
           sx={{ width: { xs: 500, md: 600 } }}
@@ -76,6 +78,24 @@ export default function BarCharts(props: BarChartsType) {
           series={displaySeries()}
           xAxis={[{ data: xLabels, scaleType: "band" }]}
         />
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            component="img"
+            alt="No Data Available"
+            src={NoDataAvailable}
+            sx={{ width: 268, height: 268 }}
+          />
+          <Typography variant="h6" fontWeight="bold">
+            No Data Available
+          </Typography>
+        </Box>
       )}
     </Box>
   );
