@@ -17,6 +17,7 @@
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.18",
     "axios": "^1.6.5",
+    "country-flag-icons": "^1.5.9",
     "dayjs": "^1.11.10",
     "libphonenumber-js": "^1.10.53",
     "lodash": "^4.17.21",
