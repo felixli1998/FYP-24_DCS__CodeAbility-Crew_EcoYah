@@ -107,7 +107,16 @@ export default function CashbackHistory(){
                 <Grid item xs={9}>
                   <Stack>
                     <Typography sx={{ fontWeight: 'medium' }}>{transaction.action === "credited" ? transaction.donationEvent : (transaction.action === "expired" ? "Expired": "Redeemed" )}</Typography>
-                    <Typography color="text.disabled">{transaction.createdAt}</Typography>
+                    <Typography color="text.disabled">
+                      {new Date(transaction.createdAt).toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: false, // Use 24-hour format
+                      })}
+                    </Typography>
                   </Stack>
                 </Grid>
                 <Grid item xs={3} sx={{ color: "#EE8F0F", textAlign: "end", alignSelf: "center"}}>{transaction.action === "credited" ? "+" : "-" } ${transaction.points}</Grid>
