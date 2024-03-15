@@ -172,7 +172,7 @@ export default function CashbackHistory(){
                   <Stack>
                     <Typography sx={{ fontWeight: 'medium'}}>
                       {transaction.action === "credited" ? transaction.donationEvent : 
-                            (transaction.action === "expired" ? "Expired" : "Redeemed" )}
+                        (transaction.action === "expired" ? "Expired" : "Redeemed" )}
                       {transaction.status === "rejected" &&
                         <Chip 
                           sx={{marginLeft: 1}}
