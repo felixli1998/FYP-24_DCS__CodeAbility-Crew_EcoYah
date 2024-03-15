@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import "../../styles/App.css";
+import UpdateIcon from '@mui/icons-material/Update';
 import {
     Alert,
     Chip,
-    Divider ,
-    Stack,
     Container,
+    Divider,
     Grid,
+    Paper,
+    Stack,
     Typography,
   } from "@mui/material";
 
@@ -31,10 +33,24 @@ const tabs = [
     }
   ];
 
+type eachDataType = {
+  id: number;
+  userPointsId: number;
+  points: number;
+  action: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  donationRequest: string;
+  donationRequestId: number;
+  donationEvent: string;
+}
+
 export default function CashbackHistory(){
   const [selectedTab, setSelectedTab] = useState<string>("all");
   const [user, setUser] = useState<any | null>(null);
   const [errorFetchingData, setErrorFetchingData] = useState(false);
+  const [pendingRedemptions, setPendingRedemptions] = useState<any[]>([]);
 
   const getTransactionHistoryData = async (userId: string, action?: string) => {
     try {
@@ -61,7 +77,14 @@ export default function CashbackHistory(){
     queryFn: async () => {
       if (user) {
         if (selectedTab === "all") {
-          return getTransactionHistoryData(user.id);
+          const getData = await getTransactionHistoryData(user.id);
+          setPendingRedemptions([]);
+          for(const eachData of getData){
+            if(eachData.status === "pending"){
+              setPendingRedemptions((prev) => [...prev, eachData]);
+            }
+          }
+          return getData;
         } else{
           return getTransactionHistoryData(user.id, selectedTab);
         } 
@@ -90,6 +113,17 @@ export default function CashbackHistory(){
     }
   }, [selectedTab, user, transactionHistoryRefetch]);
 
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleString("en-US", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false, // 24-hour format
+    })
+  }
+
   return (
     <>
     {errorFetchingData ? 
@@ -106,6 +140,23 @@ export default function CashbackHistory(){
     (<Stack spacing={2} sx={{ margin: { xs: "2rem 2rem", md: "2rem 4rem" } }}>
         <Typography variant="h5" sx={{ fontWeight: "bold"}}>Cashback History</Typography>
 
+        { pendingRedemptions.length > 0 && 
+          <Paper elevation={2} sx={{ padding: "1rem 1.5rem", borderRadius: "10px", backgroundColor: "#EE8F0F", color: "white" }}>
+            <Stack direction="column" justifyContent="space-between">
+              <Typography sx={{ fontWeight: "bold", display: "flex", alignItems: "center" }}>
+                <UpdateIcon sx={{marginRight: 1}}/>
+                Pending Redemptions
+              </Typography>
+              {pendingRedemptions.map((eachData: eachDataType, key: number) => (
+                <Stack key={eachData.id} direction="row" justifyContent="space-between" sx={{marginTop: 1}}>
+                  <Typography>{formatDate(eachData.createdAt)}</Typography>
+                  <Typography sx={{ fontWeight: "bold" }}>${eachData.points}</Typography>
+                </Stack>
+              ))}
+            </Stack>
+          </Paper>
+        }
+
         <ColorTabs
           tabs={tabs}
           selectedTab={selectedTab}
@@ -114,6 +165,7 @@ export default function CashbackHistory(){
 
         { transactionHistoryData &&
           transactionHistoryData.map((transaction: any, key: number) => (
+            transaction.status !== "pending" && (
             <>
               <Grid container key={transaction.id}>
                 <Grid item xs={9}>
@@ -121,23 +173,16 @@ export default function CashbackHistory(){
                     <Typography sx={{ fontWeight: 'medium'}}>
                       {transaction.action === "credited" ? transaction.donationEvent : 
                             (transaction.action === "expired" ? "Expired" : "Redeemed" )}
-                      {(transaction.status === "rejected" || transaction.status === "pending") &&
+                      {transaction.status === "rejected" &&
                         <Chip 
-                          sx={{marginLeft: 2}}
-                          label={transaction.status === "pending" ? "Pending" : (transaction.status === "rejected" && "Rejected")}
-                          color={transaction.status === "pending" ? "warning" : (transaction.status === "rejected" && "error") || undefined}
+                          sx={{marginLeft: 1}}
+                          label={transaction.status === "rejected" && "Rejected"}
+                          color={transaction.status === "rejected" ? "error" : "default"}
                         />
                       }
                     </Typography>
                     <Typography color="text.disabled">
-                      {new Date(transaction.createdAt).toLocaleString("en-US", {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "2-digit",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        hour12: false, // 24-hour format
-                      })}
+                      {formatDate(transaction.createdAt)}
                     </Typography>
                   </Stack>
                 </Grid>
@@ -146,10 +191,8 @@ export default function CashbackHistory(){
                 </Grid>
               </Grid>
               <Divider/>
-            </>
-          )
-        
-        )}
+            </>)
+          ))}
 
         <Typography sx={{ fontSize: { xs: 12, md: 20 }, textAlign: "center", marginTop: "1rem" }}>- You have reached the end of your cashback history -</Typography>
       </Stack>)}
