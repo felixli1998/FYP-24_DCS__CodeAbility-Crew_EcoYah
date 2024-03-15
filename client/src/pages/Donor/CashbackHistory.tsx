@@ -147,7 +147,7 @@ export default function CashbackHistory(){
                 <UpdateIcon sx={{marginRight: 1}}/>
                 Pending Redemptions
               </Typography>
-              {pendingRedemptions.map((eachData: eachDataType, key: number) => (
+              {pendingRedemptions.map((eachData: eachDataType) => (
                 <Stack key={eachData.id} direction="row" justifyContent="space-between" sx={{marginTop: 1}}>
                   <Typography>{formatDate(eachData.createdAt)}</Typography>
                   <Typography sx={{ fontWeight: "bold" }}>${eachData.points}</Typography>
@@ -164,7 +164,7 @@ export default function CashbackHistory(){
         />
 
         { transactionHistoryData &&
-          transactionHistoryData.map((transaction: any, key: number) => (
+          transactionHistoryData.map((transaction: any) => (
             transaction.status !== "pending" && (
             <>
               <Grid container key={transaction.id}>
