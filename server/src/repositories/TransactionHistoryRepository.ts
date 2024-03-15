@@ -47,17 +47,14 @@ export class TransactionHistoryRepository {
     let whereCondition: any = { userPoints : { user: {id: userId }}};
     let relations: string[] = ["donationRequest.donationEvent"];
 
-    // TODO: AFTER "STATUS" IS ADDED TO THE TRANSACTION HISTORY TABLE
-    if (action){
-      if(action == "credited") {
-        whereCondition.action = In([Action.CREDITED]);
-        relations = ["donationRequest.donationEvent"];
-      }
-      if(action == "redeemed"){
-        whereCondition.action = In([Action.REDEEMED, Action.EXPIRED]);
-        whereCondition.status = In([Status.APPROVED, Status.SYSTEM]);
-        relations = [];
-      }
+    if(action == "credited") {
+      whereCondition.action = In([Action.CREDITED]);
+      relations = ["donationRequest.donationEvent"];
+    }
+    else if(action == "redeemed"){
+      whereCondition.action = In([Action.REDEEMED, Action.EXPIRED]);
+      whereCondition.status = In([Status.APPROVED, Status.SYSTEM]);
+      relations = [];
     }
 
     const transactionHistory = await AppDataSource.getRepository(TransactionHistory).find({
