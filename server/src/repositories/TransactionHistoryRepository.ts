@@ -69,7 +69,6 @@ export class TransactionHistoryRepository {
     });
 
     const transactionHistoryWithNamesOnly: any = transactionHistory.map(transaction => {
-      console.log(transaction);
       const { donationRequest } = transaction;
       if (donationRequest && donationRequest.donationEvent) {
           return {
