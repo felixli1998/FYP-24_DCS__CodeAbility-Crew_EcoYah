@@ -286,7 +286,7 @@ export class DashboardRepository {
         `SUM(CASE 
           WHEN TH.action = 'expired' THEN TH.points 
           WHEN TH.action = 'credited' THEN TH.points 
-          WHEN TH.action = 'redeemed' THEN TH.points 
+          WHEN TH.action = 'redeemed' AND TH.status = 'accepted' THEN TH.points 
           ELSE 0 END) as total_points`,
       ])
       .groupBy("month, TH.action, EXTRACT(MONTH FROM TH.updated_at)")

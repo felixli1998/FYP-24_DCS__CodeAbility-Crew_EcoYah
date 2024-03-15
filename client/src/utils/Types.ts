@@ -86,5 +86,6 @@ export type SeriesArray = {
   data: number[];
   label: string;
   id: string;
-  stack: string;
+  stack: string | undefined;
+  curve: "linear" | "monotoneX" | "monotoneY" | "natural" | "step" | undefined;
 };

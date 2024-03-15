@@ -29,7 +29,7 @@ export default function LineCharts(props: LineChartsType) {
             ...getChartStyles(axisClasses, seriesLabels),
           }}
           height={330}
-          series={displaySeries(seriesLabels)}
+          series={displaySeries(seriesLabels, "line")}
           xAxis={[{ label: xAxis, scaleType: "point", data: xLabels }]}
           yAxis={[{ label: yAxis }]}
         />

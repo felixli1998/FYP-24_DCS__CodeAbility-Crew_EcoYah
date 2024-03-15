@@ -29,10 +29,19 @@ export const isValueExistsInObjectArray = (
 };
 
 // ==== Dashboard Related ====
-export const displaySeries = (seriesLabels: Record<string, number[]>) => {
+export const displaySeries = (
+  seriesLabels: Record<string, number[]>,
+  chart: string,
+) => {
   const seriesArray: SeriesArray[] = [];
   for (const [key, value] of Object.entries(seriesLabels)) {
-    seriesArray.push({ data: value, label: key, id: key, stack: "total" });
+    seriesArray.push({
+      data: value,
+      label: key,
+      id: key,
+      stack: chart === "bar" ? "total" : undefined,
+      curve: chart === "line" ? "natural" : undefined,
+    });
   }
   return seriesArray;
 };

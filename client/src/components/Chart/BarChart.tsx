@@ -74,7 +74,7 @@ export default function BarCharts(props: BarChartsType) {
             ...getChartStyles(axisClasses, seriesLabels),
           }}
           height={315}
-          series={displaySeries(seriesLabels)}
+          series={displaySeries(seriesLabels, "bar")}
           xAxis={[{ label: xAxis, data: xLabels, scaleType: "band" }]}
           yAxis={[{ label: yAxis }]}
         />
