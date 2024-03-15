@@ -191,18 +191,16 @@ export default function CashbackHistory() {
             transactionHistoryData.map(
               (transaction: any) =>
                 transaction.status !== "pending" && (
-                  <Box key={transaction.id}>
-                    <Grid container sx={{ mb: "1rem" }}>
+                  <>
+                    <Grid container key={transaction.id}>
                       <Grid item xs={9}>
                         <Stack>
-                          <Typography
-                            sx={{ fontWeight: "medium", mb: "0.5rem" }}
-                          >
+                          <Typography sx={{ fontWeight: "medium" }}>
                             {transaction.action === "credited"
                               ? transaction.donationEvent
                               : transaction.action === "expired"
-                                ? "Expired Cashback"
-                                : "Redeemed Cashback"}
+                                ? "Expired"
+                                : "Redeemed"}
                             {transaction.status === "rejected" && (
                               <Chip
                                 sx={{ marginLeft: 1 }}
@@ -227,11 +225,7 @@ export default function CashbackHistory() {
                         item
                         xs={3}
                         sx={{
-                          color:
-                            transaction.action === "credited" ||
-                            transaction.status === "rejected"
-                              ? "primary.main"
-                              : "error.main",
+                          color: "#EE8F0F",
                           textAlign: "end",
                           alignSelf: "center",
                         }}
@@ -244,7 +238,7 @@ export default function CashbackHistory() {
                       </Grid>
                     </Grid>
                     <Divider />
-                  </Box>
+                  </>
                 ),
             )}
 
