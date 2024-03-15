@@ -1,8 +1,9 @@
-const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+export const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
 // Parent Routes
 export const PARENT_ROUTES = {
   USERS: `${BASE_URL}/users`,
+  USERS_POINTS: `${BASE_URL}/points`,
   ITEMS: `${BASE_URL}/items`,
   DONATION_EVENTS: `${BASE_URL}/donation-events`,
   DONATION_REQUESTS: `${BASE_URL}/donation-requests`,
@@ -17,6 +18,14 @@ export const USER_ROUTES = {
   ADMIN_LOGIN: `${PARENT_ROUTES.USERS}/allAdmins`,
   UPDATE_USER: `${PARENT_ROUTES.USERS}/update`,
   GET_ACCOUNT_TYPE: `${PARENT_ROUTES.USERS}/get-account-type`,
+};
+
+// User Points Related Routes //
+export const USER_POINTS_ROUTES = {
+  GET_USER_POINTS: `${PARENT_ROUTES.USERS_POINTS}/:id`,
+  MAKE_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/request`,
+  ACCEPT_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/accept-request`,
+  REJECT_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/reject-request`,
 };
 
 // ITEM Related Routes //
