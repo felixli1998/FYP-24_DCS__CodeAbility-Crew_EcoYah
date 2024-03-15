@@ -2,6 +2,7 @@ import { In } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import {
   Action,
+  Status,
   EXPIRY_DATE,
   TransactionHistory,
 } from "../entities/TransactionHistory";
@@ -54,7 +55,7 @@ export class TransactionHistoryRepository {
       }
       if(action == "redeemed"){
         whereCondition.action = In([Action.REDEEMED, Action.EXPIRED]);
-        // whereCondition.status = In([Status.ACCEPTED, Status.SYSTEM]);
+        whereCondition.status = In([Status.APPROVED, Status.SYSTEM]);
         relations = [];
       }
     }
@@ -68,13 +69,13 @@ export class TransactionHistoryRepository {
     });
 
     const transactionHistoryWithNamesOnly: any = transactionHistory.map(transaction => {
-      console.log(transaction);
       const { donationRequest } = transaction;
       if (donationRequest && donationRequest.donationEvent) {
           return {
               id: transaction.id,
               points: transaction.points,
               action: transaction.action,
+              status: transaction.status,
               createdAt: transaction.createdAt,
               updatedAt: transaction.updatedAt,
               donationEvent: donationRequest.donationEvent.name
