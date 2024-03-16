@@ -18,39 +18,69 @@ import Cna from "../../assets/Cna.png";
 import Mothership from "../../assets/Mothership.png";
 import Sethlui from "../../assets/Sethlui.png";
 
-const team = [
-  {
-    name: "Aaron Yeoh",
-    title: "Founder",
-    description:
-      "Social entrepreneur. Have been in youth & community development work since 2009",
-    image: Aaron,
-  },
-  {
-    name: "Chan Lay Hoon",
-    title: "Co-Founder",
-    description:
-      "Beside the love to cook, she is also a food scientist and works with Alex on natural flavouring.",
-    image: LayHoon,
-  },
-  {
-    name: "Alex Seow",
-    title: "Chef",
-    description: "Experienced chef who unfortunately lost part of his vision.",
-    image: Alex,
-  },
-  {
-    name: "Oh Siew May",
-    title: "Assistant Chef",
-    description:
-      "Home cook born with cerebal palsy, she is highly independent, positive in life and attitude.",
-    image: SiewMay,
-  },
-];
-
-const OurTeam = () => {
+const Mission = () => {
   return (
-    <Box>
+    <>
+      <Typography variant="h4" sx={{ fontWeight: "bold", marginY: 2 }}>
+        Kunyah's mission is to serve you nice heritage food while rebuilding the
+        lives of disabled as chefs.
+      </Typography>
+      <Typography variant="h6" color="text.secondary" sx={{ marginBottom: 2 }}>
+        Partner with us for your food needs, together we improve social equity &
+        inclusion of the disabled.
+      </Typography>
+      <Box>
+        <img
+          src={KunyahGroupPhoto}
+          alt="Sample Text"
+          width="100%"
+          height="100%"
+          style={{ objectFit: "cover", borderRadius: 20 }}
+          loading="lazy"
+        />
+      </Box>
+    </>
+  );
+};
+
+const Story = () => {
+  return <></>;
+};
+
+const Team = () => {
+  const team = [
+    {
+      name: "Aaron Yeoh",
+      title: "Founder",
+      description:
+        "Social entrepreneur. Have been in youth & community development work since 2009",
+      image: Aaron,
+    },
+    {
+      name: "Chan Lay Hoon",
+      title: "Co-Founder",
+      description:
+        "Beside the love to cook, she is also a food scientist and works with Alex on natural flavouring.",
+      image: LayHoon,
+    },
+    {
+      name: "Alex Seow",
+      title: "Chef",
+      description:
+        "Experienced chef who unfortunately lost part of his vision.",
+      image: Alex,
+    },
+    {
+      name: "Oh Siew May",
+      title: "Assistant Chef",
+      description:
+        "Home cook born with cerebal palsy, she is highly independent, positive in life and attitude.",
+      image: SiewMay,
+    },
+  ];
+
+  return (
+    <Box sx={{ marginTop: 12 }}>
       <Typography variant="h5" sx={{ fontWeight: "bold", marginY: 2 }}>
         Our team
       </Typography>
@@ -58,7 +88,7 @@ const OurTeam = () => {
         Meet our founding members and the team.
       </Typography>
       {team.map((member, index) => (
-        <Box key={index} sx={{ marginY: 2 }}>
+        <Box key={index} sx={{ marginY: 4 }}>
           <img
             src={member.image}
             alt="Sample Text"
@@ -86,6 +116,54 @@ const OurTeam = () => {
   );
 };
 
+const Stats = () => {
+  return (
+    <Box sx={{ marginTop: 12 }}>
+      <Typography variant="h5" sx={{ fontWeight: "bold", marginY: 2 }}>
+        We approach the workplace as something that adds to our lives and adds
+        value to world.
+      </Typography>
+      <Typography variant="h6" color="text.secondary" sx={{ marginBottom: 2 }}>
+        Here are the impact that we have made till date.
+      </Typography>
+      <Box sx={{ bgcolor: "#eceff1", padding: 4, borderRadius: 4 }}>
+        <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: 2 }}>
+          Rebuilt Lives
+        </Typography>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ marginBottom: 2 }}
+        >
+          Transform the lives of Persons with Disabilites (PWDs)
+        </Typography>
+        <Typography variant="h4" fontWeight="bold">
+          2
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          bgcolor: "#263238",
+          padding: 4,
+          borderRadius: 4,
+          marginTop: 2,
+          color: "white",
+        }}
+      >
+        <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: 2 }}>
+          Meal Served
+        </Typography>
+        <Typography variant="body1" sx={{ marginBottom: 2 }}>
+          Serving up nice heritage food
+        </Typography>
+        <Typography variant="h4" fontWeight="bold">
+          15,000
+        </Typography>
+      </Box>
+    </Box>
+  );
+};
+
 const Featured = () => {
   const itemData = [
     {
@@ -107,9 +185,9 @@ const Featured = () => {
   ];
 
   return (
-    <>
+    <Box sx={{ marginTop: 12 }}>
       <Typography variant="h5" sx={{ fontWeight: "bold", marginY: 2 }}>
-        Featured
+        Featured on
       </Typography>
       <Box sx={{ border: 1, borderRadius: 4, borderColor: "lightgray" }}>
         <ImageList cols={2}>
@@ -125,7 +203,22 @@ const Featured = () => {
           ))}
         </ImageList>
       </Box>
-    </>
+    </Box>
+  );
+};
+
+const JoinUs = () => {
+  return (
+    <Box sx={{ marginTop: 12 }}>
+      <Typography variant="h5" sx={{ fontWeight: "bold", marginY: 2 }}>
+        We're always looking for awesome people to join us
+      </Typography>
+      <Typography variant="h6" color="text.secondary" sx={{ marginBottom: 2 }}>
+        We are always open to get in touch with like-minded people to support us
+        either by ordering our food for your event/catering needs or angels with
+        a shared vision to build a sustainable, inclusive and kinder Singapore.
+      </Typography>
+    </Box>
   );
 };
 
@@ -133,29 +226,11 @@ export default function AboutUs() {
   return (
     <Container sx={{ marginTop: 3, marginX: "auto" }}>
       <Box sx={{ marginX: 1, marginY: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", marginY: 2 }}>
-          Kunyah's mission is to serve you nice heritage food while rebuilding
-          the lives of disabled as chefs.
-        </Typography>
-        <Typography
-          variant="h6"
-          color="text.secondary"
-          sx={{ marginBottom: 2 }}
-        >
-          Partner with us for your food needs, together we improve social equity
-          & inclusion of the disabled.
-        </Typography>
-        <Box>
-          <img
-            src={KunyahGroupPhoto}
-            alt="Sample Text"
-            width="100%"
-            height="100%"
-            style={{ objectFit: "cover", borderRadius: 20 }}
-            loading="lazy"
-          />
-        </Box>
-        <OurTeam />
+        <Mission />
+        <Story />
+        <Team />
+        <Stats />
+        <JoinUs />
         <Featured />
       </Box>
     </Container>
