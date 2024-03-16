@@ -14,6 +14,14 @@ export class TransactionHistoryRepository {
     );
   }
 
+  async getTransactionHistory(id: number) {
+    return await AppDataSource.getRepository(TransactionHistory).findOne({ where: { id } });
+  }
+
+  async updateStatus(transactionHistoryId: number, status: string) {
+    return AppDataSource.getRepository(TransactionHistory).update(transactionHistoryId, { status: status });
+  }
+
   async getExpiringDateForEachUser() {
     const result = await AppDataSource.getRepository(UserPoints)
       .createQueryBuilder()

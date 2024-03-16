@@ -1,8 +1,9 @@
 // Internal Imports
 import { TransactionHistoryRepository } from "../repositories/TransactionHistoryRepository";
-import { Action, TransactionHistory } from "../entities/TransactionHistory";
+import { Action, TransactionHistory, Status } from "../entities/TransactionHistory";
 import { DonationRequest } from "../entities/DonationRequest";
 import { UserPoints } from "../entities/UserPoints";
+import { isatty } from "tty";
 
 
 export class TransactionHistoryService {
@@ -32,7 +33,9 @@ export class TransactionHistoryService {
 
         return expiredHistory;
       case Action.REDEEMED:
-        // do something
+        const redeemedHistory = await this.handleRedeemedHistory(amount, userPointsID);
+
+        return redeemedHistory;
         break;
       default:
         // do something
@@ -67,11 +70,38 @@ export class TransactionHistoryService {
     return createdHistory;
   }
 
-  private async handleRedeemedHistory(amount: TransactionHistory["points"]) {
-    // do something here ...
+  private async handleRedeemedHistory(amount: TransactionHistory["points"], userPointsID: UserPoints["id"]) {
+    const newTransactionHistory = new TransactionHistory();
+
+    newTransactionHistory.action = Action.REDEEMED;
+    newTransactionHistory.userPointsId = userPointsID;
+    newTransactionHistory.points = amount;
+
+    const createdHistory = await this.transactionHistoryRepository.createTransactionHistory(newTransactionHistory);
+
+    return createdHistory;
   }
 
   async getExpiringDateForEachUser() {
     return await this.transactionHistoryRepository.getExpiringDateForEachUser();
+  }
+
+  // Admin accept or reject the cashback redemption
+  async handleRedeemed(transactionHistoryId: number, isAccept: boolean ) {
+    const transactionHistory = await this.transactionHistoryRepository.getTransactionHistory(transactionHistoryId);
+
+    if (!transactionHistory) {
+      throw new Error(`Transaction history with id ${transactionHistoryId} not found`);
+    }
+
+    if (transactionHistory.status !== Status.PENDING) {
+      throw new Error(`Transaction history with id ${transactionHistoryId} has already been handled`);
+    }
+
+    const newStatus = isAccept ? Status.APPROVED : Status.REJECTED;
+
+    const updateTransactionHistoryStatus = await this.transactionHistoryRepository.updateStatus(transactionHistoryId, newStatus);
+
+    return updateTransactionHistoryStatus;
   }
 }

@@ -13,6 +13,7 @@ export default function RedemptionNotification() {
     axios.post(USER_POINTS_ROUTES.ACCEPT_REQUEST, {
       userId: notification.userId,
       points: notification.points,
+      transactionHistoryId: notification.transactionHistory.id,
       // Location for future use
       location: "default",
     })
@@ -22,8 +23,7 @@ export default function RedemptionNotification() {
 
   const rejectCashbackRequest = (notification: any) => {
     axios.post(USER_POINTS_ROUTES.REJECT_REQUEST, {
-      userId: notification.userId,
-      points: notification.points,
+      transactionHistoryId: notification.transactionHistory.id,
       // Location for future use
       location: "default",
     });

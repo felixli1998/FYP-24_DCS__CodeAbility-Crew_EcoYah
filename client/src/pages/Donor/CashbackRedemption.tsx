@@ -79,7 +79,7 @@ export default function CashbackRedemption() {
 
         if (response.status === 200) {
           setInputCashbackAmt("0");
-          navigate("/transaction-history"); // TODO: Redirect to transaction history
+          navigate("/cashback-history"); // TODO: Redirect to transaction history
         }
       }
     },
