@@ -12,6 +12,10 @@ export class TransactionHistoryService {
     this.transactionHistoryRepository = transactionHistoryRepository;
   }
 
+  async getTransactionHistoryByAction(userId: string, action?: TransactionHistory["action"]) {
+    return await this.transactionHistoryRepository.getTransactionHistoryByAction(userId, action);
+  }
+
   // TODO: Might want to refactor this -- quite ugly way of doing things
   async createTransactionHistory(action: Action, amount: TransactionHistory["points"], userPointsID: UserPoints["id"], donationRequestID?: DonationRequest["id"]) {
     switch(action) {
