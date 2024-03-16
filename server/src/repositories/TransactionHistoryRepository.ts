@@ -1,6 +1,8 @@
+import { In } from "typeorm";
 import { AppDataSource } from "../config/data-source";
 import {
   Action,
+  Status,
   EXPIRY_DATE,
   TransactionHistory,
 } from "../entities/TransactionHistory";
@@ -33,5 +35,51 @@ export class TransactionHistoryRepository {
       .getRawMany();
 
     return result;
+  }
+
+  /* 
+    Fetches transaction history (by action): 
+      - If "action == NULL", return ALL transaction history regardless of action and status
+      - If "action == 'credited'", return all transaction history with action "credited"
+      - If "action == 'redeemed'", return all transaction history with action "redeemed" with status "accepted" or action "expired"
+  */
+  async getTransactionHistoryByAction(userId: string, action?: TransactionHistory["action"]) {
+    let whereCondition: any = { userPoints : { user: {id: userId }}};
+    let relations: string[] = ["donationRequest.donationEvent"];
+
+    if(action == "credited") {
+      whereCondition.action = In([Action.CREDITED]);
+    }
+    else if(action == "redeemed"){
+      whereCondition.action = In([Action.REDEEMED, Action.EXPIRED]);
+      whereCondition.status = In([Status.APPROVED, Status.SYSTEM]);
+      relations = [];
+    }
+
+    const transactionHistory = await AppDataSource.getRepository(TransactionHistory).find({
+        where: whereCondition,
+        relations: relations,
+        order: {
+          updatedAt: "DESC",
+        }
+    });
+
+    const transactionHistoryWithNamesOnly: any = transactionHistory.map(transaction => {
+      const { donationRequest } = transaction;
+      if (donationRequest && donationRequest.donationEvent) {
+          return {
+              id: transaction.id,
+              points: transaction.points,
+              action: transaction.action,
+              status: transaction.status,
+              createdAt: transaction.createdAt,
+              updatedAt: transaction.updatedAt,
+              donationEvent: donationRequest.donationEvent.name
+          };
+      }
+      return transaction;
+    });
+
+    return transactionHistoryWithNamesOnly;
   }
 }
