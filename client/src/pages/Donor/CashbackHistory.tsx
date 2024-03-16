@@ -171,9 +171,9 @@ export default function CashbackHistory() {
                     justifyContent="space-between"
                     sx={{ mt: 1, ml: 4 }}
                   >
-                    <Typography>{formatDate(eachData.createdAt)}</Typography>
+                    <Typography>{formatDate(eachData.updatedAt)}</Typography>
                     <Typography sx={{ fontWeight: "bold" }}>
-                      ${eachData.points}
+                      - ${eachData.points}
                     </Typography>
                   </Stack>
                 ))}
@@ -219,7 +219,7 @@ export default function CashbackHistory() {
                             )}
                           </Typography>
                           <Typography color="text.disabled">
-                            {formatDate(transaction.createdAt)}
+                            {formatDate(transaction.updatedAt)}
                           </Typography>
                         </Stack>
                       </Grid>
