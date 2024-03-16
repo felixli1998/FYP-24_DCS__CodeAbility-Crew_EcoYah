@@ -49,7 +49,6 @@ export class TransactionHistoryRepository {
 
     if(action == "credited") {
       whereCondition.action = In([Action.CREDITED]);
-      relations = ["donationRequest.donationEvent"];
     }
     else if(action == "redeemed"){
       whereCondition.action = In([Action.REDEEMED, Action.EXPIRED]);
@@ -61,7 +60,7 @@ export class TransactionHistoryRepository {
         where: whereCondition,
         relations: relations,
         order: {
-          createdAt: "DESC",
+          updatedAt: "DESC",
         }
     });
 
