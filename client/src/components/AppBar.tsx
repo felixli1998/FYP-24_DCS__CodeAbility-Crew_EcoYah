@@ -62,6 +62,7 @@ function ResponsiveAppBar() {
         const NavList = [
           NavigationList.DONATION_EVENTS,
           NavigationList.DONATION_REQUEST,
+          NavigationList.CASHBACK_REQUEST,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, true));
       } else {
@@ -147,21 +148,18 @@ function ResponsiveAppBar() {
   }, [location.pathname]);
 
   return (
-    <AppBar position="static" color="default">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ justifyContent: "space-between" }}>
+    <AppBar position="sticky" color="inherit" elevation={1}>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
           <Link to={homePath}>
-            <Box
-              component="img"
-              sx={{
-                m: "auto",
-                marginTop: 2,
-                width: "5rem",
-                height: "5rem",
-              }}
-              alt="Kunyah"
+            <img
+              width="10%"
+              height="100%"
+              srcSet={logo}
               src={logo}
-            ></Box>
+              alt={"Home"}
+              loading="lazy"
+              style={{ verticalAlign: 'middle' }}
+            />
           </Link>
 
           <TemporaryDrawer
@@ -169,7 +167,6 @@ function ResponsiveAppBar() {
             bottomDrawerList={actionList}
           ></TemporaryDrawer>
         </Toolbar>
-      </Container>
     </AppBar>
   );
 }

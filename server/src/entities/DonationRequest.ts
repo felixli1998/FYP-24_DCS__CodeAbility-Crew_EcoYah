@@ -8,10 +8,12 @@ import {
   ManyToOne,
   Index,
   OneToMany,
+  OneToOne,
 } from "typeorm";
 import { User } from "./User";
 import { DonationRequestItem } from "./DonationRequestItem";
 import { DonationEvent } from "./DonationEvent";
+import { TransactionHistory } from "./TransactionHistory";
 
 export enum Status {
   SUBMITTED = "submitted",
@@ -41,6 +43,12 @@ export class DonationRequest {
     { nullable: false },
   )
   donationEvent: DonationEvent;
+
+  @OneToOne(
+    () => TransactionHistory,
+    (transactionHistory) => transactionHistory.donationRequest
+  )
+  transactionHistory: TransactionHistory;
 
   @Column({
     comment: "If the donor wants to omit the points for this donation request.",

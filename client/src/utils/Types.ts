@@ -57,3 +57,21 @@ export type DonationRequestItemsType = {
     pointsPerUnit: number;
   };
 };
+
+export type SpeechSynthesisUtteranceType = {
+  text: string;
+  volume?: number;
+  rate?: number;
+  pitch?: number;
+  lang?: string;
+};
+
+export type SpeechSynthesisType = {
+  speak(utterance: SpeechSynthesisUtteranceType): void;
+  pause(): void;
+  resume(): void;
+  cancel(): void;
+  getVoices(): SpeechSynthesisVoice[];
+  addEventListener(type: string, listener: EventListener): void;
+  removeEventListener(type: string, listener: EventListener): void;
+};
