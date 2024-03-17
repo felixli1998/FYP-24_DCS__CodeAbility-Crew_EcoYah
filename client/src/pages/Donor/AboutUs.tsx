@@ -43,7 +43,7 @@ const team = [
     name: "Oh Siew May",
     title: "Assistant Chef",
     description:
-      "Home cook born with cerebal palsy, she is highly independent, positive in life and attitude.",
+      "Home cook born with cerebral palsy, she is highly independent, positive in life and attitude.",
     image: SiewMay,
   },
 ];
@@ -51,8 +51,11 @@ const team = [
 const OurTeam = () => {
   return (
     <Box>
-      <Typography variant="h5" sx={{ fontWeight: "bold", marginY: 2 }}>
-        Our team
+      <Typography
+        variant="h5"
+        sx={{ fontWeight: "bold", textAlign: "center", marginY: 2 }}
+      >
+        Our Team
       </Typography>
       <Typography variant="h6" color="text.secondary" sx={{ marginBottom: 2 }}>
         Meet our founding members and the team.
@@ -73,7 +76,7 @@ const OurTeam = () => {
             </Typography>
             <Typography variant="body1">{member.title}</Typography>
             <Typography
-              variant="body2"
+              variant="body1"
               sx={{ marginTop: 0.5 }}
               color="text.secondary"
             >
@@ -108,16 +111,19 @@ const Featured = () => {
 
   return (
     <>
-      <Typography variant="h5" sx={{ fontWeight: "bold", marginY: 2 }}>
-        Featured
+      <Typography
+        variant="h5"
+        sx={{ fontWeight: "bold", textAlign: "center", marginY: 2 }}
+      >
+        On the headlines
       </Typography>
       <Box sx={{ border: 1, borderRadius: 4, borderColor: "lightgray" }}>
         <ImageList cols={2}>
           {itemData.map((item) => (
             <ImageListItem key={item.img} sx={{ padding: 2 }}>
               <img
-                srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
+                srcSet={`${item.img}?w=120&h=120&fit=crop&auto=format&dpr=2 2x`}
+                src={`${item.img}?w=120&h=120&fit=crop&auto=format`}
                 alt={item.title}
                 loading="lazy"
               />
@@ -133,17 +139,21 @@ export default function AboutUs() {
   return (
     <Container sx={{ marginTop: 3, marginX: "auto" }}>
       <Box sx={{ marginX: 1, marginY: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", marginY: 2 }}>
-          Kunyah's mission is to serve you nice heritage food while rebuilding
-          the lives of disabled as chefs.
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: "bold", textAlign: "center", marginY: 2 }}
+        >
+          Our Mission
         </Typography>
         <Typography
           variant="h6"
           color="text.secondary"
           sx={{ marginBottom: 2 }}
         >
-          Partner with us for your food needs, together we improve social equity
-          & inclusion of the disabled.
+          Kunyah's mission is to serve nice heritage food while rebuilding the
+          lives of disabled as chefs. Partner with us today by donating your
+          used items. Together, we improve social equity and inclusion for
+          individuals with disabilities.
         </Typography>
         <Box>
           <img
