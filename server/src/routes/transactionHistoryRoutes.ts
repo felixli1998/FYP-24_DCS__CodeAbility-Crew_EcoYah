@@ -1,23 +1,33 @@
-// External Imports
 import express from "express";
-
 import { TransactionHistoryRepository } from "../repositories/TransactionHistoryRepository";
 import { TransactionHistoryService } from "../services/TransactionHistoryService";
-import { generateResponse } from "../common/methods";
-import { UserPointsService } from "../services/UserPointsService";
-import { UserPointsRepository } from "../repositories/UserPointsRepository";
+import { generateResponse, strongParams } from "../common/methods";
 
-const router = express.Router();
 const transactionHistoryRepository = new TransactionHistoryRepository();
 const transactionHistoryService = new TransactionHistoryService(transactionHistoryRepository);
 
-const userPointsService = new UserPointsService(new UserPointsRepository());
+const router = express.Router();
 
-router.get('/test', async (req, res) => {
-  const data = await transactionHistoryService.getExpiringDateForEachUser();
-  const test = await userPointsService.expireUserPoints();
+router.get("/get-transaction-history", async (req, res) => {
+    try {
+        const params = req.query;
+        const filterParams = strongParams(params, ["userId", "action"]);
+        const { userId, action } = filterParams;
 
-  return generateResponse(res, 200, { data });
+        let transactionHistory;
+        if (action) {
+            transactionHistory = await transactionHistoryService.getTransactionHistoryByAction(userId, action);
+        } else {
+            transactionHistory = await transactionHistoryService.getTransactionHistoryByAction(userId);
+        }
+        return generateResponse(res, 200, { action: true, message: transactionHistory });
+    } catch (error) {
+        return generateResponse(res, 500, {
+        action: false,
+        message: "Internal Server Error. Please refresh and try again.",
+        });
+    }
 });
 
 export default router;
+
