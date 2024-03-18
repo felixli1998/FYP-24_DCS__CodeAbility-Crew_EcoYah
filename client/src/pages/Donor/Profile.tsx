@@ -1,9 +1,10 @@
+// React
 import { useState, useEffect } from "react";
-import "../../styles/App.css";
+import { Link, useNavigate } from "react-router-dom";
+// MUI
 import {
   Box,
   Container,
-  ThemeProvider,
   Typography,
   Avatar,
   ListItemAvatar,
@@ -16,34 +17,32 @@ import {
   CardContent,
   CardActions,
 } from "@mui/material";
-import BasicButton from "../../components/Button/BasicButton";
-
-import { theme } from "../../styles/Palette";
-import { Link, useNavigate } from "react-router-dom";
+// Icons
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import PersonIcon from "@mui/icons-material/Person";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import PersonIcon from "@mui/icons-material/Person";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+// Components
+import Image from "../../components/Image/Image";
+import { folderPrefixNames } from "../../components/Image/Image";
+// Utils
 import { makeHttpRequest } from "../../utils/Utility";
 import { USER_ROUTES } from "../../services/routes";
 import { capitalize } from "lodash";
-import { folderPrefixNames } from "../../components/Image/Image";
-import Image from "../../components/Image/Image";
 
 const navigationItems = [
   {
-    category: "Transaction History",
+    category: "Cashback History",
     subCategories: [
       {
-        title: "Transaction",
-        subtitle: "View all your cash back transactions",
+        title: "Cashback",
+        subtitle: "View all your cashback transactions",
         avatar: (
           <Avatar sx={{ bgcolor: "#455a64" }}>
             <LocalActivityIcon />
           </Avatar>
         ),
-        slug: "vouchers",
+        slug: "cashback-history",
       },
     ],
   },
@@ -52,7 +51,7 @@ const navigationItems = [
     subCategories: [
       {
         title: "Your profile",
-        subtitle: "Edit and view profile information",
+        subtitle: "View and edit profile information",
         avatar: (
           <Avatar sx={{ bgcolor: "#455a64" }}>
             <PersonIcon />
@@ -75,61 +74,9 @@ const navigationItems = [
         ),
         slug: "contact-us",
       },
-      {
-        title: "Notification",
-        subtitle: "Manage subscriptions and email settings",
-        avatar: (
-          <Avatar sx={{ bgcolor: "#455a64" }}>
-            <NotificationsIcon />
-          </Avatar>
-        ),
-        slug: "notification",
-      },
     ],
   },
 ];
-
-// == Profile Picture Section ==
-// interface ProfilePictureProps {
-//   picture: string;
-//   name: string;
-//   role: string;
-// }
-
-// const ProfilePicture: React.FC<ProfilePictureProps> = ({
-//   picture,
-//   name,
-//   role,
-// }) => {
-//   const imageId = picture.trim() === "" ? "DefaultProfilePicture.jpg" : picture;
-//   console.log(picture)
-//   return (
-//     <>
-//       <Box
-//         display="flex"
-//         justifyContent="center"
-//         sx={{
-//           marginX: "auto",
-//           width: "8rem",
-//           height: "8rem",
-//           marginTop: 4,
-//         }}
-//       >
-//         <Image
-//           imageId={imageId}
-//           type="circle"
-//           width="100%"
-//           height="100%"
-//           folderPrefix={folderPrefixNames.PROFILEPICTURES}
-//         />
-//       </Box>
-//       <Typography sx={{ fontWeight: "bold" }} align="center">
-//         {name}
-//       </Typography>
-//       <Typography align="center">{role}</Typography>
-//     </>
-//   );
-// };
 
 // == Reward Section ==
 interface RewardProps {
@@ -165,7 +112,7 @@ const Reward: React.FC<RewardProps> = ({ points, expiryDate }) => {
             </Typography>
           </Box>
           <Typography variant="h5" component="span" color="white">
-            {points}
+            ${points}
           </Typography>
         </CardContent>
         <CardActions
@@ -282,7 +229,6 @@ export default function Profile() {
       );
       const { action, data } = res.data;
       if (action) {
-        // Currently, we do not have points so it will be null
         const { name, role, imageId, points, expiryDate } = data;
         setUserInfo({
           name,
@@ -292,7 +238,6 @@ export default function Profile() {
           expiryDate,
         });
       } else {
-        // TODO: Currently, we do not really have any robust error message
         console.log("Error retrieving user info");
       }
     } catch (error) {
@@ -307,45 +252,35 @@ export default function Profile() {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container sx={{ width: "100%" }}>
-        {/* <ProfilePicture
-          picture={userInfo.imageId}
-          name={userInfo.name}
-          role={userInfo.role}
-        /> */}
-        <Box
-          display="flex"
-          justifyContent="center"
-          sx={{
-            marginX: "auto",
-            width: "8rem",
-            height: "8rem",
-            marginTop: 4,
-          }}
-        >
-          {loading ? (
-            <div>Loading...</div>
-          ) : (
-            <Image
-              imageId={userInfo.imageId}
-              type="circle"
-              width="100%"
-              height="100%"
-              folderPrefix={folderPrefixNames.PROFILEPICTURES}
-            />
-          )}
-        </Box>
-        <Typography
-          sx={{ fontWeight: "bold", marginTop: "1rem" }}
-          align="center"
-        >
-          {userInfo.name}
-        </Typography>
-        <Typography align="center">{userInfo.role}</Typography>
-        <Reward points={userInfo.points} expiryDate={userInfo.expiryDate} />
-        <Others />
-      </Container>
-    </ThemeProvider>
+    <Container sx={{ width: "100%" }}>
+      <Box
+        display="flex"
+        justifyContent="center"
+        sx={{
+          marginX: "auto",
+          width: "8rem",
+          height: "8rem",
+          marginTop: 4,
+        }}
+      >
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <Image
+            imageId={userInfo.imageId}
+            type="circle"
+            width="100%"
+            height="100%"
+            folderPrefix={folderPrefixNames.PROFILEPICTURES}
+          />
+        )}
+      </Box>
+      <Typography sx={{ fontWeight: "bold" }} align="center">
+        {userInfo.name}
+      </Typography>
+      <Typography align="center">{userInfo.role}</Typography>
+      <Reward points={userInfo.points} expiryDate={userInfo.expiryDate} />
+      <Others />
+    </Container>
   );
 }
