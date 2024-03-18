@@ -18,6 +18,7 @@ import DonationRequests from "../pages/Admin/DonationRequests";
 import { DonationRequest } from "../pages/Donor/DonationRequest";
 import LongPolling from "../pages/LongPollingPage";
 import CashbackRequests from "../pages/Admin/CashbackRequests";
+import PosterGenerator from "../pages/Admin/PosterGenerator";
 
 type AppRoutesT = {
   path: string;
@@ -141,5 +142,11 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "View all Cashback Requests for the admin",
     element: <CashbackRequests />,
     isAdmin: true,
-  }
+  },
+  {
+    path:"poster-generator",
+    description: "Poster Generator for the admin",
+    element: <PosterGenerator />,
+    isAdmin: false, // Set to false for development
+  },
 ];
