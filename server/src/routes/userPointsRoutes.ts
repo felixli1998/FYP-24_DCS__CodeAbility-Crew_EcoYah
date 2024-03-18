@@ -37,13 +37,13 @@ router.post("/request", async function (req, res) {
   const userId = parseInt(req.body.userId);
   const pointsToBeDeducted = parseInt(req.body.points);
   try {
-    const currentPoints = await userPointsService.getUserPoints(userId);
-    if (!currentPoints) {
+    const userPoints = await userPointsService.getUserPoints(userId);
+    if (!userPoints) {
       return generateResponse(res, 400, {
         message: "User does not have a points account",
       });
     }
-    if (currentPoints.points < pointsToBeDeducted) {
+    if (userPoints.points < pointsToBeDeducted) {
       return generateResponse(res, 400, {
         message: "Insufficient points",
       });
@@ -53,7 +53,7 @@ router.post("/request", async function (req, res) {
       location: "default",
       notificationData: {
         userId: userId,
-        name: currentPoints.user.name,
+        name: userPoints.user.name,
         points: pointsToBeDeducted,
       },
     };
@@ -62,7 +62,7 @@ router.post("/request", async function (req, res) {
       await transactionHistoryService.createTransactionHistory(
         Action.REDEEMED,
         pointsToBeDeducted,
-        userId
+        userPoints.id
       );
     if (transactionHistory) {
       data.notificationData.transactionHistory = transactionHistory;
