@@ -1,8 +1,22 @@
 import { Box, Container } from "@mui/material";
 import html2canvas from 'html2canvas';
 
+// Internal imports
+import BasicTemplate from "../../components/PosterTemplates/BasicTemplate";
+
+export interface DonationDetails {
+    startDate: string;
+    endDate: string;
+    donationItems: string[];
+    name: string;
+    location: string;
+    posterHeight: number;
+    posterWidth: number;
+    images: string ; // Assuming images can be a single string or an array of strings
+}
+
 export default function PosterGenerator() {
-    const donationDetails = {
+    const donationDetails :  DonationDetails = {
         startDate: "2022-01-01",
         endDate: "2022-01-31",
         donationItems: ["Laptop", "Phone", "Tablet"],
@@ -10,7 +24,9 @@ export default function PosterGenerator() {
         location: "1234 Main St, San Francisco, CA 94123",
         posterHeight: 1350,
         posterWidth: 1080,
+        images:  "Stock1.jpg"
     }
+    // What format should this be in
 
     const handleDownload = () => {
         const box = document.getElementById('poster-box');
@@ -27,21 +43,7 @@ export default function PosterGenerator() {
 
     return (
         <Container>
-            <Box
-                id="poster-box"
-                sx={{
-                    width: donationDetails.posterWidth,
-                    height: donationDetails.posterHeight,
-                    backgroundColor: "red",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "1rem",
-                }}
-            >
-                {/* Add content inside the box here */}
-            </Box>
+            <BasicTemplate {...donationDetails}/>
             <button onClick={handleDownload}>Download</button>
         </Container>
     )
