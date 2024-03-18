@@ -16,6 +16,7 @@ import axios from "axios";
 import ColorTabs from "../../components/Tabs/Tabs";
 import { getUserByEmail } from "../../services/authenticationApi";
 import { TRANSACTION_HISTORY_ROUTES } from "../../services/routes";
+import { UserType } from "../../utils/Types";
 
 const tabs = [
   {
@@ -47,11 +48,11 @@ type eachDataType = {
 
 export default function CashbackHistory() {
   const [selectedTab, setSelectedTab] = useState<string>("all");
-  const [user, setUser] = useState<any | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [errorFetchingData, setErrorFetchingData] = useState(false);
-  const [pendingRedemptions, setPendingRedemptions] = useState<any[]>([]);
+  const [pendingRedemptions, setPendingRedemptions] = useState<eachDataType[]>([]);
 
-  const getTransactionHistoryData = async (userId: string, action?: string) => {
+  const getTransactionHistoryData = async (userId: number, action?: String) => {
     try {
       const response = await axios.get(
         TRANSACTION_HISTORY_ROUTES.GET_TRANS_HISTORY_BY_ACTION,
@@ -93,17 +94,20 @@ export default function CashbackHistory() {
     });
 
   useEffect(() => {
-    const email = localStorage.getItem("ecoyah-email");
-    if (email) {
-      getUserByEmail(email)
-        .then((res) => {
-          setUser(res.data);
-        })
-        .catch((error) => {
+    async function getUser() {
+      const email = localStorage.getItem("ecoyah-email");
+      if (email) {
+        try {
+          const getUser = await getUserByEmail(email);
+          setUser(getUser.data);
+        }
+        catch (error) {
           setErrorFetchingData(true);
           console.error("An error occurred while fetching user data:", error);
-        });
+        }
+      }
     }
+    getUser();
   }, [localStorage.getItem("ecoyah-email")]);
 
   useEffect(() => {
@@ -189,20 +193,22 @@ export default function CashbackHistory() {
 
           {transactionHistoryData &&
             transactionHistoryData.map(
-              (transaction: any) =>
+              (transaction: eachDataType) =>
                 transaction.status !== "pending" && (
                   <Box key={transaction.id}>
                     <Grid container sx={{ mb: "1rem" }}>
                       <Grid item xs={9}>
                         <Stack>
-                          <Typography
-                            sx={{ fontWeight: "medium", mb: "0.5rem" }}
-                          >
-                            {transaction.action === "credited"
-                              ? transaction.donationEvent
-                              : transaction.action === "expired"
-                                ? "Expired Cashback"
-                                : "Redeemed Cashback"}
+                          <Box sx={{display: "flex", alignItems: "center", mb: "0.5rem"}}>
+                            <Typography
+                              sx={{ fontWeight: "medium" }}
+                            >
+                              {transaction.action === "credited"
+                                ? transaction.donationEvent
+                                : transaction.action === "expired"
+                                  ? "Expired Cashback"
+                                  : "Redeemed Cashback"}
+                            </Typography>
                             {transaction.status === "rejected" && (
                               <Chip
                                 sx={{ marginLeft: 1 }}
@@ -217,7 +223,7 @@ export default function CashbackHistory() {
                                 }
                               />
                             )}
-                          </Typography>
+                          </Box>
                           <Typography color="text.disabled">
                             {formatDate(transaction.updatedAt)}
                           </Typography>
@@ -248,15 +254,16 @@ export default function CashbackHistory() {
                 ),
             )}
 
-          {/* <Typography
+          <Typography
             sx={{
-              fontSize: { xs: 12, md: 20 },
+              fontSize: { xs: 13, md: 16 },
               textAlign: "center",
               marginTop: "1rem",
+              fontWeight: "medium"
             }}
           >
-            - You have reached the end of your cashback history -
-          </Typography> */}
+            ~ You have reached the end of your cashback history ~
+          </Typography> 
         </Stack>
       )}
     </>
