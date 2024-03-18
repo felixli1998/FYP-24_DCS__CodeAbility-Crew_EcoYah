@@ -3,14 +3,16 @@ import { TransactionHistoryRepository } from "../repositories/TransactionHistory
 import { Action, TransactionHistory, Status } from "../entities/TransactionHistory";
 import { DonationRequest } from "../entities/DonationRequest";
 import { UserPoints } from "../entities/UserPoints";
-import { isatty } from "tty";
-
 
 export class TransactionHistoryService {
   private transactionHistoryRepository: TransactionHistoryRepository;
 
   constructor(transactionHistoryRepository: TransactionHistoryRepository) {
     this.transactionHistoryRepository = transactionHistoryRepository;
+  }
+
+  async getCashbackRequests() {
+    return await this.transactionHistoryRepository.getCashbackRequests();
   }
 
   async getTransactionHistoryByAction(userId: string, action?: TransactionHistory["action"]) {
@@ -36,9 +38,7 @@ export class TransactionHistoryService {
         const redeemedHistory = await this.handleRedeemedHistory(amount, userPointsID);
 
         return redeemedHistory;
-        break;
       default:
-        // do something
         throw new Error(`Invalid action: ${action}`)
     }
 
@@ -58,7 +58,6 @@ export class TransactionHistoryService {
   }
 
   private async handleExpiredHistory(amount: TransactionHistory["points"], userPointsID: UserPoints["id"]) {
-    // do something here ...
     const newTransactionHistory = new TransactionHistory();
 
     newTransactionHistory.action = Action.EXPIRED;

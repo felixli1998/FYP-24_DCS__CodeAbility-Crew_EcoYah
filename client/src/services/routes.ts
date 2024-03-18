@@ -10,6 +10,7 @@ export const PARENT_ROUTES = {
   DONATION_REQUEST_ITEMS: `${BASE_URL}/donation-request-items`,
   IMAGES: `${BASE_URL}/images`,
   LOGIN: `${BASE_URL}/login`,
+  CASHBACK: `${BASE_URL}/transaction-history`
 };
 
 // User Related Routes //
@@ -69,3 +70,7 @@ export const IMAGE_ROUTES = {
 export const EVENT_TYPE_ROUTES = {
   GET_ALL: `${BASE_URL}/event-types/event-types`,
 };
+
+export const CASHBACK_ROUTES = {
+  GET_ALL_PENDING: `${PARENT_ROUTES.CASHBACK}/pending-cashback-requests`,
+}

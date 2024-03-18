@@ -1,13 +1,22 @@
 import { useState, useEffect } from "react";
-import io from "socket.io-client";
-import axios from "axios";
-
 import RedemptionToastNotification from "./RedemptionToastNotification";
+import axios from "axios";
 import { BASE_URL, USER_POINTS_ROUTES } from "../../services/routes";
+import { getAllPending } from "../../services/cashbackApi";
+import io from "socket.io-client";
 
 export default function RedemptionNotification() {
   const messageSound = require("../../assets/message.mp3");
   const [notifications, setNotifications] = useState<any[]>([]);
+
+  const fetchPendingCashbackRequests = async () => {
+    try {
+      const pendingData = await getAllPending();
+      setNotifications(pendingData.data);
+    } catch (error) {
+      console.error("Error fetching pending data", error);
+    }
+  }
 
   const acceptCashbackRequest = (notification: any) => {
     axios.post(USER_POINTS_ROUTES.ACCEPT_REQUEST, {
@@ -39,11 +48,14 @@ export default function RedemptionNotification() {
   };
 
   useEffect(() => {
+    fetchPendingCashbackRequests();
+
     // Create a Socket.IO client instance and connect to the server
     const socket = io(BASE_URL);
 
     // Listen for 'notification' event from the server and update state
     socket.on("notification", (data) => {
+      console.log(data)
       setNotifications((prevNotifications) => [...prevNotifications, data]);
       const sound = new Audio(messageSound);
       sound.autoplay = true;
