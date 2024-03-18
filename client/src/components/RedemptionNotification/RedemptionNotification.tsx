@@ -16,7 +16,7 @@ export default function RedemptionNotification() {
     } catch (error) {
       console.error("Error fetching pending data", error);
     }
-  }
+  };
 
   const acceptCashbackRequest = (notification: any) => {
     axios.post(USER_POINTS_ROUTES.ACCEPT_REQUEST, {
@@ -25,7 +25,7 @@ export default function RedemptionNotification() {
       transactionHistoryId: notification.transactionHistory.id,
       // Location for future use
       location: "default",
-    })
+    });
     // Make a call to actually deduct
     removeNotification(notification);
   };
@@ -55,7 +55,6 @@ export default function RedemptionNotification() {
 
     // Listen for 'notification' event from the server and update state
     socket.on("notification", (data) => {
-      console.log(data)
       setNotifications((prevNotifications) => [...prevNotifications, data]);
       const sound = new Audio(messageSound);
       sound.autoplay = true;
