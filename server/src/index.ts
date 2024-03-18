@@ -1,9 +1,9 @@
 // External Imports
 import dotenv from "dotenv";
-import express, { Router, Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import { createServer } from "http";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 import cron from "node-cron";
 import { scheduledMethods } from "./cron/index";
 import { scheduleCronTask } from "./cron/utils";
@@ -28,6 +28,7 @@ import donationEventItemRoutes from "./routes/donationEventItemRoutes";
 import userPointsRoutes from "./routes/userPointsRoutes";
 import { createLongPollingConnection } from "./services/WebSocket";
 import transactionHistoryRoutes from "./routes/transactionHistoryRoutes";
+import openAIRoutes from "./routes/openAIRoutes";
 // import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
 
 dotenv.config();
@@ -37,13 +38,13 @@ const httpServer = createServer(app);
 const options = {
   pingTimeout: 5000,
   pingInterval: 10000,
-  cors:{
-    origin: "*"
-  }
+  cors: {
+    origin: "*",
+  },
 };
 
 // Create long polling connection
-let location = "default";
+const location = "default";
 const io = new Server(httpServer, options);
 createLongPollingConnection(io, location);
 
@@ -74,7 +75,7 @@ AppDataSource.initialize()
     scheduledMethods.forEach((scheduleMethod) => {
       console.log(`Starting CRON jobs: ${scheduleMethod.description}`);
       scheduleCronTask(cron, scheduleMethod.method, scheduleMethod.unixFormat);
-    })
+    });
   })
   .catch((error) => console.log(error));
 
@@ -88,8 +89,9 @@ app.use("/items", itemRoutes);
 app.use("/event-types", eventRoutes);
 app.use("/donation-requests", donationRequestRoutes);
 app.use("/donation-request-items", donationRequestItemRoutes);
-app.use("/points", userPointsRoutes)
+app.use("/points", userPointsRoutes);
 app.use("/transaction-history", transactionHistoryRoutes);
+app.use("/openai", openAIRoutes);
 // app.use("/longpolling", longPollingRoute);
 
 app.get("/", (req, res) => {
