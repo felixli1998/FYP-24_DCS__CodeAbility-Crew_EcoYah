@@ -14,6 +14,19 @@ const config = {
   },
 };
 
+export type emailResultItemType = [string, string, string];
+
+export type emailResultType = Record<
+  string,
+  {
+    name: string;
+    donationEventName: string;
+    dropOffDate: string;
+    dropOffTime: string;
+    items: emailResultItemType[];
+  }
+>;
+
 export class EmailService {
   private donationRequestRepository: DonationRequestRepository;
 
@@ -46,25 +59,31 @@ export class EmailService {
 
   async notifyDropOff(
   ) {
-    const result = await this.donationRequestRepository.getDonationRequestsApproachingDeadline();
+    const result: emailResultType = await this.donationRequestRepository.getDonationRequestsApproachingDeadline();
     console.log(result);
     const transporter = nodemailer.createTransport(config);
 
     try {
-      for (const donationRequest of result) {
+      for (const [email, donationRequest] of Object.entries(result)) {
 
-        const { drop_off_date, drop_off_time, user_name, user_email, donation_event_name, quantity, item, unit } = donationRequest;
+        const { dropOffDate, dropOffTime, name, donationEventName, items } = donationRequest;
 
-        const formattedDate = dayjs(drop_off_date).format('DD/MM/YYYY');
+        const formattedDate = dayjs(dropOffDate).format('DD/MM/YYYY');
+
+        const formattedItems = items.map((item) => {
+          return `${item[0]} ${item[1]} of ${item[2]}`;
+        }).join('<br>');
 
         const message = {
           from: process.env.GMAIL_APP_USER,
-          to: user_email, 
+          to: email, 
           subject: "[REMINDER] Donation Drop-Off",
-          html: `Dear ${user_name},<br><br>
+          html: `Dear ${name},<br><br>
             Please be reminded that your drop off for 
-            ${donation_event_name} is due on ${formattedDate} ${drop_off_time}.<br><br>
-            Thank you.`,
+            ${donationEventName} is due on ${formattedDate} ${dropOffTime}.<br><br>
+            Your donation request consists of:<br><br>
+            ${formattedItems}<br><br>
+            Thank you for your generosity.`,
         };
   
         console.log(message);
