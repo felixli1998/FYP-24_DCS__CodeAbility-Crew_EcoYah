@@ -5,12 +5,14 @@ import express from "express";
 import { strongParams, generateResponse } from "../common/methods";
 import { UserService } from "../services/UserService";
 import { UserRepository } from "../repositories/UserRepository";
+import { DonationRequestRepository } from "../repositories/DonationRequestRepository";
 import { EmailService } from "../services/EmailService";
 
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
 
-const emailService = new EmailService();
+const donationRequestRepository = new DonationRequestRepository();
+const emailService = new EmailService(donationRequestRepository);
 
 const router = express.Router();
 
@@ -31,6 +33,17 @@ router.post("/notify-new-events", async (req, res) => {
     filteredParams.captionText,
   );
 
+  if (response)
+    return generateResponse(res, 201, {
+      message: "Emails sent successfully!",
+    });
+  else return generateResponse(res, 500, { message: "Internal Server Error" });
+});
+
+router.post("/notify-drop-off", async (req, res) => {
+  
+  const response = await emailService.notifyDropOff();
+  
   if (response)
     return generateResponse(res, 201, {
       message: "Emails sent successfully!",

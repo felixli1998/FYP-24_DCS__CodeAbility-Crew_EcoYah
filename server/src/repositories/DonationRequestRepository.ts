@@ -1,5 +1,8 @@
 // External Imports
 import { startOfDay, endOfDay } from "date-fns";
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc';
+import timezone from "dayjs/plugin/timezone";
 import { In } from "typeorm";
 
 // Internal imports
@@ -7,13 +10,18 @@ import { DonationRequest, Status } from "../entities/DonationRequest";
 import { AppDataSource } from "../config/data-source";
 import { Between } from "typeorm";
 import IPagination from "../common/IPagination";
+import { User } from "../entities/User";
+import { DonationEvent } from "../entities/DonationEvent";
+import { DonationEventItem } from "../entities/DonationEventItem";
+import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { Item } from "../entities/Item";
 
 export class DonationRequestRepository {
   static PAGE_SIZE: number = 25;
 
   async getActiveDonationRequestFromUser(
     user_id: number,
-    page: number = 1,
+    page: number = 1
   ): Promise<{ data: DonationRequest[]; pagination: IPagination }> {
     const offset = (page - 1) * DonationRequestRepository.PAGE_SIZE;
     const selectOptions = {
@@ -45,7 +53,7 @@ export class DonationRequestRepository {
       },
     };
     const [data, totalCount] = await AppDataSource.getRepository(
-      DonationRequest,
+      DonationRequest
     ).findAndCount({
       select: selectOptions,
       where: {
@@ -66,7 +74,7 @@ export class DonationRequestRepository {
       take: DonationRequestRepository.PAGE_SIZE,
     });
     const totalPages = Math.ceil(
-      totalCount / DonationRequestRepository.PAGE_SIZE,
+      totalCount / DonationRequestRepository.PAGE_SIZE
     );
     const pagination: IPagination = {
       pageNumber: page,
@@ -77,11 +85,11 @@ export class DonationRequestRepository {
 
   async getCompletedDonationRequestFromUser(
     user_id: number,
-    page: number = 1,
+    page: number = 1
   ): Promise<{ data: DonationRequest[]; pagination: IPagination }> {
     const offset = (page - 1) * DonationRequestRepository.PAGE_SIZE;
     const [data, totalCount] = await AppDataSource.getRepository(
-      DonationRequest,
+      DonationRequest
     ).findAndCount({
       where: {
         user: { id: user_id },
@@ -101,7 +109,7 @@ export class DonationRequestRepository {
       take: DonationRequestRepository.PAGE_SIZE,
     });
     const totalPages = Math.ceil(
-      totalCount / DonationRequestRepository.PAGE_SIZE,
+      totalCount / DonationRequestRepository.PAGE_SIZE
     );
     const pagination: IPagination = {
       pageNumber: page,
@@ -113,7 +121,7 @@ export class DonationRequestRepository {
   // TODO: This was created during model creation. Feel free to expand upon it as needed
   async createDonationRequest(donationRequest: DonationRequest) {
     return await AppDataSource.getRepository(DonationRequest).save(
-      donationRequest,
+      donationRequest
     );
   }
 
@@ -210,7 +218,34 @@ export class DonationRequestRepository {
   async completeDonationRequest(id: number) {
     await AppDataSource.getRepository(DonationRequest).update(
       { id: id },
-      { status: Status.COMPLETED },
+      { status: Status.COMPLETED }
     );
+  }
+
+  async getDonationRequestsApproachingDeadline() {
+    dayjs.extend(utc);
+    dayjs.extend(timezone);
+
+    const currentDay = dayjs();
+    const twoDaysLater = currentDay.add(2, 'day');
+    console.log(currentDay, twoDaysLater);
+
+    const donationRequests = await AppDataSource.getRepository(DonationRequest)
+      .createQueryBuilder("DR")
+      .select("DR.drop_off_date, DR.drop_off_time")
+      .addSelect("U.name as user_name, U.email as user_email")
+      .addSelect("DE.name as donation_event_name")
+      .addSelect("DRI.quantity as quantity")
+      .addSelect("I.name as item, I.unit as unit")
+      .innerJoin(User, "U", "U.id = DR.user_id")
+      .innerJoin(DonationEvent, "DE", "DE.id = DR.donation_event_id")
+      .innerJoin(DonationRequestItem, "DRI", "DRI.donation_request_id = DR.id")
+      .innerJoin(DonationEventItem, "DEI", "DEI.id = DRI.donation_event_item_id")
+      .innerJoin(Item, "I", "I.id = DEI.item_id")
+      .where("DR.drop_off_date <= :twoDaysLater", { twoDaysLater }) 
+      .andWhere("DR.status = :status", { status: Status.SUBMITTED })
+      .getRawMany();
+
+    return donationRequests;
   }
 }
