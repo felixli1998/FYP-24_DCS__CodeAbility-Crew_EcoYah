@@ -44,6 +44,7 @@ export enum folderPrefixNames {
   DONOR = "donor",
   EVENTS = "events",
   PROFILEPICTURES = "profile-pictures",
+  POSTERS = "posters",
 }
 
 export default function Image(props: ImageProps): JSX.Element {
