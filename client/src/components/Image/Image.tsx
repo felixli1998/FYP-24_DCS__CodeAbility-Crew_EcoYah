@@ -28,6 +28,8 @@ interface ImageProps {
   editable?: boolean | false;
   width?: string | number;
   height?: string | number;
+  imageLeftShift?: string;
+  imageTopShift?: string;
 }
 
 const defaultProps: ImageProps = {
@@ -37,6 +39,8 @@ const defaultProps: ImageProps = {
   editable: false, // Default value for editable
   width: "250px",
   height: "250px",
+  imageLeftShift: "0px",
+  imageTopShift: "0px",
 };
 
 export enum folderPrefixNames {
@@ -194,6 +198,8 @@ export default function Image(props: ImageProps): JSX.Element {
         style={{
           width: props.width,
           height: props.height,
+          marginTop: props.imageTopShift,
+          marginLeft: props.imageLeftShift,
           ...getStyles(),
         }}
       />
