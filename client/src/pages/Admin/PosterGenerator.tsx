@@ -3,7 +3,6 @@ import html2canvas from 'html2canvas';
 
 // Internal imports
 import BasicTemplate from "../../components/PosterTemplates/BasicTemplate";
-
 export interface DonationDetails {
     startDate: string;
     endDate: string;
@@ -24,10 +23,8 @@ export default function PosterGenerator() {
         location: "1234 Main St, San Francisco, CA 94123",
         posterHeight: 1350,
         posterWidth: 1080,
-        images:  "Stock1.jpg"
+        images:  "Stock3.jpg"
     }
-    // What format should this be in
-
     const handleDownload = () => {
         const box = document.getElementById('poster-box');
         if (!box) return;
