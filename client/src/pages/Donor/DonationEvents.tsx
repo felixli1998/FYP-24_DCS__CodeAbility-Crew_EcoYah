@@ -393,7 +393,9 @@ export default function DonationEvents() {
                       <Grid item sx={{ marginBottom: 2 }} key={event.id}>
                         <DonationEventCard
                           name={event.name}
-                          description={`Take part in this donation by donating ${event.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                          description={event.donationEventItems.map((eachItem, i) => 
+                            <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
+                            )}
                           imgSrc={event.imageId}
                           numJoined={event.numDonors}
                           timeLeft={event.timeLeft}
