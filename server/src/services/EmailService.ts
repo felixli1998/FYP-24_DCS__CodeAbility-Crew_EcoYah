@@ -57,26 +57,28 @@ export class EmailService {
     }
   }
 
-  async notifyDropOff(
-  ) {
-    const result: emailResultType = await this.donationRequestRepository.getDonationRequestsApproachingDeadline();
-    console.log(result);
+  async notifyDropOffs() {
+    const result: emailResultType =
+      await this.donationRequestRepository.getDonationRequestsApproachingDeadline();
+
     const transporter = nodemailer.createTransport(config);
 
     try {
       for (const [email, donationRequest] of Object.entries(result)) {
+        const { dropOffDate, dropOffTime, name, donationEventName, items } =
+          donationRequest;
 
-        const { dropOffDate, dropOffTime, name, donationEventName, items } = donationRequest;
+        const formattedDate = dayjs(dropOffDate).format("DD/MM/YYYY");
 
-        const formattedDate = dayjs(dropOffDate).format('DD/MM/YYYY');
-
-        const formattedItems = items.map((item) => {
-          return `${item[0]} ${item[1]} of ${item[2]}`;
-        }).join('<br>');
+        const formattedItems = items
+          .map((item) => {
+            return `${item[0]} ${item[1]} of ${item[2]}`;
+          })
+          .join("<br>");
 
         const message = {
           from: process.env.GMAIL_APP_USER,
-          to: email, 
+          to: email,
           subject: "[REMINDER] Donation Drop-Off",
           html: `Dear ${name},<br><br>
             Please be reminded that your drop off for 
@@ -85,12 +87,10 @@ export class EmailService {
             ${formattedItems}<br><br>
             Thank you for your generosity.`,
         };
-  
-        console.log(message);
 
         await transporter.sendMail(message);
       }
-  
+
       return true;
     } catch (err) {
       console.error("Error sending emails:", err);

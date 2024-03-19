@@ -40,10 +40,10 @@ router.post("/notify-new-events", async (req, res) => {
   else return generateResponse(res, 500, { message: "Internal Server Error" });
 });
 
-router.post("/notify-drop-off", async (req, res) => {
-  
-  const response = await emailService.notifyDropOff();
-  
+// for testing purposes, will remove after PR is approved
+router.post("/notify-drop-offs", async (req, res) => {
+  const response = await emailService.notifyDropOffs();
+
   if (response)
     return generateResponse(res, 201, {
       message: "Emails sent successfully!",
