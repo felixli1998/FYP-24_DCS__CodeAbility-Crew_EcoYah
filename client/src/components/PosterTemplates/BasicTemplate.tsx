@@ -23,11 +23,11 @@ export default function BasicTemplate(donationDetails: DonationDetails) {
                 padding: "1rem",
             }}
         >           <BasicOutline
-        style={{
-            position: "absolute",
-            opacity: 0.99,
-        }}
-    />
+                style={{
+                    position: "absolute",
+                    opacity: 0.99,
+                }}
+            />
 
             <PosterImageBoundingBox
                 imageId={donationDetails.images}
@@ -51,44 +51,45 @@ export default function BasicTemplate(donationDetails: DonationDetails) {
                     padding: "1rem",
                     marginTop: "800px",
                     overflow: "hidden",
+                    zIndex: "5000",
+                    position:"relative"
                 }}
             >
-                <h1 
-                    >
+                <h1
+                >
                     {donationDetails.startDate}
                 </h1>
                 <Typography
                     color="white"
                     variant="h1"
                     gutterBottom
-                    sx = {{zIndex: 5000}}
-                    >
+                >
                     {donationDetails.startDate}
                 </Typography>
                 <Typography
                     color="white"
                     variant="h2"
                     gutterBottom
-                    >
+                >
                     {donationDetails.name}
                 </Typography>
                 <Typography
                     color="white"
                     variant="h3"
                     gutterBottom
-                    >
+                >
                     {donationDetails.location}
                 </Typography>
                 <Typography
                     color="white"
                     variant="h3"
                     gutterBottom
-                    >
+                >
                     {donationDetails.donationItems}
                 </Typography>
 
             </Box>
- 
+
             {/* Add content inside the box here */}
         </Box>
     );
