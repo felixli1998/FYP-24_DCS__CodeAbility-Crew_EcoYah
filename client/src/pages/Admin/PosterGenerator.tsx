@@ -1,4 +1,4 @@
-import { Box, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import html2canvas from 'html2canvas';
 
 // Internal imports
@@ -25,6 +25,7 @@ export default function PosterGenerator() {
         posterWidth: 1080,
         images:  "Stock3.jpg"
     }
+
     const handleDownload = () => {
         const box = document.getElementById('poster-box');
         if (!box) return;
