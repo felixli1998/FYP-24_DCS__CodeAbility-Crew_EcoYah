@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 import { isAuthenticated } from "../../components/AppBar";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
 import { fetchActiveDonationEvents } from "../../services/donationEventApi";
@@ -185,19 +185,23 @@ export default function DonationEvents() {
 
   const navigate = useNavigate();
   const handleDonateClick = (donationEvent: eventType) => {
+    const dataToDonationRequestForm: dataToDonationRequestFormType = {
+      id: donationEvent.id,
+      donationEventItems: donationEvent.donationEventItems,
+      startDate: donationEvent.startDate,
+      endDate: donationEvent.endDate,
+      imageId: donationEvent.imageId,
+      name: donationEvent.name,
+    };
     // Check if user is authenticated, if not, push to Sign In
     if (!isAuthenticated()) {
+      localStorage.setItem('intendedDestination', JSON.stringify({
+        path: '/donation-request-form',
+        state: { action: 'create', form: dataToDonationRequestForm }
+      }));
       navigate("/sign-in");
     } else {
       // Redirect to donation request form page
-      const dataToDonationRequestForm: dataToDonationRequestFormType = {
-        id: donationEvent.id,
-        donationEventItems: donationEvent.donationEventItems,
-        startDate: donationEvent.startDate,
-        endDate: donationEvent.endDate,
-        imageId: donationEvent.imageId,
-        name: donationEvent.name,
-      };
       navigate("/donation-request-form", {
         state: { action: "create", form: dataToDonationRequestForm },
       });

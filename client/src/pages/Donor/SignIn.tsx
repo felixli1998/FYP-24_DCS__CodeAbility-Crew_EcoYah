@@ -64,7 +64,16 @@ export default function SignIn() {
           // Login successful
           localStorage.setItem("ecoyah-id", res.data.data.id);
           localStorage.setItem("ecoyah-email", formData["email"]);
-          navigate("/");
+          const storedDestination = localStorage.getItem('intendedDestination');
+
+          if (storedDestination) {
+            // If user clicks on Donate in DonationEvents but was not signed in, this redirects them back to the Donation Request Form
+            const { path, state } = JSON.parse(storedDestination);
+            navigate(path, { state });
+            localStorage.removeItem('intendedDestination');
+          } else {
+            navigate("/");
+          }
         } else {
           // Login failed, handle specific cases
           if (res.data.message === "wrong_email") {
