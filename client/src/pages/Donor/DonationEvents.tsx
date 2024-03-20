@@ -208,6 +208,21 @@ export default function DonationEvents() {
     }
   };
 
+  const redirectToDonationRequestForm = (donationEventIds: number[]) => {
+    const storedDestination = localStorage.getItem('intendedDestination');
+    if (storedDestination) {
+      // If user clicks on Donate in DonationEvents but was not signed in initially, this redirects them back to the Donation Request Form
+      const { path, state } = JSON.parse(storedDestination);
+      const toDonateEventId = state.form.id;
+      console.log(toDonateEventId, donationEventIds);
+      // This allows only redirection to DonationRequestForm if user has not participated in the DonationEvent before
+      if(!donationEventIds.includes(toDonateEventId)) {
+        navigate(path, { state });
+      }
+      localStorage.removeItem('intendedDestination');
+    } 
+  }
+
   useEffect(() => {
     const userId = localStorage.getItem("ecoyah-id");
     if (userId) {
@@ -224,9 +239,11 @@ export default function DonationEvents() {
             donationEventIds.push(donationRequest.donationEvent.id);
           });
           setUserParticipatedEvents(donationEventIds);
+          redirectToDonationRequestForm(donationEventIds);
         })
         .catch((err: any) => console.error(err));
     }
+
 
     const fetchData = async () => {
       try {
