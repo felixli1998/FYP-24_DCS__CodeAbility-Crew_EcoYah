@@ -212,15 +212,8 @@ export default function CashbackHistory() {
                             {transaction.status === "rejected" && (
                               <Chip
                                 sx={{ marginLeft: 1 }}
-                                label={
-                                  transaction.status === "rejected" &&
-                                  "Rejected"
-                                }
-                                color={
-                                  transaction.status === "rejected"
-                                    ? "error"
-                                    : "default"
-                                }
+                                label="Rejected"
+                                color="error"
                               />
                             )}
                           </Box>
