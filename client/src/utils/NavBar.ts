@@ -3,7 +3,6 @@ import slugify from "slugify";
 export enum NavigationList {
   HOME = "Home",
   CONTACT_US = "Contact us",
-  REWARD = "Reward",
   PROFILE = "Profile",
   DONATION = "Donation",
   DONATION_EVENT_FORM = "Donation Event Form",
