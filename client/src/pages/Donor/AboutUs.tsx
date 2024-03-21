@@ -1,6 +1,7 @@
 import {
   Box,
   Container,
+  Grid,
   ImageList,
   ImageListItem,
   Typography,
@@ -83,34 +84,42 @@ const Team = () => {
       <Typography variant="h5" sx={{ fontWeight: "bold", marginY: 2 }}>
         Our Team
       </Typography>
-      <Typography variant="h6" color="text.secondary" sx={{ marginBottom: 2 }}>
+      <Typography variant="h6" color="text.secondary">
         Meet our founding members and the team.
       </Typography>
-      {team.map((member, index) => (
-        <Box key={index} sx={{ marginY: 4 }}>
-          <img
-            src={member.image}
-            alt="Sample Text"
-            width="100%"
-            height="300"
-            style={{ objectFit: "cover", borderRadius: 20 }}
-            loading="lazy"
-          />
-          <Box>
-            <Typography variant="h6" fontWeight="bold" sx={{ marginTop: 1 }}>
-              {member.name}
-            </Typography>
-            <Typography variant="body1">{member.title}</Typography>
-            <Typography
-              variant="body1"
-              sx={{ marginTop: 0.5 }}
-              color="text.secondary"
-            >
-              {member.description}
-            </Typography>
-          </Box>
-        </Box>
-      ))}
+      <Grid container spacing={2} sx={{ marginTop: 0.5 }}>
+        {team.map((member, index) => (
+          <Grid item xs={12} sm={6} lg={3} key={index}>
+            <Box sx={{ marginY: 1 }}>
+              <img
+                src={member.image}
+                alt="Sample Text"
+                width="100%"
+                height="300"
+                style={{ objectFit: "cover", borderRadius: 20 }}
+                loading="lazy"
+              />
+              <Box>
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  sx={{ marginTop: 1 }}
+                >
+                  {member.name}
+                </Typography>
+                <Typography variant="body1">{member.title}</Typography>
+                <Typography
+                  variant="body1"
+                  sx={{ marginTop: 0.5 }}
+                  color="text.secondary"
+                >
+                  {member.description}
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
     </Box>
   );
 };
