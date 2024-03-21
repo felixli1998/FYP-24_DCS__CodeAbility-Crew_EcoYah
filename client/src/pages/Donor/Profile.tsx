@@ -85,6 +85,7 @@ interface RewardProps {
 }
 
 const Reward: React.FC<RewardProps> = ({ points, expiryDate }) => {
+  const navigate = useNavigate();
   return (
     <Box sx={{ marginY: 2 }}>
       <Card
@@ -95,7 +96,16 @@ const Reward: React.FC<RewardProps> = ({ points, expiryDate }) => {
           backgroundImage: "linear-gradient(to right, #004d40, #00695c)",
         }}
       >
-        <CardContent sx={{ paddingTop: 1 }}>
+        <CardContent
+          sx={{
+            paddingTop: 1,
+            cursor: "pointer",
+            "&:hover": {
+              opacity: 0.8,
+            },
+          }}
+          onClick={() => navigate("/cashback-history")}
+        >
           <Box
             sx={{
               paddingY: 1,

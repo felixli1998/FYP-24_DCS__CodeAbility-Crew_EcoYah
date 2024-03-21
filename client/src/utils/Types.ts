@@ -75,3 +75,13 @@ export type SpeechSynthesisType = {
   addEventListener(type: string, listener: EventListener): void;
   removeEventListener(type: string, listener: EventListener): void;
 };
+
+export type UserType = {
+  id: number;
+  name: String;
+  contactNum: String;
+  email: String;
+  points: number;
+  role: String;
+  imageId: String;
+};
