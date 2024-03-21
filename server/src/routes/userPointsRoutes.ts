@@ -86,7 +86,7 @@ router.post("/accept-request", async function (req, res) {
   const pointsToBeDeducted = parseInt(req.body.points);
   const transactionHistoryId = parseInt(req.body.transactionHistoryId);
   // Location is for logging purposes
-  const location = req.body.location;
+  // const location = req.body.location;
   const isAccept = true;
 
   try {
@@ -96,17 +96,20 @@ router.post("/accept-request", async function (req, res) {
     );
 
     if (userPointsDeduction) {
-        const transactionHistoryStatus =
-          await transactionHistoryService.handleRedeemed(transactionHistoryId, isAccept);
-        if (transactionHistoryStatus) {
-            return generateResponse(res, 200, {
-              message: "Points deducted successfully.",
-            });
-        }
+      const transactionHistoryStatus =
+        await transactionHistoryService.handleRedeemed(
+          transactionHistoryId,
+          isAccept
+        );
+      if (transactionHistoryStatus) {
+        return generateResponse(res, 200, {
+          message: "Points deducted successfully.",
+        });
+      }
     }
     return generateResponse(res, 400, {
-        message: "Failed to handled cashback redemption acceptance.",
-      });
+      message: "Failed to handled cashback redemption acceptance.",
+    });
   } catch (error) {
     return generateResponse(res, 500, {
       message: "Internal Server Error. Please refresh and try again.",
@@ -115,27 +118,30 @@ router.post("/accept-request", async function (req, res) {
 });
 
 router.post("/reject-request", async function (req, res) {
-    const transactionHistoryId = parseInt(req.body.transactionHistoryId);
-    // Location is for logging purposes
-    const location = req.body.location;
-    const isAccept = false;
-  
-    try {
-        const transactionHistoryStatus =
-        await transactionHistoryService.handleRedeemed(transactionHistoryId, isAccept);
-        if (transactionHistoryStatus) {
-            return generateResponse(res, 200, {
-                message: "Request rejected successfully.",
-            });
-        }
-      return generateResponse(res, 400, {
-          message: "Failed to handled cashback redemption rejection.",
-        });
-    } catch (error) {
-      return generateResponse(res, 500, {
-        message: "Internal Server Error. Please refresh and try again.",
+  const transactionHistoryId = parseInt(req.body.transactionHistoryId);
+  // Location is for logging purposes
+  // const location = req.body.location;
+  const isAccept = false;
+
+  try {
+    const transactionHistoryStatus =
+      await transactionHistoryService.handleRedeemed(
+        transactionHistoryId,
+        isAccept
+      );
+    if (transactionHistoryStatus) {
+      return generateResponse(res, 200, {
+        message: "Request rejected successfully.",
       });
     }
+    return generateResponse(res, 400, {
+      message: "Failed to handled cashback redemption rejection.",
+    });
+  } catch (error) {
+    return generateResponse(res, 500, {
+      message: "Internal Server Error. Please refresh and try again.",
+    });
+  }
 });
 
 export default router;
