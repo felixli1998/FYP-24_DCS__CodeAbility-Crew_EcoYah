@@ -8,6 +8,13 @@ export class UserRepository {
     return await AppDataSource.getRepository(User).find();
   }
 
+  async getAllDonorEmails() {
+    return await AppDataSource.getRepository(User).find({
+      select: ["email"],
+      where: { role: UserRole.DONOR },
+    });
+  }
+
   async getAllAdminUsers() {
     return await AppDataSource.getRepository(User).find({
       select: ["id", "name", "email", "imageId"],

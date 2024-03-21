@@ -5,8 +5,11 @@ import SignIn from "../pages/Donor/SignIn";
 import Profile from "../pages/Donor/Profile";
 import EditProfile from "../pages/Donor/EditProfile";
 import ImageComponentExample from "../pages/Donor/ImageComponentExample";
-import { DonorHome } from "../pages/Donor/DonorHome";
+import {DonorHome} from "../pages/Donor/DonorHome";
 import DonationRequestForm from "../pages/Donor/DonationRequestForm";
+import Faq from "../pages/Donor/Faq";
+import AboutUs from "../pages/Donor/AboutUs";
+import CashbackRedemption from "../pages/Donor/CashbackRedemption";
 import CashbackHistory from "../pages/Donor/CashbackHistory";
 
 // Admin routes //
@@ -16,9 +19,10 @@ import DonationEventForm from "../pages/Admin/DonationEventForm";
 import DonationEvent from "../pages/Admin/DonationEvent";
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
 import DonationRequests from "../pages/Admin/DonationRequests";
-import { DonationRequest } from "../pages/Donor/DonationRequest";
+import {DonationRequest} from "../pages/Donor/DonationRequest";
 import LongPolling from "../pages/LongPollingPage";
 import CashbackRequests from "../pages/Admin/CashbackRequests";
+import Dashboard from "../pages/Admin/Dashboard";
 
 type AppRoutesT = {
   path: string;
@@ -118,7 +122,7 @@ export const APP_ROUTES: AppRoutesT[] = [
     protected: true,
   },
   {
-    path: "donation-request-form",
+    path: "donation-request-form/:id/:name",
     description: "Submission of donation request form for the donor",
     element: <DonationRequestForm />,
     isAdmin: false,
@@ -132,16 +136,40 @@ export const APP_ROUTES: AppRoutesT[] = [
     protected: true,
   },
   {
-    path:"long-polling",
+    path: "long-polling",
     description: "Long polling tests",
     element: <LongPolling />,
     isAdmin: false,
-  }, 
+  },
   {
-    path:"cashback-requests",
+    path: "cashback-requests",
     description: "View all Cashback Requests for the admin",
     element: <CashbackRequests />,
     isAdmin: true,
+  },
+  {
+    path: "dashboard",
+    description: "View all statistics for the admin",
+    element: <Dashboard />,
+    isAdmin: true,
+  },
+  {
+    path: "faq",
+    description: "View all FAQ Related for the donor",
+    element: <Faq />,
+    isAdmin: false,
+  },
+  {
+    path: "about-us",
+    description: "View all about kunyah Related for the donor",
+    element: <AboutUs />,
+    isAdmin: false,
+  },
+  {
+    path: "cashback-redemption",
+    description: "Donor redeem cashback form page.",
+    element: <CashbackRedemption />,
+    isAdmin: false,
   },
   {
     path: "cashback-history",

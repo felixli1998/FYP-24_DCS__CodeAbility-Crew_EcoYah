@@ -50,7 +50,9 @@ export default function CashbackHistory() {
   const [selectedTab, setSelectedTab] = useState<string>("all");
   const [user, setUser] = useState<UserType | null>(null);
   const [errorFetchingData, setErrorFetchingData] = useState(false);
-  const [pendingRedemptions, setPendingRedemptions] = useState<eachDataType[]>([]);
+  const [pendingRedemptions, setPendingRedemptions] = useState<eachDataType[]>(
+    [],
+  );
 
   const getTransactionHistoryData = async (userId: number, action?: String) => {
     try {
@@ -100,8 +102,7 @@ export default function CashbackHistory() {
         try {
           const getUser = await getUserByEmail(email);
           setUser(getUser.data);
-        }
-        catch (error) {
+        } catch (error) {
           setErrorFetchingData(true);
           console.error("An error occurred while fetching user data:", error);
         }
@@ -199,10 +200,14 @@ export default function CashbackHistory() {
                     <Grid container sx={{ mb: "1rem" }}>
                       <Grid item xs={9}>
                         <Stack>
-                          <Box sx={{display: "flex", alignItems: "center", mb: "0.5rem"}}>
-                            <Typography
-                              sx={{ fontWeight: "medium" }}
-                            >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              mb: "0.5rem",
+                            }}
+                          >
+                            <Typography sx={{ fontWeight: "medium" }}>
                               {transaction.action === "credited"
                                 ? transaction.donationEvent
                                 : transaction.action === "expired"
@@ -252,11 +257,11 @@ export default function CashbackHistory() {
               fontSize: { xs: 13, md: 16 },
               textAlign: "center",
               marginTop: "1rem",
-              fontWeight: "medium"
+              fontWeight: "medium",
             }}
           >
             ~ You have reached the end of your cashback history ~
-          </Typography> 
+          </Typography>
         </Stack>
       )}
     </>

@@ -28,6 +28,10 @@ export class UserService {
     return this.userRepository.getAllUsers();
   }
 
+  async getAllDonorEmails() {
+    return this.userRepository.getAllDonorEmails();
+  }
+
   async getAllAdminUsers() {
     return this.userRepository.getAllAdminUsers();
   }

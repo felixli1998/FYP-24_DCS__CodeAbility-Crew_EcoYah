@@ -12,7 +12,7 @@ import { DONATION_REQUEST_ROUTES } from "../../services/routes";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-
+import _ from "lodash";
 import {
   Box,
   Chip,
@@ -196,13 +196,13 @@ export default function DonationEvents() {
     // Check if user is authenticated, if not, push to Sign In
     if (!isAuthenticated()) {
       localStorage.setItem('intendedDestination', JSON.stringify({
-        path: '/donation-request-form',
+        path: `/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`,
         state: { action: 'create', form: dataToDonationRequestForm }
       }));
       navigate("/sign-in");
     } else {
       // Redirect to donation request form page
-      navigate("/donation-request-form", {
+      navigate(`/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`, {
         state: { action: "create", form: dataToDonationRequestForm },
       });
     }
