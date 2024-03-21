@@ -1,4 +1,5 @@
-export const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+export const BASE_URL =
+  process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
 // Parent Routes
 export const PARENT_ROUTES = {
@@ -10,6 +11,7 @@ export const PARENT_ROUTES = {
   DONATION_REQUEST_ITEMS: `${BASE_URL}/donation-request-items`,
   IMAGES: `${BASE_URL}/images`,
   LOGIN: `${BASE_URL}/login`,
+  CASHBACK: `${BASE_URL}/transaction-history`,
 };
 
 // User Related Routes //
@@ -68,4 +70,12 @@ export const IMAGE_ROUTES = {
 // Event Type-related routes //
 export const EVENT_TYPE_ROUTES = {
   GET_ALL: `${BASE_URL}/event-types/event-types`,
+};
+
+export const CASHBACK_ROUTES = {
+  GET_ALL_PENDING: `${PARENT_ROUTES.CASHBACK}/pending-cashback-requests`,
+};
+// Transaction History Routes //
+export const TRANSACTION_HISTORY_ROUTES = {
+  GET_TRANS_HISTORY_BY_ACTION: `${BASE_URL}/transaction-history/get-transaction-history`,
 };
