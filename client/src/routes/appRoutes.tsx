@@ -122,7 +122,7 @@ export const APP_ROUTES: AppRoutesT[] = [
     protected: true,
   },
   {
-    path: "donation-request-form",
+    path: "donation-request-form/:id/:name",
     description: "Submission of donation request form for the donor",
     element: <DonationRequestForm />,
     isAdmin: false,
