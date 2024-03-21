@@ -5,8 +5,12 @@ import SignIn from "../pages/Donor/SignIn";
 import Profile from "../pages/Donor/Profile";
 import EditProfile from "../pages/Donor/EditProfile";
 import ImageComponentExample from "../pages/Donor/ImageComponentExample";
-import { DonorHome } from "../pages/Donor/DonorHome";
+import {DonorHome} from "../pages/Donor/DonorHome";
 import DonationRequestForm from "../pages/Donor/DonationRequestForm";
+import Faq from "../pages/Donor/Faq";
+import AboutUs from "../pages/Donor/AboutUs";
+import CashbackRedemption from "../pages/Donor/CashbackRedemption";
+import CashbackHistory from "../pages/Donor/CashbackHistory";
 
 // Admin routes //
 import AdminHome from "../pages/Admin/AdminHome";
@@ -15,7 +19,7 @@ import DonationEventForm from "../pages/Admin/DonationEventForm";
 import DonationEvent from "../pages/Admin/DonationEvent";
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
 import DonationRequests from "../pages/Admin/DonationRequests";
-import { DonationRequest } from "../pages/Donor/DonationRequest";
+import {DonationRequest} from "../pages/Donor/DonationRequest";
 import LongPolling from "../pages/LongPollingPage";
 import CashbackRequests from "../pages/Admin/CashbackRequests";
 import Dashboard from "../pages/Admin/Dashboard";
@@ -148,5 +152,30 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "View all statistics for the admin",
     element: <Dashboard />,
     isAdmin: true,
+  },
+  {
+    path: "faq",
+    description: "View all FAQ Related for the donor",
+    element: <Faq />,
+    isAdmin: false,
+  },
+  {
+    path: "about-us",
+    description: "View all about kunyah Related for the donor",
+    element: <AboutUs />,
+    isAdmin: false,
+  },
+  {
+    path: "cashback-redemption",
+    description: "Donor redeem cashback form page.",
+    element: <CashbackRedemption />,
+    isAdmin: false,
+  },
+  {
+    path: "cashback-history",
+    description: "Cashback history page for the donor",
+    element: <CashbackHistory />,
+    isAdmin: false,
+    protected: true,
   },
 ];

@@ -89,3 +89,13 @@ export type SeriesArray = {
   stack: string | undefined;
   curve: "linear" | "monotoneX" | "monotoneY" | "natural" | "step" | undefined;
 };
+
+export type UserType = {
+  id: number;
+  name: String;
+  contactNum: String;
+  email: String;
+  points: number;
+  role: String;
+  imageId: String;
+};

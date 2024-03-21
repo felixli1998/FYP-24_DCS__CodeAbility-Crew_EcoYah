@@ -72,6 +72,8 @@ function ResponsiveAppBar() {
           NavigationList.HOME,
           NavigationList.PROFILE,
           NavigationList.DONATION_REQUEST,
+          NavigationList.ABOUT_US,
+          NavigationList.FAQ,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, false));
       }

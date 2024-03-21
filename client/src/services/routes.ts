@@ -1,4 +1,5 @@
-export const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
+export const BASE_URL =
+  process.env.REACT_APP_BACKEND_URL || "http://localhost:8000";
 
 // Parent Routes
 export const PARENT_ROUTES = {
@@ -11,6 +12,7 @@ export const PARENT_ROUTES = {
   IMAGES: `${BASE_URL}/images`,
   LOGIN: `${BASE_URL}/login`,
   DASHBOARD: `${BASE_URL}/dashboard`,
+  CASHBACK: `${BASE_URL}/transaction-history`,
 };
 
 // User Routes
@@ -80,4 +82,10 @@ export const DASHBOARD_ROUTES = {
   GET_ITEMS_BY_MONTH: `${PARENT_ROUTES.DASHBOARD}/get-items-by-month/:month`,
   GET_PREFERRED_DROP_OFF: `${PARENT_ROUTES.DASHBOARD}/get-preferred-drop-off`,
   GET_CASHBACK_STATUS: `${PARENT_ROUTES.DASHBOARD}/get-cashback-status`,
+};
+
+// Transaction History Routes 
+export const TRANSACTION_HISTORY_ROUTES = {
+  GET_TRANS_HISTORY_BY_ACTION: `${PARENT_ROUTES.CASHBACK}/get-transaction-history`,
+  GET_ALL_PENDING_REQUESTS: `${PARENT_ROUTES.CASHBACK}/pending-cashback-requests`,
 };
