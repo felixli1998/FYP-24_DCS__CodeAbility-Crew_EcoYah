@@ -214,7 +214,6 @@ export default function DonationEvents() {
       // If user clicks on Donate in DonationEvents but was not signed in initially, this redirects them back to the Donation Request Form
       const { path, state } = JSON.parse(storedDestination);
       const toDonateEventId = state.form.id;
-      console.log(toDonateEventId, donationEventIds);
       // This allows only redirection to DonationRequestForm if user has not participated in the DonationEvent before
       if(!donationEventIds.includes(toDonateEventId)) {
         navigate(path, { state });
