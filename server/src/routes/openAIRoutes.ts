@@ -37,7 +37,6 @@ router.post("/generate-instagram-caption", async (req, res) => {
   const params = req.body;
   const filterParams = strongParams(params, ["donationEventId"]);
   const { donationEventId } = filterParams;
-  console.log("HELLO", donationEventId);
   let eventName;
   let eventItems = "";
   let eventStartDate;
