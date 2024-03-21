@@ -29,6 +29,8 @@ import userPointsRoutes from "./routes/userPointsRoutes";
 import { createLongPollingConnection } from "./services/WebSocket";
 import transactionHistoryRoutes from "./routes/transactionHistoryRoutes";
 import openAIRoutes from "./routes/openAIRoutes";
+import emailRoutes from "./routes/emailRoutes";
+import dashboardRoutes from "./routes/dashboardRoutes";
 // import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
 
 dotenv.config();
@@ -92,6 +94,8 @@ app.use("/donation-request-items", donationRequestItemRoutes);
 app.use("/points", userPointsRoutes);
 app.use("/transaction-history", transactionHistoryRoutes);
 app.use("/openai", openAIRoutes);
+app.use("/email", emailRoutes);
+app.use("/dashboard", dashboardRoutes);
 // app.use("/longpolling", longPollingRoute);
 
 app.get("/", (req, res) => {

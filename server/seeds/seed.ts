@@ -79,7 +79,7 @@ let DONATION_EVENT_OBJECTS: any = {};
 let ITEM_OBJECTS: any = {};
 
 const NO_OF_USER_TO_CREATE = 5;
-const NO_OF_DONATION_REQUEST_TO_CREATE = 5;
+const NO_OF_DONATION_REQUEST_TO_CREATE = 10;
 
 // Donor seed data - keep this //
 const generateSeedData = async () => {

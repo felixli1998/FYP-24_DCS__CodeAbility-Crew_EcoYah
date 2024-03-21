@@ -7,10 +7,59 @@ import {
   TransactionHistory,
 } from "../entities/TransactionHistory";
 import { UserPoints } from "../entities/UserPoints";
+
 export class TransactionHistoryRepository {
   async createTransactionHistory(transactionHistory: TransactionHistory) {
     return await AppDataSource.getRepository(TransactionHistory).save(
-      transactionHistory,
+      transactionHistory
+    );
+  }
+
+  async getCashbackRequests() {
+    const cashbackRequests = await AppDataSource.getRepository(
+      TransactionHistory
+    )
+      .createQueryBuilder("TH")
+      .select([
+        "TH.id as id",
+        "TH.points as points",
+        "TH.action as action",
+        "TH.status as status",
+        "user.id AS user_id", 
+        "user.name AS name", 
+      ])
+      .innerJoin("TH.userPoints", "userPoints")
+      .innerJoin("userPoints.user", "user")
+      .where("TH.action = :action", { action: Action.REDEEMED })
+      .andWhere("TH.status = :status", {
+        status: Status.PENDING,
+      })
+      .getRawMany();
+    
+    const restructureResult = cashbackRequests.map((entry) => ({
+      userId: entry.user_id,
+      name: entry.name,
+      points: entry.points,
+      transactionHistory: {
+        id: entry.id,
+        action: entry.action,
+        status: entry.status
+      }
+    }))
+    
+    return restructureResult;
+  }
+
+  async getTransactionHistory(id: number) {
+    return await AppDataSource.getRepository(TransactionHistory).findOne({
+      where: { id },
+    });
+  }
+
+  async updateStatus(transactionHistoryId: number, status: string) {
+    return AppDataSource.getRepository(TransactionHistory).update(
+      transactionHistoryId,
+      { status: status }
     );
   }
 
@@ -25,7 +74,7 @@ export class TransactionHistoryRepository {
         return subQuery
           .select("th.user_points_id", "user_points_id")
           .addSelect(
-            `MAX(th.created_at) + INTERVAL '${EXPIRY_DATE} months'', 'expiry_date`,
+            `MAX(th.created_at) + INTERVAL '${EXPIRY_DATE} months'', 'expiry_date`
           )
           .from(TransactionHistory, "th")
           .where("th.action = :action", { action: Action.CREDITED })
@@ -43,42 +92,48 @@ export class TransactionHistoryRepository {
       - If "action == 'credited'", return all transaction history with action "credited"
       - If "action == 'redeemed'", return all transaction history with action "redeemed" with status "accepted" or action "expired"
   */
-  async getTransactionHistoryByAction(userId: string, action?: TransactionHistory["action"]) {
-    let whereCondition: any = { userPoints : { user: {id: userId }}};
+  async getTransactionHistoryByAction(
+    userId: string,
+    action?: TransactionHistory["action"]
+  ) {
+    const whereCondition: any = { userPoints: { user: { id: userId } } };
     let relations: string[] = ["donationRequest.donationEvent"];
 
-    if(action == "credited") {
+    if (action == "credited") {
       whereCondition.action = In([Action.CREDITED]);
-    }
-    else if(action == "redeemed"){
+    } else if (action == "redeemed") {
       whereCondition.action = In([Action.REDEEMED, Action.EXPIRED]);
       whereCondition.status = In([Status.APPROVED, Status.SYSTEM]);
       relations = [];
     }
 
-    const transactionHistory = await AppDataSource.getRepository(TransactionHistory).find({
-        where: whereCondition,
-        relations: relations,
-        order: {
-          updatedAt: "DESC",
-        }
+    const transactionHistory = await AppDataSource.getRepository(
+      TransactionHistory
+    ).find({
+      where: whereCondition,
+      relations: relations,
+      order: {
+        updatedAt: "DESC",
+      },
     });
 
-    const transactionHistoryWithNamesOnly: any = transactionHistory.map(transaction => {
-      const { donationRequest } = transaction;
-      if (donationRequest && donationRequest.donationEvent) {
+    const transactionHistoryWithNamesOnly: any = transactionHistory.map(
+      (transaction) => {
+        const { donationRequest } = transaction;
+        if (donationRequest && donationRequest.donationEvent) {
           return {
-              id: transaction.id,
-              points: transaction.points,
-              action: transaction.action,
-              status: transaction.status,
-              createdAt: transaction.createdAt,
-              updatedAt: transaction.updatedAt,
-              donationEvent: donationRequest.donationEvent.name
+            id: transaction.id,
+            points: transaction.points,
+            action: transaction.action,
+            status: transaction.status,
+            createdAt: transaction.createdAt,
+            updatedAt: transaction.updatedAt,
+            donationEvent: donationRequest.donationEvent.name,
           };
+        }
+        return transaction;
       }
-      return transaction;
-    });
+    );
 
     return transactionHistoryWithNamesOnly;
   }

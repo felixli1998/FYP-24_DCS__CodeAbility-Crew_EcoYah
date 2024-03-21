@@ -66,6 +66,11 @@ export const ITEM_SEED_DATA = [
     eventType: "Electronic Waste",
   },
   {
+    name: "iPad",
+    unit: "unit",
+    eventType: "Electronic Waste",
+  },
+  {
     name: "iPhone 12",
     unit: "unit",
     eventType: "Electronic Waste",
@@ -111,6 +116,11 @@ export const ITEM_SEED_DATA = [
     eventType: "Book Donation",
   },
   {
+    name: "Old Comics",
+    unit: "unit",
+    eventType: "Book Donation",
+  },
+  {
     name: "Children's Clothing",
     unit: "unit",
     eventType: "Clothing Waste",
@@ -123,6 +133,50 @@ export const ITEM_SEED_DATA = [
 ];
 
 export const DONATION_EVENT_SEED_DATA = [
+  {
+    name: "From Shelf to Heart",
+    imageId: "BookPoster.jpeg",
+    user: "Aaron",
+    eventType: "Book Donation",
+    startDate: new Date("2024-01-14"),
+    endDate: new Date("2024-01-20"),
+    donationEventItems: [
+      {
+        name: "Old Books",
+        targetQty: 50,
+        minQty: 5,
+        pointsPerUnit: 10,
+      },
+      {
+        name: "Old Comics",
+        targetQty: 80,
+        minQty: 10,
+        pointsPerUnit: 5,
+      },
+    ],
+  },
+  {
+    name: "Gadgets for Cash",
+    imageId: "ElectronicsPoster.jpg",
+    user: "Alex",
+    eventType: "Electronic Waste",
+    startDate: new Date("2024-01-25"),
+    endDate: new Date("2024-01-29"),
+    donationEventItems: [
+      {
+        name: "iPad",
+        targetQty: 20,
+        minQty: 1,
+        pointsPerUnit: 50,
+      },
+      {
+        name: "Laptop",
+        targetQty: 10,
+        minQty: 1,
+        pointsPerUnit: 100,
+      },
+    ],
+  },
   {
     name: "Clothes Upcycling",
     imageId: "ClothesPoster.jpeg",
