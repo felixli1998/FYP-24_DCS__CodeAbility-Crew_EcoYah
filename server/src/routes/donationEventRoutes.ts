@@ -115,6 +115,7 @@ router.post("/create", async (req, res) => {
 
     // create new DonationEvent object to avoid typing errors
     const newDonationEvent = new DonationEvent();
+    console.log("THIS SHTIW AS CREATED HERE ", newDonationEvent)
     newDonationEvent.name = filteredEventParams.name;
     newDonationEvent.imageId = filteredEventParams.imageId;
     

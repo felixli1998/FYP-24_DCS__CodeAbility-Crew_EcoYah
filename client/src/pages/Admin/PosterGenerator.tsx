@@ -1,30 +1,47 @@
 import { Container } from "@mui/material";
 import html2canvas from 'html2canvas';
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { DONATION_EVENT_ROUTES } from "../../services/routes";
+import axios from "axios";
+
 
 // Internal imports
 import BasicTemplate from "../../components/PosterTemplates/BasicTemplate";
-export interface DonationDetails {
-    startDate: string;
-    endDate: string;
-    donationItems: string[];
-    name: string;
-    location: string;
-    posterHeight: number;
-    posterWidth: number;
-    images: string ; // Assuming images can be a single string or an array of strings
-}
+
+export interface IDonationDetails {
+    name: string,
+    startDate: string,
+    endDate: string,
+    imageId: string,
+    donationEventItems: any,
+    location?: string,
+};
+
+const defaultDonationDetails: IDonationDetails = {
+    startDate: "",
+    endDate: "",
+    imageId: "",
+    donationEventItems: [],
+    name: ""
+};
 
 export default function PosterGenerator() {
-    const donationDetails :  DonationDetails = {
-        startDate: "2022-01-01",
-        endDate: "2022-01-31",
-        donationItems: ["Laptop", "Phone", "Tablet"],
-        name: "Wasting perfectly good items!",
-        location: "1234 Main St, San Francisco, CA 94123",
-        posterHeight: 1350,
-        posterWidth: 1080,
-        images:  "Stock3.jpg"
-    }
+    const { donationEventId } = useParams(); // Fetching the donationEventId from the URL
+    const [donationEventDetails, setDonationEventDetails] = useState<IDonationDetails>(defaultDonationDetails);
+    useEffect(() => {
+        if (!donationEventId) setDonationEventDetails(defaultDonationDetails);
+        else {
+            axios
+                .get(DONATION_EVENT_ROUTES.BY_ID.replace(":id", donationEventId))
+                .then((resp) => {
+                    console.log(resp.data.data);
+                    setDonationEventDetails(resp.data.data);
+                })
+            // Make axios call to fetch the donation event details
+        }
+    }, [donationEventId]);
+    if (!donationEventId) return <div>Please enter a donation event ID.</div>;
 
     const handleDownload = () => {
         const box = document.getElementById('poster-box');
@@ -41,7 +58,7 @@ export default function PosterGenerator() {
 
     return (
         <Container>
-            <BasicTemplate {...donationDetails}/>
+            <BasicTemplate {...donationEventDetails} />
             <button onClick={handleDownload}>Download</button>
         </Container>
     )

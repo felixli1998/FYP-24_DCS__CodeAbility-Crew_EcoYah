@@ -144,9 +144,9 @@ export const APP_ROUTES: AppRoutesT[] = [
     isAdmin: true,
   },
   {
-    path:"poster-generator",
-    description: "Poster Generator for the admin",
-    element: <PosterGenerator />,
+    path:"social-media-content/:donationEventId?",
+    description: "Social media content generator for an event.",
+    element: <PosterGenerator/>,
     isAdmin: false, // Set to false for development
   },
 ];
