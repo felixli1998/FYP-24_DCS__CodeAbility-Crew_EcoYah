@@ -1,9 +1,12 @@
 // Internal imports
 import { DonationEvent } from "../src/entities/DonationEvent";
 import { DonationEventItem } from "../src/entities/DonationEventItem";
-import { DonationRequest } from "../src/entities/DonationRequest";
+import { DonationRequest, Status } from "../src/entities/DonationRequest";
 import { DonationRequestItem } from "../src/entities/DonationRequestItem";
 import { User } from "../src/entities/User";
+
+const statuses = [Status.SUBMITTED, Status.COMPLETED, Status.WITHDRAWN];
+const timings = ["10:00", "12:00", "14:00"];
 
 function* DonationRequestGenerator(
   userObjects: { [key: string]: User },
@@ -16,6 +19,8 @@ function* DonationRequestGenerator(
 
   // TODO: omit_points (let's default it to be false for now)
   newDonationRequest.omitPoints = false;
+  const randomIndexStatus = Math.floor(Math.random() * statuses.length);
+  newDonationRequest.status = statuses[randomIndexStatus];
 
   // TODO: drop_off_date (let's pick a random date within 31 days from today)
   const today = new Date();
@@ -23,8 +28,9 @@ function* DonationRequestGenerator(
     today.getTime() + Math.floor(Math.random() * 31) * 24 * 60 * 60 * 1000,
   ); // Random start date within 31 days from today
 
-  // TODO: drop_off_time (let's default it to be 12:00 for now)
-  newDonationRequest.dropOffTime = "12:00";
+  // TODO: drop_off_time 
+  const randomIndexTiming = Math.floor(Math.random() * timings.length);
+  newDonationRequest.dropOffTime = timings[randomIndexTiming];
 
   // TODO: user_id - let's pick a random user
   const randomUser =

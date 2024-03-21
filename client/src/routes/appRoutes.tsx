@@ -22,6 +22,7 @@ import DonationRequests from "../pages/Admin/DonationRequests";
 import {DonationRequest} from "../pages/Donor/DonationRequest";
 import LongPolling from "../pages/LongPollingPage";
 import CashbackRequests from "../pages/Admin/CashbackRequests";
+import Dashboard from "../pages/Admin/Dashboard";
 
 type AppRoutesT = {
   path: string;
@@ -144,6 +145,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     path: "cashback-requests",
     description: "View all Cashback Requests for the admin",
     element: <CashbackRequests />,
+    isAdmin: true,
+  },
+  {
+    path: "dashboard",
+    description: "View all statistics for the admin",
+    element: <Dashboard />,
     isAdmin: true,
   },
   {

@@ -63,6 +63,7 @@ function ResponsiveAppBar() {
           NavigationList.DONATION_EVENTS,
           NavigationList.DONATION_REQUEST,
           NavigationList.CASHBACK_REQUEST,
+          NavigationList.DASHBOARD,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, true));
       } else {
