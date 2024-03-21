@@ -1,20 +1,36 @@
 import { Box, Typography } from "@mui/material";
-import PosterImageBoundingBox from "./PosterImageBoundingBox"
-import { DonationDetails } from "../../pages/Admin/PosterGenerator";
-
 // Internal
 import { ReactComponent as BasicOutline } from "../../assets/poster_assets/BasicOutline.svg";
 import { folderPrefixNames } from "../Image/Image";
+import PosterImageBoundingBox from "./PosterImageBoundingBox"
+import { IDonationDetails } from "../../pages/Admin/PosterGenerator";
+import KunyahLogo from "../../assets/Kunyah.png";
+import EcoyahLogo from "../../assets/EcoYah.png";
 
-export default function BasicTemplate(donationDetails: DonationDetails) {
-    console.log(donationDetails);
+export default function BasicTemplate(donationDetails: IDonationDetails) {
+    function dateStringToDayMonthYear(dateString: string) {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'long' });
+        const year = date.getFullYear();
+        return `${day} ${month} `;
+    };
+
+    let items = "";
+    if (donationDetails.donationEventItems) {
+        for (const item of donationDetails.donationEventItems) {
+            items += item.item.name + " | ";
+        }
+    }
+    items = items.slice(0, -3);
+
     return (
         <Box
             id="poster-box"
             sx={{
-                width: donationDetails.posterWidth,
-                height: donationDetails.posterHeight,
-                backgroundColor: "#546137",
+                width: "1080px",
+                height: "1350px",
+                backgroundColor: "#29AB87",
                 position: 'relative', // Ensure relative positioning for child elements
                 display: "flex",
                 flexDirection: "column",
@@ -22,26 +38,66 @@ export default function BasicTemplate(donationDetails: DonationDetails) {
                 alignItems: "center",
                 padding: "1rem",
             }}
-        >           <BasicOutline
+        >
+            {/* Logos */}
+            <Box >
+                <img
+
+                    srcSet={KunyahLogo}
+                    src={KunyahLogo}
+                    alt={"Home"}
+                    style={{
+                        width: "115px",
+                        height: "115px",
+                        position: "absolute",
+                        bottom: "0px",
+                        right: "20px",
+                        zIndex: 100,
+                    }}
+                />
+                <img
+
+                    srcSet={EcoyahLogo}
+                    src={EcoyahLogo}
+                    alt={"Home"}
+                    style={{
+                        width: "115px",
+                        height: "115px",
+                        position: "absolute",
+                        bottom: "0px",
+                        right: "120px",
+                        zIndex: 100,
+                    }}
+                />
+                <div style={{ backgroundColor: "#29AB87", width: "23%", height: "9%", position: "absolute", bottom: "0px", right: "0px", zIndex: 50 }}></div>
+
+            </Box>
+            <BasicOutline
                 style={{
                     position: "absolute",
-                    opacity: 0.99,
+                    opacity: 1,
+                    zIndex: 15,
+                    backgroundColor: "rgba(0, 0, 0, 0)",
                 }}
             />
+            {donationDetails.imageId + "abc " + folderPrefixNames.EVENTS}
 
-            <PosterImageBoundingBox
-                imageId={donationDetails.images}
-                folderPrefix={folderPrefixNames.POSTERS}
-                // This style refers to the mask
-                style={{
-                    width: "1000px",
-                    height: "800px",
-                    position: "absolute",
-                    top: "45px",
-                }}
-                imageScale={1.1}
-                imageLeftShift="-50px"
-                imageTopShift="0px" />
+            {donationDetails.imageId && ( // Check if imageId is not null or undefined
+                <PosterImageBoundingBox
+                    imageId={donationDetails.imageId}
+                    folderPrefix={folderPrefixNames.EVENTS}
+                    // This style refers to the mask
+                    style={{
+                        width: "1000px",
+                        height: "800px",
+                        position: "absolute",
+                        top: "40px",
+                    }}
+                    imageScale={1.2}
+                    imageLeftShift="-50px"
+                    imageTopShift="0px"
+                />
+            )}
             <Box
                 sx={{
                     justifyContent: "flex-start",
@@ -49,27 +105,28 @@ export default function BasicTemplate(donationDetails: DonationDetails) {
                     width: "90%",
                     height: "35%",
                     padding: "1rem",
-                    marginTop: "800px",
+                    marginTop: "685px",
                     overflow: "hidden",
                     zIndex: "5000",
-                    position:"relative"
+                    position: "relative"
                 }}
             >
-                <h1
-                >
-                    {donationDetails.startDate}
-                </h1>
                 <Typography
                     color="white"
                     variant="h1"
-                    gutterBottom
+
+                    style={{
+                        fontFamily: 'Open Sans, sans-serif',
+                        fontWeight: 700, // Apply bold (700 weight) style
+                        fontSize: "6rem",
+                    }}
                 >
-                    {donationDetails.startDate}
+                    {dateStringToDayMonthYear(donationDetails.startDate)}
                 </Typography>
                 <Typography
                     color="white"
                     variant="h2"
-                    gutterBottom
+
                 >
                     {donationDetails.name}
                 </Typography>
@@ -81,16 +138,25 @@ export default function BasicTemplate(donationDetails: DonationDetails) {
                     {donationDetails.location}
                 </Typography>
                 <Typography
+                    color="#29AB87"
+                    variant="h5"
+                >
+                    We are looking for the following items:
+                </Typography>
+                <Typography
                     color="white"
                     variant="h3"
                     gutterBottom
                 >
-                    {donationDetails.donationItems}
+                    {items}
                 </Typography>
-
+                <Typography
+                    marginTop={8}
+                    color="white"
+                    variant="h5">
+                    Sign up below to donate and receive points! <br />Let's make a difference together.
+                </Typography>
             </Box>
-
-            {/* Add content inside the box here */}
         </Box>
     );
 }
