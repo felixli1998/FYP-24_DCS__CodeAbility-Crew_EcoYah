@@ -1,9 +1,9 @@
 // External Imports
 import dotenv from "dotenv";
-import express, { Router, Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import { createServer } from "http";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 import cron from "node-cron";
 import { scheduledMethods } from "./cron/index";
 import { scheduleCronTask } from "./cron/utils";
@@ -28,6 +28,7 @@ import donationEventItemRoutes from "./routes/donationEventItemRoutes";
 import userPointsRoutes from "./routes/userPointsRoutes";
 import { createLongPollingConnection } from "./services/WebSocket";
 import transactionHistoryRoutes from "./routes/transactionHistoryRoutes";
+import dashboardRoutes from "./routes/dashboardRoutes";
 // import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
 
 dotenv.config();
@@ -43,7 +44,7 @@ const options = {
 };
 
 // Create long polling connection
-let location = "default";
+const location = "default";
 const io = new Server(httpServer, options);
 createLongPollingConnection(io, location);
 
@@ -90,6 +91,7 @@ app.use("/donation-requests", donationRequestRoutes);
 app.use("/donation-request-items", donationRequestItemRoutes);
 app.use("/points", userPointsRoutes)
 app.use("/transaction-history", transactionHistoryRoutes);
+app.use("/dashboard", dashboardRoutes);
 // app.use("/longpolling", longPollingRoute);
 
 app.get("/", (req, res) => {

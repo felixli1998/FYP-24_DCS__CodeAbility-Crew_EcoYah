@@ -4,6 +4,7 @@ import { UserRepository } from "../repositories/UserRepository";
 import { QueryFailedError } from "typeorm";
 import { hashSync } from "bcrypt";
 import { generateResponse, strongParams } from "../common/methods";
+import { format, addMonths } from "date-fns";
 
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
@@ -64,6 +65,7 @@ router.get("/:email", async (req, res) => {
         imageId: user.imageId,
         role: user.role,
         points: user.userPoints.points,
+        expiryDate: format(addMonths(new Date(user.userPoints.updatedAt), 6), "dd/MM/yyyy")
       };
       return generateResponse(res, 200, {
         action: true,

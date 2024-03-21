@@ -75,3 +75,27 @@ export type SpeechSynthesisType = {
   addEventListener(type: string, listener: EventListener): void;
   removeEventListener(type: string, listener: EventListener): void;
 };
+
+export type PieChartType = {
+  id: number;
+  value: number;
+  label: string;
+};
+
+export type SeriesArray = {
+  data: number[];
+  label: string;
+  id: string;
+  stack: string | undefined;
+  curve: "linear" | "monotoneX" | "monotoneY" | "natural" | "step" | undefined;
+};
+
+export type UserType = {
+  id: number;
+  name: String;
+  contactNum: String;
+  email: String;
+  points: number;
+  role: String;
+  imageId: String;
+};
