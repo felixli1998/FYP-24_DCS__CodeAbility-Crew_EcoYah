@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, redirect } from "react-router-dom";
 import { isAuthenticated } from "../../components/AppBar";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
 import { fetchActiveDonationEvents } from "../../services/donationEventApi";
@@ -185,24 +185,42 @@ export default function DonationEvents() {
 
   const navigate = useNavigate();
   const handleDonateClick = (donationEvent: eventType) => {
+    const dataToDonationRequestForm: dataToDonationRequestFormType = {
+      id: donationEvent.id,
+      donationEventItems: donationEvent.donationEventItems,
+      startDate: donationEvent.startDate,
+      endDate: donationEvent.endDate,
+      imageId: donationEvent.imageId,
+      name: donationEvent.name,
+    };
     // Check if user is authenticated, if not, push to Sign In
     if (!isAuthenticated()) {
+      localStorage.setItem('intendedDestination', JSON.stringify({
+        path: `/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`,
+        state: { action: 'create', form: dataToDonationRequestForm }
+      }));
       navigate("/sign-in");
     } else {
       // Redirect to donation request form page
-      const dataToDonationRequestForm: dataToDonationRequestFormType = {
-        id: donationEvent.id,
-        donationEventItems: donationEvent.donationEventItems,
-        startDate: donationEvent.startDate,
-        endDate: donationEvent.endDate,
-        imageId: donationEvent.imageId,
-        name: donationEvent.name,
-      };
       navigate(`/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`, {
         state: { action: "create", form: dataToDonationRequestForm },
       });
     }
   };
+
+  const redirectToDonationRequestForm = (donationEventIds: number[]) => {
+    const storedDestination = localStorage.getItem('intendedDestination');
+    if (storedDestination) {
+      // If user clicks on Donate in DonationEvents but was not signed in initially, this redirects them back to the Donation Request Form
+      const { path, state } = JSON.parse(storedDestination);
+      const toDonateEventId = state.form.id;
+      // This allows only redirection to DonationRequestForm if user has not participated in the DonationEvent before
+      if(!donationEventIds.includes(toDonateEventId)) {
+        navigate(path, { state });
+      }
+      localStorage.removeItem('intendedDestination');
+    } 
+  }
 
   useEffect(() => {
     const userId = localStorage.getItem("ecoyah-id");
@@ -220,9 +238,11 @@ export default function DonationEvents() {
             donationEventIds.push(donationRequest.donationEvent.id);
           });
           setUserParticipatedEvents(donationEventIds);
+          redirectToDonationRequestForm(donationEventIds);
         })
         .catch((err: any) => console.error(err));
     }
+
 
     const fetchData = async () => {
       try {
@@ -393,7 +413,9 @@ export default function DonationEvents() {
                       <Grid item sx={{ marginBottom: 2 }} key={event.id}>
                         <DonationEventCard
                           name={event.name}
-                          description={`Take part in this donation by donating ${event.donationEventItems.map((eachItem) => eachItem.item.name.toLowerCase()).join(", ")}!`}
+                          description={event.donationEventItems.map((eachItem, i) => 
+                            <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
+                            )}
                           imgSrc={event.imageId}
                           numJoined={event.numDonors}
                           timeLeft={event.timeLeft}
