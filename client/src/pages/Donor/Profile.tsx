@@ -1,9 +1,10 @@
+// React
 import { useState, useEffect } from "react";
-import "../../styles/App.css";
+import { Link, useNavigate } from "react-router-dom";
+// MUI
 import {
   Box,
   Container,
-  ThemeProvider,
   Typography,
   Avatar,
   ListItemAvatar,
@@ -14,40 +15,34 @@ import {
   IconButton,
   Card,
   CardContent,
-  CardMedia,
+  CardActions,
 } from "@mui/material";
-
-import { theme } from "../../styles/Palette";
-import logo from "../../assets/EcoYah.png";
-import { useNavigate } from "react-router-dom";
+// Icons
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
-import { green, pink, orange, blue } from "@mui/material/colors";
-import PersonIcon from "@mui/icons-material/Person";
 import LocalActivityIcon from "@mui/icons-material/LocalActivity";
-import pointsPicture from "../../assets/Reward.png";
-import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
-import PaidOutlinedIcon from "@mui/icons-material/Paid";
+import PersonIcon from "@mui/icons-material/Person";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+// Components
+import Image from "../../components/Image/Image";
+import { folderPrefixNames } from "../../components/Image/Image";
+// Utils
 import { makeHttpRequest } from "../../utils/Utility";
 import { USER_ROUTES } from "../../services/routes";
 import { capitalize } from "lodash";
-import { folderPrefixNames } from "../../components/Image/Image";
-import Image from "../../components/Image/Image";
 
 const navigationItems = [
   {
-    category: "Rewards",
+    category: "Cashback History",
     subCategories: [
       {
-        title: "My vouchers",
-        subtitle: "View your active and past vouchers",
+        title: "Cashback",
+        subtitle: "View all your cashback transactions",
         avatar: (
-          <Avatar sx={{ bgcolor: orange[400] }}>
+          <Avatar sx={{ bgcolor: "#455a64" }}>
             <LocalActivityIcon />
           </Avatar>
         ),
-        slug: "vouchers",
+        slug: "cashback-history",
       },
     ],
   },
@@ -56,9 +51,9 @@ const navigationItems = [
     subCategories: [
       {
         title: "Your profile",
-        subtitle: "Edit and view profile information",
+        subtitle: "View and edit profile information",
         avatar: (
-          <Avatar sx={{ bgcolor: blue[400] }}>
+          <Avatar sx={{ bgcolor: "#455a64" }}>
             <PersonIcon />
           </Avatar>
         ),
@@ -73,115 +68,98 @@ const navigationItems = [
         title: "Contact us",
         subtitle: "Contact or send feedback to us",
         avatar: (
-          <Avatar sx={{ bgcolor: pink[400] }}>
+          <Avatar sx={{ bgcolor: "#455a64" }}>
             <LocalPhoneIcon />
           </Avatar>
         ),
         slug: "contact-us",
       },
-      {
-        title: "Notification",
-        subtitle: "Manage subscriptions and email settings",
-        avatar: (
-          <Avatar sx={{ bgcolor: green[400] }}>
-            <NotificationsIcon />
-          </Avatar>
-        ),
-        slug: "notification",
-      },
     ],
   },
 ];
 
-// == Profile Picture Section ==
-// interface ProfilePictureProps {
-//   picture: string;
-//   name: string;
-//   role: string;
-// }
-
-// const ProfilePicture: React.FC<ProfilePictureProps> = ({
-//   picture,
-//   name,
-//   role,
-// }) => {
-//   const imageId = picture.trim() === "" ? "DefaultProfilePicture.jpg" : picture;
-//   console.log(picture)
-//   return (
-//     <>
-//       <Box
-//         display="flex"
-//         justifyContent="center"
-//         sx={{
-//           marginX: "auto",
-//           width: "8rem",
-//           height: "8rem",
-//           marginTop: 4,
-//         }}
-//       >
-//         <Image
-//           imageId={imageId}
-//           type="circle"
-//           width="100%"
-//           height="100%"
-//           folderPrefix={folderPrefixNames.PROFILEPICTURES}
-//         />
-//       </Box>
-//       <Typography sx={{ fontWeight: "bold" }} align="center">
-//         {name}
-//       </Typography>
-//       <Typography align="center">{role}</Typography>
-//     </>
-//   );
-// };
-
 // == Reward Section ==
 interface RewardProps {
   points: number;
+  expiryDate: string;
 }
 
-const Reward: React.FC<RewardProps> = ({ points }) => {
+const Reward: React.FC<RewardProps> = ({ points, expiryDate }) => {
   const navigate = useNavigate();
   return (
-    <Card
-      sx={{
-        display: "flex",
-        bgcolor: "#e0f2f1",
-        borderRadius: 5,
-        marginY: 2,
-        height: "10rem",
-      }}
-    >
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <CardContent sx={{ flex: "1 0 auto", width: "14rem" }}>
-          <Typography component="div" variant="body1" fontWeight={600}>
-            My points
-          </Typography>
-          <Typography
-            variant="h6"
-            color={orange[500]}
-            component="div"
-            display="flex"
-            alignItems={"center"}
+    <Box sx={{ marginY: 2 }}>
+      <Card
+        variant="outlined"
+        sx={{
+          borderRadius: 4,
+          boxShadow: 2,
+          backgroundImage: "linear-gradient(to right, #004d40, #00695c)",
+        }}
+      >
+        <CardContent
+          sx={{
+            paddingTop: 1,
+            cursor: "pointer",
+            "&:hover": {
+              opacity: 0.8,
+            },
+          }}
+          onClick={() => navigate("/cashback-history")}
+        >
+          <Box
+            sx={{
+              paddingY: 1,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
-            <PaidOutlinedIcon sx={{ marginRight: 0.5 }} /> {points}
+            <Typography variant="body1" fontWeight="bold" color="white">
+              Cashback
+            </Typography>
+            <Typography variant="caption" color="white">
+              Expired on {expiryDate}
+            </Typography>
+          </Box>
+          <Typography variant="h5" component="span" color="white">
+            ${points}
           </Typography>
         </CardContent>
-        <Box sx={{ display: "flex", alignItems: "center", pl: 2, pb: 2,
-             cursor: "pointer", "&:hover": { textDecoration: "underline" } }} onClick={() => navigate("/cashback-history")}>
-          <Typography variant="body1" fontWeight={600} component="div">
-            View history
+        <CardActions
+          sx={{
+            p: 1.5,
+            display: "flex",
+            justifyContent: "space-between",
+            backgroundColor: "rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          <Typography component="div" variant="caption" color="white">
+            Amount available to redeem
           </Typography>
-          <ArrowCircleRightIcon sx={{ marginLeft: 0.5 }} color="secondary" />
-        </Box>
-      </Box>
-      <CardMedia
-        component="img"
-        sx={{ width: "10rem", height: "10rem" }}
-        src={pointsPicture}
-        alt="Points"
-      />
-    </Card>
+          <Link to={"/cashback-redemption"}>
+            <Typography
+              paddingX={2}
+              paddingY={1}
+              sx={{
+                borderRadius: 4,
+                fontWeight: "bold",
+                fontSize: 12,
+                backgroundColor: "#eceff1",
+                color: "black",
+                transition: "background-color", // Add transition for a smooth effect
+                "&:hover": {
+                  backgroundColor: "#607d8b",
+                  color: "white",
+                  boxShadow: 4,
+                },
+              }}
+            >
+              Redeem
+            </Typography>
+          </Link>
+        </CardActions>
+      </Card>
+    </Box>
   );
 };
 
@@ -191,19 +169,24 @@ const Others = () => {
   return (
     <nav aria-label="main mailbox folders">
       {navigationItems.map((category, index) => (
-        <List dense sx={{ paddingTop: 0 }} key={index} disablePadding>
+        <List dense sx={{ paddingY: 0 }} key={index} disablePadding>
           <Typography
-            variant="h6"
+            variant="body1"
             sx={{
-              marginLeft: "1rem",
               fontWeight: 600,
-              marginTop: 2,
+              marginY: 1,
             }}
           >
             {category.category}
           </Typography>
           {category.subCategories.map((subCategory, subIndex) => (
             <ListItem
+              sx={{
+                border: 1,
+                borderRadius: 4,
+                borderColor: "lightgrey",
+                marginY: 1,
+              }}
               key={subIndex}
               disablePadding
               secondaryAction={
@@ -243,6 +226,7 @@ export default function Profile() {
     role: "",
     imageId: "",
     points: 0,
+    expiryDate: "",
   });
 
   const [loading, setLoading] = useState(true);
@@ -255,11 +239,15 @@ export default function Profile() {
       );
       const { action, data } = res.data;
       if (action) {
-        // Currently, we do not have points so it will be null
-        const { name, role, imageId, points = 1000 } = data;
-        setUserInfo({ name, role: capitalize(role), imageId, points });
+        const { name, role, imageId, points, expiryDate } = data;
+        setUserInfo({
+          name,
+          role: capitalize(role),
+          imageId,
+          points,
+          expiryDate,
+        });
       } else {
-        // TODO: Currently, we do not really have any robust error message
         console.log("Error retrieving user info");
       }
     } catch (error) {
@@ -274,41 +262,35 @@ export default function Profile() {
   }, []);
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container sx={{ width: "100%" }}>
-        {/* <ProfilePicture
-          picture={userInfo.imageId}
-          name={userInfo.name}
-          role={userInfo.role}
-        /> */}
-        <Box
-          display="flex"
-          justifyContent="center"
-          sx={{
-            marginX: "auto",
-            width: "8rem",
-            height: "8rem",
-            marginTop: 4,
-          }}
-        >
-          {loading ? (
-            <div>Loading...</div>
-          ) : 
-          (<Image
+    <Container sx={{ width: "100%" }}>
+      <Box
+        display="flex"
+        justifyContent="center"
+        sx={{
+          marginX: "auto",
+          width: "8rem",
+          height: "8rem",
+          marginTop: 4,
+        }}
+      >
+        {loading ? (
+          <div>Loading...</div>
+        ) : (
+          <Image
             imageId={userInfo.imageId}
             type="circle"
             width="100%"
             height="100%"
             folderPrefix={folderPrefixNames.PROFILEPICTURES}
-          />)}
-        </Box>
-        <Typography sx={{ fontWeight: "bold" }} align="center">
-          {userInfo.name}
-        </Typography>
-        <Typography align="center">{userInfo.role}</Typography>
-        <Reward points={userInfo.points} />
-        <Others />
-      </Container>
-    </ThemeProvider>
+          />
+        )}
+      </Box>
+      <Typography sx={{ fontWeight: "bold" }} align="center">
+        {userInfo.name}
+      </Typography>
+      <Typography align="center">{userInfo.role}</Typography>
+      <Reward points={userInfo.points} expiryDate={userInfo.expiryDate} />
+      <Others />
+    </Container>
   );
 }

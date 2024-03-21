@@ -77,11 +77,11 @@ export type SpeechSynthesisType = {
 };
 
 export type UserType = {
-  id: number,
-  name: String,
-  contactNum: String,
-  email: String,
-  points: number,
-  role: String,
-  imageId: String
-}
+  id: number;
+  name: String;
+  contactNum: String;
+  email: String;
+  points: number;
+  role: String;
+  imageId: String;
+};
