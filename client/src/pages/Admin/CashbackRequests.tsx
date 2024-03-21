@@ -1,6 +1,5 @@
 // MUI Imports
 import { Stack } from "@mui/material";
-
 // Components
 import StaffTypography from "../../components/Typography/StaffTypography";
 import RedemptionNotification from "../../components/RedemptionNotification/RedemptionNotification";

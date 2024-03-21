@@ -12,7 +12,7 @@ import { DONATION_REQUEST_ROUTES } from "../../services/routes";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-
+import _ from "lodash";
 import {
   Box,
   Chip,
@@ -198,7 +198,7 @@ export default function DonationEvents() {
         imageId: donationEvent.imageId,
         name: donationEvent.name,
       };
-      navigate("/donation-request-form", {
+      navigate(`/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`, {
         state: { action: "create", form: dataToDonationRequestForm },
       });
     }

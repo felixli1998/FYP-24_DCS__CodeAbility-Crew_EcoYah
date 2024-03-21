@@ -63,6 +63,7 @@ function ResponsiveAppBar() {
           NavigationList.DONATION_EVENTS,
           NavigationList.DONATION_REQUEST,
           NavigationList.CASHBACK_REQUEST,
+          NavigationList.DASHBOARD,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, true));
       } else {
@@ -71,6 +72,8 @@ function ResponsiveAppBar() {
           NavigationList.HOME,
           NavigationList.PROFILE,
           NavigationList.DONATION_REQUEST,
+          NavigationList.ABOUT_US,
+          NavigationList.FAQ,
         ];
         return NavList.map((navItem) => generateNavItem(navItem, false));
       }
@@ -141,7 +144,9 @@ function ResponsiveAppBar() {
     navActionLogicMap();
 
     if (isAdmin()) {
-      setHomePath(isAuthenticated() ? "/admin/donation-events" : "/admin/sign-in");
+      setHomePath(
+        isAuthenticated() ? "/admin/donation-events" : "/admin/sign-in",
+      );
     } else {
       setHomePath("/");
     }
@@ -149,24 +154,24 @@ function ResponsiveAppBar() {
 
   return (
     <AppBar position="sticky" color="inherit" elevation={1}>
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Link to={homePath}>
-            <img
-              width="10%"
-              height="100%"
-              srcSet={logo}
-              src={logo}
-              alt={"Home"}
-              loading="lazy"
-              style={{ verticalAlign: 'middle' }}
-            />
-          </Link>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Link to={homePath}>
+          <img
+            width="10%"
+            height="100%"
+            srcSet={logo}
+            src={logo}
+            alt={"Home"}
+            loading="lazy"
+            style={{ verticalAlign: "middle" }}
+          />
+        </Link>
 
-          <TemporaryDrawer
-            topDrawerList={navigationList}
-            bottomDrawerList={actionList}
-          ></TemporaryDrawer>
-        </Toolbar>
+        <TemporaryDrawer
+          topDrawerList={navigationList}
+          bottomDrawerList={actionList}
+        ></TemporaryDrawer>
+      </Toolbar>
     </AppBar>
   );
 }
