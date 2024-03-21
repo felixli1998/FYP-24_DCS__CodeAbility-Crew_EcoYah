@@ -96,7 +96,7 @@ export class TransactionHistoryRepository {
     userId: string,
     action?: TransactionHistory["action"]
   ) {
-    let whereCondition: any = { userPoints: { user: { id: userId } } };
+    const whereCondition: any = { userPoints: { user: { id: userId } } };
     let relations: string[] = ["donationRequest.donationEvent"];
 
     if (action == "credited") {

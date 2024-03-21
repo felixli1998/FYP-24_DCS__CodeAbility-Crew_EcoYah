@@ -1,5 +1,5 @@
-import { Box, Container, Typography, Divider } from "@mui/material";
-import { Link } from "react-router-dom";
+import {Box, Container, Typography, Divider} from "@mui/material";
+import {Link} from "react-router-dom";
 
 const questionsAndAnswers = [
   {
@@ -27,17 +27,23 @@ const questionsAndAnswers = [
 
 export default function Faq() {
   return (
-    <Container sx={{ marginTop: 3, marginX: "auto" }}>
-      <Box sx={{ marginY: 3 }}>
-        <Typography variant="h5" sx={{ fontWeight: "bold", marginY: 2 }}>
+    <Container sx={{marginTop: 3, marginX: "auto"}}>
+      <Box sx={{marginY: 3}}>
+        <Typography
+          variant="h5"
+          sx={{fontWeight: "bold", marginY: 2}}
+        >
           Frequently Asked Questions
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography
+          variant="body1"
+          color="text.secondary"
+        >
           Find answers to common questions about Kunyah below. If you can't find
           what you're looking for, please{" "}
           <Typography
             component="span"
-            sx={{ color: "primary.main" }}
+            sx={{color: "primary.main"}}
             fontWeight={"bold"}
           >
             {/* TODO: link to a contact us page */}
@@ -45,24 +51,23 @@ export default function Faq() {
           </Typography>
         </Typography>
       </Box>
-      <Box
-        sx={{
-          padding: 2,
-        }}
-      >
+      <Box>
         {questionsAndAnswers.map((item, index) => (
           <Box key={index}>
             <Typography
               variant="h6"
-              sx={{ fontWeight: "bold", marginBottom: 2 }}
+              sx={{fontWeight: "bold", marginBottom: 2}}
             >
               {item.question}
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography
+              variant="body1"
+              color="text.secondary"
+            >
               {item.answer}
             </Typography>
             {questionsAndAnswers.length - 1 !== index && (
-              <Divider sx={{ marginY: 2 }} />
+              <Divider sx={{marginY: 2}} />
             )}
           </Box>
         ))}
