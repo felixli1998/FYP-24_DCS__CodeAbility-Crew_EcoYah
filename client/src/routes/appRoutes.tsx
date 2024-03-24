@@ -153,6 +153,8 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "Social media content generator for an event.",
     element: <PosterGenerator/>,
     isAdmin: false, // Set to false for development
+  },
+  {
     path: "dashboard",
     description: "View all statistics for the admin",
     element: <Dashboard />,
