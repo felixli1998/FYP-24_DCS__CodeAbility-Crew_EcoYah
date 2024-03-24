@@ -17,6 +17,7 @@ import {
   StepLabel,
   Stack,
   Grid,
+  TextField,
 } from "@mui/material";
 
 // Utils Imports
@@ -25,6 +26,7 @@ import {
   getDonationEventById,
   updateDonationEventById,
 } from "../../services/donationEventApi";
+import { generateInstaCaption } from "../../services/openaiApi";
 import { uploadImage } from "../../utils/UploadImage";
 
 // Icons
@@ -257,6 +259,80 @@ export default function DonationEvent() {
   };
   // === For Donation Event Form Edit Related === //
 
+  // === Social Media Sharing Dialog === //
+  const SocialMediaSharing = () => {
+    const [open, setOpen] = useState<boolean>(false);
+    const handleOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const {
+      data: instaGeneratedCaptionData,
+      isLoading: instaGeneratedCaptionIsLoading,
+      refetch: instaGeneratedCaptionRefetch,
+    } = useQuery({
+      queryKey: ["generate-instagram-caption", donationEventId],
+      queryFn: () => generateInstaCaption(donationEventId as string),
+    });
+
+    return (
+      <>
+        <Button
+          variant="outlined"
+          sx={{
+            fontSize: "1.25rem",
+            letterSpacing: "0.15rem",
+            width: "9.375rem",
+            height: "3.75rem",
+            borderColor: "primary.dark",
+            color: "primary.dark",
+          }}
+          onClick={() => handleOpen()}
+        >
+          Share
+        </Button>
+        <SimpleDialog
+          open={open}
+          title={"Share on Social Media"}
+          subtitleText={
+            "Generate poster and captions and share on social media platforms"
+          }
+          leftButtonLabel={"Cancel"}
+          rightButtonLabel={"Generate"}
+          onClose={() => handleClose()}
+          handleRightButton={() => instaGeneratedCaptionRefetch()}
+        >
+          <Box>
+            <TextField
+              label="Caption"
+              id="outlined-multiline-static"
+              multiline
+              fullWidth
+              defaultValue="Generate caption..."
+              sx={{ marginY: 2 }}
+              value={instaGeneratedCaptionData}
+            />
+            <StaffTypography type="title" size={1.5} text={`Social Media`} />
+            <WhatsappShareButton
+              url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
+              children={<WhatsappIcon size={55} round={true} />}
+              style={{ marginRight: 12 }}
+            />
+            <TelegramShareButton
+              url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
+              children={<TelegramIcon size={55} round={true} />}
+            />
+          </Box>
+        </SimpleDialog>
+      </>
+    );
+  };
+  // === Social Media Sharing Dialog === //
+
   if (donationEventIsLoading) {
     return <Box>...Loading</Box>;
   }
@@ -278,15 +354,8 @@ export default function DonationEvent() {
                 text={`Donation Event`}
                 customStyles={{ textAlign: "center" }}
               />
-              <WhatsappShareButton
-                url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
-                children={<WhatsappIcon size={55} round={true} />}
-              />
-              <TelegramShareButton
-                url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
-                children={<TelegramIcon size={55} round={true} />}
-              />
               <Box>
+                <SocialMediaSharing />
                 <Button
                   variant="outlined"
                   sx={{
@@ -363,7 +432,7 @@ export default function DonationEvent() {
         }
         leftButtonLabel={"Cancel"}
         rightButtonLabel={"Save"}
-        updateDonationIsActive={updateDonationIsActive}
+        handleRightButton={updateDonationIsActive}
       />
       {/* Preview and Edit isActive (only) */}
       {/* Full Edit Mode */}

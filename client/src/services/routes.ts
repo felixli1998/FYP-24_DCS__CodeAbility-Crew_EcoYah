@@ -13,6 +13,7 @@ export const PARENT_ROUTES = {
   LOGIN: `${BASE_URL}/login`,
   DASHBOARD: `${BASE_URL}/dashboard`,
   CASHBACK: `${BASE_URL}/transaction-history`,
+  OPENAI: `${BASE_URL}/openai`,
 };
 
 // User Routes
@@ -23,7 +24,7 @@ export const USER_ROUTES = {
   GET_ACCOUNT_TYPE: `${PARENT_ROUTES.USERS}/get-account-type`,
 };
 
-// User Points Routes 
+// User Points Routes
 export const USER_POINTS_ROUTES = {
   GET_USER_POINTS: `${PARENT_ROUTES.USERS_POINTS}/:id`,
   MAKE_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/request`,
@@ -31,7 +32,7 @@ export const USER_POINTS_ROUTES = {
   REJECT_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/reject-request`,
 };
 
-// Item Routes 
+// Item Routes
 export const ITEM_ROUTES = {
   CREATE_ITEM: `${PARENT_ROUTES.ITEMS}/create`,
   RETRIEVE_ALL_ITEMS: `${PARENT_ROUTES.ITEMS}/all`,
@@ -84,8 +85,13 @@ export const DASHBOARD_ROUTES = {
   GET_CASHBACK_STATUS: `${PARENT_ROUTES.DASHBOARD}/get-cashback-status`,
 };
 
-// Transaction History Routes 
+// Transaction History Routes
 export const TRANSACTION_HISTORY_ROUTES = {
   GET_TRANS_HISTORY_BY_ACTION: `${PARENT_ROUTES.CASHBACK}/get-transaction-history`,
   GET_ALL_PENDING_REQUESTS: `${PARENT_ROUTES.CASHBACK}/pending-cashback-requests`,
+};
+
+// OPENAI Routes
+export const OPENAI_ROUTES = {
+  GENERATE_INSTAGRAM_CAPTION: `${PARENT_ROUTES.OPENAI}/generate-instagram-caption`,
 };

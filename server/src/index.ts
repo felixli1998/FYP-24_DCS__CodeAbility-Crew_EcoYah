@@ -28,6 +28,7 @@ import donationEventItemRoutes from "./routes/donationEventItemRoutes";
 import userPointsRoutes from "./routes/userPointsRoutes";
 import { createLongPollingConnection } from "./services/WebSocket";
 import transactionHistoryRoutes from "./routes/transactionHistoryRoutes";
+import openAIRoutes from "./routes/openAIRoutes";
 import emailRoutes from "./routes/emailRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
 // import longPollingRoute, {handleLongPolling} from "./routes/longPolling";
@@ -39,9 +40,9 @@ const httpServer = createServer(app);
 const options = {
   pingTimeout: 5000,
   pingInterval: 10000,
-  cors:{
-    origin: "*"
-  }
+  cors: {
+    origin: "*",
+  },
 };
 
 // Create long polling connection
@@ -76,7 +77,7 @@ AppDataSource.initialize()
     scheduledMethods.forEach((scheduleMethod) => {
       console.log(`Starting CRON jobs: ${scheduleMethod.description}`);
       scheduleCronTask(cron, scheduleMethod.method, scheduleMethod.unixFormat);
-    })
+    });
   })
   .catch((error) => console.log(error));
 
@@ -90,8 +91,9 @@ app.use("/items", itemRoutes);
 app.use("/event-types", eventRoutes);
 app.use("/donation-requests", donationRequestRoutes);
 app.use("/donation-request-items", donationRequestItemRoutes);
-app.use("/points", userPointsRoutes)
+app.use("/points", userPointsRoutes);
 app.use("/transaction-history", transactionHistoryRoutes);
+app.use("/openai", openAIRoutes);
 app.use("/email", emailRoutes);
 app.use("/dashboard", dashboardRoutes);
 // app.use("/longpolling", longPollingRoute);
