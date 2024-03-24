@@ -38,7 +38,7 @@ export default function SimpleDialog(props: SimpleDialogProps) {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} maxWidth="lg" >
       <DialogTitle sx={{ fontSize: "1.5rem", letterSpacing: "0.18rem" }}>
         {title}
       </DialogTitle>
