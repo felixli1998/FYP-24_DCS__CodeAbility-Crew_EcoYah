@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import IconButton from '@mui/material/IconButton';
+import GetAppIcon from '@mui/icons-material/GetApp';
 
 // MUI Imports
 import StaffTypography from "../../components/Typography/StaffTypography";
@@ -38,6 +40,7 @@ import Step1Form from "../../components/DonationEvent/Step1Form";
 import Step2Form from "../../components/DonationEvent/Step2Form";
 import Step3Form from "../../components/DonationEvent/Step3Form";
 import SimpleDialog from "../../components/Dialog/SimpleDialog";
+import PosterGeneratorComponent from "../../components/PosterGenerator/PosterGeneratorComponent";
 
 // Other Imports
 import dayjs from "dayjs";
@@ -48,6 +51,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+import html2canvas from "html2canvas";
 
 export default function DonationEvent() {
   const navigate = useNavigate();
@@ -60,6 +64,22 @@ export default function DonationEvent() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const steps = ["Step 1", "Step 2", "Step 3", "Preview"];
   const [activeStep, setActiveStep] = useState(0);
+
+  const handleDownload = () => {
+    const box = document.getElementById('poster-box');
+    const SCALE_FACTOR = 2;
+    if (!box) return;
+    html2canvas(box, {
+      scale: SCALE_FACTOR
+    })
+      .then(canvas => {
+        const dataURL = canvas.toDataURL();
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = 'poster.png';
+        link.click();
+      });
+  };
 
   const {
     data: donationEventData,
@@ -306,26 +326,49 @@ export default function DonationEvent() {
           onClose={() => handleClose()}
           handleRightButton={() => instaGeneratedCaptionRefetch()}
         >
-          <Box>
-            <TextField
-              label="Caption"
-              id="outlined-multiline-static"
-              multiline
-              fullWidth
-              defaultValue="Generate caption..."
-              sx={{ marginY: 2 }}
-              value={instaGeneratedCaptionData}
-            />
-            <StaffTypography type="title" size={1.5} text={`Social Media`} />
-            <WhatsappShareButton
-              url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
-              children={<WhatsappIcon size={55} round={true} />}
-              style={{ marginRight: 12 }}
-            />
-            <TelegramShareButton
-              url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
-              children={<TelegramIcon size={55} round={true} />}
-            />
+          <Box sx={{
+            width: "100%",
+            marginTop: "2rem"
+          }}>
+            <Box sx={{
+              flexDirection: ["column", "row"],
+              display: "flex",
+            }}>
+
+              <Box sx={{
+                flex: .5,
+              }}>
+                <PosterGeneratorComponent donationEvent={donationEvent} />
+              </Box>
+              <Box>
+                <TextField
+                  label="Caption"
+                  id="outlined-multiline-static"
+                  multiline
+                  defaultValue="Generate caption..."
+                  sx={{
+                    marginY: 2,
+                    width: "20vw",
+                  }}
+                  value={instaGeneratedCaptionData}
+                />
+                <StaffTypography type="title" size={1.5} text={`Social Media`} />
+                <WhatsappShareButton
+                  url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
+                  children={<WhatsappIcon size={55} round={true} />}
+                  style={{ marginRight: 12 }}
+                />
+                <TelegramShareButton
+                  url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
+                  children={<TelegramIcon size={55} round={true} />}
+                  style={{ marginRight: 12 }}
+                />
+                {/* Download Icon */}
+                <IconButton onClick={handleDownload} style={{ marginTop: "-43px", padding: 8, backgroundColor: "gray" }}> {/* Adjust padding as needed */}
+                  <GetAppIcon fontSize="large" /> {/* Adjust size as needed */}
+                </IconButton>
+              </Box>
+            </Box>
           </Box>
         </SimpleDialog>
       </>
