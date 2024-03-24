@@ -109,7 +109,7 @@ export default function DonationEventsAdmin() {
         <Typography
           fontWeight="bold"
           color="primary.dark"
-          sx={{ fontSize: "2.215rem", letterSpacing: "0.255rem" }}
+          sx={{ fontSize: "4rem", letterSpacing: "0.48rem" }}
         >
           Donation Events
         </Typography>
@@ -214,7 +214,9 @@ export default function DonationEventsAdmin() {
                   {event.name}
                 </Typography>
               </CardContent>
-              <CardActions sx={{ justifyContent: "flex-end" }}>
+              <CardActions
+                sx={{ justifyContent: "flex-end", alignItems: "bottom" }}
+              >
                 <Button
                   onClick={() => handleDonationEventClick(event.id)}
                   sx={{
@@ -233,7 +235,9 @@ export default function DonationEventsAdmin() {
       </Grid>
 
       <Pagination
-        sx={{ display: "flex", justifyContent: "center" }}
+        sx={{ display: "flex", justifyContent: "center", m: "2rem" }}
+        size="large"
+        color="primary"
         count={Math.ceil(events.length / 4)}
         page={page}
         onChange={(e, v) => {

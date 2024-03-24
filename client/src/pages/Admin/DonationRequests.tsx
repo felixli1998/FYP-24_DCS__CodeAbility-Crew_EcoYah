@@ -55,7 +55,7 @@ export default function DonationRequests() {
     <Stack spacing={5} sx={{ margin: { xs: "2rem 2rem", md: "2rem 4rem" } }}>
       <StaffTypography
         type="title"
-        size={2.5}
+        size={4}
         text={"Active Donation Requests"}
       ></StaffTypography>
       <DatePicker
