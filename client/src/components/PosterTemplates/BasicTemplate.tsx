@@ -8,11 +8,11 @@ import KunyahLogo from "../../assets/Kunyah.png";
 import EcoyahLogo from "../../assets/EcoYah.png";
 
 export default function BasicTemplate(donationDetails: IDonationDetails) {
+    const SCALE_FACTOR = 2;
     function dateStringToDayMonthYear(dateString: string) {
         const date = new Date(dateString);
         const day = date.getDate();
         const month = date.toLocaleString('default', { month: 'long' });
-        const year = date.getFullYear();
         return `${day} ${month} `;
     };
 
@@ -28,8 +28,8 @@ export default function BasicTemplate(donationDetails: IDonationDetails) {
         <Box
             id="poster-box"
             sx={{
-                width: "1080px",
-                height: "1350px",
+                width: `${1080 / SCALE_FACTOR}px`,
+                height: `${1350 / SCALE_FACTOR}px`,
                 backgroundColor: "#29AB87",
                 position: 'relative', // Ensure relative positioning for child elements
                 display: "flex",
@@ -42,15 +42,14 @@ export default function BasicTemplate(donationDetails: IDonationDetails) {
             {/* Logos */}
             <Box >
                 <img
-
                     srcSet={KunyahLogo}
                     src={KunyahLogo}
                     alt={"Home"}
                     style={{
-                        width: "115px",
-                        height: "115px",
+                        width: `${115 / SCALE_FACTOR}px`,
+                        height: `${115 / SCALE_FACTOR}px`,
                         position: "absolute",
-                        bottom: "0px",
+                        bottom: "20px",
                         right: "20px",
                         zIndex: 100,
                     }}
@@ -61,15 +60,22 @@ export default function BasicTemplate(donationDetails: IDonationDetails) {
                     src={EcoyahLogo}
                     alt={"Home"}
                     style={{
-                        width: "115px",
-                        height: "115px",
+                        borderRadius: "50%",
+                        width: `${115 / SCALE_FACTOR}px`,
+                        height: `${115 / SCALE_FACTOR}px`,
                         position: "absolute",
-                        bottom: "0px",
-                        right: "120px",
+                        bottom: "20px",
+                        right: "85px",
                         zIndex: 100,
                     }}
                 />
-                <div style={{ backgroundColor: "#29AB87", width: "23%", height: "9%", position: "absolute", bottom: "0px", right: "0px", zIndex: 50 }}></div>
+                <div style={{ 
+                    backgroundColor: "#29AB87", 
+                    borderRadius: "100%",
+                    width: `${115 / SCALE_FACTOR}px`, height: `${115 / SCALE_FACTOR}px`, 
+                    position: "absolute", 
+                    bottom: "20px",
+                    right: "20px", zIndex: 50 }}></div>
 
             </Box>
             <BasicOutline
@@ -88,10 +94,10 @@ export default function BasicTemplate(donationDetails: IDonationDetails) {
                     folderPrefix={folderPrefixNames.EVENTS}
                     // This style refers to the mask
                     style={{
-                        width: "1000px",
-                        height: "800px",
+                        width: `${1000 / SCALE_FACTOR}px`,
+                        height: `${800 / SCALE_FACTOR}px`,
                         position: "absolute",
-                        top: "40px",
+                        top: `${40 / SCALE_FACTOR}px`,
                     }}
                     imageScale={1.2}
                     imageLeftShift="-50px"
@@ -102,10 +108,10 @@ export default function BasicTemplate(donationDetails: IDonationDetails) {
                 sx={{
                     justifyContent: "flex-start",
                     backgroundColor: "rgba(0, 0, 0, 0)",
-                    width: "90%",
+                    width: "100%",
                     height: "35%",
                     padding: "1rem",
-                    marginTop: "685px",
+                    marginTop: `${605 / SCALE_FACTOR}px`,
                     overflow: "hidden",
                     zIndex: "5000",
                     position: "relative"
@@ -114,11 +120,10 @@ export default function BasicTemplate(donationDetails: IDonationDetails) {
                 <Typography
                     color="white"
                     variant="h1"
-
                     style={{
                         fontFamily: 'Open Sans, sans-serif',
                         fontWeight: 700, // Apply bold (700 weight) style
-                        fontSize: "6rem",
+                        fontSize: "2rem",
                     }}
                 >
                     {dateStringToDayMonthYear(donationDetails.startDate)}
@@ -126,13 +131,20 @@ export default function BasicTemplate(donationDetails: IDonationDetails) {
                 <Typography
                     color="white"
                     variant="h2"
-
+                    style={{
+                        fontFamily: 'Open Sans, sans-serif',
+                        fontSize: "1rem",
+                    }}
                 >
                     {donationDetails.name}
                 </Typography>
                 <Typography
                     color="white"
                     variant="h3"
+                    style={{
+                        fontFamily: 'Open Sans, sans-serif',
+                        fontSize: "1rem",
+                    }}
                     gutterBottom
                 >
                     {donationDetails.location}
@@ -140,20 +152,32 @@ export default function BasicTemplate(donationDetails: IDonationDetails) {
                 <Typography
                     color="#29AB87"
                     variant="h5"
+                    style={{
+                        fontFamily: 'Open Sans, sans-serif',
+                        fontSize: "0.9rem",
+                    }}
                 >
                     We are looking for the following items:
                 </Typography>
                 <Typography
                     color="white"
                     variant="h3"
+                    style={{
+                        fontFamily: 'Open Sans, sans-serif',
+                        fontSize: "1.5rem",
+                    }}
                     gutterBottom
                 >
                     {items}
                 </Typography>
                 <Typography
-                    marginTop={8}
+                    marginTop={2}
                     color="white"
-                    variant="h5">
+                    variant="h5"
+                    style={{
+                        fontFamily: 'Open Sans, sans-serif',
+                        fontSize: "1rem",
+                    }}>
                     Sign up below to donate and receive points! <br />Let's make a difference together.
                 </Typography>
             </Box>
