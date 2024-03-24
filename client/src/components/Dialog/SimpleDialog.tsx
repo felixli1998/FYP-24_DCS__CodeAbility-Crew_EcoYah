@@ -17,7 +17,7 @@ export interface SimpleDialogProps {
   leftButtonLabel: string;
   rightButtonLabel: string;
   onClose: (value: boolean) => void;
-  updateDonationIsActive: () => void;
+  handleRightButton: () => void;
 }
 
 export default function SimpleDialog(props: SimpleDialogProps) {
@@ -28,7 +28,7 @@ export default function SimpleDialog(props: SimpleDialogProps) {
     children,
     leftButtonLabel,
     rightButtonLabel,
-    updateDonationIsActive,
+    handleRightButton,
     onClose,
   } = props;
   const [loading] = React.useState(false);
@@ -67,7 +67,7 @@ export default function SimpleDialog(props: SimpleDialogProps) {
         </Button>
         <Button
           variant="contained"
-          onClick={updateDonationIsActive}
+          onClick={handleRightButton}
           disabled={loading}
           sx={{
             fontSize: "1.125rem",
