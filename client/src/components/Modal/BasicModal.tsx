@@ -151,9 +151,9 @@ export default function BasicModal(props: BasicModalType) {
             />
           </Box>
           {error && (
-            <Alert severity="error">
-              An error occurred while updating the donation request to
-              completed. Please try again.
+            <Alert variant="filled" severity="error">
+              An error occurred while completing the donation request. Please
+              refresh and try again.
             </Alert>
           )}
         </Stack>
