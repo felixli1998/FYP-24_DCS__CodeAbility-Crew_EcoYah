@@ -102,7 +102,10 @@ export default function Dashboard() {
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = downloadUrl;
-      link.setAttribute("download", "redeemed_cashback_data.csv");
+      link.setAttribute(
+        "download",
+        `redeemed_cashback_data_${startDate?.format("DD/MM/YYYY")}_to_${endDate?.format("DD/MM/YYYY")}.csv`,
+      );
       document.body.appendChild(link);
       link.click();
       link.parentNode!.removeChild(link);
