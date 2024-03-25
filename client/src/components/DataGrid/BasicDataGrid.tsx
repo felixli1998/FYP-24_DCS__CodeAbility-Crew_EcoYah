@@ -53,6 +53,9 @@ export default function BasicDataGrid(props: BasicDataGridType) {
       <DataGrid
         rows={rows}
         columns={columns}
+        getRowId={(row: Record<string, string | number>) =>
+          (row.name as string) + row.timestamp
+        }
         initialState={{
           pagination: {
             paginationModel: {
@@ -63,6 +66,7 @@ export default function BasicDataGrid(props: BasicDataGridType) {
         pageSizeOptions={[5]}
         rowHeight={100}
         disableRowSelectionOnClick
+        sx={{ minHeight: "10rem" }}
       />
     </Box>
   );

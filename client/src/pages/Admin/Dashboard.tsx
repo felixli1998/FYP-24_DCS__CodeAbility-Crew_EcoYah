@@ -19,6 +19,7 @@ import {
   getPopularEvent,
   getPopularItem,
   getPreferredDropOff,
+  getRedeemedCashback,
 } from "../../services/dashboardApi";
 // Utils
 import { PieChartType } from "../../utils/Types";
@@ -58,6 +59,9 @@ export default function Dashboard() {
 
   const [startDate, setStartDate] = useState<Dayjs | null>(null);
   const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  const [redeemedCashbackData, setRedeemedCashbackData] = useState<
+    Record<string, string | number>[]
+  >([]);
 
   const [error, setError] = useState<boolean>(false);
 
@@ -133,6 +137,12 @@ export default function Dashboard() {
           Withdrawn: itemsByMonthData.withdrawnData,
         });
       }
+
+      const redeemedCashbackData = await getRedeemedCashback(
+        startDate!,
+        endDate!,
+      );
+      setRedeemedCashbackData(redeemedCashbackData);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(true);
@@ -145,7 +155,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchDynamicData();
-  }, [eventsSelect, itemsSelect]);
+  }, [eventsSelect, itemsSelect, startDate, endDate]);
 
   const rows = [
     {
@@ -265,7 +275,7 @@ export default function Dashboard() {
       </Grid>
       <BasicDataGrid
         title={"Redeemed Cashback"}
-        rows={rows}
+        rows={redeemedCashbackData}
         columns={columns}
         setStartDate={handleStartDateChange}
         setEndDate={handleEndDateChange}

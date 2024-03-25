@@ -23,7 +23,7 @@ export const USER_ROUTES = {
   GET_ACCOUNT_TYPE: `${PARENT_ROUTES.USERS}/get-account-type`,
 };
 
-// User Points Routes 
+// User Points Routes
 export const USER_POINTS_ROUTES = {
   GET_USER_POINTS: `${PARENT_ROUTES.USERS_POINTS}/:id`,
   MAKE_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/request`,
@@ -31,7 +31,7 @@ export const USER_POINTS_ROUTES = {
   REJECT_REQUEST: `${PARENT_ROUTES.USERS_POINTS}/reject-request`,
 };
 
-// Item Routes 
+// Item Routes
 export const ITEM_ROUTES = {
   CREATE_ITEM: `${PARENT_ROUTES.ITEMS}/create`,
   RETRIEVE_ALL_ITEMS: `${PARENT_ROUTES.ITEMS}/all`,
@@ -82,9 +82,10 @@ export const DASHBOARD_ROUTES = {
   GET_ITEMS_BY_MONTH: `${PARENT_ROUTES.DASHBOARD}/get-items-by-month/:month`,
   GET_PREFERRED_DROP_OFF: `${PARENT_ROUTES.DASHBOARD}/get-preferred-drop-off`,
   GET_CASHBACK_STATUS: `${PARENT_ROUTES.DASHBOARD}/get-cashback-status`,
+  GET_REDEEMED_CASHBACK: `${PARENT_ROUTES.DASHBOARD}/get-redeemed-cashback`,
 };
 
-// Transaction History Routes 
+// Transaction History Routes
 export const TRANSACTION_HISTORY_ROUTES = {
   GET_TRANS_HISTORY_BY_ACTION: `${PARENT_ROUTES.CASHBACK}/get-transaction-history`,
   GET_ALL_PENDING_REQUESTS: `${PARENT_ROUTES.CASHBACK}/pending-cashback-requests`,

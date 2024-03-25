@@ -341,7 +341,7 @@ export class DashboardRepository {
   async getRedeemedCashback(startDate: Date, endDate: Date) {
     const result = await AppDataSource.getRepository(TransactionHistory)
       .createQueryBuilder("TH")
-      .select("TH.points, TH.updated_at")
+      .select("TH.points as cashback, TH.updated_at as timestamp")
       .addSelect("U.id, U.name")
       .leftJoin(UserPoints, "UP", "TH.user_points_id = UP.id")
       .leftJoin(User, "U", "UP.user_id = U.id")
@@ -352,7 +352,7 @@ export class DashboardRepository {
       .andWhere("TH.action = :action", { action: "redeemed" })
       .andWhere("TH.status = :status", { status: "approved" })
       .orderBy("TH.updated_at", "DESC")
-      .cache(`get-redeemed-cashback`, 60000)
+      .cache(`get-redeemed-cashback-${startDate}-${endDate}`, 60000)
       .getRawMany();
 
     return result;
