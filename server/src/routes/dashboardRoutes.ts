@@ -2,7 +2,7 @@
 import express from "express";
 
 // Internal Imports
-import { generateResponse } from "../common/methods";
+import { generateResponse, strongParams } from "../common/methods";
 import { DashboardService } from "../services/DashboardService";
 import { DashboardRepository } from "../repositories/DashboardRepository";
 
@@ -73,6 +73,25 @@ router.get("/get-preferred-drop-off", async (req, res) => {
 router.get("/get-cashback-status", async (req, res) => {
   try {
     const result = await dashboardService.getCashbackStatus();
+    return generateResponse(res, 200, { data: result });
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong");
+  }
+});
+
+router.post("/get-redeemed-cashback", async (req, res) => {
+  try {
+    const params = req.body;
+    const allowedParams = ["startDate", "endDate"];
+    const filteredParams = strongParams(params, allowedParams);
+
+    if (!filteredParams)
+      return generateResponse(res, 400, "Invalid Request Body");
+
+    const result = await dashboardService.getRedeemedCashback(
+      filteredParams.startDate,
+      filteredParams.endDate,
+    );
     return generateResponse(res, 200, { data: result });
   } catch (error) {
     return generateResponse(res, 500, "Something went wrong");

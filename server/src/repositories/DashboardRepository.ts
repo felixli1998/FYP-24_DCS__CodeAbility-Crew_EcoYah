@@ -6,6 +6,8 @@ import { DonationEvent } from "../entities/DonationEvent";
 import { DonationEventItem } from "../entities/DonationEventItem";
 import { Item } from "../entities/Item";
 import { TransactionHistory } from "../entities/TransactionHistory";
+import { UserPoints } from "../entities/UserPoints";
+import { User } from "../entities/User";
 
 export class DashboardRepository {
   async getPopularEvent() {
@@ -334,5 +336,25 @@ export class DashboardRepository {
       creditedData: groupCreditedData,
       redeemedData: groupRedeemedData,
     };
+  }
+
+  async getRedeemedCashback(startDate: Date, endDate: Date) {
+    const result = await AppDataSource.getRepository(TransactionHistory)
+      .createQueryBuilder("TH")
+      .select("TH.points, TH.updated_at")
+      .addSelect("U.id, U.name")
+      .leftJoin(UserPoints, "UP", "TH.user_points_id = UP.id")
+      .leftJoin(User, "U", "UP.user_id = U.id")
+      .where("TH.updated_at BETWEEN :startDate AND :endDate", {
+        startDate,
+        endDate,
+      })
+      .andWhere("TH.action = :action", { action: "redeemed" })
+      .andWhere("TH.status = :status", { status: "approved" })
+      .orderBy("TH.updated_at", "DESC")
+      .cache(`get-redeemed-cashback`, 60000)
+      .getRawMany();
+
+    return result;
   }
 }

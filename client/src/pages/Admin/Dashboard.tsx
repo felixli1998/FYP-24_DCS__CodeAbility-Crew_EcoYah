@@ -2,11 +2,14 @@
 import { useState, useEffect } from "react";
 // MUI
 import { Alert, Box, Grid, Typography } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { Dayjs } from "dayjs";
 // Components
 import DashboardCard from "../../components/Card/DashboardCard";
 import BarCharts from "../../components/Chart/BarChart";
 import PieCharts from "../../components/Chart/PieChart";
 import LineCharts from "../../components/Chart/LineChart";
+import BasicDataGrid from "../../components/DataGrid/BasicDataGrid";
 // APIs
 import {
   getCashbackStatus,
@@ -53,6 +56,9 @@ export default function Dashboard() {
     {},
   );
 
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+
   const [error, setError] = useState<boolean>(false);
 
   const handleEventsChange = (value: string) => {
@@ -65,6 +71,14 @@ export default function Dashboard() {
     setItemsSelect(value);
     setItemsName([]);
     setItemsByMonthData({});
+  };
+
+  const handleStartDateChange = (date: Dayjs | null) => {
+    setStartDate(date);
+  };
+
+  const handleEndDateChange = (date: Dayjs | null) => {
+    setEndDate(date);
   };
 
   const fetchStaticData = async () => {
@@ -132,6 +146,36 @@ export default function Dashboard() {
   useEffect(() => {
     fetchDynamicData();
   }, [eventsSelect, itemsSelect]);
+
+  const rows = [
+    {
+      id: "1",
+      name: "Joey",
+      cashback: 30,
+      timestamp: "20-01-2024 22:22:22",
+    },
+    {
+      id: "2",
+      name: "Joey",
+      cashback: 30,
+      timestamp: "20-01-2024 22:22:22",
+    },
+  ];
+
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 300 },
+    { field: "name", headerName: "Name", width: 300 },
+    {
+      field: "cashback",
+      headerName: "Cashback",
+      width: 300,
+    },
+    {
+      field: "timestamp",
+      headerName: "Timestamp",
+      width: 300,
+    },
+  ];
 
   return (
     <Box sx={{ backgroundColor: "#efebeb", padding: "1rem" }}>
@@ -219,6 +263,13 @@ export default function Dashboard() {
           />
         </Grid>
       </Grid>
+      <BasicDataGrid
+        title={"Redeemed Cashback"}
+        rows={rows}
+        columns={columns}
+        setStartDate={handleStartDateChange}
+        setEndDate={handleEndDateChange}
+      />
     </Box>
   );
 }
