@@ -31,7 +31,7 @@ export default function Dashboard() {
     { field: "name", headerName: "Name", width: 300 },
     {
       field: "cashback",
-      headerName: "Cashback",
+      headerName: "Cashback ($)",
       width: 300,
     },
     {
