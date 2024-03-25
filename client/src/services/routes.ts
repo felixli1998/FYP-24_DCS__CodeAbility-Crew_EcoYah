@@ -83,6 +83,7 @@ export const DASHBOARD_ROUTES = {
   GET_PREFERRED_DROP_OFF: `${PARENT_ROUTES.DASHBOARD}/get-preferred-drop-off`,
   GET_CASHBACK_STATUS: `${PARENT_ROUTES.DASHBOARD}/get-cashback-status`,
   GET_REDEEMED_CASHBACK: `${PARENT_ROUTES.DASHBOARD}/get-redeemed-cashback`,
+  DOWNLOAD_DATA_CSV: `${PARENT_ROUTES.DASHBOARD}/download-data-csv`,
 };
 
 // Transaction History Routes

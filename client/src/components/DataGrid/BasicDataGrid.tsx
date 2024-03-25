@@ -9,12 +9,14 @@ type BasicDataGridType = {
   title: string;
   rows: any;
   columns: GridColDef[];
+  onExportClick: () => void;
   setStartDate: (value: Dayjs | null) => void;
   setEndDate: (value: Dayjs | null) => void;
 };
 
 export default function BasicDataGrid(props: BasicDataGridType) {
-  const { title, rows, columns, setStartDate, setEndDate } = props;
+  const { title, rows, columns, onExportClick, setStartDate, setEndDate } =
+    props;
 
   const handleStartDateChange = (date: Dayjs | null) => {
     setStartDate(date);
@@ -32,7 +34,12 @@ export default function BasicDataGrid(props: BasicDataGridType) {
             <Typography variant="h6" fontWeight="bold">
               {title}
             </Typography>
-            <Button variant="contained" size="large" sx={{ mx: "2rem" }}>
+            <Button
+              variant="contained"
+              size="large"
+              sx={{ mx: "2rem" }}
+              onClick={onExportClick}
+            >
               Export to CSV
             </Button>
           </Box>

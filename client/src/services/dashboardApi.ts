@@ -83,3 +83,25 @@ export const getRedeemedCashback = async (startDate: Dayjs, endDate: Dayjs) => {
     throw new Error("Failed to fetch redeeemed cashback data");
   }
 };
+
+export const downloadDataCSV = async (
+  columns: string[],
+  data: Record<string, string | number>[],
+) => {
+  try {
+    const res = await axios.post(
+      DASHBOARD_ROUTES.DOWNLOAD_DATA_CSV,
+      {
+        fields: columns,
+        data: data,
+      },
+      {
+        responseType: "blob",
+      },
+    );
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to download data in csv");
+  }
+};

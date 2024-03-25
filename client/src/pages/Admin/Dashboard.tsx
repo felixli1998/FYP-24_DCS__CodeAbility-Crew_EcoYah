@@ -12,6 +12,7 @@ import LineCharts from "../../components/Chart/LineChart";
 import BasicDataGrid from "../../components/DataGrid/BasicDataGrid";
 // APIs
 import {
+  downloadDataCSV,
   getCashbackStatus,
   getDonationRequests,
   getEventsByMonth,
@@ -25,6 +26,21 @@ import {
 import { PieChartType } from "../../utils/Types";
 
 export default function Dashboard() {
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 300 },
+    { field: "name", headerName: "Name", width: 300 },
+    {
+      field: "cashback",
+      headerName: "Cashback",
+      width: 300,
+    },
+    {
+      field: "timestamp",
+      headerName: "Timestamp",
+      width: 300,
+    },
+  ];
+
   const [popularEvent, setPopularEvent] = useState<
     Record<string, string | number>
   >({});
@@ -75,6 +91,26 @@ export default function Dashboard() {
     setItemsSelect(value);
     setItemsName([]);
     setItemsByMonthData({});
+  };
+
+  const handleExportButton = async () => {
+    try {
+      const blob = await downloadDataCSV(
+        ["id", "name", "cashback", "timestamp"],
+        redeemedCashbackData,
+      );
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.setAttribute("download", "redeemed_cashback_data.csv");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode!.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error("Error downloading data:", error);
+      setError(true);
+    }
   };
 
   const handleStartDateChange = (date: Dayjs | null) => {
@@ -156,36 +192,6 @@ export default function Dashboard() {
   useEffect(() => {
     fetchDynamicData();
   }, [eventsSelect, itemsSelect, startDate, endDate]);
-
-  const rows = [
-    {
-      id: "1",
-      name: "Joey",
-      cashback: 30,
-      timestamp: "20-01-2024 22:22:22",
-    },
-    {
-      id: "2",
-      name: "Joey",
-      cashback: 30,
-      timestamp: "20-01-2024 22:22:22",
-    },
-  ];
-
-  const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 300 },
-    { field: "name", headerName: "Name", width: 300 },
-    {
-      field: "cashback",
-      headerName: "Cashback",
-      width: 300,
-    },
-    {
-      field: "timestamp",
-      headerName: "Timestamp",
-      width: 300,
-    },
-  ];
 
   return (
     <Box sx={{ backgroundColor: "#efebeb", padding: "1rem" }}>
@@ -277,6 +283,7 @@ export default function Dashboard() {
         title={"Redeemed Cashback"}
         rows={redeemedCashbackData}
         columns={columns}
+        onExportClick={handleExportButton}
         setStartDate={handleStartDateChange}
         setEndDate={handleEndDateChange}
       />
