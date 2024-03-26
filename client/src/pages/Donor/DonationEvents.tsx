@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate, redirect } from "react-router-dom";
-import { isAuthenticated } from "../../components/AppBar";
+import { useNavigate } from "react-router-dom";
+import { isAuthenticated } from "../../components/NavBar/AppBar";
 import DonationEventCard from "../../components/DonationEvent/DonationEventCard";
 import { fetchActiveDonationEvents } from "../../services/donationEventApi";
 import { fetchEventTypes } from "../../services/eventTypesApi";
@@ -157,8 +157,8 @@ export default function DonationEvents() {
   }, [search, filteredEvents]);
 
   // ------ dayjs ------
-  dayjs.extend(utc)
-  dayjs.extend(timezone)
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
   const dateNow = dayjs();
   const dateNowSG = dayjs.tz(dateNow, "Asia/Singapore");
   const currentDateInMs = dateNowSG.valueOf();
@@ -195,32 +195,38 @@ export default function DonationEvents() {
     };
     // Check if user is authenticated, if not, push to Sign In
     if (!isAuthenticated()) {
-      localStorage.setItem('intendedDestination', JSON.stringify({
-        path: `/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`,
-        state: { action: 'create', form: dataToDonationRequestForm }
-      }));
+      localStorage.setItem(
+        "intendedDestination",
+        JSON.stringify({
+          path: `/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`,
+          state: { action: "create", form: dataToDonationRequestForm },
+        }),
+      );
       navigate("/sign-in");
     } else {
       // Redirect to donation request form page
-      navigate(`/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`, {
-        state: { action: "create", form: dataToDonationRequestForm },
-      });
+      navigate(
+        `/donation-request-form/${dataToDonationRequestForm.id}/${_.kebabCase(donationEvent.name)}`,
+        {
+          state: { action: "create", form: dataToDonationRequestForm },
+        },
+      );
     }
   };
 
   const redirectToDonationRequestForm = (donationEventIds: number[]) => {
-    const storedDestination = localStorage.getItem('intendedDestination');
+    const storedDestination = localStorage.getItem("intendedDestination");
     if (storedDestination) {
       // If user clicks on Donate in DonationEvents but was not signed in initially, this redirects them back to the Donation Request Form
       const { path, state } = JSON.parse(storedDestination);
       const toDonateEventId = state.form.id;
       // This allows only redirection to DonationRequestForm if user has not participated in the DonationEvent before
-      if(!donationEventIds.includes(toDonateEventId)) {
+      if (!donationEventIds.includes(toDonateEventId)) {
         navigate(path, { state });
       }
-      localStorage.removeItem('intendedDestination');
-    } 
-  }
+      localStorage.removeItem("intendedDestination");
+    }
+  };
 
   useEffect(() => {
     const userId = localStorage.getItem("ecoyah-id");
@@ -242,7 +248,6 @@ export default function DonationEvents() {
         })
         .catch((err: any) => console.error(err));
     }
-
 
     const fetchData = async () => {
       try {
@@ -345,12 +350,9 @@ export default function DonationEvents() {
                 onChange={(e) => setSearch(e.target.value)}
               />
 
-              {(search.length === 0 && eventOfTheWeek) && (
+              {search.length === 0 && eventOfTheWeek && (
                 <>
-                  <Typography
-                    variant="h5"
-                    sx={{ fontWeight: "bold", my: 2 }}
-                  >
+                  <Typography variant="h5" sx={{ fontWeight: "bold", my: 2 }}>
                     Popular Donation of the Week
                   </Typography>
 
@@ -358,9 +360,19 @@ export default function DonationEvents() {
                     name={
                       eventOfTheWeek?.name || "No Donation Event of The Week"
                     }
-                    description={eventOfTheWeek.donationEventItems.map((eachItem, i) => 
-                      <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
-                      )}
+                    description={eventOfTheWeek.donationEventItems.map(
+                      (eachItem, i) => (
+                        <Chip
+                          key={i}
+                          sx={{
+                            marginRight: 1,
+                            backgroundColor: green[50],
+                            color: green[800],
+                          }}
+                          label={eachItem.item.name}
+                        />
+                      ),
+                    )}
                     imgSrc={
                       eventOfTheWeek?.imageId || "https://picsum.photos/200/300"
                     }
@@ -407,27 +419,45 @@ export default function DonationEvents() {
                 </>
               )}
 
-              {searchEvents.length > 0 ? 
-              <Grid container spacing={3}>
-                   {searchEvents.map((event: eventType) => (
-                      <Grid item sx={{ marginBottom: 2 }} key={event.id}>
-                        <DonationEventCard
-                          name={event.name}
-                          description={event.donationEventItems.map((eachItem, i) => 
-                            <Chip key={i} sx={{ marginRight: 1, backgroundColor: green[50], color: green[800]}} label={eachItem.item.name} />
-                            )}
-                          imgSrc={event.imageId}
-                          numJoined={event.numDonors}
-                          timeLeft={event.timeLeft}
-                          handleDonateClick={() => handleDonateClick(event)}
-                          disableButton={userParticipatedEvents.includes(event.id)}
-                        />
-                      </Grid>
-                    ))}
-              </Grid>
-              :
-              <Typography variant="h5" sx={{ fontWeight: "bold", textAlign: 'center' }}> No Donation Events Found </Typography> 
-              }
+              {searchEvents.length > 0 ? (
+                <Grid container spacing={3}>
+                  {searchEvents.map((event: eventType) => (
+                    <Grid item sx={{ marginBottom: 2 }} key={event.id}>
+                      <DonationEventCard
+                        name={event.name}
+                        description={event.donationEventItems.map(
+                          (eachItem, i) => (
+                            <Chip
+                              key={i}
+                              sx={{
+                                marginRight: 1,
+                                backgroundColor: green[50],
+                                color: green[800],
+                              }}
+                              label={eachItem.item.name}
+                            />
+                          ),
+                        )}
+                        imgSrc={event.imageId}
+                        numJoined={event.numDonors}
+                        timeLeft={event.timeLeft}
+                        handleDonateClick={() => handleDonateClick(event)}
+                        disableButton={userParticipatedEvents.includes(
+                          event.id,
+                        )}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Typography
+                  variant="h5"
+                  sx={{ fontWeight: "bold", textAlign: "center" }}
+                >
+                  {" "}
+                  No Donation Events Found{" "}
+                </Typography>
+              )}
             </>
           )}
         </>

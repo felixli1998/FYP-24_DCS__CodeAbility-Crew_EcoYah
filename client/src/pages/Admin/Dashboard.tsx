@@ -2,13 +2,17 @@
 import { useState, useEffect } from "react";
 // MUI
 import { Alert, Box, Grid, Typography } from "@mui/material";
+import { GridColDef } from "@mui/x-data-grid";
+import { Dayjs } from "dayjs";
 // Components
 import DashboardCard from "../../components/Card/DashboardCard";
 import BarCharts from "../../components/Chart/BarChart";
 import PieCharts from "../../components/Chart/PieChart";
 import LineCharts from "../../components/Chart/LineChart";
+import BasicDataGrid from "../../components/DataGrid/BasicDataGrid";
 // APIs
 import {
+  downloadDataCSV,
   getCashbackStatus,
   getDonationRequests,
   getEventsByMonth,
@@ -16,11 +20,27 @@ import {
   getPopularEvent,
   getPopularItem,
   getPreferredDropOff,
+  getRedeemedCashback,
 } from "../../services/dashboardApi";
 // Utils
 import { PieChartType } from "../../utils/Types";
 
 export default function Dashboard() {
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 300 },
+    { field: "name", headerName: "Name", width: 300 },
+    {
+      field: "cashback",
+      headerName: "Cashback ($)",
+      width: 300,
+    },
+    {
+      field: "timestamp",
+      headerName: "Timestamp",
+      width: 300,
+    },
+  ];
+
   const [popularEvent, setPopularEvent] = useState<
     Record<string, string | number>
   >({});
@@ -53,6 +73,12 @@ export default function Dashboard() {
     {},
   );
 
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+  const [redeemedCashbackData, setRedeemedCashbackData] = useState<
+    Record<string, string | number>[]
+  >([]);
+
   const [error, setError] = useState<boolean>(false);
 
   const handleEventsChange = (value: string) => {
@@ -65,6 +91,37 @@ export default function Dashboard() {
     setItemsSelect(value);
     setItemsName([]);
     setItemsByMonthData({});
+  };
+
+  const handleExportButton = async () => {
+    try {
+      const blob = await downloadDataCSV(
+        ["id", "name", "cashback", "timestamp"],
+        redeemedCashbackData,
+      );
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      link.setAttribute(
+        "download",
+        `redeemed_cashback_data_${startDate?.format("DD/MM/YYYY")}_to_${endDate?.format("DD/MM/YYYY")}.csv`,
+      );
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode!.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error("Error downloading data:", error);
+      setError(true);
+    }
+  };
+
+  const handleStartDateChange = (date: Dayjs | null) => {
+    setStartDate(date);
+  };
+
+  const handleEndDateChange = (date: Dayjs | null) => {
+    setEndDate(date);
   };
 
   const fetchStaticData = async () => {
@@ -119,6 +176,12 @@ export default function Dashboard() {
           Withdrawn: itemsByMonthData.withdrawnData,
         });
       }
+
+      const redeemedCashbackData = await getRedeemedCashback(
+        startDate!,
+        endDate!,
+      );
+      setRedeemedCashbackData(redeemedCashbackData);
     } catch (error) {
       console.error("Error fetching data:", error);
       setError(true);
@@ -131,7 +194,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchDynamicData();
-  }, [eventsSelect, itemsSelect]);
+  }, [eventsSelect, itemsSelect, startDate, endDate]);
 
   return (
     <Box sx={{ backgroundColor: "#efebeb", padding: "1rem" }}>
@@ -219,6 +282,14 @@ export default function Dashboard() {
           />
         </Grid>
       </Grid>
+      <BasicDataGrid
+        title={"Redeemed Cashback"}
+        rows={redeemedCashbackData}
+        columns={columns}
+        onExportClick={handleExportButton}
+        setStartDate={handleStartDateChange}
+        setEndDate={handleEndDateChange}
+      />
     </Box>
   );
 }

@@ -1,17 +1,14 @@
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Container from "@mui/material/Container";
-import TemporaryDrawer from "./Drawer";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
-import logo from "../assets/Kunyah.png";
 import { useState, useEffect, useReducer } from "react";
+import { AppBar, Toolbar } from "@mui/material";
+import TemporaryDrawer from "./Drawer";
+import logo from "../../assets/Kunyah.png";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   NavigationList,
   ActionList,
   generateNavItem,
   NavigationListItemT,
-} from "../utils/NavBar";
+} from "../../utils/NavBar";
 
 type ActionReducerT = {
   authenticated: boolean;
@@ -83,7 +80,11 @@ function ResponsiveAppBar() {
         return [];
       } else {
         // Donor + Unauthenticated //
-        const NavList = [NavigationList.HOME];
+        const NavList = [
+          NavigationList.HOME,
+          NavigationList.ABOUT_US,
+          NavigationList.FAQ,
+        ];
         return NavList.map((navItem) => generateNavItem(navItem, false));
         // return [];
       }

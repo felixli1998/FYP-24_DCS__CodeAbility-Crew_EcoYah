@@ -1,4 +1,5 @@
 import { useEffect, useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
 // MUI
 import { Box, Button, Stack } from "@mui/material";
 // Components
@@ -6,11 +7,11 @@ import ProfilePic from "../../components/EditProfile/ProfilePic";
 import ProfileTextField from "../../components/EditProfile/ProfileTextField";
 import { useFeedbackNotification } from "../../components/useFeedbackNotification";
 // import TerminateModal from "../components/EditProfile/TerminateModal";
-import { makeHttpRequest } from "../../utils/Utility";
-import { IMAGE_ROUTES, USER_ROUTES } from "../../services/routes";
-import { useNavigate } from "react-router-dom";
 import { uploadImage } from "../../utils/UploadImage";
 import { folderPrefixNames } from "../../components/Image/Image";
+// Services
+import { IMAGE_ROUTES, USER_ROUTES } from "../../services/routes";
+import { makeHttpRequest } from "../../utils/Utility";
 
 type ErrorActionT = {
   type: "requiredField" | "invalidContact" | "reset" | "resetAll";
@@ -119,7 +120,7 @@ export default function EditProfile() {
     const filepath = folderPrefixNames.PROFILEPICTURES + "/" + imageId;
 
     return IMAGE_ROUTES.RETRIEVE_BY_FILE_PATH.replace(":filePath", filepath);
-  }
+  };
 
   const retrieveProfileInfo = async () => {
     try {
@@ -214,9 +215,12 @@ export default function EditProfile() {
       let payload: any = { ...userData };
 
       if (base64ImageString !== "") {
-        const imageId = await uploadImage("profile-pictures", base64ImageString);
+        const imageId = await uploadImage(
+          "profile-pictures",
+          base64ImageString,
+        );
 
-        payload['imageId'] = imageId[0];
+        payload["imageId"] = imageId[0];
       }
 
       const res: any = await makeHttpRequest(
@@ -255,7 +259,7 @@ export default function EditProfile() {
   };
 
   return (
-      <>
+    <>
       <Box
         component="form"
         display="flex"
@@ -278,7 +282,11 @@ export default function EditProfile() {
             }}
           >
             <ProfilePic
-              profilePic={isS3Image(userData.imageId) ? retrieveImage(userData.imageId) : userData.imageId}
+              profilePic={
+                isS3Image(userData.imageId)
+                  ? retrieveImage(userData.imageId)
+                  : userData.imageId
+              }
               handlePhotoUpload={handlePhotoUpload}
             />
             <ProfileTextField
@@ -313,8 +321,8 @@ export default function EditProfile() {
               variant="contained"
               color="primary"
               sx={{
-                fontWeight: "bold", // Make the font bold
-                height: "3rem", // Adjust the height to make it thicker
+                fontWeight: "bold",
+                height: "3rem",
               }}
               onClick={() => handleSaveChanges()}
             >
@@ -324,8 +332,8 @@ export default function EditProfile() {
               variant="outlined"
               color="error"
               sx={{
-                fontWeight: "bold", // Make the font bold
-                height: "3rem", // Adjust the height to make it thicker
+                fontWeight: "bold",
+                height: "3rem",
               }}
               onClick={() => navigate("/profile")}
             >
@@ -337,6 +345,6 @@ export default function EditProfile() {
         </Stack>
       </Box>
       <FeedbackNotification />
-      </>
+    </>
   );
 }

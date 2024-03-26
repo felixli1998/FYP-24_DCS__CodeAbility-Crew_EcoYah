@@ -34,4 +34,8 @@ export class DashboardService {
   async getCashbackStatus() {
     return this.dashboardRepository.getCashbackStatus();
   }
+
+  async getRedeemedCashback(startDate: Date, endDate: Date) {
+    return this.dashboardRepository.getRedeemedCashback(startDate, endDate);
+  }
 }

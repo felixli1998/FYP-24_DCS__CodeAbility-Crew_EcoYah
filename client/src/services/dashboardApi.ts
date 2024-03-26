@@ -1,5 +1,6 @@
 import axios from "axios";
 import { DASHBOARD_ROUTES } from "./routes";
+import dayjs, { Dayjs } from "dayjs";
 
 export const getPopularEvent = async () => {
   try {
@@ -65,5 +66,42 @@ export const getCashbackStatus = async () => {
     return res.data.data.data;
   } catch (error) {
     throw new Error("Failed to fetch cashback status data");
+  }
+};
+
+export const getRedeemedCashback = async (startDate: Dayjs, endDate: Dayjs) => {
+  const formattedStartDate = dayjs(startDate).startOf("day");
+  const formattedEndDate = dayjs(endDate).endOf("day");
+
+  try {
+    const res = await axios.post(DASHBOARD_ROUTES.GET_REDEEMED_CASHBACK, {
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+    });
+    return res.data.data.data;
+  } catch (error) {
+    throw new Error("Failed to fetch redeeemed cashback data");
+  }
+};
+
+export const downloadDataCSV = async (
+  columns: string[],
+  data: Record<string, string | number>[],
+) => {
+  try {
+    const res = await axios.post(
+      DASHBOARD_ROUTES.DOWNLOAD_DATA_CSV,
+      {
+        fields: columns,
+        data: data,
+      },
+      {
+        responseType: "blob",
+      },
+    );
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to download data in csv");
   }
 };

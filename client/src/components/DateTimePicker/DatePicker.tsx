@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 type DatePickerValueType = {
   label: string;
@@ -11,6 +13,8 @@ type DatePickerValueType = {
 };
 
 export default function DatePickerValue(props: DatePickerValueType) {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
   const [value, setValue] = useState<Dayjs | null>(dayjs(props.defaultValue));
 
   // update the final state of the date value to parent component
@@ -35,7 +39,8 @@ export default function DatePickerValue(props: DatePickerValueType) {
           },
         }}
         format="DD/MM/YYYY"
-        sx={{ width: 300, marginBottom: "1.5rem" }}
+        timezone="Asia/Singapore"
+        sx={{ width: 300 }}
       />
     </LocalizationProvider>
   );
