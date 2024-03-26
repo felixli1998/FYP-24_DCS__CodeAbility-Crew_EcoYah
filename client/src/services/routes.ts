@@ -13,6 +13,7 @@ export const PARENT_ROUTES = {
   LOGIN: `${BASE_URL}/login`,
   DASHBOARD: `${BASE_URL}/dashboard`,
   CASHBACK: `${BASE_URL}/transaction-history`,
+  OPENAI: `${BASE_URL}/openai`,
 };
 
 // User Routes
@@ -90,4 +91,9 @@ export const DASHBOARD_ROUTES = {
 export const TRANSACTION_HISTORY_ROUTES = {
   GET_TRANS_HISTORY_BY_ACTION: `${PARENT_ROUTES.CASHBACK}/get-transaction-history`,
   GET_ALL_PENDING_REQUESTS: `${PARENT_ROUTES.CASHBACK}/pending-cashback-requests`,
+};
+
+// OPENAI Routes
+export const OPENAI_ROUTES = {
+  GENERATE_INSTAGRAM_CAPTION: `${PARENT_ROUTES.OPENAI}/generate-instagram-caption`,
 };
