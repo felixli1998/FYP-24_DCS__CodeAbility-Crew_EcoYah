@@ -1,5 +1,6 @@
 // External Imports
 import { startOfDay, endOfDay } from "date-fns";
+import dayjs from "dayjs";
 import { In } from "typeorm";
 
 // Internal imports
@@ -7,6 +8,12 @@ import { DonationRequest, Status } from "../entities/DonationRequest";
 import { AppDataSource } from "../config/data-source";
 import { Between } from "typeorm";
 import IPagination from "../common/IPagination";
+import { User } from "../entities/User";
+import { DonationEvent } from "../entities/DonationEvent";
+import { DonationEventItem } from "../entities/DonationEventItem";
+import { DonationRequestItem } from "../entities/DonationRequestItem";
+import { Item } from "../entities/Item";
+import { emailResultType } from "../services/EmailService";
 
 export class DonationRequestRepository {
   static PAGE_SIZE: number = 25;
@@ -212,5 +219,58 @@ export class DonationRequestRepository {
       { id: id },
       { status: Status.COMPLETED },
     );
+  }
+
+  async getDonationRequestsApproachingDeadline() {
+    const currentDay = dayjs();
+    const twoDaysLater = currentDay.add(2, "day");
+
+    const donationRequests = await AppDataSource.getRepository(DonationRequest)
+      .createQueryBuilder("DR")
+      .select("DR.drop_off_date, DR.drop_off_time")
+      .addSelect("U.name as user_name, U.email as user_email")
+      .addSelect("DE.name as donation_event_name")
+      .addSelect("DRI.quantity as quantity")
+      .addSelect("I.name as item, I.unit as unit")
+      .innerJoin(User, "U", "U.id = DR.user_id")
+      .innerJoin(DonationEvent, "DE", "DE.id = DR.donation_event_id")
+      .innerJoin(DonationRequestItem, "DRI", "DRI.donation_request_id = DR.id")
+      .innerJoin(
+        DonationEventItem,
+        "DEI",
+        "DEI.id = DRI.donation_event_item_id",
+      )
+      .innerJoin(Item, "I", "I.id = DEI.item_id")
+      .where("DR.drop_off_date <= :twoDaysLater", { twoDaysLater })
+      .andWhere("DR.status = :status", { status: Status.SUBMITTED })
+      .getRawMany();
+
+    const result: emailResultType = {};
+
+    for (const donationRequest of donationRequests) {
+      if (donationRequest.user_email in result) {
+        result[donationRequest.user_email].items.push([
+          donationRequest.quantity,
+          donationRequest.unit,
+          donationRequest.item,
+        ]);
+      } else {
+        result[donationRequest.user_email] = {
+          name: donationRequest.user_name,
+          donationEventName: donationRequest.donation_event_name,
+          dropOffDate: donationRequest.drop_off_date,
+          dropOffTime: donationRequest.drop_off_time,
+          items: [
+            [
+              donationRequest.quantity,
+              donationRequest.unit,
+              donationRequest.item,
+            ],
+          ],
+        };
+      }
+    }
+
+    return result;
   }
 }

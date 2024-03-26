@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import _ from "lodash";
 
 // MUI Imports
 import StaffTypography from "../../components/Typography/StaffTypography";
@@ -18,6 +17,7 @@ import {
   StepLabel,
   Stack,
   Grid,
+  TextField,
 } from "@mui/material";
 
 // Utils Imports
@@ -26,6 +26,7 @@ import {
   getDonationEventById,
   updateDonationEventById,
 } from "../../services/donationEventApi";
+import { generateInstaCaption } from "../../services/openaiApi";
 import { uploadImage } from "../../utils/UploadImage";
 
 // Icons
@@ -40,6 +41,13 @@ import SimpleDialog from "../../components/Dialog/SimpleDialog";
 
 // Other Imports
 import dayjs from "dayjs";
+import _ from "lodash";
+import {
+  TelegramShareButton,
+  TelegramIcon,
+  WhatsappShareButton,
+  WhatsappIcon,
+} from "react-share";
 
 export default function DonationEvent() {
   const navigate = useNavigate();
@@ -121,7 +129,7 @@ export default function DonationEvent() {
         updateParams[key] = donationEvent[key];
       }
       if (donationEvent.imageId.includes(";base64,")) {
-        const imageId = await uploadImage("events", donationEvent.imageId)
+        const imageId = await uploadImage("events", donationEvent.imageId);
         updateParams["imageId"] = imageId[0];
       }
       const response = await updateDonationEventMutateAsync({
@@ -164,25 +172,25 @@ export default function DonationEvent() {
     switch (activeStep) {
       case 0:
         return donationEvent["name"] && donationEvent["imageId"];
-        case 1:
-          if (donationEvent["donationEventItems"].length === 0) {
-            return false;
-          }
-          for (const eventItem of donationEvent["donationEventItems"]) {
-            for (const [key, value] of Object.entries(eventItem)) {
-              if (
-                key !== "currentQty" &&
-                (!value || (typeof value === "number" && value <= 0))
-              ) {
-                return false;
-              }
+      case 1:
+        if (donationEvent["donationEventItems"].length === 0) {
+          return false;
+        }
+        for (const eventItem of donationEvent["donationEventItems"]) {
+          for (const [key, value] of Object.entries(eventItem)) {
+            if (
+              key !== "currentQty" &&
+              (!value || (typeof value === "number" && value <= 0))
+            ) {
+              return false;
             }
           }
-          return true;
+        }
+        return true;
       case 2:
         return (
           dayjs(donationEvent["startDate"]).isValid() &&
-          dayjs(donationEvent["endDate"]).isValid() && 
+          dayjs(donationEvent["endDate"]).isValid() &&
           dayjs(donationEvent["startDate"]).isBefore(donationEvent["endDate"])
         );
       default:
@@ -226,7 +234,13 @@ export default function DonationEvent() {
         handleData={handleData}
       />
     ),
-    2: <Step3Form formData={donationEvent} handleData={handleData} showMissingFields={showMissingFields} />,
+    2: (
+      <Step3Form
+        formData={donationEvent}
+        handleData={handleData}
+        showMissingFields={showMissingFields}
+      />
+    ),
     3: (
       <DonationEventPreview
         headerBar={
@@ -245,6 +259,80 @@ export default function DonationEvent() {
   };
   // === For Donation Event Form Edit Related === //
 
+  // === Social Media Sharing Dialog === //
+  const SocialMediaSharing = () => {
+    const [open, setOpen] = useState<boolean>(false);
+    const handleOpen = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+    };
+
+    const {
+      data: instaGeneratedCaptionData,
+      isLoading: instaGeneratedCaptionIsLoading,
+      refetch: instaGeneratedCaptionRefetch,
+    } = useQuery({
+      queryKey: ["generate-instagram-caption", donationEventId],
+      queryFn: () => generateInstaCaption(donationEventId as string),
+    });
+
+    return (
+      <>
+        <Button
+          variant="outlined"
+          sx={{
+            fontSize: "1.25rem",
+            letterSpacing: "0.15rem",
+            width: "9.375rem",
+            height: "3.75rem",
+            borderColor: "primary.dark",
+            color: "primary.dark",
+          }}
+          onClick={() => handleOpen()}
+        >
+          Share
+        </Button>
+        <SimpleDialog
+          open={open}
+          title={"Share on Social Media"}
+          subtitleText={
+            "Generate poster and captions and share on social media platforms"
+          }
+          leftButtonLabel={"Cancel"}
+          rightButtonLabel={"Generate"}
+          onClose={() => handleClose()}
+          handleRightButton={() => instaGeneratedCaptionRefetch()}
+        >
+          <Box>
+            <TextField
+              label="Caption"
+              id="outlined-multiline-static"
+              multiline
+              fullWidth
+              defaultValue="Generate caption..."
+              sx={{ marginY: 2 }}
+              value={instaGeneratedCaptionData}
+            />
+            <StaffTypography type="title" size={1.5} text={`Social Media`} />
+            <WhatsappShareButton
+              url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
+              children={<WhatsappIcon size={55} round={true} />}
+              style={{ marginRight: 12 }}
+            />
+            <TelegramShareButton
+              url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
+              children={<TelegramIcon size={55} round={true} />}
+            />
+          </Box>
+        </SimpleDialog>
+      </>
+    );
+  };
+  // === Social Media Sharing Dialog === //
+
   if (donationEventIsLoading) {
     return <Box>...Loading</Box>;
   }
@@ -255,7 +343,11 @@ export default function DonationEvent() {
       {donationEvent && !editMode && (
         <DonationEventPreview
           headerBar={
-            <Box display="flex" justifyContent={"space-between"}>
+            <Box
+              display="flex"
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
               <StaffTypography
                 type="title"
                 size={2.125}
@@ -263,6 +355,7 @@ export default function DonationEvent() {
                 customStyles={{ textAlign: "center" }}
               />
               <Box>
+                <SocialMediaSharing />
                 <Button
                   variant="outlined"
                   sx={{
@@ -339,7 +432,7 @@ export default function DonationEvent() {
         }
         leftButtonLabel={"Cancel"}
         rightButtonLabel={"Save"}
-        updateDonationIsActive={updateDonationIsActive}
+        handleRightButton={updateDonationIsActive}
       />
       {/* Preview and Edit isActive (only) */}
       {/* Full Edit Mode */}
