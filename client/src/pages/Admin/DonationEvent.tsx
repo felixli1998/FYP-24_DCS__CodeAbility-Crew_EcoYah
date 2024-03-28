@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import IconButton from '@mui/material/IconButton';
-import GetAppIcon from '@mui/icons-material/GetApp';
+// import IconButton from "@mui/material/IconButton";
+// import GetAppIcon from "@mui/icons-material/GetApp";
 
 // MUI Imports
 import StaffTypography from "../../components/Typography/StaffTypography";
@@ -29,6 +29,7 @@ import {
   updateDonationEventById,
 } from "../../services/donationEventApi";
 import { generateInstaCaption } from "../../services/openaiApi";
+import { NotifyNewEvents } from "../../services/openaiApi";
 import { uploadImage } from "../../utils/UploadImage";
 
 // Icons
@@ -51,6 +52,9 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+import { SocialIcon } from "react-social-icons";
+import "react-social-icons/instagram";
+import "react-social-icons/email";
 import html2canvas from "html2canvas";
 
 export default function DonationEvent() {
@@ -66,19 +70,18 @@ export default function DonationEvent() {
   const [activeStep, setActiveStep] = useState(0);
 
   const handleDownload = () => {
-    const box = document.getElementById('poster-box');
+    const box = document.getElementById("poster-box");
     const SCALE_FACTOR = 2;
     if (!box) return;
     html2canvas(box, {
-      scale: SCALE_FACTOR
-    })
-      .then(canvas => {
-        const dataURL = canvas.toDataURL();
-        const link = document.createElement('a');
-        link.href = dataURL;
-        link.download = 'poster.png';
-        link.click();
-      });
+      scale: SCALE_FACTOR,
+    }).then((canvas) => {
+      const dataURL = canvas.toDataURL();
+      const link = document.createElement("a");
+      link.href = dataURL;
+      link.download = "poster.png";
+      link.click();
+    });
   };
 
   const {
@@ -299,6 +302,18 @@ export default function DonationEvent() {
       queryFn: () => generateInstaCaption(donationEventId as string),
     });
 
+    const sendEmail = async () => {
+      try {
+        const response = await NotifyNewEvents(
+          donationEvent.name,
+          instaGeneratedCaptionData,
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("Error sending email: ", error);
+      }
+    };
+
     return (
       <>
         <Button
@@ -321,23 +336,29 @@ export default function DonationEvent() {
           subtitleText={
             "Generate poster and captions and share on social media platforms"
           }
-          leftButtonLabel={"Cancel"}
-          rightButtonLabel={"Generate"}
-          onClose={() => handleClose()}
+          leftButtonLabel={"Download Poster"}
+          rightButtonLabel={"Generate Text"}
+          handleLeftButton={() => handleDownload()}
           handleRightButton={() => instaGeneratedCaptionRefetch()}
+          onClose={() => handleClose()}
         >
-          <Box sx={{
-            width: "100%",
-            marginTop: "2rem"
-          }}>
-            <Box sx={{
-              flexDirection: ["column", "row"],
-              display: "flex",
-            }}>
-
-              <Box sx={{
-                flex: .5,
-              }}>
+          <Box
+            sx={{
+              width: "100%",
+              marginTop: "2rem",
+            }}
+          >
+            <Box
+              sx={{
+                flexDirection: ["column", "row"],
+                display: "flex",
+              }}
+            >
+              <Box
+                sx={{
+                  flex: 0.5,
+                }}
+              >
                 <PosterGeneratorComponent donationEvent={donationEvent} />
               </Box>
               <Box>
@@ -347,26 +368,50 @@ export default function DonationEvent() {
                   multiline
                   defaultValue="Generate caption..."
                   sx={{
-                    marginY: 2,
                     width: "20vw",
+                    mb: "2rem",
                   }}
-                  value={instaGeneratedCaptionData}
+                  value={""}
                 />
-                <StaffTypography type="title" size={1.5} text={`Social Media`} />
-                <WhatsappShareButton
-                  url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
-                  children={<WhatsappIcon size={55} round={true} />}
-                  style={{ marginRight: 12 }}
-                />
-                <TelegramShareButton
-                  url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
-                  children={<TelegramIcon size={55} round={true} />}
-                  style={{ marginRight: 12 }}
+                <StaffTypography
+                  type="title"
+                  size={1.5}
+                  text={`Social Media`}
                 />
                 {/* Download Icon */}
-                <IconButton onClick={handleDownload} style={{ marginTop: "-43px", padding: 8, backgroundColor: "gray" }}> {/* Adjust padding as needed */}
-                  <GetAppIcon fontSize="large" /> {/* Adjust size as needed */}
-                </IconButton>
+                {/* <IconButton
+                  onClick={handleDownload}
+                  style={{
+                    marginTop: "-43px",
+                    backgroundColor: "gray",
+                    width: 55,
+                    height: 55,
+                    marginRight: 12,
+                  }}
+                >
+                  <GetAppIcon fontSize="large" />
+                </IconButton> */}
+                <Box display="flex">
+                  <WhatsappShareButton
+                    url={instaGeneratedCaptionData}
+                    children={<WhatsappIcon size={55} round={true} />}
+                    style={{ marginRight: 12 }}
+                  />
+                  <TelegramShareButton
+                    url={instaGeneratedCaptionData}
+                    children={<TelegramIcon size={55} round={true} />}
+                    style={{ marginRight: 12 }}
+                  />
+                  <SocialIcon
+                    network="instagram"
+                    style={{ width: 55, height: 55, marginRight: 12 }}
+                  />
+                  <SocialIcon
+                    network="email"
+                    style={{ width: 55, height: 55 }}
+                    onClick={() => sendEmail()}
+                  />
+                </Box>
               </Box>
             </Box>
           </Box>
@@ -408,7 +453,7 @@ export default function DonationEvent() {
                     height: "3.75rem",
                     borderColor: "primary.dark",
                     color: "primary.dark",
-                    marginX: "2rem",
+                    marginX: "1rem",
                   }}
                   onClick={() => navigate("/admin/donation-events")}
                 >
