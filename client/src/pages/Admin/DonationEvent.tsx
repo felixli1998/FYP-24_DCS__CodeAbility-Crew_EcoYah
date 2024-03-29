@@ -307,6 +307,7 @@ export default function DonationEvent() {
     });
 
     const sendEmail = async () => {
+      displayNotification("info", "Sending emails...");
       try {
         const response = await NotifyNewEvents(
           donationEvent.name,
@@ -316,10 +317,15 @@ export default function DonationEvent() {
           displayNotification("success", response.data.message);
       } catch (error) {
         console.error("Error sending email: ", error);
+        displayNotification(
+          "error",
+          "An error occurred while sending emails! Please try again later!",
+        );
       }
     };
 
     const publishToIg = async () => {
+      displayNotification("info", "Publishing content...");
       try {
         const box = document.getElementById("poster-box");
         const SCALE_FACTOR = 2;
@@ -335,6 +341,10 @@ export default function DonationEvent() {
           displayNotification("success", response.data.message);
       } catch (error) {
         console.error("Error publishing to instagram: ", error);
+        displayNotification(
+          "error",
+          "An error occurred while publishing content! Please try again later!",
+        );
       }
     };
 
