@@ -15,6 +15,7 @@ export const PARENT_ROUTES = {
   CASHBACK: `${BASE_URL}/transaction-history`,
   OPENAI: `${BASE_URL}/openai`,
   EMAIL: `${BASE_URL}/email`,
+  INSTAGRAM: `${BASE_URL}/instagram`,
 };
 
 // User Routes
@@ -100,4 +101,9 @@ export const OPENAI_ROUTES = {
 // Email Routes
 export const EMAIL_ROUTES = {
   NOTIFY_NEW_EVENTS: `${PARENT_ROUTES.EMAIL}/notify-new-events`,
+};
+
+// Instagram Routes
+export const INSTAGRAM_ROUTES = {
+  PUBLISH_CONTENT: `${PARENT_ROUTES.INSTAGRAM}/publish-ig-content`,
 };

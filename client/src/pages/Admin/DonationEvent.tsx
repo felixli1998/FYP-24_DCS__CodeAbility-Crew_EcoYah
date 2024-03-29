@@ -29,7 +29,7 @@ import {
   updateDonationEventById,
 } from "../../services/donationEventApi";
 import { generateInstaCaption } from "../../services/openaiApi";
-import { NotifyNewEvents } from "../../services/openaiApi";
+import { NotifyNewEvents, PublishIgContent } from "../../services/openaiApi";
 import { uploadImage } from "../../utils/UploadImage";
 
 // Icons
@@ -42,6 +42,7 @@ import Step2Form from "../../components/DonationEvent/Step2Form";
 import Step3Form from "../../components/DonationEvent/Step3Form";
 import SimpleDialog from "../../components/Dialog/SimpleDialog";
 import PosterGeneratorComponent from "../../components/PosterGenerator/PosterGeneratorComponent";
+import { useFeedbackNotification } from "../../components/useFeedbackNotification";
 
 // Other Imports
 import dayjs from "dayjs";
@@ -76,10 +77,10 @@ export default function DonationEvent() {
     html2canvas(box, {
       scale: SCALE_FACTOR,
     }).then((canvas) => {
-      const dataURL = canvas.toDataURL();
+      const dataURL = canvas.toDataURL("image/jpeg");
       const link = document.createElement("a");
       link.href = dataURL;
-      link.download = "poster.png";
+      link.download = "poster.jpg";
       link.click();
     });
   };
@@ -285,6 +286,9 @@ export default function DonationEvent() {
   // === Social Media Sharing Dialog === //
   const SocialMediaSharing = () => {
     const [open, setOpen] = useState<boolean>(false);
+    const { displayNotification, FeedbackNotification } =
+      useFeedbackNotification();
+
     const handleOpen = () => {
       setOpen(true);
     };
@@ -308,23 +312,42 @@ export default function DonationEvent() {
           donationEvent.name,
           instaGeneratedCaptionData,
         );
-        console.log(response);
+        if (response.status === 201)
+          displayNotification("success", response.data.message);
       } catch (error) {
         console.error("Error sending email: ", error);
+      }
+    };
+
+    const publishToIg = async () => {
+      try {
+        const box = document.getElementById("poster-box");
+        const SCALE_FACTOR = 2;
+        if (!box) return;
+
+        const canvas = await html2canvas(box, { scale: SCALE_FACTOR });
+        const dataURL = canvas.toDataURL("image/jpeg");
+        const response = await PublishIgContent(
+          dataURL,
+          instaGeneratedCaptionData,
+        );
+        if (response.status === 201)
+          displayNotification("success", response.data.message);
+      } catch (error) {
+        console.error("Error publishing to instagram: ", error);
       }
     };
 
     return (
       <>
         <Button
-          variant="outlined"
+          variant="contained"
           sx={{
             fontSize: "1.25rem",
             letterSpacing: "0.15rem",
             width: "9.375rem",
             height: "3.75rem",
-            borderColor: "primary.dark",
-            color: "primary.dark",
+            backgroundColor: "primary.dark",
           }}
           onClick={() => handleOpen()}
         >
@@ -342,6 +365,7 @@ export default function DonationEvent() {
           handleRightButton={() => instaGeneratedCaptionRefetch()}
           onClose={() => handleClose()}
         >
+          <FeedbackNotification />
           <Box
             sx={{
               width: "100%",
@@ -371,7 +395,7 @@ export default function DonationEvent() {
                     width: "20vw",
                     mb: "2rem",
                   }}
-                  value={""}
+                  value={instaGeneratedCaptionData}
                 />
                 <StaffTypography
                   type="title"
@@ -405,6 +429,7 @@ export default function DonationEvent() {
                   <SocialIcon
                     network="instagram"
                     style={{ width: 55, height: 55, marginRight: 12 }}
+                    onClick={() => publishToIg()}
                   />
                   <SocialIcon
                     network="email"
@@ -443,7 +468,20 @@ export default function DonationEvent() {
                 customStyles={{ textAlign: "center" }}
               />
               <Box>
-                <SocialMediaSharing />
+                <Button
+                  variant="outlined"
+                  sx={{
+                    fontSize: "1.25rem",
+                    letterSpacing: "0.15rem",
+                    width: "9.375rem",
+                    height: "3.75rem",
+                    borderColor: "primary.dark",
+                    color: "primary.dark",
+                  }}
+                  onClick={() => navigate("/admin/donation-events")}
+                >
+                  Cancel
+                </Button>
                 <Button
                   variant="outlined"
                   sx={{
@@ -455,23 +493,11 @@ export default function DonationEvent() {
                     color: "primary.dark",
                     marginX: "1rem",
                   }}
-                  onClick={() => navigate("/admin/donation-events")}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  sx={{
-                    fontSize: "1.25rem",
-                    letterSpacing: "0.15rem",
-                    width: "9.375rem",
-                    height: "3.75rem",
-                    backgroundColor: "primary.dark",
-                  }}
                   onClick={() => handleEdit()}
                 >
                   Edit
                 </Button>
+                <SocialMediaSharing />
               </Box>
             </Box>
           }
