@@ -1,0 +1,29 @@
+name: Main Branch PR Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Build and deploy client
+        run: |
+          cd client
+          npm install
+          npm run build
+          aws s3 sync ./build s3://${{secrets.S3_BUCKET}} --delete --region ${{secrets.AWS_REGION}} --access-key ${{ secrets.S3_ACCESS_KEY }} --secret-key ${{ secrets.S3_SECRET }}
+          cd ..
+
+      - name: Build and deploy server
+        run: |
+          cd server
+          npm install
+          npm run build
+          scp -r ./dist user@your-ec2-instance-ip:/path/to/destination

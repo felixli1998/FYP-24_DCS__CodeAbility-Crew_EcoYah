@@ -95,7 +95,7 @@ router.post("/generate-instagram-caption", async (req, res) => {
     });
 
     if (chatCompletion) {
-      const url = `http://kunyah.eco-yah.com/admin/donation-event/${donationEventId}`;
+      const url = `http://kunyah.eco-yah.com/`;
       const instaCaption = chatCompletion.choices[0].message.content;
       result = InstagramTemplate(
         eventName || "",

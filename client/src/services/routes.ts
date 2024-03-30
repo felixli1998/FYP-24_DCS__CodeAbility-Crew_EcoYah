@@ -14,6 +14,8 @@ export const PARENT_ROUTES = {
   DASHBOARD: `${BASE_URL}/dashboard`,
   CASHBACK: `${BASE_URL}/transaction-history`,
   OPENAI: `${BASE_URL}/openai`,
+  EMAIL: `${BASE_URL}/email`,
+  INSTAGRAM: `${BASE_URL}/instagram`,
 };
 
 // User Routes
@@ -96,4 +98,14 @@ export const TRANSACTION_HISTORY_ROUTES = {
 // OPENAI Routes
 export const OPENAI_ROUTES = {
   GENERATE_INSTAGRAM_CAPTION: `${PARENT_ROUTES.OPENAI}/generate-instagram-caption`,
+};
+
+// Email Routes
+export const EMAIL_ROUTES = {
+  NOTIFY_NEW_EVENTS: `${PARENT_ROUTES.EMAIL}/notify-new-events`,
+};
+
+// Instagram Routes
+export const INSTAGRAM_ROUTES = {
+  PUBLISH_CONTENT: `${PARENT_ROUTES.INSTAGRAM}/publish-ig-content`,
 };

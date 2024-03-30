@@ -22,6 +22,7 @@ import DonationRequests from "../pages/Admin/DonationRequests";
 import {DonationRequest} from "../pages/Donor/DonationRequest";
 import LongPolling from "../pages/LongPollingPage";
 import CashbackRequests from "../pages/Admin/CashbackRequests";
+import PosterGenerator from "../pages/Admin/PosterGenerator";
 import Dashboard from "../pages/Admin/Dashboard";
 
 type AppRoutesT = {
@@ -146,6 +147,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     description: "View all Cashback Requests for the admin",
     element: <CashbackRequests />,
     isAdmin: true,
+  },
+  {
+    path:"social-media-content/:donationEventId?",
+    description: "Social media content generator for an event.",
+    element: <PosterGenerator/>,
+    isAdmin: false, // Set to false for development
   },
   {
     path: "dashboard",
