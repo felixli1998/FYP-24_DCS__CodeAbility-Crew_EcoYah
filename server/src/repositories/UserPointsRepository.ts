@@ -10,15 +10,16 @@ export class UserPointsRepository {
     const selectOptions = {
       id: true,
       points: true,
+      totalPoints: true,
       user: {
-        id: true, 
-        name: true
-      }
+        id: true,
+        name: true,
+      },
     };
     return await AppDataSource.getRepository(UserPoints).findOne({
       select: selectOptions,
       where: { user: { id: userId } },
-      relations: [ 'user' ]
+      relations: ["user"],
     });
   }
 
@@ -49,5 +50,4 @@ export class UserPointsRepository {
       points,
     );
   }
-  
 }

@@ -9,12 +9,14 @@ import { UserPointsRepository } from "../repositories/UserPointsRepository";
 import { TransactionHistoryRepository } from "../repositories/TransactionHistoryRepository";
 import { TransactionHistoryService } from "./TransactionHistoryService";
 import { Action } from "../entities/TransactionHistory";
+import { UserRepository } from "../repositories/UserRepository";
 
 export class DonationRequestService {
   private donationRequestRepository: DonationRequestRepository;
   private donationRequestItemRepository: DonationRequestItemRepository;
   private donationEventItemRepository: DonationEventItemRepository;
   private userPointsService: UserPointsService;
+  private userRepository: UserRepository;
   private transactionHistoryService: TransactionHistoryService;
 
   constructor(donationRequestRepository: DonationRequestRepository) {
@@ -148,33 +150,40 @@ export class DonationRequestService {
   }
 
   async completeDonationRequest(id: number) {
-    // Credit Points
-    const totalPts = await this.tabulateTotalPts(id);
     const donationRequest =
       await this.donationRequestRepository.retrieveById(id);
 
-    try {
+    if (donationRequest) {
+      let totalPts = 0;
+
       // if donationRequest.omitPoints is true, do not credit user points
-      if (donationRequest) {
-        const user_id = donationRequest.user.id;
-        const user_points_id = donationRequest.user.userPoints.id;
-
-        if (!donationRequest.omitPoints)
-          await this.userPointsService.creditUserPoints(user_id, totalPts);
-
-        await this.transactionHistoryService.createTransactionHistory(
-          Action.CREDITED,
-          donationRequest.omitPoints ? 0 : totalPts,
-          user_points_id,
-          id,
+      if (!donationRequest.omitPoints) {
+        totalPts = await this.tabulateTotalPts(id);
+        await this.userPointsService.creditUserPoints(
+          donationRequest.user.id,
+          totalPts,
         );
-        await this.updateDonationEventItemQty(id);
       }
-    } catch (error) {
-      throw new Error("Failed to credit user points");
+
+      await Promise.all([
+        this.userRepository.updateUser(donationRequest.user.email, {
+          totalDonations: donationRequest.user.totalDonations + 1,
+          lastDonation: new Date(),
+          streak: donationRequest.user.streak + 1,
+        }),
+        this.transactionHistoryService.createTransactionHistory(
+          Action.CREDITED,
+          totalPts,
+          donationRequest.user.userPoints.id,
+          id,
+        ),
+      ]);
     }
 
-    return await this.donationRequestRepository.completeDonationRequest(id); // Mark donation request as completed
+    await Promise.all([
+      this.updateDonationEventItemQty(id),
+      this.donationRequestRepository.completeDonationRequest(id), // Mark donation request as completed
+    ]);
   }
 
   async retrieveDonationRequestCountByEventId(
@@ -240,7 +249,7 @@ export class DonationRequestService {
 
     await Promise.all(
       payload.map(async (item) => {
-        await this.donationEventItemRepository.updateDonationEventItemQty(
+        this.donationEventItemRepository.updateDonationEventItemQty(
           item.donationEventItemId,
           item.newQty,
         );

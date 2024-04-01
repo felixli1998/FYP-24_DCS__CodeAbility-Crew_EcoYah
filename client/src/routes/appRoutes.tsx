@@ -5,7 +5,7 @@ import SignIn from "../pages/Donor/SignIn";
 import Profile from "../pages/Donor/Profile";
 import EditProfile from "../pages/Donor/EditProfile";
 import ImageComponentExample from "../pages/Donor/ImageComponentExample";
-import {DonorHome} from "../pages/Donor/DonorHome";
+import { DonorHome } from "../pages/Donor/DonorHome";
 import DonationRequestForm from "../pages/Donor/DonationRequestForm";
 import Faq from "../pages/Donor/Faq";
 import AboutUs from "../pages/Donor/AboutUs";
@@ -19,10 +19,11 @@ import DonationEventForm from "../pages/Admin/DonationEventForm";
 import DonationEvent from "../pages/Admin/DonationEvent";
 import DonationEventsAdmin from "../pages/Admin/DonationEventsAdmin";
 import DonationRequests from "../pages/Admin/DonationRequests";
-import {DonationRequest} from "../pages/Donor/DonationRequest";
+import { DonationRequest } from "../pages/Donor/DonationRequest";
 import LongPolling from "../pages/LongPollingPage";
 import CashbackRequests from "../pages/Admin/CashbackRequests";
 import Dashboard from "../pages/Admin/Dashboard";
+import Leaderboard from "../pages/Donor/Leaderboard";
 
 type AppRoutesT = {
   path: string;
@@ -177,5 +178,12 @@ export const APP_ROUTES: AppRoutesT[] = [
     element: <CashbackHistory />,
     isAdmin: false,
     protected: true,
+  },
+  {
+    path: "leaderboard",
+    description: "Leaderboard",
+    element: <Leaderboard />,
+    isAdmin: false,
+    protected: false,
   },
 ];

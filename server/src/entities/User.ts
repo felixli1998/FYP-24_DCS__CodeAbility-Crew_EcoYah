@@ -68,6 +68,21 @@ export class User {
   })
   status: string;
 
+  @Column({
+    nullable: true,
+  })
+  totalDonations: number;
+
+  @Column({
+    nullable: true,
+  })
+  lastDonation: Date;
+
+  @Column({
+    nullable: true,
+  })
+  streak: number;
+
   @OneToMany(() => DonationEvent, (donationEvent) => donationEvent.createdBy)
   donationEvents: DonationEvent[];
 

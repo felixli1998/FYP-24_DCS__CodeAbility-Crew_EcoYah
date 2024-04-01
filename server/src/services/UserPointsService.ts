@@ -13,15 +13,18 @@ export class UserPointsService {
   constructor(userPointsRepository: UserPointsRepository) {
     this.userPointsRepository = userPointsRepository;
     this.transactionHistoryRepository = new TransactionHistoryRepository();
-    this.transactionHistoryService = new TransactionHistoryService(this.transactionHistoryRepository);
+    this.transactionHistoryService = new TransactionHistoryService(
+      this.transactionHistoryRepository,
+    );
   }
 
-  async getUserPoints(userId: number){
-    const userPoints = await this.userPointsRepository.getUserPointsByUserId(userId);
+  async getUserPoints(userId: number) {
+    const userPoints =
+      await this.userPointsRepository.getUserPointsByUserId(userId);
     return userPoints;
   }
 
-  // TODO: Can we rename this to addUserPoints instead? 
+  // TODO: Can we rename this to addUserPoints instead?
   // The difference between Update, add and deduct should be
   // Update : Does not care what the previous value is, just sets
   // Add: Has to be non negative
@@ -31,15 +34,13 @@ export class UserPointsService {
       await this.userPointsRepository.getUserPointsByUserId(userId);
 
     if (UserPoints) {
-      const currentPoints = UserPoints.points;
-      const newPoints = currentPoints + points;
-
       // TODO: Track User Points History
       // Implement this in the future OR we can use subscriber
 
       // Update User Points
       return await this.userPointsRepository.updateUserPoints(userId, {
-        points: newPoints,
+        points: UserPoints.points + points,
+        totalPoints: UserPoints.totalPoints + points,
       });
     }
   }
@@ -48,8 +49,9 @@ export class UserPointsService {
     if (points <= 0) {
       throw new Error("Points to deduct must be a non zero positive number");
     }
-    const UserPoints = await this.userPointsRepository.getUserPointsByUserId(userId);
-    if (!UserPoints){
+    const UserPoints =
+      await this.userPointsRepository.getUserPointsByUserId(userId);
+    if (!UserPoints) {
       throw new Error("User does not have a points account.");
     }
     const currentPoints = UserPoints.points;
@@ -63,19 +65,31 @@ export class UserPointsService {
     a) If the user has points that expires on that day, the points should be expired
   */
   async expireUserPoints() {
-    console.log("Screening for expiring user points...")
+    console.log("Screening for expiring user points...");
 
-    const expiringUserPoints = await this.transactionHistoryRepository.getExpiringDateForEachUser();
+    const expiringUserPoints =
+      await this.transactionHistoryRepository.getExpiringDateForEachUser();
 
     for (const record of expiringUserPoints) {
-      const { user_points_id, user_id, expiry_date: expiry_date_with_tz, points } = record;
+      const {
+        user_points_id,
+        user_id,
+        expiry_date: expiry_date_with_tz,
+        points,
+      } = record;
       const today = new Date();
 
-      if(isSameDay (new Date(expiry_date_with_tz), today) && points > 0) {
+      if (isSameDay(new Date(expiry_date_with_tz), today) && points > 0) {
         console.log(`Expiring points for ${user_points_id} - ${points} points`);
 
-        await this.userPointsRepository.updateUserPoints(user_id, { points: 0 });
-        await this.transactionHistoryService.createTransactionHistory(Action.EXPIRED, points, user_points_id);
+        await this.userPointsRepository.updateUserPoints(user_id, {
+          points: 0,
+        });
+        await this.transactionHistoryService.createTransactionHistory(
+          Action.EXPIRED,
+          points,
+          user_points_id,
+        );
       }
     }
   }

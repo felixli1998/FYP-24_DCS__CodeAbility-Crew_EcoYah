@@ -92,10 +92,20 @@ export type SeriesArray = {
 
 export type UserType = {
   id: number;
-  name: String;
-  contactNum: String;
-  email: String;
+  name: string;
+  contactNum: string;
+  email: string;
   points: number;
-  role: String;
-  imageId: String;
+  role: string;
+  imageId: string;
+};
+
+export type LeaderboardRecord = {
+  id: number;
+  name: string;
+  points: number;
+  co2_saved: string;
+  total_donations: number;
+  last_donation: string;
+  streak: number;
 };

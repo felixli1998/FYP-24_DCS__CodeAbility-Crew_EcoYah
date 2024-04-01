@@ -49,6 +49,9 @@ function* UserGenerator(): Generator<User> {
     newUser.contactNum = `+65 ${Math.floor(Math.random() * 100000000)}`;
     newUser.imageId = "DefaultProfilePicture.jpg";
     newUser.role = UserRole.DONOR; // Admin so no error when using this to create Donation Event
+    newUser.totalDonations = Math.floor(Math.random() * 10);
+    newUser.lastDonation = new Date();
+    newUser.streak = newUser.totalDonations - Math.round(Math.random()) - 1;
     yield newUser;
     i++;
   }
