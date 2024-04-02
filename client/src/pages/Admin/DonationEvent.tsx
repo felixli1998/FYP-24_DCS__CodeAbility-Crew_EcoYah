@@ -20,6 +20,8 @@ import {
   Stack,
   Grid,
   TextField,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 
 // Utils Imports
@@ -288,6 +290,9 @@ export default function DonationEvent() {
     const [open, setOpen] = useState<boolean>(false);
     const { displayNotification, FeedbackNotification } =
       useFeedbackNotification();
+    const [loader, setLoader] = useState<boolean>(false);
+    const [loaderText, setLoaderText] = useState<string>("");
+    const [generatedCaption, setGeneratedCaption] = useState<string>("");
 
     const handleOpen = () => {
       setOpen(true);
@@ -297,25 +302,35 @@ export default function DonationEvent() {
       setOpen(false);
     };
 
+    const handleCaptionChange = (
+      event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+      setGeneratedCaption(event.target.value);
+    };
+
     const {
       data: instaGeneratedCaptionData,
       isLoading: instaGeneratedCaptionIsLoading,
       refetch: instaGeneratedCaptionRefetch,
     } = useQuery({
+      enabled: false,
       queryKey: ["generate-instagram-caption", donationEventId],
       queryFn: () => generateInstaCaption(donationEventId as string),
     });
 
     const sendEmail = async () => {
-      displayNotification("info", "Sending emails...");
+      // displayNotification("info", "Sending emails...");
+      setLoaderText("Sending emails...");
+      setLoader(true);
       try {
         const response = await NotifyNewEvents(
           donationEvent.name,
-          instaGeneratedCaptionData,
+          generatedCaption,
         );
-        if (response.status === 201)
-          displayNotification("success", response.data.message);
+        if (response.status === 201) setLoader(false);
+        displayNotification("success", response.data.message);
       } catch (error) {
+        setLoader(false);
         console.error("Error sending email: ", error);
         displayNotification(
           "error",
@@ -324,8 +339,16 @@ export default function DonationEvent() {
       }
     };
 
+    const handleCaptionGeneration = () => {
+      setLoader(true);
+      setLoaderText("Generating caption...");
+      instaGeneratedCaptionRefetch();
+    };
+
     const publishToIg = async () => {
-      displayNotification("info", "Publishing content...");
+      // displayNotification("info", "Publishing content...");
+      setLoaderText("Publishing content...");
+      setLoader(true);
       try {
         const box = document.getElementById("poster-box");
         const SCALE_FACTOR = 2;
@@ -333,13 +356,11 @@ export default function DonationEvent() {
 
         const canvas = await html2canvas(box, { scale: SCALE_FACTOR });
         const dataURL = canvas.toDataURL("image/jpeg");
-        const response = await PublishIgContent(
-          dataURL,
-          instaGeneratedCaptionData,
-        );
-        if (response.status === 201)
-          displayNotification("success", response.data.message);
+        const response = await PublishIgContent(dataURL, generatedCaption);
+        if (response.status === 201) setLoader(false);
+        displayNotification("success", response.data.message);
       } catch (error) {
+        setLoader(false);
         console.error("Error publishing to instagram: ", error);
         displayNotification(
           "error",
@@ -347,6 +368,13 @@ export default function DonationEvent() {
         );
       }
     };
+
+    useEffect(() => {
+      if (!instaGeneratedCaptionIsLoading && instaGeneratedCaptionData) {
+        setGeneratedCaption(instaGeneratedCaptionData);
+        setLoader(false);
+      }
+    }, [instaGeneratedCaptionData, instaGeneratedCaptionIsLoading]);
 
     return (
       <>
@@ -372,7 +400,7 @@ export default function DonationEvent() {
           leftButtonLabel={"Download Poster"}
           rightButtonLabel={"Generate Text"}
           handleLeftButton={() => handleDownload()}
-          handleRightButton={() => instaGeneratedCaptionRefetch()}
+          handleRightButton={handleCaptionGeneration}
           onClose={() => handleClose()}
         >
           <FeedbackNotification />
@@ -396,16 +424,17 @@ export default function DonationEvent() {
                 <PosterGeneratorComponent donationEvent={donationEvent} />
               </Box>
               <Box>
+                <StaffTypography type="title" size={1.5} text={`Caption`} />
                 <TextField
                   label="Caption"
                   id="outlined-multiline-static"
                   multiline
-                  defaultValue="Generate caption..."
                   sx={{
                     width: "20vw",
                     mb: "2rem",
                   }}
-                  value={instaGeneratedCaptionData}
+                  value={generatedCaption}
+                  onChange={handleCaptionChange}
                 />
                 <StaffTypography
                   type="title"
@@ -438,18 +467,37 @@ export default function DonationEvent() {
                   />
                   <SocialIcon
                     network="instagram"
-                    style={{ width: 55, height: 55, marginRight: 12 }}
+                    style={{
+                      width: 55,
+                      height: 55,
+                      marginRight: 12,
+                      cursor: "pointer",
+                    }}
                     onClick={() => publishToIg()}
                   />
                   <SocialIcon
                     network="email"
-                    style={{ width: 55, height: 55 }}
+                    style={{ width: 55, height: 55, cursor: "pointer" }}
                     onClick={() => sendEmail()}
                   />
                 </Box>
               </Box>
             </Box>
           </Box>
+          <div>
+            <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={loader}
+            >
+              <CircularProgress color="inherit" />
+              <StaffTypography
+                type="title"
+                size={1.5}
+                text={loaderText}
+                customStyles={{ color: "white", marginLeft: 1 }}
+              />
+            </Backdrop>
+          </div>
         </SimpleDialog>
       </>
     );

@@ -21,15 +21,7 @@ const InstagramTemplate = (
   caption: string,
   url: string,
 ) => {
-  const result = `
-      [EVENT] ${name}
-      Items needed: ${items}
-      Happening on ${startDate} to ${endDate}
-  
-      ${caption}
-  
-      Find out more at ${url}
-    `;
+  const result = `[EVENT] ${name}\nItems needed: ${items}\nHappening on ${startDate} to ${endDate}\n\n${caption}\n\nFind out more at ${url}`;
   return result;
 };
 
