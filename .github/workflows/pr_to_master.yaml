@@ -72,6 +72,8 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
+            sudo npm install pm2 -g  
+            source ~/.bashrc 
             pm2 stop ecoyah-backend
 
       - name: SCP server build to EC2

@@ -21,7 +21,7 @@ const modalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: { xs: 400, md: 500 },
   bgcolor: "background.paper",
   borderRadius: 1,
   boxShadow: 24,
@@ -90,18 +90,18 @@ export default function BasicModal(props: BasicModalType) {
       <Box sx={modalStyle}>
         <Stack spacing={3}>
           <StaffTypography
-            size={1.5}
+            size={2}
             text={`${props.data.user.name}'s Donation`}
             type={"title"}
           />
           <StaffTypography
-            size={1}
+            size={1.5}
             text={`<b>Donation Event:</b> ${props.data.donationEvent.name}`}
             type={"title"}
             customStyles={{ fontWeight: "none" }}
           />
           <StaffTypography
-            size={1}
+            size={1.5}
             text={
               "<b>Donation Event Item(s):</b>" +
               populateDonationItems(props.data.donationRequestItems)
@@ -110,7 +110,7 @@ export default function BasicModal(props: BasicModalType) {
             customStyles={{ fontWeight: "none" }}
           />
           <StaffTypography
-            size={1}
+            size={1.5}
             text={`<b>Drop off Date:</b> ${new Date(
               props.data.dropOffDate,
             ).toLocaleDateString("en-GB")}`}
@@ -118,7 +118,7 @@ export default function BasicModal(props: BasicModalType) {
             customStyles={{ fontWeight: "none" }}
           />
           <StaffTypography
-            size={1}
+            size={1.5}
             text={`<b>Drop off Time:</b> ${props.data.dropOffTime}`}
             type={"title"}
             customStyles={{ fontWeight: "none" }}
@@ -151,9 +151,9 @@ export default function BasicModal(props: BasicModalType) {
             />
           </Box>
           {error && (
-            <Alert severity="error">
-              An error occurred while updating the donation request to
-              completed. Please try again.
+            <Alert variant="filled" severity="error">
+              An error occurred while completing the donation request. Please
+              refresh and try again.
             </Alert>
           )}
         </Stack>

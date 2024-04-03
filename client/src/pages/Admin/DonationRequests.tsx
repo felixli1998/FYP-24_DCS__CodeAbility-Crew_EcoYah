@@ -1,14 +1,11 @@
 // React Imports
 import { useState, useEffect } from "react";
-
 // MUI Imports
 import { Stack, Alert } from "@mui/material";
-
 // Components
 import StaffTypography from "../../components/Typography/StaffTypography";
 import DatePicker from "../../components/DateTimePicker/DatePicker";
 import ItemList from "../../components/List/List";
-
 // Other Imports
 import dayjs, { Dayjs } from "dayjs";
 import { DonationRequestType } from "../../utils/Types";
@@ -19,6 +16,7 @@ export default function DonationRequests() {
   const [donationRequests, setDonationRequests] = useState<
     DonationRequestType[]
   >([]);
+  const [completeRequest, setCompleteRequest] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
   const handleDateChange = (date: Dayjs | null) => {
@@ -45,6 +43,7 @@ export default function DonationRequests() {
       (request: DonationRequestType) => request.id !== requestId,
     );
     setDonationRequests(updatedDonationRequests);
+    setCompleteRequest(true);
   };
 
   useEffect(() => {
@@ -52,28 +51,42 @@ export default function DonationRequests() {
   }, []);
 
   return (
-    <Stack spacing={5} sx={{ margin: { xs: "2rem 2rem", md: "2rem 4rem" } }}>
-      <StaffTypography
-        type="title"
-        size={2.5}
-        text={"Active Donation Requests"}
-      ></StaffTypography>
-      <DatePicker
-        label={"Date"}
-        defaultValue={new Date()}
-        onDateChange={handleDateChange}
-      ></DatePicker>
-      {!error ? (
-        <ItemList
-          data={donationRequests}
-          onRemoveRequest={handleRemoveRequest}
-        ></ItemList>
-      ) : (
-        <Alert severity="error">
-          An error occurred while fetching active donation requests. Please
-          refresh and try again.
+    <>
+      {completeRequest && (
+        <Alert
+          variant="filled"
+          severity="success"
+          onClose={() => {
+            setCompleteRequest(false);
+          }}
+          sx={{ backgroundColor: "primary.dark", fontSize: "1rem" }}
+        >
+          The donation request is completed successfully!
         </Alert>
       )}
-    </Stack>
+      <Stack spacing={5} sx={{ margin: { xs: "2rem 2rem", md: "2rem 4rem" } }}>
+        <StaffTypography
+          type="title"
+          size={4}
+          text={"Active Donation Requests"}
+        ></StaffTypography>
+        <DatePicker
+          label={"Date"}
+          defaultValue={new Date()}
+          onDateChange={handleDateChange}
+        ></DatePicker>
+        {!error ? (
+          <ItemList
+            data={donationRequests}
+            onRemoveRequest={handleRemoveRequest}
+          ></ItemList>
+        ) : (
+          <Alert variant="filled" severity="error">
+            An error occurred while fetching active donation requests. Please
+            refresh and try again.
+          </Alert>
+        )}
+      </Stack>
+    </>
   );
 }

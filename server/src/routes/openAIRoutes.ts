@@ -21,15 +21,7 @@ const InstagramTemplate = (
   caption: string,
   url: string,
 ) => {
-  const result = `
-      [EVENT] ${name}
-      Items needed: ${items}
-      Happening on ${startDate} to ${endDate}
-  
-      ${caption}
-  
-      Find out more at ${url}
-    `;
+  const result = `[EVENT] ${name}\nItems needed: ${items}\nHappening on ${startDate} to ${endDate}\n\n${caption}\n\nFind out more at ${url}`;
   return result;
 };
 
@@ -95,7 +87,7 @@ router.post("/generate-instagram-caption", async (req, res) => {
     });
 
     if (chatCompletion) {
-      const url = `http://kunyah.eco-yah.com/admin/donation-event/${donationEventId}`;
+      const url = `http://kunyah.eco-yah.com/`;
       const instaCaption = chatCompletion.choices[0].message.content;
       result = InstagramTemplate(
         eventName || "",

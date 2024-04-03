@@ -41,7 +41,7 @@ export default function ItemList(props: ItemListType) {
       {props.data.map(function (eachData: DonationRequestType, index: number) {
         return (
           <List key={index} sx={{ width: "100%", bgcolor: "background.paper" }}>
-            <ListItem alignItems="flex-start">
+            <ListItem alignItems="center">
               <ListItemAvatar>
                 <Avatar
                   alt={eachData.user.name}
@@ -51,7 +51,7 @@ export default function ItemList(props: ItemListType) {
               </ListItemAvatar>
               <ListItemText>
                 <StaffTypography
-                  size={1.25}
+                  size={1.5}
                   text={eachData.user.name}
                   type={"title"}
                   customStyles={{ color: "secondary.main", fontWeight: "none" }}
@@ -62,7 +62,7 @@ export default function ItemList(props: ItemListType) {
                   alignItems="center"
                 >
                   <StaffTypography
-                    size={1}
+                    size={1.25}
                     text={`Drop off on <br> ${new Date(eachData.dropOffDate).toLocaleDateString("en-GB")}, ${eachData.dropOffTime}`}
                     type={"title"}
                     customStyles={{
@@ -71,15 +71,14 @@ export default function ItemList(props: ItemListType) {
                     }}
                   />
                   <BasicButton
-                    variant="outlined"
+                    variant="contained"
                     label={"View More"}
                     customStyles={{
                       fontSize: "1rem",
                       letterSpacing: "0.12rem",
                       width: "9.375rem",
                       height: "3.75rem",
-                      color: "primary.dark",
-                      borderColor: "primary.dark",
+                      backgroundColor: "primary.dark",
                     }}
                     onButtonChange={(status: boolean) =>
                       handleButtonChange(index, status)

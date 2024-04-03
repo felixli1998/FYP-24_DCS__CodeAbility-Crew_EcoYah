@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
+// import IconButton from "@mui/material/IconButton";
+// import GetAppIcon from "@mui/icons-material/GetApp";
 
 // MUI Imports
 import StaffTypography from "../../components/Typography/StaffTypography";
@@ -18,6 +20,8 @@ import {
   Stack,
   Grid,
   TextField,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 
 // Utils Imports
@@ -27,6 +31,7 @@ import {
   updateDonationEventById,
 } from "../../services/donationEventApi";
 import { generateInstaCaption } from "../../services/openaiApi";
+import { NotifyNewEvents, PublishIgContent } from "../../services/openaiApi";
 import { uploadImage } from "../../utils/UploadImage";
 
 // Icons
@@ -38,6 +43,8 @@ import Step1Form from "../../components/DonationEvent/Step1Form";
 import Step2Form from "../../components/DonationEvent/Step2Form";
 import Step3Form from "../../components/DonationEvent/Step3Form";
 import SimpleDialog from "../../components/Dialog/SimpleDialog";
+import PosterGeneratorComponent from "../../components/PosterGenerator/PosterGeneratorComponent";
+import { useFeedbackNotification } from "../../components/useFeedbackNotification";
 
 // Other Imports
 import dayjs from "dayjs";
@@ -48,6 +55,10 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+import { SocialIcon } from "react-social-icons";
+import "react-social-icons/instagram";
+import "react-social-icons/email";
+import html2canvas from "html2canvas";
 
 export default function DonationEvent() {
   const navigate = useNavigate();
@@ -60,6 +71,21 @@ export default function DonationEvent() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const steps = ["Step 1", "Step 2", "Step 3", "Preview"];
   const [activeStep, setActiveStep] = useState(0);
+
+  const handleDownload = () => {
+    const box = document.getElementById("poster-box");
+    const SCALE_FACTOR = 2;
+    if (!box) return;
+    html2canvas(box, {
+      scale: SCALE_FACTOR,
+    }).then((canvas) => {
+      const dataURL = canvas.toDataURL("image/jpeg");
+      const link = document.createElement("a");
+      link.href = dataURL;
+      link.download = "poster.jpg";
+      link.click();
+    });
+  };
 
   const {
     data: donationEventData,
@@ -262,6 +288,12 @@ export default function DonationEvent() {
   // === Social Media Sharing Dialog === //
   const SocialMediaSharing = () => {
     const [open, setOpen] = useState<boolean>(false);
+    const { displayNotification, FeedbackNotification } =
+      useFeedbackNotification();
+    const [loader, setLoader] = useState<boolean>(false);
+    const [loaderText, setLoaderText] = useState<string>("");
+    const [generatedCaption, setGeneratedCaption] = useState<string>("");
+
     const handleOpen = () => {
       setOpen(true);
     };
@@ -270,26 +302,90 @@ export default function DonationEvent() {
       setOpen(false);
     };
 
+    const handleCaptionChange = (
+      event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+      setGeneratedCaption(event.target.value);
+    };
+
     const {
       data: instaGeneratedCaptionData,
       isLoading: instaGeneratedCaptionIsLoading,
       refetch: instaGeneratedCaptionRefetch,
     } = useQuery({
+      enabled: false,
       queryKey: ["generate-instagram-caption", donationEventId],
       queryFn: () => generateInstaCaption(donationEventId as string),
     });
 
+    const sendEmail = async () => {
+      // displayNotification("info", "Sending emails...");
+      setLoaderText("Sending emails...");
+      setLoader(true);
+      try {
+        const response = await NotifyNewEvents(
+          donationEvent.name,
+          generatedCaption,
+        );
+        if (response.status === 201) setLoader(false);
+        displayNotification("success", response.data.message);
+      } catch (error) {
+        setLoader(false);
+        console.error("Error sending email: ", error);
+        displayNotification(
+          "error",
+          "An error occurred while sending emails! Please try again later!",
+        );
+      }
+    };
+
+    const handleCaptionGeneration = () => {
+      setLoader(true);
+      setLoaderText("Generating caption...");
+      instaGeneratedCaptionRefetch();
+    };
+
+    const publishToIg = async () => {
+      // displayNotification("info", "Publishing content...");
+      setLoaderText("Publishing content...");
+      setLoader(true);
+      try {
+        const box = document.getElementById("poster-box");
+        const SCALE_FACTOR = 2;
+        if (!box) return;
+
+        const canvas = await html2canvas(box, { scale: SCALE_FACTOR });
+        const dataURL = canvas.toDataURL("image/jpeg");
+        const response = await PublishIgContent(dataURL, generatedCaption);
+        if (response.status === 201) setLoader(false);
+        displayNotification("success", response.data.message);
+      } catch (error) {
+        setLoader(false);
+        console.error("Error publishing to instagram: ", error);
+        displayNotification(
+          "error",
+          "An error occurred while publishing content! Please try again later!",
+        );
+      }
+    };
+
+    useEffect(() => {
+      if (!instaGeneratedCaptionIsLoading && instaGeneratedCaptionData) {
+        setGeneratedCaption(instaGeneratedCaptionData);
+        setLoader(false);
+      }
+    }, [instaGeneratedCaptionData, instaGeneratedCaptionIsLoading]);
+
     return (
       <>
         <Button
-          variant="outlined"
+          variant="contained"
           sx={{
             fontSize: "1.25rem",
             letterSpacing: "0.15rem",
             width: "9.375rem",
             height: "3.75rem",
-            borderColor: "primary.dark",
-            color: "primary.dark",
+            backgroundColor: "primary.dark",
           }}
           onClick={() => handleOpen()}
         >
@@ -301,32 +397,107 @@ export default function DonationEvent() {
           subtitleText={
             "Generate poster and captions and share on social media platforms"
           }
-          leftButtonLabel={"Cancel"}
-          rightButtonLabel={"Generate"}
+          leftButtonLabel={"Download Poster"}
+          rightButtonLabel={"Generate Text"}
+          handleLeftButton={() => handleDownload()}
+          handleRightButton={handleCaptionGeneration}
           onClose={() => handleClose()}
-          handleRightButton={() => instaGeneratedCaptionRefetch()}
         >
-          <Box>
-            <TextField
-              label="Caption"
-              id="outlined-multiline-static"
-              multiline
-              fullWidth
-              defaultValue="Generate caption..."
-              sx={{ marginY: 2 }}
-              value={instaGeneratedCaptionData}
-            />
-            <StaffTypography type="title" size={1.5} text={`Social Media`} />
-            <WhatsappShareButton
-              url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
-              children={<WhatsappIcon size={55} round={true} />}
-              style={{ marginRight: 12 }}
-            />
-            <TelegramShareButton
-              url={`http://kunyah.eco-yah.com/donation-request-form/${donationEventId}/${_.kebabCase(donationEvent.name)}`}
-              children={<TelegramIcon size={55} round={true} />}
-            />
+          <FeedbackNotification />
+          <Box
+            sx={{
+              width: "100%",
+              marginTop: "2rem",
+            }}
+          >
+            <Box
+              sx={{
+                flexDirection: ["column", "row"],
+                display: "flex",
+              }}
+            >
+              <Box
+                sx={{
+                  flex: 0.5,
+                }}
+              >
+                <PosterGeneratorComponent donationEvent={donationEvent} />
+              </Box>
+              <Box>
+                <StaffTypography type="title" size={1.5} text={`Caption`} />
+                <TextField
+                  label="Caption"
+                  id="outlined-multiline-static"
+                  multiline
+                  sx={{
+                    width: "20vw",
+                    mb: "2rem",
+                  }}
+                  value={generatedCaption}
+                  onChange={handleCaptionChange}
+                />
+                <StaffTypography
+                  type="title"
+                  size={1.5}
+                  text={`Social Media`}
+                />
+                {/* Download Icon */}
+                {/* <IconButton
+                  onClick={handleDownload}
+                  style={{
+                    marginTop: "-43px",
+                    backgroundColor: "gray",
+                    width: 55,
+                    height: 55,
+                    marginRight: 12,
+                  }}
+                >
+                  <GetAppIcon fontSize="large" />
+                </IconButton> */}
+                <Box display="flex">
+                  <WhatsappShareButton
+                    url={instaGeneratedCaptionData}
+                    children={<WhatsappIcon size={55} round={true} />}
+                    style={{ marginRight: 12 }}
+                  />
+                  <TelegramShareButton
+                    url={instaGeneratedCaptionData}
+                    children={<TelegramIcon size={55} round={true} />}
+                    style={{ marginRight: 12 }}
+                  />
+                  <SocialIcon
+                    network="instagram"
+                    style={{
+                      width: 55,
+                      height: 55,
+                      marginRight: 12,
+                      cursor: "pointer",
+                    }}
+                    onClick={() => publishToIg()}
+                  />
+                  <SocialIcon
+                    network="email"
+                    style={{ width: 55, height: 55, cursor: "pointer" }}
+                    onClick={() => sendEmail()}
+                  />
+                </Box>
+              </Box>
+            </Box>
           </Box>
+          <div>
+            <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={loader}
+            >
+              <CircularProgress color="inherit" />
+              <StaffTypography
+                type="title"
+                size={1.5}
+                text={loaderText}
+                customStyles={{ color: "white", marginLeft: 1 }}
+              />
+            </Backdrop>
+          </div>
         </SimpleDialog>
       </>
     );
@@ -355,7 +526,6 @@ export default function DonationEvent() {
                 customStyles={{ textAlign: "center" }}
               />
               <Box>
-                <SocialMediaSharing />
                 <Button
                   variant="outlined"
                   sx={{
@@ -365,25 +535,27 @@ export default function DonationEvent() {
                     height: "3.75rem",
                     borderColor: "primary.dark",
                     color: "primary.dark",
-                    marginX: "2rem",
                   }}
                   onClick={() => navigate("/admin/donation-events")}
                 >
                   Cancel
                 </Button>
                 <Button
-                  variant="contained"
+                  variant="outlined"
                   sx={{
                     fontSize: "1.25rem",
                     letterSpacing: "0.15rem",
                     width: "9.375rem",
                     height: "3.75rem",
-                    backgroundColor: "primary.dark",
+                    borderColor: "primary.dark",
+                    color: "primary.dark",
+                    marginX: "1rem",
                   }}
                   onClick={() => handleEdit()}
                 >
                   Edit
                 </Button>
+                <SocialMediaSharing />
               </Box>
             </Box>
           }

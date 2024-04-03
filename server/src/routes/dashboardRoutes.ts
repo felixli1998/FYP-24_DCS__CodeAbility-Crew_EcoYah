@@ -1,8 +1,9 @@
 // External Imports
 import express from "express";
+import { Parser } from "@json2csv/plainjs";
 
 // Internal Imports
-import { generateResponse } from "../common/methods";
+import { generateResponse, strongParams } from "../common/methods";
 import { DashboardService } from "../services/DashboardService";
 import { DashboardRepository } from "../repositories/DashboardRepository";
 
@@ -74,6 +75,42 @@ router.get("/get-cashback-status", async (req, res) => {
   try {
     const result = await dashboardService.getCashbackStatus();
     return generateResponse(res, 200, { data: result });
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong");
+  }
+});
+
+router.post("/get-redeemed-cashback", async (req, res) => {
+  try {
+    const params = req.body;
+    const allowedParams = ["startDate", "endDate"];
+    const filteredParams = strongParams(params, allowedParams);
+
+    if (!filteredParams)
+      return generateResponse(res, 400, "Invalid Request Body");
+
+    const result = await dashboardService.getRedeemedCashback(
+      filteredParams.startDate,
+      filteredParams.endDate,
+    );
+    return generateResponse(res, 200, { data: result });
+  } catch (error) {
+    return generateResponse(res, 500, "Something went wrong");
+  }
+});
+
+router.post("/download-data-csv", async (req, res) => {
+  try {
+    const params = req.body;
+    const allowedParams = ["fields", "data"];
+    const filteredParams = strongParams(params, allowedParams);
+
+    const json2csv = new Parser({ fields: filteredParams.fields });
+    const csv = json2csv.parse(filteredParams.data);
+
+    res.setHeader("Content-Type", "text/csv");
+    res.attachment("redeemed_cashback_data.csv");
+    res.status(200).send(csv);
   } catch (error) {
     return generateResponse(res, 500, "Something went wrong");
   }

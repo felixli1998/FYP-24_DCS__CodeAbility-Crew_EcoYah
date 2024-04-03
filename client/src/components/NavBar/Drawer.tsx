@@ -13,7 +13,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link, useLocation } from "react-router-dom";
-import { NavigationListItemT } from "../utils/NavBar";
+import { NavigationListItemT } from "../../utils/NavBar";
 
 type DrawerListProps = {
   topDrawerList: NavigationListItemT[];
@@ -27,7 +27,7 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
   useEffect(() => {
     // Only when there is a change in URL, we will close the drawer
     setIsDrawerOpen(false);
-  }, [location.pathname])
+  }, [location.pathname]);
 
   const BottomList = () => {
     return bottomDrawerList.map((actionItem, idx) => {
@@ -82,10 +82,7 @@ function TemporaryDrawer({ topDrawerList, bottomDrawerList }: DrawerListProps) {
         {topDrawerList.map((navItem, index) => (
           <ListItem key={index} disablePadding>
             {navItem.path && (
-              <ListItemButton
-                component={Link}
-                to={navItem.path}
-              >
+              <ListItemButton component={Link} to={navItem.path}>
                 <ListItemText primary={navItem.item} />
               </ListItemButton>
             )}
