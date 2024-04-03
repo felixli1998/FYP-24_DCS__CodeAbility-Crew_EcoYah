@@ -38,9 +38,11 @@ router.post("/publish-ig-content", async (req, res) => {
     /^data:image\/jpeg;base64,/,
     "",
   );
+  const uniqueFilename = `poster-${Date.now()}.jpg`;
   const imagePath = path.join(
     __dirname,
-    `../../uploaded_images/poster_${new Date()}.jpg`,
+    "../../uploaded_images/",
+    uniqueFilename,
   );
   const caption = filteredParams.captionText;
 
@@ -54,6 +56,7 @@ router.post("/publish-ig-content", async (req, res) => {
 
       try {
         await postImage(imagePath, caption);
+        await fs.promises.unlink(imagePath);
         return generateResponse(res, 201, {
           message: "Content published successfully!",
         });
