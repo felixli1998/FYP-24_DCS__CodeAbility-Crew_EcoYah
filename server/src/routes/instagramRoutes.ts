@@ -28,11 +28,20 @@ router.post("/publish-ig-content", async (req, res) => {
   const allowedParams = ["image", "captionText"];
   const filteredParams = strongParams(params, allowedParams);
 
+  if (!filteredParams.image || !filteredParams.captionText) {
+    return generateResponse(res, 400, {
+      message: "Missing required parameters",
+    });
+  }
+
   const base64Data = filteredParams.image.replace(
     /^data:image\/jpeg;base64,/,
     "",
   );
-  const imagePath = path.join(__dirname, "../../uploaded_images/poster.jpg");
+  const imagePath = path.join(
+    __dirname,
+    `../../uploaded_images/poster_${new Date()}.jpg`,
+  );
   const caption = filteredParams.captionText;
 
   try {
