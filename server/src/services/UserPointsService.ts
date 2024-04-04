@@ -40,7 +40,6 @@ export class UserPointsService {
       // Update User Points
       return await this.userPointsRepository.updateUserPoints(userId, {
         points: UserPoints.points + points,
-        totalPoints: UserPoints.totalPoints + points,
       });
     }
   }

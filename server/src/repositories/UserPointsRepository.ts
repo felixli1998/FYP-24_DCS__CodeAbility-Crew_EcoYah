@@ -10,7 +10,6 @@ export class UserPointsRepository {
     const selectOptions = {
       id: true,
       points: true,
-      totalPoints: true,
       user: {
         id: true,
         name: true,

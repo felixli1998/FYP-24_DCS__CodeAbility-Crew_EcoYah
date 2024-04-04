@@ -25,11 +25,6 @@ export class UserPoints {
   })
   points: number;
 
-  @Column({
-    default: 0,
-  })
-  totalPoints: number;
-
   @OneToMany(
     () => TransactionHistory,
     (transactionHistory) => transactionHistory.userPoints,
