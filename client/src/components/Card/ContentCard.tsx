@@ -130,7 +130,7 @@ export default function ContentCard(props: ContentCardProps) {
               variant="contained"
               fullWidth
               onClick={() => {
-                navigate(`/donation-request-form/${id}/${originalData.name}}`, {
+                navigate(`/donation-request-form/${id}/${originalData.name}`, {
                   state: { action: "edit", form: originalData },
                   replace: true,
                 });
