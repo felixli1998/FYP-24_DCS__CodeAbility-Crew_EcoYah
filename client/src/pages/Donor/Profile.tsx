@@ -1,6 +1,6 @@
 // React
-import {useState, useEffect} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 // MUI
 import {
   Box,
@@ -24,11 +24,11 @@ import PersonIcon from "@mui/icons-material/Person";
 import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 // Components
 import Image from "../../components/Image/Image";
-import {folderPrefixNames} from "../../components/Image/Image";
+import { folderPrefixNames } from "../../components/Image/Image";
 // Utils
-import {makeHttpRequest} from "../../utils/Utility";
-import {USER_ROUTES} from "../../services/routes";
-import {capitalize} from "lodash";
+import { makeHttpRequest } from "../../utils/Utility";
+import { USER_ROUTES } from "../../services/routes";
+import { capitalize } from "lodash";
 
 const navigationItems = [
   {
@@ -38,7 +38,7 @@ const navigationItems = [
         title: "Cashback",
         subtitle: "View all your cashback transactions",
         avatar: (
-          <Avatar sx={{bgcolor: "#455a64"}}>
+          <Avatar sx={{ bgcolor: "#455a64" }}>
             <LocalActivityIcon />
           </Avatar>
         ),
@@ -53,7 +53,7 @@ const navigationItems = [
         title: "Your profile",
         subtitle: "View and edit profile information",
         avatar: (
-          <Avatar sx={{bgcolor: "#455a64"}}>
+          <Avatar sx={{ bgcolor: "#455a64" }}>
             <PersonIcon />
           </Avatar>
         ),
@@ -61,21 +61,21 @@ const navigationItems = [
       },
     ],
   },
-  {
-    category: "General",
-    subCategories: [
-      {
-        title: "Contact us",
-        subtitle: "Contact or send feedback to us",
-        avatar: (
-          <Avatar sx={{bgcolor: "#455a64"}}>
-            <LocalPhoneIcon />
-          </Avatar>
-        ),
-        slug: "contact-us",
-      },
-    ],
-  },
+  // {
+  //   category: "General",
+  //   subCategories: [
+  //     {
+  //       title: "Contact us",
+  //       subtitle: "Contact or send feedback to us",
+  //       avatar: (
+  //         <Avatar sx={{bgcolor: "#455a64"}}>
+  //           <LocalPhoneIcon />
+  //         </Avatar>
+  //       ),
+  //       slug: "contact-us",
+  //     },
+  //   ],
+  // },
 ];
 
 // == Reward Section ==
@@ -84,10 +84,10 @@ interface RewardProps {
   expiryDate: string;
 }
 
-const Reward: React.FC<RewardProps> = ({points, expiryDate}) => {
+const Reward: React.FC<RewardProps> = ({ points, expiryDate }) => {
   const navigate = useNavigate();
   return (
-    <Box sx={{marginY: 2}}>
+    <Box sx={{ marginY: 2 }}>
       <Card
         variant="outlined"
         sx={{
@@ -114,25 +114,14 @@ const Reward: React.FC<RewardProps> = ({points, expiryDate}) => {
               alignItems: "center",
             }}
           >
-            <Typography
-              variant="body1"
-              fontWeight="bold"
-              color="white"
-            >
+            <Typography variant="body1" fontWeight="bold" color="white">
               Cashback
             </Typography>
-            <Typography
-              variant="caption"
-              color="white"
-            >
+            <Typography variant="caption" color="white">
               Expired on {expiryDate}
             </Typography>
           </Box>
-          <Typography
-            variant="h5"
-            component="span"
-            color="white"
-          >
+          <Typography variant="h5" component="span" color="white">
             ${points}
           </Typography>
         </CardContent>
@@ -144,11 +133,7 @@ const Reward: React.FC<RewardProps> = ({points, expiryDate}) => {
             backgroundColor: "rgba(0, 0, 0, 0.2)",
           }}
         >
-          <Typography
-            component="div"
-            variant="caption"
-            color="white"
-          >
+          <Typography component="div" variant="caption" color="white">
             Amount available to redeem
           </Typography>
           <Link to={"/cashback-redemption"}>
@@ -184,12 +169,7 @@ const Others = () => {
   return (
     <nav aria-label="main mailbox folders">
       {navigationItems.map((category, index) => (
-        <List
-          dense
-          sx={{paddingY: 0}}
-          key={index}
-          disablePadding
-        >
+        <List dense sx={{ paddingY: 0 }} key={index} disablePadding>
           <Typography
             variant="body1"
             sx={{
@@ -210,10 +190,7 @@ const Others = () => {
               key={subIndex}
               disablePadding
               secondaryAction={
-                <IconButton
-                  edge="end"
-                  aria-label="delete"
-                >
+                <IconButton edge="end" aria-label="delete">
                   <KeyboardArrowRightIcon />
                 </IconButton>
               }
@@ -258,11 +235,11 @@ export default function Profile() {
     try {
       const res: any = await makeHttpRequest(
         "GET",
-        USER_ROUTES.RETRIEVE_BY_EMAIL.replace(":email", email)
+        USER_ROUTES.RETRIEVE_BY_EMAIL.replace(":email", email),
       );
-      const {action, data} = res.data;
+      const { action, data } = res.data;
       if (action) {
-        const {name, role, imageId, points, expiryDate} = data;
+        const { name, role, imageId, points, expiryDate } = data;
         setUserInfo({
           name,
           role: capitalize(role),
@@ -285,7 +262,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <Container sx={{width: "100%"}}>
+    <Container sx={{ width: "100%" }}>
       <Box
         display="flex"
         justifyContent="center"
@@ -308,17 +285,11 @@ export default function Profile() {
           />
         )}
       </Box>
-      <Typography
-        sx={{fontWeight: "bold"}}
-        align="center"
-      >
+      <Typography sx={{ fontWeight: "bold" }} align="center">
         {userInfo.name}
       </Typography>
       <Typography align="center">{userInfo.role}</Typography>
-      <Reward
-        points={userInfo.points}
-        expiryDate={userInfo.expiryDate}
-      />
+      <Reward points={userInfo.points} expiryDate={userInfo.expiryDate} />
       <Others />
     </Container>
   );
