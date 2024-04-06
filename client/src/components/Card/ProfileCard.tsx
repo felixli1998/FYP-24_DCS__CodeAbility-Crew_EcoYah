@@ -28,6 +28,7 @@ export default function ProfileCard(props: {
     <StyledCard
       raised={raised}
       sx={{
+        height: "250px",
         width: "220px",
         textAlign: "center",
         borderRadius: "20%",
@@ -40,7 +41,7 @@ export default function ProfileCard(props: {
         onMouseOut={() => outHoverCard()}
       >
         <CardMedia
-          sx={{ display: "flex", justifyContent: "center", paddingTop: 3 }}
+          sx={{ display: "flex", justifyContent: "center", paddingTop: 3, height: "13em" }}
         >
           <Image
             imageId={props.imgSrc}
