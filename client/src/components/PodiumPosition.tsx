@@ -1,11 +1,11 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { LeaderboardRecord } from "../utils/Types";
 import Image, { folderPrefixNames } from "./Image/Image";
 
 type PodiumPositionProps = {
   height: string;
   color: string;
-  stats: LeaderboardRecord;
+  name: string;
+  points: number;
 };
 
 export default function PodiumPostion(props: PodiumPositionProps) {
@@ -21,6 +21,7 @@ export default function PodiumPostion(props: PodiumPositionProps) {
           folderPrefix={folderPrefixNames.PROFILEPICTURES}
         />
       </Box>
+
       <Box
         borderRadius="20px 20px 0 0"
         bgcolor={props.color}
@@ -31,9 +32,8 @@ export default function PodiumPostion(props: PodiumPositionProps) {
         display="flex"
       >
         <Box alignSelf="center">
-          <Typography>{props.stats.name}</Typography>
-          <Typography fontWeight={900}>{props.stats.points}</Typography>
-          <Typography>{"CO2 saved: " + props.stats.co2_saved}</Typography>
+          <Typography>{props.name}</Typography>
+          <Typography fontWeight={900}>{props.points}</Typography>
         </Box>
       </Box>
     </Stack>

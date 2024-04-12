@@ -44,6 +44,16 @@ router.get("/get-account-type", async (req, res) => {
   }
 });
 
+router.get("/leaderboard-data", async (req, res) => {
+  try {
+    res.json({
+      data: await 0,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Error retrieving leaderboard data" });
+  }
+});
+
 router.get("/:email", async (req, res) => {
   try {
     const { email } = req.params;
@@ -65,7 +75,10 @@ router.get("/:email", async (req, res) => {
         imageId: user.imageId,
         role: user.role,
         points: user.userPoints.points,
-        expiryDate: format(addMonths(new Date(user.userPoints.updatedAt), 6), "dd/MM/yyyy")
+        expiryDate: format(
+          addMonths(new Date(user.userPoints.updatedAt), 6),
+          "dd/MM/yyyy",
+        ),
       };
       return generateResponse(res, 200, {
         action: true,
@@ -120,7 +133,7 @@ router.put("/update", async (req, res) => {
     const user = await userService.getUserByEmail(email);
     if (!user) {
       generateResponse(res, 200, { action: false, message: "User not found" });
-      return
+      return;
     }
     await userService.updateUser(email, sanitisedPayload);
     generateResponse(res, 200, {

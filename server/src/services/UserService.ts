@@ -55,4 +55,8 @@ export class UserService {
   async getAccountType(email: string) {
     return this.userRepository.getAccountType(email);
   }
+
+  async getLeaderboardData() {
+    return 0;
+  }
 }

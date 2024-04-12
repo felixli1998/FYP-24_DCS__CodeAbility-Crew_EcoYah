@@ -53,4 +53,8 @@ export class UserRepository {
 
     return user?.role;
   }
+
+  async getLeaderboardData() {
+    return await 0;
+  }
 }
